@@ -34,3 +34,7 @@ let words = toWords(452); // words = Four Hundred Fifty Two Rupees Only
 
 words = toWords(452.36); // words = Four Hundred Fifty Two Rupee And Thirty Six Paise Only
 ```
+
+
+## Inspiration
+[https://stackoverflow.com/a/46221860](https://stackoverflow.com/a/46221860)

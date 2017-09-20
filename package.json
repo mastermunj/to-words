@@ -1,6 +1,6 @@
 {
   "name": "to-words",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Converts Numbers (including decimal points) into words for Indian style.",
   "main": "index.js",
   "scripts": {
