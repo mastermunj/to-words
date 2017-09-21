@@ -30,9 +30,9 @@ To convert to currency
 
 ```js
 let toWords = require('to-words');
-let words = toWords(452); // words = Four Hundred Fifty Two Rupees Only
+let words = toWords(452, {currency: true}); // words = Four Hundred Fifty Two Rupee Only
 
-words = toWords(452.36); // words = Four Hundred Fifty Two Rupee And Thirty Six Paise Only
+words = toWords(452.36, {currency: true}); // words = Four Hundred Fifty Two Rupee And Thirty Six Paise Only
 ```
 
 
