@@ -47,11 +47,11 @@ class ToWords {
       }
       let split = (number + '').split('.');
       return this.convertInternal(split[0], options)
-        + (options.currency ? ' Rupee And ' : ' Point ')
+        + (options.currency ? ' Rupees And ' : ' Point ')
         + this.convertInternal(split[1], options)
         + (options.currency ? ' Paise Only' : '');
     }
-    return this.convertInternal(number, options) + (options.currency ? ' Rupee Only' : '');
+    return this.convertInternal(number, options) + (options.currency ? ' Rupees Only' : '');
   }
 
   convertInternal(number, options = {}) {
