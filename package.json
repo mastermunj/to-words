@@ -1,31 +1,60 @@
 {
   "name": "to-words",
-  "version": "1.0.3",
-  "description": "Converts Numbers (including decimal points) into words for Indian style.",
-  "main": "index.js",
+  "version": "2.0.0",
+  "description": "Converts numbers (including decimal points) into words & currency.",
+  "main": "dist/to-words.js",
   "scripts": {
-    "transpile": "babel src -d lib",
-    "lint": "eslint .",
-    "lint-fix": "eslint . --fix"
+    "clean": "rimraf dist/*",
+    "build": "npm run clean && tsc",
+    "lint": "eslint --ext .js,.ts .",
+    "lint-fix": "eslint --ext .js,.ts . --fix",
+    "test": "jest --detectOpenHandles --coverage"
   },
   "keywords": [
     "to words",
     "number to words",
-    "Indian style number to words",
-    "Indian style number to words currency"
+    "number to words currency",
+    "international number to words",
+    "international number to words currency",
+    "i18n",
+    "converter",
+    "number",
+    "word",
+    "currency"
   ],
+  "engines": {
+    "node": ">=10.0.0"
+  },
   "author": "Munjal Dhamecha",
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.6.0",
-    "eslint": "^4.7.1",
-    "eslint-config-google": "^0.9.1",
-    "eslint-config-standard": "^10.2.1"
+    "@commitlint/cli": "^8.3.5",
+    "@commitlint/config-conventional": "^8.3.4",
+    "@types/jest": "^25.2.1",
+    "@types/lodash": "^4.14.150",
+    "@types/node": "^13.13.2",
+    "@types/source-map-support": "^0.5.1",
+    "@typescript-eslint/eslint-plugin": "^2.29.0",
+    "@typescript-eslint/parser": "^2.29.0",
+    "eslint": "^6.8.0",
+    "eslint-plugin-import": "^2.20.2",
+    "husky": "^4.2.5",
+    "jest": "^25.4.0",
+    "lodash": "^4.17.15",
+    "rimraf": "^3.0.2",
+    "source-map-support": "^0.5.18",
+    "standard-version": "^7.1.0",
+    "ts-jest": "^25.4.0",
+    "typescript": "^3.8.3"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/mastermunj/to-words.git"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
   }
 }
