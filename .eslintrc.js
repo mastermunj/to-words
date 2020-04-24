@@ -14,4 +14,7 @@ module.exports = {
     commonjs: true,
     browser: true,
   },
+  rules: {
+    'prefer-template': 'error',
+  }
 };

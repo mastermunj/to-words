@@ -34,7 +34,7 @@ testNegativeIntegers.map((row, i) => {
     return;
   }
   row[0] = -row[0];
-  row[1] = 'Minus ' + row[1];
+  row[1] = `Minus ${row[1]}`;
 });
 
 describe('Test Negative Integers with options = {}', () => {
@@ -45,7 +45,7 @@ describe('Test Negative Integers with options = {}', () => {
 
 const testIntegersWithCurrency = cloneDeep(testIntegers);
 testIntegersWithCurrency.map((row) => {
-  row[1] = row[1] + ` Rupees Only`
+  row[1] = `${row[1]} Rupees Only`;
 });
 
 describe('Test Integers with options = { currency: true }', () => {
