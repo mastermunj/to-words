@@ -1,6 +1,6 @@
 {
   "name": "to-words",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Converts numbers (including decimal points) into words & currency.",
   "main": "dist/to-words.js",
   "scripts": {
