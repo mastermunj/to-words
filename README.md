@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Converts Numbers (including decimal points) into words for Indian style. It also converts the numbers into words for currency, again, for Indian style.
+Converts Numbers (including decimal points) into words. It also converts the numbers into words for currency.
 
 ## Installation
 
