@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.1](https://github.com/mastermunj/to-words/compare/v2.1.0...v2.1.1) (2020-05-01)
+
+
+### Bug Fixes
+
+* add build files ([3c7b7e8](https://github.com/mastermunj/to-words/commit/3c7b7e8f0fe7a3f08dc853a93f7ee5210d1b1f61))
+
 ## [2.1.0](https://github.com/mastermunj/to-words/compare/v2.0.3...v2.1.0) (2020-05-01)
 
 
