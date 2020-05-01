@@ -2,18 +2,6 @@
   "name": "to-words",
   "version": "2.0.3",
   "description": "Converts numbers (including decimal points) into words & currency.",
-  "main": "dist/to-words.js",
-  "scripts": {
-    "build": "npm run clean && tsc --noEmitOnError",
-    "build:watch": "npm run build -- --watch",
-    "clean": "rimraf dist coverage",
-    "lint": "eslint --ext .js,.ts .",
-    "lint:fix": "npm run lint -- --fix",
-    "release": "standard-version",
-    "release:mock": "npm run release -- --dry-run",
-    "test": "jest --detectOpenHandles --coverage",
-    "test:watch": "npm run test -- --watch"
-  },
   "keywords": [
     "to words",
     "number to words",
@@ -27,11 +15,35 @@
     "word",
     "currency"
   ],
-  "engines": {
-    "node": ">=10.0.0"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mastermunj/to-words.git"
   },
-  "author": "Munjal Dhamecha",
   "license": "MIT",
+  "author": "Munjal Dhamecha",
+  "main": "dist/to-words.js",
+  "scripts": {
+    "build": "npm run clean && tsc --noEmitOnError",
+    "build:watch": "npm run build -- --watch",
+    "clean": "rimraf dist coverage",
+    "lint": "eslint --ext .js,.ts .",
+    "lint:fix": "npm run lint -- --fix",
+    "release": "standard-version",
+    "release:mock": "npm run release -- --dry-run",
+    "test": "jest --detectOpenHandles --coverage",
+    "test:watch": "npm run test -- --watch"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "package.json": [
+      "sort-package-json"
+    ]
+  },
   "dependencies": {},
   "devDependencies": {
     "@commitlint/cli": "^8.3.5",
@@ -58,18 +70,7 @@
     "ts-jest": "^25.4.0",
     "typescript": "^3.8.3"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/mastermunj/to-words.git"
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
-  },
-  "lint-staged": {
-    "package.json": [
-      "sort-package-json"
-    ]
+  "engines": {
+    "node": ">=10.0.0"
   }
 }
