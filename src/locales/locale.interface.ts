@@ -1,4 +1,3 @@
-
 export interface LocaleInterface {
   currency: {
     name: string;

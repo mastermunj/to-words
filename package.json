@@ -4,11 +4,15 @@
   "description": "Converts numbers (including decimal points) into words & currency.",
   "main": "dist/to-words.js",
   "scripts": {
-    "clean": "rimraf dist/*",
-    "build": "npm run clean && tsc",
+    "build": "npm run clean && tsc --noEmitOnError",
+    "build:watch": "npm run build -- --watch",
+    "clean": "rimraf dist coverage",
     "lint": "eslint --ext .js,.ts .",
-    "lint-fix": "eslint --ext .js,.ts . --fix",
-    "test": "jest --detectOpenHandles --coverage"
+    "lint:fix": "npm run lint -- --fix",
+    "release": "standard-version",
+    "release:mock": "npm run release -- --dry-run",
+    "test": "jest --detectOpenHandles --coverage",
+    "test:watch": "npm run test -- --watch"
   },
   "keywords": [
     "to words",
@@ -39,11 +43,16 @@
     "@typescript-eslint/eslint-plugin": "^2.30.0",
     "@typescript-eslint/parser": "^2.30.0",
     "eslint": "^6.8.0",
-    "eslint-plugin-import": "^2.20.2",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-jest": "^23.8.2",
+    "eslint-plugin-prettier": "^3.1.3",
     "husky": "^4.2.5",
     "jest": "^25.5.3",
+    "lint-staged": "^10.2.2",
     "lodash": "^4.17.15",
+    "prettier": "^2.0.5",
     "rimraf": "^3.0.2",
+    "sort-package-json": "^1.42.1",
     "source-map-support": "^0.5.19",
     "standard-version": "^7.1.0",
     "ts-jest": "^25.4.0",
@@ -57,5 +66,10 @@
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
+  },
+  "lint-staged": {
+    "package.json": [
+      "sort-package-json"
+    ]
   }
 }

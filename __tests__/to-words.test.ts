@@ -10,7 +10,6 @@ describe('Wrong Locale', () => {
   });
 });
 
-
 describe('Test Wrong Inputs', () => {
   const toWords = new ToWords();
 
@@ -29,4 +28,3 @@ describe('Test Wrong Inputs', () => {
     expect(() => toWords.convert(input as number)).toThrow();
   });
 });
-

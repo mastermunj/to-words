@@ -22,10 +22,12 @@
 
     "esModuleInterop": true,
 
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true
   },
   "exclude": [
-    "node_modules", "**/*.spec.ts", "**/*.test.ts"
+    "node_modules",
+    "__tests__"
   ],
   "include": [
     "./src/**/*"

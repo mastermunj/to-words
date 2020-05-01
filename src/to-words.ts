@@ -15,10 +15,10 @@ const DefaultConverterOptions: ConverterOptions = {
 type ToWordsOptions = {
   localeCode?: string;
   converterOptions?: ConverterOptions;
-}
+};
 
 interface ConstructorOf<T> {
-  new(): T;
+  new (): T;
 }
 
 export class ToWords {
@@ -26,21 +26,24 @@ export class ToWords {
   private locale: LocaleInterface | undefined = undefined;
 
   constructor(options: ToWordsOptions = {}) {
-    this.options = Object.assign({
-      localeCode: 'en-IN',
-      converterOptions: DefaultConverterOptions,
-    }, options);
+    this.options = Object.assign(
+      {
+        localeCode: 'en-IN',
+        converterOptions: DefaultConverterOptions,
+      },
+      options,
+    );
   }
 
   private getLocaleClass(): ConstructorOf<LocaleInterface> {
-    return (require(`./locales/${this.options.localeCode}`)).Locale;
+    return require(`./locales/${this.options.localeCode}`).Locale;
   }
 
   getLocale(): LocaleInterface {
     if (this.locale === undefined) {
       try {
         const LocaleClass = this.getLocaleClass();
-        this.locale = new LocaleClass;
+        this.locale = new LocaleClass();
       } catch (e) {
         throw new Error(`Unknown Locale "${this.options.localeCode}"`);
       }
@@ -63,7 +66,7 @@ export class ToWords {
       isFloat = false;
     }
 
-    const isNegativeNumber = (number < 0);
+    const isNegativeNumber = number < 0;
     if (isNegativeNumber) {
       number = Math.abs(number);
     }
@@ -73,8 +76,10 @@ export class ToWords {
       // Extra check for isFloat to overcome 1.999 rounding off to 2
       isFloat = this.isFloat(number);
       const isNumberZero = number >= 0 && number < 1;
-      const split = (number.toString()).split('.');
-      let words = `${this.convertInternal(Number(split[0]), options)} ${locale.currency.plural}`;
+      const split = number.toString().split('.');
+      let words = `${this.convertInternal(Number(split[0]), options)} ${
+        locale.currency.plural
+      }`;
 
       if (isNumberZero && options.ignoreZeroCurrency) {
         words = '';
@@ -85,12 +90,20 @@ export class ToWords {
         if (!isNumberZero || !options.ignoreZeroCurrency) {
           wordsWithDecimal += ` ${locale.texts.and} `;
         }
-        wordsWithDecimal += `${this.convertInternal(Number(split[1]) * Math.pow(10, 2 - split[1].length), options)} ${locale.currency.fractionalUnit.plural}`;
+        wordsWithDecimal += `${this.convertInternal(
+          Number(split[1]) * Math.pow(10, 2 - split[1].length),
+          options,
+        )} ${locale.currency.fractionalUnit.plural}`;
       }
       const isEmpty = words.length <= 0 && wordsWithDecimal.length <= 0;
-      return (!isEmpty && isNegativeNumber ? `${locale.texts.minus} ` : '') + words + wordsWithDecimal + (!isEmpty ? ` ${locale.texts.only}` : '');
+      return (
+        (!isEmpty && isNegativeNumber ? `${locale.texts.minus} ` : '') +
+        words +
+        wordsWithDecimal +
+        (!isEmpty ? ` ${locale.texts.only}` : '')
+      );
     } else {
-      const split = (number.toString()).split('.');
+      const split = number.toString().split('.');
 
       const words = this.convertInternal(Number(split[0]), options);
       let wordsWithDecimal = '';
@@ -108,7 +121,11 @@ export class ToWords {
         }
       }
       const isEmpty = words.length <= 0 && wordsWithDecimal.length <= 0;
-      return (!isEmpty && isNegativeNumber ? `${locale.texts.minus} ` : '') + words + wordsWithDecimal;
+      return (
+        (!isEmpty && isNegativeNumber ? `${locale.texts.minus} ` : '') +
+        words +
+        wordsWithDecimal
+      );
     }
   }
 
@@ -117,6 +134,7 @@ export class ToWords {
     const match = locale.numberWordsMapping.find((elem) => {
       return number >= elem.number;
     });
+
     if (!match) {
       throw new Error(`Invalid Number "${number}"`);
     }
@@ -132,7 +150,9 @@ export class ToWords {
       const quotient = Math.floor(number / match.number);
       const remainder = number % match.number;
       if (remainder > 0) {
-        return `${this.convertInternal(quotient, options)} ${match.value} ${this.convertInternal(remainder, options)}`
+        return `${this.convertInternal(quotient, options)} ${
+          match.value
+        } ${this.convertInternal(remainder, options)}`;
       } else {
         return `${this.convertInternal(quotient, options)} ${match.value}`;
       }
