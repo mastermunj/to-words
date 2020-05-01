@@ -15,13 +15,13 @@ class ToWords {
         }, options);
     }
     getLocaleClass() {
-        return (require(`./locales/${this.options.localeCode}`)).Locale;
+        return require(`./locales/${this.options.localeCode}`).Locale;
     }
     getLocale() {
         if (this.locale === undefined) {
             try {
                 const LocaleClass = this.getLocaleClass();
-                this.locale = new LocaleClass;
+                this.locale = new LocaleClass();
             }
             catch (e) {
                 throw new Error(`Unknown Locale "${this.options.localeCode}"`);
@@ -40,7 +40,7 @@ class ToWords {
             number = Number.parseInt(number.toString());
             isFloat = false;
         }
-        const isNegativeNumber = (number < 0);
+        const isNegativeNumber = number < 0;
         if (isNegativeNumber) {
             number = Math.abs(number);
         }
@@ -49,8 +49,8 @@ class ToWords {
             // Extra check for isFloat to overcome 1.999 rounding off to 2
             isFloat = this.isFloat(number);
             const isNumberZero = number >= 0 && number < 1;
-            const split = (number + '').split('.');
-            let words = this.convertInternal(Number(split[0]), options) + ` ${locale.currency.plural}`;
+            const split = number.toString().split('.');
+            let words = `${this.convertInternal(Number(split[0]), options)} ${locale.currency.plural}`;
             if (isNumberZero && options.ignoreZeroCurrency) {
                 words = '';
             }
@@ -59,13 +59,16 @@ class ToWords {
                 if (!isNumberZero || !options.ignoreZeroCurrency) {
                     wordsWithDecimal += ` ${locale.texts.and} `;
                 }
-                wordsWithDecimal += this.convertInternal(Number(split[1]) * Math.pow(10, 2 - split[1].length), options) + ` ${locale.currency.fractionalUnit.plural}`;
+                wordsWithDecimal += `${this.convertInternal(Number(split[1]) * Math.pow(10, 2 - split[1].length), options)} ${locale.currency.fractionalUnit.plural}`;
             }
             const isEmpty = words.length <= 0 && wordsWithDecimal.length <= 0;
-            return (!isEmpty && isNegativeNumber ? `${locale.texts.minus} ` : '') + words + wordsWithDecimal + (!isEmpty ? ` ${locale.texts.only}` : '');
+            return ((!isEmpty && isNegativeNumber ? `${locale.texts.minus} ` : '') +
+                words +
+                wordsWithDecimal +
+                (!isEmpty ? ` ${locale.texts.only}` : ''));
         }
         else {
-            const split = (number + '').split('.');
+            const split = number.toString().split('.');
             const words = this.convertInternal(Number(split[0]), options);
             let wordsWithDecimal = '';
             if (isFloat) {
@@ -82,7 +85,9 @@ class ToWords {
                 }
             }
             const isEmpty = words.length <= 0 && wordsWithDecimal.length <= 0;
-            return (!isEmpty && isNegativeNumber ? `${locale.texts.minus} ` : '') + words + wordsWithDecimal;
+            return ((!isEmpty && isNegativeNumber ? `${locale.texts.minus} ` : '') +
+                words +
+                wordsWithDecimal);
         }
     }
     convertInternal(number, options = {}) {
@@ -98,18 +103,17 @@ class ToWords {
             words += match.value;
             number -= match.number;
             if (number > 0) {
-                words += ' ' + this.convertInternal(number, options);
+                words += ` ${this.convertInternal(number, options)}`;
             }
         }
         else {
             const quotient = Math.floor(number / match.number);
             const remainder = number % match.number;
             if (remainder > 0) {
-                return this.convertInternal(quotient, options) + ' '
-                    + match.value + ' ' + this.convertInternal(remainder, options);
+                return `${this.convertInternal(quotient, options)} ${match.value} ${this.convertInternal(remainder, options)}`;
             }
             else {
-                return this.convertInternal(quotient, options) + ' ' + match.value;
+                return `${this.convertInternal(quotient, options)} ${match.value}`;
             }
         }
         return words;
