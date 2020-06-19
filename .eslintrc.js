@@ -5,10 +5,7 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module',
   },
-  plugins: [
-    '@typescript-eslint',
-    'jest',
-  ],
+  plugins: ['@typescript-eslint', 'jest'],
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/eslint-recommended',
@@ -24,5 +21,5 @@ module.exports = {
     node: true,
     commonjs: true,
     browser: false,
-  }
+  },
 };
