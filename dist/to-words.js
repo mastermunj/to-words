@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ToWords = void 0;
 const DefaultConverterOptions = {
     currency: false,
     ignoreDecimal: false,
@@ -15,6 +16,7 @@ class ToWords {
         }, options);
     }
     getLocaleClass() {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         return require(`./locales/${this.options.localeCode}`).Locale;
     }
     getLocale() {

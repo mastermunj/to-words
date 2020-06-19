@@ -36,6 +36,7 @@ export class ToWords {
   }
 
   private getLocaleClass(): ConstructorOf<LocaleInterface> {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     return require(`./locales/${this.options.localeCode}`).Locale;
   }
 
