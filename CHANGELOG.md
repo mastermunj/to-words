@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/mastermunj/to-words/compare/v2.1.1...v2.2.0) (2020-06-20)
+
+
+### Features
+
+* add Mauritius English locale ([cead7b4](https://github.com/mastermunj/to-words/commit/cead7b42b106c06404f8c7ef21f28262f353aa66))
+
 ### [2.1.1](https://github.com/mastermunj/to-words/compare/v2.1.0...v2.1.1) (2020-05-01)
 
 
