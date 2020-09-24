@@ -36,18 +36,23 @@ export class ToWords {
   }
 
   private getLocaleClass(): ConstructorOf<LocaleInterface> {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    return require(`./locales/${this.options.localeCode}`).Locale;
+    /* eslint-disable @typescript-eslint/no-var-requires */
+    switch (this.options.localeCode) {
+      case 'en-IN':
+        return require('./locales/en-IN').Locale;
+      case 'en-MU':
+        return require('./locales/en-MU').Locale;
+      case 'en-US':
+        return require('./locales/en-US').Locale;
+    }
+    /* eslint-enable @typescript-eslint/no-var-requires */
+    throw new Error(`Unknown Locale "${this.options.localeCode}"`);
   }
 
   getLocale(): LocaleInterface {
     if (this.locale === undefined) {
-      try {
-        const LocaleClass = this.getLocaleClass();
-        this.locale = new LocaleClass();
-      } catch (e) {
-        throw new Error(`Unknown Locale "${this.options.localeCode}"`);
-      }
+      const LocaleClass = this.getLocaleClass();
+      this.locale = new LocaleClass();
     }
     return this.locale as LocaleInterface;
   }
