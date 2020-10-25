@@ -10,6 +10,10 @@ export interface LocaleInterface {
     };
   };
 
+  splitters?: {
+    splitWord?: string;
+  };
+
   texts: {
     and: string;
     minus: string;

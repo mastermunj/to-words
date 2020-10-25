@@ -44,6 +44,8 @@ export class ToWords {
         return require('./locales/en-MU').Locale;
       case 'en-US':
         return require('./locales/en-US').Locale;
+      case 'fa':
+        return require('./locales/fa').Locale;
     }
     /* eslint-enable @typescript-eslint/no-var-requires */
     throw new Error(`Unknown Locale "${this.options.localeCode}"`);
@@ -83,9 +85,7 @@ export class ToWords {
       isFloat = this.isFloat(number);
       const isNumberZero = number >= 0 && number < 1;
       const split = number.toString().split('.');
-      let words = `${this.convertInternal(Number(split[0]), options)} ${
-        locale.currency.plural
-      }`;
+      let words = `${this.convertInternal(Number(split[0]), options)} ${locale.currency.plural}`;
 
       if (isNumberZero && options.ignoreZeroCurrency) {
         words = '';
@@ -96,10 +96,9 @@ export class ToWords {
         if (!isNumberZero || !options.ignoreZeroCurrency) {
           wordsWithDecimal += ` ${locale.texts.and} `;
         }
-        wordsWithDecimal += `${this.convertInternal(
-          Number(split[1]) * Math.pow(10, 2 - split[1].length),
-          options,
-        )} ${locale.currency.fractionalUnit.plural}`;
+        wordsWithDecimal += `${this.convertInternal(Number(split[1]) * Math.pow(10, 2 - split[1].length), options)} ${
+          locale.currency.fractionalUnit.plural
+        }`;
       }
       const isEmpty = words.length <= 0 && wordsWithDecimal.length <= 0;
       return (
@@ -127,16 +126,13 @@ export class ToWords {
         }
       }
       const isEmpty = words.length <= 0 && wordsWithDecimal.length <= 0;
-      return (
-        (!isEmpty && isNegativeNumber ? `${locale.texts.minus} ` : '') +
-        words +
-        wordsWithDecimal
-      );
+      return (!isEmpty && isNegativeNumber ? `${locale.texts.minus} ` : '') + words + wordsWithDecimal;
     }
   }
 
   private convertInternal(number: number, options = {}): string {
     const locale = this.getLocale();
+    const splitWord = locale.splitters?.splitWord ? `${locale.splitters?.splitWord} ` : '';
     const match = locale.numberWordsMapping.find((elem) => {
       return number >= elem.number;
     });
@@ -150,15 +146,13 @@ export class ToWords {
       words += match.value;
       number -= match.number;
       if (number > 0) {
-        words += ` ${this.convertInternal(number, options)}`;
+        words += ` ${splitWord}${this.convertInternal(number, options)}`;
       }
     } else {
       const quotient = Math.floor(number / match.number);
       const remainder = number % match.number;
       if (remainder > 0) {
-        return `${this.convertInternal(quotient, options)} ${
-          match.value
-        } ${this.convertInternal(remainder, options)}`;
+        return `${this.convertInternal(quotient, options)} ${match.value} ${splitWord}${this.convertInternal(remainder, options)}`;
       } else {
         return `${this.convertInternal(quotient, options)} ${match.value}`;
       }
