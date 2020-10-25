@@ -108,8 +108,10 @@ web_modules/
 .vscode-test
 
 # yarn v2
-
-.yarn/cache
-.yarn/unplugged
-.yarn/build-state.yml
+yarn.lock
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
 .pnp.*
