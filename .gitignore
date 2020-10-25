@@ -108,7 +108,6 @@ web_modules/
 .vscode-test
 
 # yarn v2
-yarn.lock
 .yarn/*
 !.yarn/releases
 !.yarn/plugins
