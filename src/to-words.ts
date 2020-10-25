@@ -44,6 +44,8 @@ export class ToWords {
         return require('./locales/en-MU').Locale;
       case 'en-US':
         return require('./locales/en-US').Locale;
+      case 'fa':
+        return require('./locales/fa').Locale;
     }
     /* eslint-enable @typescript-eslint/no-var-requires */
     throw new Error(`Unknown Locale "${this.options.localeCode}"`);
@@ -137,6 +139,9 @@ export class ToWords {
 
   private convertInternal(number: number, options = {}): string {
     const locale = this.getLocale();
+    const splitWord = locale.splitters?.splitWord
+      ? `${locale.splitters?.splitWord} `
+      : '';
     const match = locale.numberWordsMapping.find((elem) => {
       return number >= elem.number;
     });
@@ -150,7 +155,7 @@ export class ToWords {
       words += match.value;
       number -= match.number;
       if (number > 0) {
-        words += ` ${this.convertInternal(number, options)}`;
+        words += ` ${splitWord}${this.convertInternal(number, options)}`;
       }
     } else {
       const quotient = Math.floor(number / match.number);
@@ -158,7 +163,7 @@ export class ToWords {
       if (remainder > 0) {
         return `${this.convertInternal(quotient, options)} ${
           match.value
-        } ${this.convertInternal(remainder, options)}`;
+        } ${splitWord}${this.convertInternal(remainder, options)}`;
       } else {
         return `${this.convertInternal(quotient, options)} ${match.value}`;
       }
