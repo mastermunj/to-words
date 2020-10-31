@@ -3,11 +3,11 @@ import { LocaleInterface } from './locale.interface';
 export class Locale implements LocaleInterface {
   public currency = {
     name: 'تومان',
-    plural: 'تومان',
+    plural: '',
     symbol: 'تومان',
     fractionalUnit: {
       name: '',
-      plural: '',
+      plural: 'تومان',
       symbol: '',
     },
   };
@@ -19,8 +19,22 @@ export class Locale implements LocaleInterface {
     point: 'و',
   };
 
-  public splitters = {
+  public options = {
+    namedLessThan1000: true,
     splitWord: 'و',
+    ignoreZeroInDecimals: true,
+  };
+
+  public decimalLengthWordMapping = {
+    1: 'دهم',
+    2: 'صدم',
+    3: 'هزارم',
+    4: 'ده‌هزارم',
+    5: 'صد‌هزارم',
+    6: 'میلیونیوم',
+    7: 'ده‌میلیونیوم',
+    8: 'صد‌میلیونیوم',
+    9: 'میلیاردیوم',
   };
 
   public numberWordsMapping = [
@@ -29,6 +43,14 @@ export class Locale implements LocaleInterface {
     { number: 1000000000, value: 'میلیارد' },
     { number: 1000000, value: 'میلیون' },
     { number: 1000, value: 'هزار' },
+    { number: 900, value: 'نهصد' },
+    { number: 800, value: 'هشتصد' },
+    { number: 700, value: 'هفتصد' },
+    { number: 600, value: 'ششصد' },
+    { number: 500, value: 'پانصد' },
+    { number: 400, value: 'چهارصد' },
+    { number: 300, value: 'سیصد' },
+    { number: 200, value: 'دویست' },
     { number: 100, value: 'صد' },
     { number: 90, value: 'نود' },
     { number: 80, value: 'هشتاد' },
