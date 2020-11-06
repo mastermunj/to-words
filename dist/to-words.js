@@ -24,8 +24,8 @@ class ToWords {
                 return require('./locales/en-MU').Locale;
             case 'en-US':
                 return require('./locales/en-US').Locale;
-            case 'fa':
-                return require('./locales/fa').Locale;
+            case 'fa-IR':
+                return require('./locales/fa-IR').Locale;
         }
         /* eslint-enable @typescript-eslint/no-var-requires */
         throw new Error(`Unknown Locale "${this.options.localeCode}"`);
@@ -38,6 +38,7 @@ class ToWords {
         return this.locale;
     }
     convert(number, options = {}) {
+        var _a, _b, _c, _d;
         options = Object.assign({}, this.options.converterOptions, options);
         if (!this.isValidNumber(number)) {
             throw new Error(`Invalid Number "${number}"`);
@@ -56,32 +57,47 @@ class ToWords {
             number = this.toFixed(number);
             // Extra check for isFloat to overcome 1.999 rounding off to 2
             isFloat = this.isFloat(number);
-            const isNumberZero = number >= 0 && number < 1;
             const split = number.toString().split('.');
-            let words = `${this.convertInternal(Number(split[0]), options)} ${locale.currency.plural}`;
-            if (isNumberZero && options.ignoreZeroCurrency) {
+            let words = `${this.convertInternal(Number(split[0]), options)}${locale.currency.plural ? ` ${locale.currency.plural}` : ''}`;
+            const isNumberZero = number >= 0 && number < 1;
+            const ignoreZero = options.ignoreZeroCurrency ||
+                (((_a = locale.options) === null || _a === void 0 ? void 0 : _a.ignoreZeroInDecimals) && number !== 0);
+            if (isNumberZero && ignoreZero) {
                 words = '';
             }
             let wordsWithDecimal = '';
             if (isFloat) {
-                if (!isNumberZero || !options.ignoreZeroCurrency) {
+                if (!isNumberZero || !ignoreZero) {
                     wordsWithDecimal += ` ${locale.texts.and} `;
                 }
-                wordsWithDecimal += `${this.convertInternal(Number(split[1]) * Math.pow(10, 2 - split[1].length), options)} ${locale.currency.fractionalUnit.plural}`;
+                const decimalLengthWord = (_b = locale === null || locale === void 0 ? void 0 : locale.decimalLengthWordMapping) === null || _b === void 0 ? void 0 : _b[split[1].length];
+                wordsWithDecimal += `${this.convertInternal(Number(split[1]) *
+                    (!locale.decimalLengthWordMapping
+                        ? Math.pow(10, 2 - split[1].length)
+                        : 1), options)}${decimalLengthWord ? ` ${decimalLengthWord}` : ''} ${locale.currency.fractionalUnit.plural}`;
+            }
+            else if (locale.decimalLengthWordMapping && words !== '') {
+                words += ` ${locale.currency.fractionalUnit.plural}`;
             }
             const isEmpty = words.length <= 0 && wordsWithDecimal.length <= 0;
             return ((!isEmpty && isNegativeNumber ? `${locale.texts.minus} ` : '') +
                 words +
                 wordsWithDecimal +
-                (!isEmpty ? ` ${locale.texts.only}` : ''));
+                (!isEmpty && locale.texts.only ? ` ${locale.texts.only}` : ''));
         }
         else {
+            const isNumberZero = number >= 0 && number < 1;
             const split = number.toString().split('.');
-            const words = this.convertInternal(Number(split[0]), options);
+            const ignoreZero = isNumberZero && ((_c = locale.options) === null || _c === void 0 ? void 0 : _c.ignoreZeroInDecimals);
+            const words = isFloat && ignoreZero
+                ? ''
+                : this.convertInternal(Number(split[0]), options);
             let wordsWithDecimal = '';
             if (isFloat) {
-                wordsWithDecimal += ` ${locale.texts.point} `;
-                if (split[1].startsWith('0')) {
+                const decimalLengthWord = (_d = locale === null || locale === void 0 ? void 0 : locale.decimalLengthWordMapping) === null || _d === void 0 ? void 0 : _d[split[1].length];
+                if (!ignoreZero)
+                    wordsWithDecimal += ` ${locale.texts.point} `;
+                if (split[1].startsWith('0') && !locale.decimalLengthWordMapping) {
                     const zeroWords = [];
                     for (const num of split[1]) {
                         zeroWords.push(this.convertInternal(Number(num)));
@@ -89,7 +105,7 @@ class ToWords {
                     wordsWithDecimal += zeroWords.join(' ');
                 }
                 else {
-                    wordsWithDecimal += this.convertInternal(Number(split[1]), options);
+                    wordsWithDecimal += `${this.convertInternal(Number(split[1]), options)}${decimalLengthWord ? ` ${decimalLengthWord}` : ''}`;
                 }
             }
             const isEmpty = words.length <= 0 && wordsWithDecimal.length <= 0;
@@ -99,9 +115,9 @@ class ToWords {
         }
     }
     convertInternal(number, options = {}) {
-        var _a, _b;
+        var _a, _b, _c;
         const locale = this.getLocale();
-        const splitWord = ((_a = locale.splitters) === null || _a === void 0 ? void 0 : _a.splitWord) ? `${(_b = locale.splitters) === null || _b === void 0 ? void 0 : _b.splitWord} `
+        const splitWord = ((_a = locale.options) === null || _a === void 0 ? void 0 : _a.splitWord) ? `${(_b = locale.options) === null || _b === void 0 ? void 0 : _b.splitWord} `
             : '';
         const match = locale.numberWordsMapping.find((elem) => {
             return number >= elem.number;
@@ -110,7 +126,7 @@ class ToWords {
             throw new Error(`Invalid Number "${number}"`);
         }
         let words = '';
-        if (number <= 100) {
+        if (number <= 100 || (number < 1000 && ((_c = locale.options) === null || _c === void 0 ? void 0 : _c.namedLessThan1000))) {
             words += match.value;
             number -= match.number;
             if (number > 0) {
