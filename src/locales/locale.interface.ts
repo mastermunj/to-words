@@ -10,6 +10,12 @@ export interface LocaleInterface {
     };
   };
 
+  options?: {
+    namedLessThan1000?: boolean;
+    splitWord?: string;
+    ignoreZeroInDecimals?: boolean;
+  };
+
   texts: {
     and: string;
     minus: string;
@@ -21,4 +27,8 @@ export interface LocaleInterface {
     number: number;
     value: string;
   }[];
+
+  decimalLengthWordMapping?: {
+    [decimalLength: number]: string;
+  };
 }
