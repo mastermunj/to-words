@@ -84,7 +84,7 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 ## Options
 | Option  | Type | Default | Description |
 | ------------- | ------------- | ------------- | ------------- |
-| localeCode | string | 'en-IN' | Locale code for selecting i18n.<br/>Currently only `en-IN` & `en-US` are supported.<br/>Please open issue / PR if more needed. |
+| localeCode | string | 'en-IN' | Locale code for selecting i18n.<br/>Supported Locale: `en-IN`, `en-MU`, `en-US` and `fa-IR`.<br/>Please open PR if more needed. |
 | currency | boolean | false | Whether the number to be converted into words written as currency.<br/>*Note: When currency:true, number will be rounded off to two decimals before converting to words* |
 | ignoreDecimal | boolean | false | Whether to ignore fractional unit of number while converting into words. |
 | ignoreZeroCurrency | boolean | false | Whether to ignore zero currency value while converting into words. |
