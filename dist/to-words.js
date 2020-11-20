@@ -20,6 +20,8 @@ class ToWords {
         switch (this.options.localeCode) {
             case 'en-IN':
                 return require('./locales/en-IN').Locale;
+            case 'en-MM':
+                return require('./locales/en-MM').Locale;
             case 'en-MU':
                 return require('./locales/en-MU').Locale;
             case 'en-US':
