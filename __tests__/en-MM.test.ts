@@ -11,35 +11,35 @@ const testIntegers = [
   [700, 'Seven Hundred'],
   [4680, 'Four Thousand Six Hundred Eighty'],
   [63892, 'Sixty Three Thousand Eight Hundred Ninety Two'],
-  [792581, 'Seven Lakh Ninety Two Thousand Five Hundred Eighty One'],
-  [2741034, 'Twenty Seven Lakh Forty One Thousand Thirty Four'],
+  [792581, 'Seven Hundred Ninety Two Thousand Five Hundred Eighty One'],
+  [2741034, 'Two Million Seven Hundred Forty One Thousand Thirty Four'],
   [
     86429753,
-    'Eight Crore Sixty Four Lakh Twenty Nine Thousand Seven Hundred Fifty Three',
+    'Eighty Six Million Four Hundred Twenty Nine Thousand Seven Hundred Fifty Three',
   ],
   [
     975310864,
-    'Ninety Seven Crore Fifty Three Lakh Ten Thousand Eight Hundred Sixty Four',
+    'Nine Hundred Seventy Five Million Three Hundred Ten Thousand Eight Hundred Sixty Four',
   ],
   [
     9876543210,
-    'Nine Hundred Eighty Seven Crore Sixty Five Lakh Forty Three Thousand Two Hundred Ten',
+    'Nine Billion Eight Hundred Seventy Six Million Five Hundred Forty Three Thousand Two Hundred Ten',
   ],
   [
     98765432101,
-    'Nine Thousand Eight Hundred Seventy Six Crore Fifty Four Lakh Thirty Two Thousand One Hundred One',
+    'Ninety Eight Billion Seven Hundred Sixty Five Million Four Hundred Thirty Two Thousand One Hundred One',
   ],
   [
     987654321012,
-    'Ninety Eight Thousand Seven Hundred Sixty Five Crore Forty Three Lakh Twenty One Thousand Twelve',
+    'Nine Hundred Eighty Seven Billion Six Hundred Fifty Four Million Three Hundred Twenty One Thousand Twelve',
   ],
   [
     9876543210123,
-    'Nine Lakh Eighty Seven Thousand Six Hundred Fifty Four Crore Thirty Two Lakh Ten Thousand One Hundred Twenty Three',
+    'Nine Trillion Eight Hundred Seventy Six Billion Five Hundred Forty Three Million Two Hundred Ten Thousand One Hundred Twenty Three',
   ],
   [
     98765432101234,
-    'Ninety Eight Lakh Seventy Six Thousand Five Hundred Forty Three Crore Twenty One Lakh One Thousand Two Hundred Thirty Four',
+    'Ninety Eight Trillion Seven Hundred Sixty Five Billion Four Hundred Thirty Two Million One Hundred One Thousand Two Hundred Thirty Four',
   ],
 ];
 

@@ -20,8 +20,10 @@ class Locale {
             point: 'Point',
         };
         this.numberWordsMapping = [
-            { number: 10000000, value: 'Crore' },
-            { number: 100000, value: 'Lakh' },
+            { number: 1000000000000000, value: 'Quadrillion' },
+            { number: 1000000000000, value: 'Trillion' },
+            { number: 1000000000, value: 'Billion' },
+            { number: 1000000, value: 'Million' },
             { number: 1000, value: 'Thousand' },
             { number: 100, value: 'Hundred' },
             { number: 90, value: 'Ninety' },
