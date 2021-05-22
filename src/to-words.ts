@@ -47,7 +47,7 @@ export class ToWords {
       case 'en-US':
         return require('./locales/en-US').Locale;
       case 'en-NG':
-        return require('./locales/en-NG').Locale;  
+        return require('./locales/en-NG').Locale;
       case 'fa-IR':
         return require('./locales/fa-IR').Locale;
     }
