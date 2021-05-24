@@ -90,11 +90,13 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | ignoreZeroCurrency | boolean | false | Whether to ignore zero currency value while converting into words. |
 
 ## Supported Locale
-* en-IN (default)
-* en-MM
-* en-MU
-* en-US
-* fa-IR
+| Country  | Language | Locale |
+| ------------- | ------------- | ------------- |
+| India | English | en-IN (default) |
+| Myanmar | English | en-MM |
+| Mauritius | English | en-MU |
+| USA | English | en-US |
+| Iran | Persian | fa-IR |
 
 ## Inspiration for core logic
 [https://stackoverflow.com/a/46221860](https://stackoverflow.com/a/46221860)
