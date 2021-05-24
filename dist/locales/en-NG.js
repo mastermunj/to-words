@@ -9,7 +9,7 @@ class Locale {
             symbol: '₦',
             fractionalUnit: {
                 name: 'Kobo',
-                plural: 'Kobos',
+                plural: 'Kobo',
                 symbol: '',
             },
         };
