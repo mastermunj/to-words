@@ -13,18 +13,9 @@ const testIntegers = [
   [63892, 'Sixty Three Thousand Eight Hundred Ninety Two'],
   [792581, 'Seven Hundred Ninety Two Thousand Five Hundred Eighty One'],
   [2741034, 'Two Million Seven Hundred Forty One Thousand Thirty Four'],
-  [
-    86429753,
-    'Eighty Six Million Four Hundred Twenty Nine Thousand Seven Hundred Fifty Three',
-  ],
-  [
-    975310864,
-    'Nine Hundred Seventy Five Million Three Hundred Ten Thousand Eight Hundred Sixty Four',
-  ],
-  [
-    9876543210,
-    'Nine Billion Eight Hundred Seventy Six Million Five Hundred Forty Three Thousand Two Hundred Ten',
-  ],
+  [86429753, 'Eighty Six Million Four Hundred Twenty Nine Thousand Seven Hundred Fifty Three'],
+  [975310864, 'Nine Hundred Seventy Five Million Three Hundred Ten Thousand Eight Hundred Sixty Four'],
+  [9876543210, 'Nine Billion Eight Hundred Seventy Six Million Five Hundred Forty Three Thousand Two Hundred Ten'],
   [
     98765432101,
     'Ninety Eight Billion Seven Hundred Sixty Five Million Four Hundred Thirty Two Thousand One Hundred One',
@@ -75,23 +66,18 @@ describe('Test Integers with options = { currency: true }', () => {
   });
 });
 
-const testIntegersWithCurrencyAndIgnoreZeroCurrency = cloneDeep(
-  testIntegersWithCurrency,
-);
+const testIntegersWithCurrencyAndIgnoreZeroCurrency = cloneDeep(testIntegersWithCurrency);
 testIntegersWithCurrencyAndIgnoreZeroCurrency[0][1] = '';
 
 describe('Test Integers with options = { currency: true, ignoreZeroCurrency: true }', () => {
-  test.each(testIntegersWithCurrencyAndIgnoreZeroCurrency)(
-    'convert %d => %s',
-    (input, expected) => {
-      expect(
-        toWords.convert(input as number, {
-          currency: true,
-          ignoreZeroCurrency: true,
-        }),
-      ).toBe(expected);
-    },
-  );
+  test.each(testIntegersWithCurrencyAndIgnoreZeroCurrency)('convert %d => %s', (input, expected) => {
+    expect(
+      toWords.convert(input as number, {
+        currency: true,
+        ignoreZeroCurrency: true,
+      }),
+    ).toBe(expected);
+  });
 });
 
 const testFloats = [
@@ -134,9 +120,7 @@ describe('Test Floats with options = { currency: true }', () => {
   });
 });
 
-const testFloatsWithCurrencyAndIgnoreZeroCurrency = cloneDeep(
-  testFloatsWithCurrency,
-);
+const testFloatsWithCurrencyAndIgnoreZeroCurrency = cloneDeep(testFloatsWithCurrency);
 testFloatsWithCurrencyAndIgnoreZeroCurrency[0][1] = '';
 testFloatsWithCurrencyAndIgnoreZeroCurrency.map((row, i) => {
   if (i === 0) {
@@ -149,22 +133,17 @@ testFloatsWithCurrencyAndIgnoreZeroCurrency.map((row, i) => {
 });
 
 describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true }', () => {
-  test.each(testFloatsWithCurrencyAndIgnoreZeroCurrency)(
-    'convert %d => %s',
-    (input, expected) => {
-      expect(
-        toWords.convert(input as number, {
-          currency: true,
-          ignoreZeroCurrency: true,
-        }),
-      ).toBe(expected);
-    },
-  );
+  test.each(testFloatsWithCurrencyAndIgnoreZeroCurrency)('convert %d => %s', (input, expected) => {
+    expect(
+      toWords.convert(input as number, {
+        currency: true,
+        ignoreZeroCurrency: true,
+      }),
+    ).toBe(expected);
+  });
 });
 
-const testFloatsWithCurrencyAndIgnoreDecimal = cloneDeep(
-  testFloatsWithCurrency,
-);
+const testFloatsWithCurrencyAndIgnoreDecimal = cloneDeep(testFloatsWithCurrency);
 testFloatsWithCurrencyAndIgnoreDecimal.map((row) => {
   if (row[0] === 0.999) {
     row[1] = `Zero Dollars Only`;
@@ -174,22 +153,17 @@ testFloatsWithCurrencyAndIgnoreDecimal.map((row) => {
 });
 
 describe('Test Floats with options = { currency: true, ignoreDecimal: true }', () => {
-  test.each(testFloatsWithCurrencyAndIgnoreDecimal)(
-    'convert %d => %s',
-    (input, expected) => {
-      expect(
-        toWords.convert(input as number, {
-          currency: true,
-          ignoreDecimal: true,
-        }),
-      ).toBe(expected);
-    },
-  );
+  test.each(testFloatsWithCurrencyAndIgnoreDecimal)('convert %d => %s', (input, expected) => {
+    expect(
+      toWords.convert(input as number, {
+        currency: true,
+        ignoreDecimal: true,
+      }),
+    ).toBe(expected);
+  });
 });
 
-const testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals = cloneDeep(
-  testFloatsWithCurrency,
-);
+const testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals = cloneDeep(testFloatsWithCurrency);
 testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals[0][1] = '';
 testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals.map((row) => {
   if (row[0] > 0 && row[0] < 1) {
@@ -199,16 +173,13 @@ testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals.map((row) => {
 });
 
 describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true, ignoreDecimal: true }', () => {
-  test.each(testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals)(
-    'convert %d => %s',
-    (input, expected) => {
-      expect(
-        toWords.convert(input as number, {
-          currency: true,
-          ignoreZeroCurrency: true,
-          ignoreDecimal: true,
-        }),
-      ).toBe(expected);
-    },
-  );
+  test.each(testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals)('convert %d => %s', (input, expected) => {
+    expect(
+      toWords.convert(input as number, {
+        currency: true,
+        ignoreZeroCurrency: true,
+        ignoreDecimal: true,
+      }),
+    ).toBe(expected);
+  });
 });

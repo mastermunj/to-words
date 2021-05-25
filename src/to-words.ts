@@ -92,9 +92,7 @@ export class ToWords {
         locale.currency.plural ? ` ${locale.currency.plural}` : ''
       }`;
       const isNumberZero = number >= 0 && number < 1;
-      const ignoreZero =
-        options.ignoreZeroCurrency ||
-        (locale.options?.ignoreZeroInDecimals && number !== 0);
+      const ignoreZero = options.ignoreZeroCurrency || (locale.options?.ignoreZeroInDecimals && number !== 0);
 
       if (isNumberZero && ignoreZero) {
         words = '';
@@ -104,17 +102,11 @@ export class ToWords {
         if (!isNumberZero || !ignoreZero) {
           wordsWithDecimal += ` ${locale.texts.and} `;
         }
-        const decimalLengthWord =
-          locale?.decimalLengthWordMapping?.[split[1].length];
+        const decimalLengthWord = locale?.decimalLengthWordMapping?.[split[1].length];
         wordsWithDecimal += `${this.convertInternal(
-          Number(split[1]) *
-            (!locale.decimalLengthWordMapping
-              ? Math.pow(10, 2 - split[1].length)
-              : 1),
+          Number(split[1]) * (!locale.decimalLengthWordMapping ? Math.pow(10, 2 - split[1].length) : 1),
           options,
-        )}${decimalLengthWord ? ` ${decimalLengthWord}` : ''} ${
-          locale.currency.fractionalUnit.plural
-        }`;
+        )}${decimalLengthWord ? ` ${decimalLengthWord}` : ''} ${locale.currency.fractionalUnit.plural}`;
       } else if (locale.decimalLengthWordMapping && words !== '') {
         words += ` ${locale.currency.fractionalUnit.plural}`;
       }
@@ -129,15 +121,11 @@ export class ToWords {
       const isNumberZero = number >= 0 && number < 1;
       const split = number.toString().split('.');
       const ignoreZero = isNumberZero && locale.options?.ignoreZeroInDecimals;
-      const words =
-        isFloat && ignoreZero
-          ? ''
-          : this.convertInternal(Number(split[0]), options);
+      const words = isFloat && ignoreZero ? '' : this.convertInternal(Number(split[0]), options);
       let wordsWithDecimal = '';
 
       if (isFloat) {
-        const decimalLengthWord =
-          locale?.decimalLengthWordMapping?.[split[1].length];
+        const decimalLengthWord = locale?.decimalLengthWordMapping?.[split[1].length];
         if (!ignoreZero) wordsWithDecimal += ` ${locale.texts.point} `;
         if (split[1].startsWith('0') && !locale.decimalLengthWordMapping) {
           const zeroWords = [];
@@ -146,26 +134,19 @@ export class ToWords {
           }
           wordsWithDecimal += zeroWords.join(' ');
         } else {
-          wordsWithDecimal += `${this.convertInternal(
-            Number(split[1]),
-            options,
-          )}${decimalLengthWord ? ` ${decimalLengthWord}` : ''}`;
+          wordsWithDecimal += `${this.convertInternal(Number(split[1]), options)}${
+            decimalLengthWord ? ` ${decimalLengthWord}` : ''
+          }`;
         }
       }
       const isEmpty = words.length <= 0 && wordsWithDecimal.length <= 0;
-      return (
-        (!isEmpty && isNegativeNumber ? `${locale.texts.minus} ` : '') +
-        words +
-        wordsWithDecimal
-      );
+      return (!isEmpty && isNegativeNumber ? `${locale.texts.minus} ` : '') + words + wordsWithDecimal;
     }
   }
 
   private convertInternal(number: number, options = {}): string {
     const locale = this.getLocale();
-    const splitWord = locale.options?.splitWord
-      ? `${locale.options?.splitWord} `
-      : '';
+    const splitWord = locale.options?.splitWord ? `${locale.options?.splitWord} ` : '';
     const match = locale.numberWordsMapping.find((elem) => {
       return number >= elem.number;
     });
@@ -185,9 +166,10 @@ export class ToWords {
       const quotient = Math.floor(number / match.number);
       const remainder = number % match.number;
       if (remainder > 0) {
-        return `${this.convertInternal(quotient, options)} ${
-          match.value
-        } ${splitWord}${this.convertInternal(remainder, options)}`;
+        return `${this.convertInternal(quotient, options)} ${match.value} ${splitWord}${this.convertInternal(
+          remainder,
+          options,
+        )}`;
       } else {
         return `${this.convertInternal(quotient, options)} ${match.value}`;
       }
