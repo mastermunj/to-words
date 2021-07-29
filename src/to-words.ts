@@ -3,13 +3,19 @@ import { LocaleInterface } from './locales/locale.interface';
 type ConverterOptions = {
   currency?: boolean;
   ignoreDecimal?: boolean;
+  ignoreOneForWords?: string[];
   ignoreZeroCurrency?: boolean;
+  pluralMark?: string;
+  pluralWords?: string[];
 };
 
 const DefaultConverterOptions: ConverterOptions = {
   currency: false,
   ignoreDecimal: false,
+  ignoreOneForWords: [],
   ignoreZeroCurrency: false,
+  pluralMark: '',
+  pluralWords: [],
 };
 
 type ToWordsOptions = {
@@ -50,6 +56,8 @@ export class ToWords {
         return require('./locales/en-NG').Locale;
       case 'fa-IR':
         return require('./locales/fa-IR').Locale;
+      case 'fr-FR':
+        return require('./locales/fr-FR').Locale;
     }
     /* eslint-enable @typescript-eslint/no-var-requires */
     throw new Error(`Unknown Locale "${this.options.localeCode}"`);
@@ -147,6 +155,7 @@ export class ToWords {
   private convertInternal(number: number, options = {}): string {
     const locale = this.getLocale();
     const splitWord = locale.options?.splitWord ? `${locale.options?.splitWord} ` : '';
+    const pluralMark = locale.options?.pluralMark ? `${locale.options?.pluralMark}` : '';
     const match = locale.numberWordsMapping.find((elem) => {
       return number >= elem.number;
     });
@@ -165,13 +174,25 @@ export class ToWords {
     } else {
       const quotient = Math.floor(number / match.number);
       const remainder = number % match.number;
+      const matchValue =
+        quotient > 1 && locale.options?.pluralWords?.find((word) => word === match.value)
+          ? match.value + pluralMark
+          : match.value;
       if (remainder > 0) {
-        return `${this.convertInternal(quotient, options)} ${match.value} ${splitWord}${this.convertInternal(
-          remainder,
-          options,
-        )}`;
+        if (quotient == 1 && locale.options?.ignoreOneForWords) {
+          return `${matchValue} ${splitWord}${this.convertInternal(remainder, options)}`;
+        } else {
+          return `${this.convertInternal(quotient, options)} ${matchValue} ${splitWord}${this.convertInternal(
+            remainder,
+            options,
+          )}`;
+        }
       } else {
-        return `${this.convertInternal(quotient, options)} ${match.value}`;
+        if (quotient == 1 && locale.options?.ignoreOneForWords) {
+          return `${matchValue}`;
+        } else {
+          return `${this.convertInternal(quotient, options)} ${matchValue}`;
+        }
       }
     }
     return words;

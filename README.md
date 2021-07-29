@@ -87,7 +87,10 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | localeCode | string | 'en-IN' | Locale code for selecting i18n. |
 | currency | boolean | false | Whether the number to be converted into words written as currency.<br/>*Note: When currency:true, number will be rounded off to two decimals before converting to words* |
 | ignoreDecimal | boolean | false | Whether to ignore fractional unit of number while converting into words. |
+| ignoreOneForWords | string[] | [] | For those words, if they follows 'One' (or equivalent for non-english languages), 'One' will be ignored.<br/>*Example: with ignoreOneForWords: ['Hundred'], 'One Hundred' will be only 'Hundred'* |
 | ignoreZeroCurrency | boolean | false | Whether to ignore zero currency value while converting into words. |
+| pluralMark | string | '' | Plural mark for languages that need it for numbers |
+| pluralWords | string[] | [] | For those words, if they follow not 'One' (or equivalent for non-english languages), pluralMark will be concatened at the end of those words.<br/>*Example: with pluralMark: 's' and pluralWords: ['Hundred'], 'Two Hundred' will be 'Two Hundreds'* |
 
 ## Supported Locale
 | Country  | Language | Locale |
@@ -97,6 +100,7 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | Mauritius | English | en-MU |
 | USA | English | en-US |
 | Iran | Persian | fa-IR |
+| France | French | fr-FR |
 
 ## Inspiration for core logic
 [https://stackoverflow.com/a/46221860](https://stackoverflow.com/a/46221860)

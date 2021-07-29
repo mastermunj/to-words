@@ -14,6 +14,9 @@ export interface LocaleInterface {
     namedLessThan1000?: boolean;
     splitWord?: string;
     ignoreZeroInDecimals?: boolean;
+    pluralMark?: string;
+    pluralWords?: string[];
+    ignoreOneForWords?: string[];
   };
 
   texts: {
