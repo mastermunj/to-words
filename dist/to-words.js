@@ -30,6 +30,8 @@ class ToWords {
                 return require('./locales/en-NG').Locale;
             case 'fa-IR':
                 return require('./locales/fa-IR').Locale;
+            case 'fr-FR':
+                return require('./locales/fr-FR').Locale;
         }
         /* eslint-enable @typescript-eslint/no-var-requires */
         throw new Error(`Unknown Locale "${this.options.localeCode}"`);
@@ -111,9 +113,10 @@ class ToWords {
         }
     }
     convertInternal(number, options = {}) {
-        var _a, _b, _c;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j;
         const locale = this.getLocale();
         const splitWord = ((_a = locale.options) === null || _a === void 0 ? void 0 : _a.splitWord) ? `${(_b = locale.options) === null || _b === void 0 ? void 0 : _b.splitWord} ` : '';
+        const pluralMark = ((_c = locale.options) === null || _c === void 0 ? void 0 : _c.pluralMark) ? `${(_d = locale.options) === null || _d === void 0 ? void 0 : _d.pluralMark}` : '';
         const match = locale.numberWordsMapping.find((elem) => {
             return number >= elem.number;
         });
@@ -121,7 +124,7 @@ class ToWords {
             throw new Error(`Invalid Number "${number}"`);
         }
         let words = '';
-        if (number <= 100 || (number < 1000 && ((_c = locale.options) === null || _c === void 0 ? void 0 : _c.namedLessThan1000))) {
+        if (number <= 100 || (number < 1000 && ((_e = locale.options) === null || _e === void 0 ? void 0 : _e.namedLessThan1000))) {
             words += match.value;
             number -= match.number;
             if (number > 0) {
@@ -131,11 +134,24 @@ class ToWords {
         else {
             const quotient = Math.floor(number / match.number);
             const remainder = number % match.number;
+            const matchValue = quotient > 1 && ((_g = (_f = locale.options) === null || _f === void 0 ? void 0 : _f.pluralWords) === null || _g === void 0 ? void 0 : _g.find((word) => word === match.value))
+                ? match.value + pluralMark
+                : match.value;
             if (remainder > 0) {
-                return `${this.convertInternal(quotient, options)} ${match.value} ${splitWord}${this.convertInternal(remainder, options)}`;
+                if (quotient == 1 && ((_h = locale.options) === null || _h === void 0 ? void 0 : _h.ignoreOneForWords)) {
+                    return `${matchValue} ${splitWord}${this.convertInternal(remainder, options)}`;
+                }
+                else {
+                    return `${this.convertInternal(quotient, options)} ${matchValue} ${splitWord}${this.convertInternal(remainder, options)}`;
+                }
             }
             else {
-                return `${this.convertInternal(quotient, options)} ${match.value}`;
+                if (quotient == 1 && ((_j = locale.options) === null || _j === void 0 ? void 0 : _j.ignoreOneForWords)) {
+                    return `${matchValue}`;
+                }
+                else {
+                    return `${this.convertInternal(quotient, options)} ${matchValue}`;
+                }
             }
         }
         return words;
