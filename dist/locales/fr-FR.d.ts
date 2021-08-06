@@ -1,4 +1,5 @@
-export interface LocaleInterface {
+import { LocaleInterface } from './locale.interface';
+export declare class Locale implements LocaleInterface {
     currency: {
         name: string;
         plural: string;
@@ -9,13 +10,10 @@ export interface LocaleInterface {
             symbol: string;
         };
     };
-    options?: {
-        namedLessThan1000?: boolean;
-        splitWord?: string;
-        ignoreZeroInDecimals?: boolean;
-        pluralMark?: string;
-        pluralWords?: string[];
-        ignoreOneForWords?: string[];
+    options: {
+        ignoreOneForWords: string[];
+        pluralMark: string;
+        pluralWords: string[];
     };
     texts: {
         and: string;
@@ -27,7 +25,4 @@ export interface LocaleInterface {
         number: number;
         value: string;
     }[];
-    decimalLengthWordMapping?: {
-        [decimalLength: number]: string;
-    };
 }
