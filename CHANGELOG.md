@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.4.0](https://github.com/mastermunj/to-words/compare/v2.3.2...v2.4.0) (2021-08-06)
+
+
+### Features
+
+* support added for french (fr-FR) ([#512](https://github.com/mastermunj/to-words/issues/512)) ([ae19f85](https://github.com/mastermunj/to-words/commit/ae19f850f6a37f36cd12267ee2177adc8510e098))
+
 ### [2.3.2](https://github.com/mastermunj/to-words/compare/v2.3.1...v2.3.2) (2021-05-24)
 
 ### [2.3.1](https://github.com/mastermunj/to-words/compare/v2.3.0...v2.3.1) (2020-12-08)
