@@ -95,8 +95,10 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | India | English | en-IN (default) |
 | Myanmar | English | en-MM |
 | Mauritius | English | en-MU |
+| Nigeria | English | en-NG |
 | USA | English | en-US |
 | Iran | Persian | fa-IR |
+| France | French | fr-FR |
 
 ## Inspiration for core logic
 [https://stackoverflow.com/a/46221860](https://stackoverflow.com/a/46221860)
