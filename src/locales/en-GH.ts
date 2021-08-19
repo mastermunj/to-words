@@ -2,12 +2,12 @@ import { LocaleInterface } from './locale.interface';
 
 export class Locale implements LocaleInterface {
   public currency = {
-    name: 'Cedi',
+    name: 'Cedis',
     plural: 'Cedis',
     symbol: 'GH¢',
     fractionalUnit: {
-      name: 'Pesewa',
-      plural: 'Pesewas',
+      name: 'Pasewas',
+      plural: 'Pasewas',
       symbol: 'Gp',
     },
   };

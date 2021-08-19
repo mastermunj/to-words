@@ -101,13 +101,13 @@ describe('Test Floats with options = {}', () => {
 });
 
 const testFloatsWithCurrency = [
-  [0.0, `Zero Cedi Only`],
-  [0.04, `Zero Cedi And Four Pasewas Only`],
-  [0.0468, `Zero Cedi And Five Pasewas Only`],
-  [0.4, `Zero Cedi And Forty Pasewas Only`],
-  [0.63, `Zero Cedi And Sixty Three Pasewas Only`],
-  [0.973, `Zero Cedi And Ninety Seven Pasewas Only`],
-  [0.999, `One Cedi Only`],
+  [0.0, `Zero Cedis Only`],
+  [0.04, `Zero Cedis And Four Pasewas Only`],
+  [0.0468, `Zero Cedis And Five Pasewas Only`],
+  [0.4, `Zero Cedis And Forty Pasewas Only`],
+  [0.63, `Zero Cedis And Sixty Three Pasewas Only`],
+  [0.973, `Zero Cedis And Ninety Seven Pasewas Only`],
+  [0.999, `One Cedis Only`],
   [37.06, `Thirty Seven Cedis And Six Pasewas Only`],
   [37.068, `Thirty Seven Cedis And Seven Pasewas Only`],
   [37.68, `Thirty Seven Cedis And Sixty Eight Pasewas Only`],
@@ -146,7 +146,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true 
 const testFloatsWithCurrencyAndIgnoreDecimal = cloneDeep(testFloatsWithCurrency);
 testFloatsWithCurrencyAndIgnoreDecimal.map((row) => {
   if (row[0] === 0.999) {
-    row[1] = `Zero Cedi Only`;
+    row[1] = `Zero Cedis Only`;
   } else {
     row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ Pasewas`), '');
   }
