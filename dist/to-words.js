@@ -28,6 +28,8 @@ class ToWords {
                 return require('./locales/en-US').Locale;
             case 'en-NG':
                 return require('./locales/en-NG').Locale;
+            case 'en-GH':
+                return require('./locales/en-GH').Locale;
             case 'fa-IR':
                 return require('./locales/fa-IR').Locale;
             case 'fr-FR':
