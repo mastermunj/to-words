@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DefaultToWordsOptions = exports.DefaultConverterOptions = void 0;
+exports.ToWords = exports.DefaultToWordsOptions = exports.DefaultConverterOptions = void 0;
 const en_GH_1 = __importDefault(require("./locales/en-GH"));
 const en_IN_1 = __importDefault(require("./locales/en-IN"));
 const en_MM_1 = __importDefault(require("./locales/en-MM"));
@@ -231,4 +231,4 @@ class ToWords {
         return number >= 0 && number < 1;
     }
 }
-exports.default = ToWords;
+exports.ToWords = ToWords;

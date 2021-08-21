@@ -1,7 +1,7 @@
 import { ConstructorOf, ConverterOptions, LocaleInterface, ToWordsOptions } from './types';
 export declare const DefaultConverterOptions: ConverterOptions;
 export declare const DefaultToWordsOptions: ToWordsOptions;
-export default class ToWords {
+export declare class ToWords {
     private options;
     private locale;
     constructor(options?: ToWordsOptions);

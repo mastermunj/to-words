@@ -1,5 +1,5 @@
 import { cloneDeep } from 'lodash';
-import ToWords from '../src/ToWords';
+import { ToWords } from '../src/ToWords';
 import enGh from '../src/locales/en-GH';
 
 const localeCode = 'en-GH';
