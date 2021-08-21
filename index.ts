@@ -1,1 +1,1 @@
-export * from './src/to-words';
+export * from './src/ToWords';
