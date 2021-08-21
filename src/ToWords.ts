@@ -23,7 +23,7 @@ export const DefaultToWordsOptions: ToWordsOptions = {
   converterOptions: DefaultConverterOptions,
 };
 
-export default class ToWords {
+export class ToWords {
   private options: ToWordsOptions = {};
 
   private locale: InstanceType<ConstructorOf<LocaleInterface>> | undefined = undefined;

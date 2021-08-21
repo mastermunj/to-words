@@ -1,4 +1,4 @@
-import ToWords from '../src/ToWords';
+import { ToWords } from '../src/ToWords';
 
 describe('Wrong Locale', () => {
   const localeCode = 'en-INDIA';
