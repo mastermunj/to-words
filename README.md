@@ -29,6 +29,7 @@ const toWords = new ToWords({
     currency: true,
     ignoreDecimal: false,
     ignoreZeroCurrency: false,
+    doNotAddOnly: false,
   }
 });
 ```
@@ -88,10 +89,12 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | currency | boolean | false | Whether the number to be converted into words written as currency.<br/>*Note: When currency:true, number will be rounded off to two decimals before converting to words* |
 | ignoreDecimal | boolean | false | Whether to ignore fractional unit of number while converting into words. |
 | ignoreZeroCurrency | boolean | false | Whether to ignore zero currency value while converting into words. |
+| doNotAddOnly | boolean | false | Do not add `only` at the end of the words. This works only when currency = true |
 
 ## Supported Locale
 | Country  | Language | Locale |
 | ------------- | ------------- | ------------- |
+| Ghana | English | en-GH |
 | India | English | en-IN (default) |
 | Myanmar | English | en-MM |
 | Mauritius | English | en-MU |
@@ -100,6 +103,9 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | USA | English | en-US |
 | Iran | Persian | fa-IR |
 | France | French | fr-FR |
+| India | Gujarati | gu-IN |
+| India | Hindi | hi-IN |
+| India | Marathi | mr-IN |
 
 ## Inspiration for core logic
 [https://stackoverflow.com/a/46221860](https://stackoverflow.com/a/46221860)

@@ -1,8 +1,24 @@
-import { ToWords } from '../src/to-words';
-import cloneDeep from 'lodash/cloneDeep';
+import { cloneDeep } from 'lodash';
+import ToWords from '../src/ToWords';
+import faIr from '../src/locales/fa-IR';
 
+const localeCode = 'fa-IR';
 const toWords = new ToWords({
-  localeCode: 'fa-IR',
+  localeCode,
+});
+
+describe('Test Locale', () => {
+  test(`Locale Class: ${localeCode}`, () => {
+    expect(toWords.getLocaleClass()).toBe(faIr);
+  });
+
+  const wrongLocaleCode = localeCode + '-wrong';
+  test(`Wrong Locale: ${wrongLocaleCode}`, () => {
+    const toWordsWrongLocale = new ToWords({
+      localeCode: wrongLocaleCode,
+    });
+    expect(() => toWordsWrongLocale.convert(1)).toThrow(/Unknown Locale/);
+  });
 });
 
 const testIntegers = [
@@ -34,36 +50,38 @@ describe('Test Integers with options = {}', () => {
   });
 });
 
-const testNegativeIntegers = cloneDeep(testIntegers);
-testNegativeIntegers.map((row, i) => {
-  if (i === 0) {
-    return;
-  }
-  row[0] = -row[0];
-  row[1] = `منفی ${row[1]}`;
-});
-
 describe('Test Negative Integers with options = {}', () => {
+  const testNegativeIntegers = cloneDeep(testIntegers);
+  testNegativeIntegers.map((row, i) => {
+    if (i === 0) {
+      return;
+    }
+    row[0] = -row[0];
+    row[1] = `منفی ${row[1]}`;
+  });
+
   test.each(testNegativeIntegers)('convert %d => %s', (input, expected) => {
     expect(toWords.convert(input as number)).toBe(expected);
   });
 });
 
-const testIntegersWithCurrency = cloneDeep(testIntegers);
-testIntegersWithCurrency.map((row) => {
-  row[1] = `${row[1]} تومان`;
-});
-
 describe('Test Integers with options = { currency: true }', () => {
+  const testIntegersWithCurrency = cloneDeep(testIntegers);
+  testIntegersWithCurrency.map((row) => {
+    row[1] = `${row[1]} تومان`;
+  });
+
   test.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
     expect(toWords.convert(input as number, { currency: true })).toBe(expected);
   });
 });
 
-const testIntegersWithCurrencyAndIgnoreZeroCurrency = cloneDeep(testIntegersWithCurrency);
-testIntegersWithCurrencyAndIgnoreZeroCurrency[0][1] = '';
-
 describe('Test Integers with options = { currency: true, ignoreZeroCurrency: true }', () => {
+  const testIntegersWithCurrencyAndIgnoreZeroCurrency = cloneDeep(testIntegers);
+  testIntegersWithCurrencyAndIgnoreZeroCurrency.map((row, i) => {
+    row[1] = i === 0 ? '' : `${row[1]} تومان`;
+  });
+
   test.each(testIntegersWithCurrencyAndIgnoreZeroCurrency)('convert %d => %s', (input, expected) => {
     expect(
       toWords.convert(input as number, {
@@ -114,19 +132,19 @@ describe('Test Floats with options = { currency: true }', () => {
   });
 });
 
-const testFloatsWithCurrencyAndIgnoreZeroCurrency = cloneDeep(testFloatsWithCurrency);
-testFloatsWithCurrencyAndIgnoreZeroCurrency[0][1] = '';
-testFloatsWithCurrencyAndIgnoreZeroCurrency.map((row, i) => {
-  if (i === 0) {
-    row[1] = '';
-    return;
-  }
-  if (row[0] > 0 && row[0] < 1) {
-    row[1] = (row[1] as string).replace(`صفر تومان`, '');
-  }
-});
-
 describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true }', () => {
+  const testFloatsWithCurrencyAndIgnoreZeroCurrency = cloneDeep(testFloatsWithCurrency);
+  testFloatsWithCurrencyAndIgnoreZeroCurrency[0][1] = '';
+  testFloatsWithCurrencyAndIgnoreZeroCurrency.map((row, i) => {
+    if (i === 0) {
+      row[1] = '';
+      return;
+    }
+    if (row[0] > 0 && row[0] < 1) {
+      row[1] = (row[1] as string).replace(`صفر تومان`, '');
+    }
+  });
+
   test.each(testFloatsWithCurrencyAndIgnoreZeroCurrency)('convert %d => %s', (input, expected) => {
     expect(
       toWords.convert(input as number, {
@@ -137,12 +155,14 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true 
   });
 });
 
-const testFloatsWithCurrencyAndIgnoreDecimal = cloneDeep(testFloatsWithCurrency).map((row) => {
-  if (row[0] >= 0 && row[0] < 1) return [row[0], 'صفر تومان'];
-  return [row[0], 'سی و هفت تومان'];
-});
-
 describe('Test Floats with options = { currency: true, ignoreDecimal: true }', () => {
+  const testFloatsWithCurrencyAndIgnoreDecimal = cloneDeep(testFloatsWithCurrency).map((row) => {
+    if (row[0] >= 0 && row[0] < 1) {
+      return [row[0], 'صفر تومان'];
+    }
+    return [row[0], 'سی و هفت تومان'];
+  });
+
   test.each(testFloatsWithCurrencyAndIgnoreDecimal)('convert %d => %s', (input, expected) => {
     expect(
       toWords.convert(input as number, {
@@ -153,12 +173,14 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
   });
 });
 
-const testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals = cloneDeep(testFloatsWithCurrency).map((row) => {
-  if (row[0] >= 0 && row[0] < 1) return [row[0], ''];
-  return [row[0], 'سی و هفت تومان'];
-});
-
 describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true, ignoreDecimal: true }', () => {
+  const testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals = cloneDeep(testFloatsWithCurrency).map((row) => {
+    if (row[0] >= 0 && row[0] < 1) {
+      return [row[0], ''];
+    }
+    return [row[0], 'سی و هفت تومان'];
+  });
+
   test.each(testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals)('convert %d => %s', (input, expected) => {
     expect(
       toWords.convert(input as number, {

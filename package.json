@@ -26,7 +26,7 @@
     "build": "npm run clean && tsc --noEmitOnError",
     "build:watch": "npm run build -- --watch",
     "clean": "rimraf dist coverage",
-    "lint": "eslint --ext .js,.ts .",
+    "lint": "eslint --max-warnings=0 --ext .ts .",
     "lint:fix": "npm run lint -- --fix",
     "release": "standard-version",
     "release:mock": "npm run release -- --dry-run",
@@ -67,6 +67,6 @@
     "typescript": "^4.4.3"
   },
   "engines": {
-    "node": ">=10.0.0"
+    "node": ">=12.0.0"
   }
 }
