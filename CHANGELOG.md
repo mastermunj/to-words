@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.5.0](https://github.com/mastermunj/to-words/compare/v2.4.0...v2.5.0) (2021-08-24)
+
 ## [2.4.0](https://github.com/mastermunj/to-words/compare/v2.3.2...v2.4.0) (2021-08-06)
 
 
