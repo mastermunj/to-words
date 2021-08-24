@@ -96,6 +96,7 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | Myanmar | English | en-MM |
 | Mauritius | English | en-MU |
 | Nigeria | English | en-NG |
+| Ghana | English | en-GH |
 | USA | English | en-US |
 | Iran | Persian | fa-IR |
 | France | French | fr-FR |
