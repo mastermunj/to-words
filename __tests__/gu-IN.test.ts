@@ -70,6 +70,17 @@ describe('Test Integers with options = { currency: true }', () => {
   });
 });
 
+describe('Test Integers with options = { currency: true, doNotAddOnly: true }', () => {
+  const testIntegersWithCurrency = cloneDeep(testIntegers);
+  testIntegersWithCurrency.map((row) => {
+    row[1] = `${row[1]} રૂપિયા`;
+  });
+
+  test.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { currency: true, doNotAddOnly: true })).toBe(expected);
+  });
+});
+
 describe('Test Integers with options = { currency: true, ignoreZeroCurrency: true }', () => {
   const testIntegersWithCurrencyAndIgnoreZeroCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrencyAndIgnoreZeroCurrency.map((row, i) => {
