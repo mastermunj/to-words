@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/mastermunj/to-words/compare/v2.5.0...v3.0.0) (2021-09-14)
+
+
+### Features
+
+* refactor and add new languages ([#526](https://github.com/mastermunj/to-words/issues/526)) ([0dc9c10](https://github.com/mastermunj/to-words/commit/0dc9c10d457982ea190fb127bb698f5307b23ffe))
+
 ## [3.0.0-alpha.0](https://github.com/mastermunj/to-words/compare/v2.5.0...v3.0.0-alpha.0) (2021-09-04)
 
 
