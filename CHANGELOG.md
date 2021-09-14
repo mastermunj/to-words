@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0-alpha.0](https://github.com/mastermunj/to-words/compare/v2.5.0...v3.0.0-alpha.0) (2021-09-04)
+
+
+### Features
+
+* refactor and new languages ([ec68e6c](https://github.com/mastermunj/to-words/commit/ec68e6c35a1d9d2ad68a6dd741cb71682681ed79))
+
+
+### Bug Fixes
+
+* remove default class export to keep import syntax same ([bc15df6](https://github.com/mastermunj/to-words/commit/bc15df67836750a010531281f39ff21d5e79773c))
+* resolve rebase issue ([2d175f2](https://github.com/mastermunj/to-words/commit/2d175f2d6f8a9f088ed1679817ee29298164bed1))
+
 ## [2.5.0](https://github.com/mastermunj/to-words/compare/v2.4.0...v2.5.0) (2021-08-24)
 
 ## [2.4.0](https://github.com/mastermunj/to-words/compare/v2.3.2...v2.4.0) (2021-08-06)

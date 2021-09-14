@@ -1,15 +1,15 @@
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
-import frFr from '../src/locales/fr-FR';
+import guIn from '../src/locales/gu-IN';
 
-const localeCode = 'fr-FR';
+const localeCode = 'gu-IN';
 const toWords = new ToWords({
   localeCode,
 });
 
 describe('Test Locale', () => {
   test(`Locale Class: ${localeCode}`, () => {
-    expect(toWords.getLocaleClass()).toBe(frFr);
+    expect(toWords.getLocaleClass()).toBe(guIn);
   });
 
   const wrongLocaleCode = localeCode + '-wrong';
@@ -22,32 +22,20 @@ describe('Test Locale', () => {
 });
 
 const testIntegers = [
-  [0, 'Zéro'],
-  [137, 'Cent Trente-Sept'],
-  [700, 'Sept Cent'],
-  [4680, 'Quatre Mille Six Cent Quatre-Vingt'],
-  [63892, 'Soixante-Trois Mille Huit Cent Quatre-Vingt-Douze'],
-  [792581, 'Sept Cent Quatre-Vingt-Douze Mille Cinq Cent Quatre-Vingt-Un'],
-  [2741034, 'Deux Millions Sept Cent Quarante Et Un Mille Trente-Quatre'],
-  [86429753, 'Quatre-Vingt-Six Millions Quatre Cent Vingt-Neuf Mille Sept Cent Cinquante-Trois'],
-  [975310864, 'Neuf Cent Soixante-Quinze Millions Trois Cent Dix Mille Huit Cent Soixante-Quatre'],
-  [9876543210, 'Neuf Milliards Huit Cent Soixante-Seize Millions Cinq Cent Quarante-Trois Mille Deux Cent Dix'],
-  [
-    98765432101,
-    'Quatre-Vingt-Dix-Huit Milliards Sept Cent Soixante-Cinq Millions Quatre Cent Trente-Deux Mille Cent Un',
-  ],
-  [
-    987654321012,
-    'Neuf Cent Quatre-Vingt-Sept Milliards Six Cent Cinquante-Quatre Millions Trois Cent Vingt Et Un Mille Douze',
-  ],
-  [
-    9876543210123,
-    'Neuf Billions Huit Cent Soixante-Seize Milliards Cinq Cent Quarante-Trois Millions Deux Cent Dix Mille Cent Vingt-Trois',
-  ],
-  [
-    98765432101234,
-    'Quatre-Vingt-Dix-Huit Billions Sept Cent Soixante-Cinq Milliards Quatre Cent Trente-Deux Millions Cent Un Mille Deux Cent Trente-Quatre',
-  ],
+  [0, 'શૂન્ય'],
+  [137, 'એક સો સાડત્રીસ'],
+  [700, 'સાત સો'],
+  [4680, 'ચાર હજાર છ સો એંસી'],
+  [63892, 'ત્રેસઠ હજાર આઠ સો બાણું'],
+  [792581, 'સાત લાખ બાણું હજાર પાંચ સો એક્યાસી'],
+  [2741034, 'સત્તાવીસ લાખ એકતાલીસ હજાર ચોત્રીસ'],
+  [86429753, 'આઠ કરોડ ચોસઠ લાખ ઓગણત્રીસ હજાર સાત સો ત્રેપન'],
+  [975310864, 'સત્તાણું કરોડ ત્રેપન લાખ દસ હજાર આઠ સો ચોસઠ'],
+  [9876543210, 'નવ સો સિત્યાસી કરોડ પાંસઠ લાખ ત્રેતાલીસ હજાર બે સો દસ'],
+  [98765432101, 'નવ હજાર આઠ સો છોતેર કરોડ ચોપન લાખ બત્રીસ હજાર એક સો એક'],
+  [987654321012, 'અઠ્ઠાણું હજાર સાત સો પાંસઠ કરોડ ત્રેતાલીસ લાખ એકવીસ હજાર બાર'],
+  [9876543210123, 'નવ લાખ સિત્યાસી હજાર છ સો ચોપન કરોડ બત્રીસ લાખ દસ હજાર એક સો તેવીસ'],
+  [98765432101234, 'અઠ્ઠાણું લાખ છોતેર હજાર પાંચ સો ત્રેતાલીસ કરોડ એકવીસ લાખ એક હજાર બે સો ચોત્રીસ'],
 ];
 
 describe('Test Integers with options = {}', () => {
@@ -63,7 +51,7 @@ describe('Test Negative Integers with options = {}', () => {
       return;
     }
     row[0] = -row[0];
-    row[1] = `Moins ${row[1]}`;
+    row[1] = `ઋણ ${row[1]}`;
   });
 
   test.each(testNegativeIntegers)('convert %d => %s', (input, expected) => {
@@ -74,7 +62,7 @@ describe('Test Negative Integers with options = {}', () => {
 describe('Test Integers with options = { currency: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} Euros`;
+    row[1] = `${row[1]} રૂપિયા`;
   });
 
   test.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -85,10 +73,10 @@ describe('Test Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, doNotAddOnly: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} Euros`;
+    row[1] = `${row[1]} રૂપિયા`;
   });
 
-  test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
+  test.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
     expect(toWords.convert(input as number, { currency: true, doNotAddOnly: true })).toBe(expected);
   });
 });
@@ -96,7 +84,7 @@ describe('Test Integers with options = { currency: true, doNotAddOnly: true }', 
 describe('Test Integers with options = { currency: true, ignoreZeroCurrency: true }', () => {
   const testIntegersWithCurrencyAndIgnoreZeroCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrencyAndIgnoreZeroCurrency.map((row, i) => {
-    row[1] = i === 0 ? '' : `${row[1]} Euros`;
+    row[1] = i === 0 ? '' : `${row[1]} રૂપિયા`;
   });
 
   test.each(testIntegersWithCurrencyAndIgnoreZeroCurrency)('convert %d => %s', (input, expected) => {
@@ -110,17 +98,17 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
 });
 
 const testFloats = [
-  [0.0, 'Zéro'],
-  [0.04, 'Zéro Virgule Zéro Quatre'],
-  [0.0468, 'Zéro Virgule Zéro Quatre Six Huit'],
-  [0.4, 'Zéro Virgule Quatre'],
-  [0.63, 'Zéro Virgule Soixante-Trois'],
-  [0.973, 'Zéro Virgule Neuf Cent Soixante-Treize'],
-  [0.999, 'Zéro Virgule Neuf Cent Quatre-Vingt-Dix-Neuf'],
-  [37.06, 'Trente-Sept Virgule Zéro Six'],
-  [37.068, 'Trente-Sept Virgule Zéro Six Huit'],
-  [37.68, 'Trente-Sept Virgule Soixante-Huit'],
-  [37.683, 'Trente-Sept Virgule Six Cent Quatre-Vingt-Trois'],
+  [0.0, 'શૂન્ય'],
+  [0.04, 'શૂન્ય દશાંશ શૂન્ય ચાર'],
+  [0.0468, 'શૂન્ય દશાંશ શૂન્ય ચાર છ આઠ'],
+  [0.4, 'શૂન્ય દશાંશ ચાર'],
+  [0.63, 'શૂન્ય દશાંશ ત્રેસઠ'],
+  [0.973, 'શૂન્ય દશાંશ નવ સો તોતેર'],
+  [0.999, 'શૂન્ય દશાંશ નવ સો નવ્વાણું'],
+  [37.06, 'સાડત્રીસ દશાંશ શૂન્ય છ'],
+  [37.068, 'સાડત્રીસ દશાંશ શૂન્ય છ આઠ'],
+  [37.68, 'સાડત્રીસ દશાંશ અડસઠ'],
+  [37.683, 'સાડત્રીસ દશાંશ છ સો ત્યાસી'],
 ];
 
 describe('Test Floats with options = {}', () => {
@@ -130,17 +118,17 @@ describe('Test Floats with options = {}', () => {
 });
 
 const testFloatsWithCurrency = [
-  [0.0, `Zéro Euros`],
-  [0.04, `Zéro Euros Et Quatre Centimes`],
-  [0.0468, `Zéro Euros Et Cinq Centimes`],
-  [0.4, `Zéro Euros Et Quarante Centimes`],
-  [0.63, `Zéro Euros Et Soixante-Trois Centimes`],
-  [0.973, `Zéro Euros Et Quatre-Vingt-Dix-Sept Centimes`],
-  [0.999, `Un Euros`],
-  [37.06, `Trente-Sept Euros Et Six Centimes`],
-  [37.068, `Trente-Sept Euros Et Sept Centimes`],
-  [37.68, `Trente-Sept Euros Et Soixante-Huit Centimes`],
-  [37.683, `Trente-Sept Euros Et Soixante-Huit Centimes`],
+  [0.0, 'શૂન્ય રૂપિયા'],
+  [0.04, 'શૂન્ય રૂપિયા અને ચાર પૈસા'],
+  [0.0468, 'શૂન્ય રૂપિયા અને પાંચ પૈસા'],
+  [0.4, 'શૂન્ય રૂપિયા અને ચાલીસ પૈસા'],
+  [0.63, 'શૂન્ય રૂપિયા અને ત્રેસઠ પૈસા'],
+  [0.973, 'શૂન્ય રૂપિયા અને સત્તાણું પૈસા'],
+  [0.999, 'એક રૂપિયા'],
+  [37.06, 'સાડત્રીસ રૂપિયા અને છ પૈસા'],
+  [37.068, 'સાડત્રીસ રૂપિયા અને સાત પૈસા'],
+  [37.68, 'સાડત્રીસ રૂપિયા અને અડસઠ પૈસા'],
+  [37.683, 'સાડત્રીસ રૂપિયા અને અડસઠ પૈસા'],
 ];
 
 describe('Test Floats with options = { currency: true }', () => {
@@ -158,7 +146,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true 
       return;
     }
     if (row[0] > 0 && row[0] < 1) {
-      row[1] = (row[1] as string).replace(`Zéro Euros Et `, '');
+      row[1] = (row[1] as string).replace(`શૂન્ય રૂપિયા અને `, '');
     }
   });
 
@@ -176,9 +164,9 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
   const testFloatsWithCurrencyAndIgnoreDecimal = cloneDeep(testFloatsWithCurrency);
   testFloatsWithCurrencyAndIgnoreDecimal.map((row) => {
     if (row[0] === 0.999) {
-      row[1] = `Zéro Euros`;
+      row[1] = `શૂન્ય રૂપિયા`;
     } else {
-      row[1] = (row[1] as string).replace(new RegExp(` Et [\\w\\- ]+ Centimes`), '');
+      row[1] = (row[1] as string).replace(new RegExp(` અને [\u0A80-\u0AFF ]+ પૈસા`), '');
     }
   });
 
@@ -199,7 +187,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
     if (row[0] > 0 && row[0] < 1) {
       row[1] = '';
     }
-    row[1] = (row[1] as string).replace(new RegExp(` Et [\\w\\- ]+ Centimes`), '');
+    row[1] = (row[1] as string).replace(new RegExp(` અને [\u0A80-\u0AFF ]+ પૈસા`), '');
   });
 
   test.each(testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals)('convert %d => %s', (input, expected) => {
