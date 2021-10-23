@@ -26,14 +26,14 @@
     "build": "npm run clean && tsc --noEmitOnError",
     "build:watch": "npm run build -- --watch",
     "clean": "rimraf dist coverage",
+    "commit": "git-cz",
     "lint": "eslint --max-warnings=0 --ext .ts .",
     "lint:fix": "npm run lint -- --fix",
+    "prepare": "husky install",
     "release": "standard-version",
     "release:mock": "npm run release -- --dry-run",
     "test": "jest --detectOpenHandles --coverage --no-cache",
-    "test:watch": "npm run test -- --watch",
-    "prepare": "husky install",
-    "commit": "git-cz"
+    "test:watch": "npm run test -- --watch"
   },
   "config": {
     "commitizen": {
@@ -41,11 +41,11 @@
     }
   },
   "devDependencies": {
-    "@commitlint/cli": "^13.1.0",
-    "@commitlint/config-conventional": "^13.1.0",
-    "@types/jest": "^27.0.1",
-    "@types/lodash": "^4.14.172",
-    "@types/node": "^16.9.1",
+    "@commitlint/cli": "^13.2.1",
+    "@commitlint/config-conventional": "^13.2.0",
+    "@types/jest": "^27.0.2",
+    "@types/lodash": "^4.14.176",
+    "@types/node": "^16.11.4",
     "@types/source-map-support": "^0.5.4",
     "@typescript-eslint/eslint-plugin": "^4.31.1",
     "@typescript-eslint/parser": "^4.31.1",
@@ -55,17 +55,17 @@
     "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-jest": "^25.0.1",
     "eslint-plugin-prettier": "^4.0.0",
-    "husky": "^7.0.2",
-    "jest": "^27.2.0",
-    "lint-staged": "^11.1.2",
+    "husky": "^7.0.4",
+    "jest": "^27.3.1",
+    "lint-staged": "^11.2.3",
     "lodash": "^4.17.21",
-    "prettier": "^2.4.0",
+    "prettier": "^2.4.1",
     "rimraf": "^3.0.2",
-    "sort-package-json": "^1.51.0",
+    "sort-package-json": "^1.52.0",
     "source-map-support": "^0.5.20",
-    "standard-version": "^9.3.1",
-    "ts-jest": "^27.0.5",
-    "typescript": "^4.4.3"
+    "standard-version": "^9.3.2",
+    "ts-jest": "^27.0.7",
+    "typescript": "^4.4.4"
   },
   "engines": {
     "node": ">=12.0.0"
