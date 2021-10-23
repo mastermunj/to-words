@@ -10,6 +10,7 @@ import frFr from './locales/fr-FR';
 import guIn from './locales/gu-IN';
 import hiIn from './locales/hi-IN';
 import mrIn from './locales/mr-IN';
+import trTr from './locales/tr-TR';
 
 export const DefaultConverterOptions: ConverterOptions = {
   currency: false,
@@ -57,6 +58,8 @@ export class ToWords {
         return hiIn;
       case 'mr-IN':
         return mrIn;
+      case 'tr-TR':
+        return trTr;
     }
     /* eslint-enable @typescript-eslint/no-var-requires */
     throw new Error(`Unknown Locale "${this.options.localeCode}"`);

@@ -106,6 +106,7 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | India | Gujarati | gu-IN |
 | India | Hindi | hi-IN |
 | India | Marathi | mr-IN |
+| Turkey | Turkish | tr-TR |
 
 ## Inspiration for core logic
 [https://stackoverflow.com/a/46221860](https://stackoverflow.com/a/46221860)
