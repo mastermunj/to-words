@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.3](https://github.com/mastermunj/to-words/compare/v3.0.2...v3.0.3) (2022-01-06)
+
+
+### Bug Fixes
+
+* remove deepsource config ([0ae7a59](https://github.com/mastermunj/to-words/commit/0ae7a59cd2058225eae44dabb4031737ba47de79))
+
 ### [3.0.2](https://github.com/mastermunj/to-words/compare/v3.0.1...v3.0.2) (2021-11-24)
 
 ### [3.0.1](https://github.com/mastermunj/to-words/compare/v3.0.0...v3.0.1) (2021-10-23)
