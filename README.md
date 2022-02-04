@@ -102,6 +102,7 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | Nigeria | English | en-NG |
 | Ghana | English | en-GH |
 | USA | English | en-US |
+| UK | English | en-GB |
 | Iran | Persian | fa-IR |
 | France | French | fr-FR |
 | India | Gujarati | gu-IN |
