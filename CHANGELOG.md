@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.0](https://github.com/mastermunj/to-words/compare/v3.0.3...v3.1.0) (2022-02-09)
+
+
+### Features
+
+* **GB:** added tests for GB support ([b9f488f](https://github.com/mastermunj/to-words/commit/b9f488f6fd787666c3f164db834763d76cdbca09))
+
 ### [3.0.3](https://github.com/mastermunj/to-words/compare/v3.0.2...v3.0.3) (2022-01-06)
 
 
