@@ -231,7 +231,7 @@ export class ToWords {
     if (quotient > 1 && locale.config?.pluralWords?.find((word) => word === match.value) && locale.config?.pluralMark) {
       matchValue += locale.config.pluralMark;
     }
-    if (quotient === 1 && locale.config?.ignoreOneForWords) {
+    if (quotient === 1 && locale.config?.ignoreOneForWords?.includes(matchValue)) {
       words.push(matchValue);
     } else {
       words.push(...this.convertInternal(quotient), matchValue);
