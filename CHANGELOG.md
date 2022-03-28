@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.1.1](https://github.com/mastermunj/to-words/compare/v3.1.0...v3.1.1) (2022-03-28)
+
+
+### Bug Fixes
+
+* add includes of ignore one for words ([a289892](https://github.com/mastermunj/to-words/commit/a2898923e96a7dfbbde8518d6d794014bb81ba88))
+* generate build ([6d08e8a](https://github.com/mastermunj/to-words/commit/6d08e8aaee3e55cbbab211894a87722254a7fe50))
+
 ## [3.1.0](https://github.com/mastermunj/to-words/compare/v3.0.3...v3.1.0) (2022-02-09)
 
 
