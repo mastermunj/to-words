@@ -28,6 +28,7 @@ const testIntegers = [
   [4680, 'Quatre Mille Six Cent Quatre-Vingt'],
   [63892, 'Soixante-Trois Mille Huit Cent Quatre-Vingt-Douze'],
   [792581, 'Sept Cent Quatre-Vingt-Douze Mille Cinq Cent Quatre-Vingt-Un'],
+  [1342823, 'Un Million Trois Cent Quarante-Deux Mille Huit Cent Vingt-Trois'],
   [2741034, 'Deux Millions Sept Cent Quarante Et Un Mille Trente-Quatre'],
   [86429753, 'Quatre-Vingt-Six Millions Quatre Cent Vingt-Neuf Mille Sept Cent Cinquante-Trois'],
   [975310864, 'Neuf Cent Soixante-Quinze Millions Trois Cent Dix Mille Huit Cent Soixante-Quatre'],
