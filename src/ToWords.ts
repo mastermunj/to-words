@@ -35,6 +35,15 @@ export class ToWords {
     this.options = Object.assign({}, DefaultToWordsOptions, options);
   }
 
+  /**
+   * getting language locale class based on user
+   * passed config options
+   * It contains the mapping for currency, texts and
+   * numberToWord mapping
+   *
+   * @returns {class} - based on selected currency
+   */
+
   public getLocaleClass(): ConstructorOf<LocaleInterface> {
     /* eslint-disable @typescript-eslint/no-var-requires */
     switch (this.options.localeCode) {
@@ -71,6 +80,11 @@ export class ToWords {
     throw new Error(`Unknown Locale "${this.options.localeCode}"`);
   }
 
+  /**
+   * Instantiating the passed user currency local option in configuration
+   * object
+   * @returns {class}
+   */
   public getLocale(): InstanceType<ConstructorOf<LocaleInterface>> {
     if (this.locale === undefined) {
       const LocaleClass = this.getLocaleClass();
@@ -79,6 +93,12 @@ export class ToWords {
     return this.locale;
   }
 
+  /**
+   *
+   * @param number - user input number to be converted
+   * @param options - configuration set by user
+   * @returns {string} - converted number to words string
+   */
   public convert(number: number, options: ConverterOptions = {}): string {
     options = Object.assign({}, this.options.converterOptions, options);
 
@@ -99,6 +119,11 @@ export class ToWords {
     return words.join(' ');
   }
 
+  /**
+   *
+   * @param number
+   * @returns {Array<string>} converted words as array of strings
+   */
   protected convertNumber(number: number): string[] {
     const locale = this.getLocale();
 
