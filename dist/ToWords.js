@@ -34,6 +34,14 @@ class ToWords {
         this.locale = undefined;
         this.options = Object.assign({}, exports.DefaultToWordsOptions, options);
     }
+    /**
+     * getting language locale class based on user
+     * passed config options
+     * It contains the mapping for currency, texts and
+     * numberToWord mapping
+     *
+     * @returns {class} - based on selected currency
+     */
     getLocaleClass() {
         /* eslint-disable @typescript-eslint/no-var-requires */
         switch (this.options.localeCode) {
@@ -69,6 +77,11 @@ class ToWords {
         /* eslint-enable @typescript-eslint/no-var-requires */
         throw new Error(`Unknown Locale "${this.options.localeCode}"`);
     }
+    /**
+     * Instantiating the passed user currency local option in configuration
+     * object
+     * @returns {class}
+     */
     getLocale() {
         if (this.locale === undefined) {
             const LocaleClass = this.getLocaleClass();
@@ -76,6 +89,12 @@ class ToWords {
         }
         return this.locale;
     }
+    /**
+     *
+     * @param number - user input number to be converted
+     * @param options - configuration set by user
+     * @returns {string} - converted number to words string
+     */
     convert(number, options = {}) {
         options = Object.assign({}, this.options.converterOptions, options);
         if (!this.isValidNumber(number)) {
@@ -93,6 +112,11 @@ class ToWords {
         }
         return words.join(' ');
     }
+    /**
+     *
+     * @param number
+     * @returns {Array<string>} converted words as array of strings
+     */
     convertNumber(number) {
         var _a, _b, _c;
         const locale = this.getLocale();
