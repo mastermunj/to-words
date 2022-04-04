@@ -15,6 +15,7 @@ const fr_FR_1 = __importDefault(require("./locales/fr-FR"));
 const gu_IN_1 = __importDefault(require("./locales/gu-IN"));
 const hi_IN_1 = __importDefault(require("./locales/hi-IN"));
 const mr_IN_1 = __importDefault(require("./locales/mr-IN"));
+const nl_SR_1 = __importDefault(require("./locales/nl-SR"));
 exports.DefaultConverterOptions = {
     currency: false,
     ignoreDecimal: false,
@@ -56,6 +57,8 @@ class ToWords {
                 return hi_IN_1.default;
             case 'mr-IN':
                 return mr_IN_1.default;
+            case 'nl-SR':
+                return nl_SR_1.default;
         }
         /* eslint-enable @typescript-eslint/no-var-requires */
         throw new Error(`Unknown Locale "${this.options.localeCode}"`);
