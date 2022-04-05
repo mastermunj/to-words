@@ -22,33 +22,33 @@ describe('Test Locale', () => {
 });
 
 const testIntegers = [
-  [0, 'NUL'],
-  [137, 'EEN HONDERD ZEVENENDERTIG'],
-  [700, 'ZEVEN HONDERD'],
-  [1100, 'EEN DUIZEND HONDERD'],
-  [4680, 'VIER DUIZEND ZES HONDERD TACHTIG'],
-  [63892, 'DRIEËNZESTIG DUIZEND ACHT HONDERD TWEEËNNEGENTIG'],
-  [86100, 'ZESENTACHTIG DUIZEND HONDERD'],
-  [792581, 'ZEVEN HONDERD TWEEËNNEGENTIG DUIZEND VIJF HONDERD EENENTACHTIG'],
-  [2741034, 'TWEE MILJOEN ZEVEN HONDERD EENENVEERTIG DUIZEND VIERENDERTIG'],
-  [86429753, 'ZESENTACHTIG MILJOEN VIER HONDERD NEGENENTWINTIG DUIZEND ZEVEN HONDERD DRIEËNVIJFTIG'],
-  [975310864, 'NEGEN HONDERD VIJFENZEVENTIG MILJOEN DRIE HONDERD TIEN DUIZEND ACHT HONDERD VIERENZESTIG'],
-  [9876543210, 'NEGEN MILJARD ACHT HONDERD ZESENZEVENTIG MILJOEN VIJF HONDERD DRIEËNVEERTIG DUIZEND TWEE HONDERD TIEN'],
+  [0, 'Nul'],
+  [137, 'Een Honderd Zevenendertig'],
+  [700, 'Zeven Honderd'],
+  [1100, 'Een Duizend Honderd'],
+  [4680, 'Vier Duizend Zes Honderd Tachtig'],
+  [63892, 'Drieënzestig Duizend Acht Honderd Tweeënnegentig'],
+  [86100, 'Zesentachtig Duizend Honderd'],
+  [792581, 'Zeven Honderd Tweeënnegentig Duizend Vijf Honderd Eenentachtig'],
+  [2741034, 'Twee Miljoen Zeven Honderd Eenenveertig Duizend Vierendertig'],
+  [86429753, 'Zesentachtig Miljoen Vier Honderd Negenentwintig Duizend Zeven Honderd Drieënvijftig'],
+  [975310864, 'Negen Honderd Vijfenzeventig Miljoen Drie Honderd Tien Duizend Acht Honderd Vierenzestig'],
+  [9876543210, 'Negen Miljard Acht Honderd Zesenzeventig Miljoen Vijf Honderd Drieënveertig Duizend Twee Honderd Tien'],
   [
     98765432101,
-    'ACHTENNEGENTIG MILJARD ZEVEN HONDERD VIJFENZESTIG MILJOEN VIER HONDERD TWEEËNDERTIG DUIZEND EEN HONDERD EEN',
+    'Achtennegentig Miljard Zeven Honderd Vijfenzestig Miljoen Vier Honderd Tweeëndertig Duizend Een Honderd Een',
   ],
   [
     987654321012,
-    'NEGEN HONDERD ZEVENENTACHTIG MILJARD ZES HONDERD VIERENVIJFTIG MILJOEN DRIE HONDERD EENENTWINTIG DUIZEND TWAALF',
+    'Negen Honderd Zevenentachtig Miljard Zes Honderd Vierenvijftig Miljoen Drie Honderd Eenentwintig Duizend Twaalf',
   ],
   [
     9876543210123,
-    'NEGEN BILJOEN ACHT HONDERD ZESENZEVENTIG MILJARD VIJF HONDERD DRIEËNVEERTIG MILJOEN TWEE HONDERD TIEN DUIZEND EEN HONDERD DRIEËNTWINTIG',
+    'Negen Biljoen Acht Honderd Zesenzeventig Miljard Vijf Honderd Drieënveertig Miljoen Twee Honderd Tien Duizend Een Honderd Drieëntwintig',
   ],
   [
     98765432101234,
-    'ACHTENNEGENTIG BILJOEN ZEVEN HONDERD VIJFENZESTIG MILJARD VIER HONDERD TWEEËNDERTIG MILJOEN EEN HONDERD EEN DUIZEND TWEE HONDERD VIERENDERTIG',
+    'Achtennegentig Biljoen Zeven Honderd Vijfenzestig Miljard Vier Honderd Tweeëndertig Miljoen Een Honderd Een Duizend Twee Honderd Vierendertig',
   ],
 ];
 
@@ -65,7 +65,7 @@ describe('Test Negative Integers with options = {}', () => {
       return;
     }
     row[0] = -row[0];
-    row[1] = `NEGATIEF ${row[1]}`;
+    row[1] = `Negatief ${row[1]}`;
   });
 
   test.concurrent.each(testNegativeIntegers)('convert %d => %s', (input, expected) => {
@@ -76,7 +76,7 @@ describe('Test Negative Integers with options = {}', () => {
 describe('Test Integers with options = { currency: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} SURINAAMSE DOLLARS`;
+    row[1] = `${row[1]} Surinaamse dollars`;
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -87,7 +87,7 @@ describe('Test Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, doNotAddOnly: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} SURINAAMSE DOLLARS`;
+    row[1] = `${row[1]} Surinaamse dollars`;
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -99,11 +99,11 @@ describe('Test Negative Integers with options = { currency: true }', () => {
   const testNegativeIntegersWithCurrency = cloneDeep(testIntegers);
   testNegativeIntegersWithCurrency.map((row, i) => {
     if (i === 0) {
-      row[1] = `${row[1]} SURINAAMSE DOLLARS`;
+      row[1] = `${row[1]} Surinaamse dollars`;
       return;
     }
     row[0] = -row[0];
-    row[1] = `NEGATIEF ${row[1]} SURINAAMSE DOLLARS`;
+    row[1] = `Negatief ${row[1]} Surinaamse dollars`;
   });
 
   test.concurrent.each(testNegativeIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -114,7 +114,7 @@ describe('Test Negative Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, ignoreZeroCurrency: true }', () => {
   const testIntegersWithCurrencyAndIgnoreZeroCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrencyAndIgnoreZeroCurrency.map((row, i) => {
-    row[1] = i === 0 ? '' : `${row[1]} SURINAAMSE DOLLARS`;
+    row[1] = i === 0 ? '' : `${row[1]} Surinaamse dollars`;
   });
 
   test.concurrent.each(testIntegersWithCurrencyAndIgnoreZeroCurrency)('convert %d => %s', (input, expected) => {
@@ -128,18 +128,18 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
 });
 
 const testFloats = [
-  [0.0, 'NUL'],
-  [0.04, 'NUL PUNT NUL VIER'],
-  [0.0468, 'NUL PUNT NUL VIER ZES ACHT'],
-  [0.4, 'NUL PUNT VIER'],
+  [0.0, 'Nul'],
+  [0.04, 'Nul Punt Nul Vier'],
+  [0.0468, 'Nul Punt Nul Vier Zes Acht'],
+  [0.4, 'Nul Punt Vier'],
   // DEBUG Not recieving expected results
-  // [0.63, 'NUL PUNT DRIEËNZESTIG'],
-  [0.973, 'NUL PUNT NEGEN HONDERD DRIEËNZEVENTIG'],
-  [0.999, 'NUL PUNT NEGEN HONDERD NEGENENNEGENTIG'],
-  [37.06, 'ZEVENENDERTIG PUNT NUL ZES'],
-  [37.068, 'ZEVENENDERTIG PUNT NUL ZES ACHT'],
-  [37.68, 'ZEVENENDERTIG PUNT ACHTENZESTIG'],
-  [37.683, 'ZEVENENDERTIG PUNT ZES HONDERD DRIEËNTACHTIG'],
+  // [0.63, 'Nul Punt Drieënzestig'],
+  [0.973, 'Nul Punt Negen Honderd Drieënzeventig'],
+  [0.999, 'Nul Punt Negen Honderd Negenennegentig'],
+  [37.06, 'Zevenendertig Punt Nul Zes'],
+  [37.068, 'Zevenendertig Punt Nul Zes Acht'],
+  [37.68, 'Zevenendertig Punt Achtenzestig'],
+  [37.683, 'Zevenendertig Punt Zes Honderd Drieëntachtig'],
 ];
 
 describe('Test Floats with options = {}', () => {
@@ -149,18 +149,18 @@ describe('Test Floats with options = {}', () => {
 });
 
 const testFloatsWithCurrency = [
-  [0.0, `NUL SURINAAMSE DOLLARS`],
-  [0.04, `NUL SURINAAMSE DOLLARS EN VIER CENTEN`],
-  [0.0468, `NUL SURINAAMSE DOLLARS EN VIJF CENTEN`],
-  [0.4, `NUL SURINAAMSE DOLLARS EN VEERTIG CENTEN`],
+  [0.0, `Nul Surinaamse dollars`],
+  [0.04, `Nul Surinaamse dollars En Vier Centen`],
+  [0.0468, `Nul Surinaamse dollars En Vijf Centen`],
+  [0.4, `Nul Surinaamse dollars En Veertig Centen`],
   // DEBUG Not recieving expected results
-  // [0.63, `NUL SURINAAMSE DOLLARS EN DRIEËNZESTIG CENTEN`],
-  [0.973, `NUL SURINAAMSE DOLLARS EN ZEVENENNEGENTIG CENTEN`],
-  [0.999, `EEN SURINAAMSE DOLLARS`],
-  [37.06, `ZEVENENDERTIG SURINAAMSE DOLLARS EN ZES CENTEN`],
-  [37.068, `ZEVENENDERTIG SURINAAMSE DOLLARS EN ZEVEN CENTEN`],
-  [37.68, `ZEVENENDERTIG SURINAAMSE DOLLARS EN ACHTENZESTIG CENTEN`],
-  [37.683, `ZEVENENDERTIG SURINAAMSE DOLLARS EN ACHTENZESTIG CENTEN`],
+  // [0.63, `Nul Surinaamse dollars En Drieënzestig Centen`],
+  [0.973, `Nul Surinaamse dollars En Zevenennegentig Centen`],
+  [0.999, `Een Surinaamse dollars`],
+  [37.06, `Zevenendertig Surinaamse dollars En Zes Centen`],
+  [37.068, `Zevenendertig Surinaamse dollars En Zeven Centen`],
+  [37.68, `Zevenendertig Surinaamse dollars En Achtenzestig Centen`],
+  [37.683, `Zevenendertig Surinaamse dollars En Achtenzestig Centen`],
 ];
 
 describe('Test Floats with options = { currency: true }', () => {
@@ -178,7 +178,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true 
       return;
     }
     if (row[0] > 0 && row[0] < 1) {
-      row[1] = (row[1] as string).replace(`NUL SURINAAMSE DOLLARS EN `, '');
+      row[1] = (row[1] as string).replace(`Nul Surinaamse dollars En `, '');
     }
   });
 
@@ -196,9 +196,9 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
   const testFloatsWithCurrencyAndIgnoreDecimal = cloneDeep(testFloatsWithCurrency);
   testFloatsWithCurrencyAndIgnoreDecimal.map((row) => {
     if (row[0] === 0.999) {
-      row[1] = `NUL SURINAAMSE DOLLARS`;
+      row[1] = `Nul Surinaamse dollars`;
     } else {
-      row[1] = (row[1] as string).replace(new RegExp(` EN [\\w ]+ CENTEN`), '');
+      row[1] = (row[1] as string).replace(new RegExp(` En [\\w ]+ Centen`), '');
     }
   });
 
@@ -219,7 +219,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
     if (row[0] > 0 && row[0] < 1) {
       row[1] = '';
     }
-    row[1] = (row[1] as string).replace(new RegExp(` EN [\\w ]+ CENTEN`), '');
+    row[1] = (row[1] as string).replace(new RegExp(` En [\\w ]+ Centen`), '');
   });
 
   test.concurrent.each(testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals)(
