@@ -99,8 +99,12 @@ export class ToWords {
    * @param options - configuration set by user
    * @returns {string} - converted number to words string
    */
-  public convert(number: number, options: ConverterOptions = {}): string {
+  public convert(number: number | string, options: ConverterOptions = {}): string {
     options = Object.assign({}, this.options.converterOptions, options);
+
+    //check type of the user input and replace any commas
+    // and convert the input to number if string
+    number = this.checkType(number);
 
     if (!this.isValidNumber(number)) {
       throw new Error(`Invalid Number "${number}"`);
@@ -285,5 +289,10 @@ export class ToWords {
 
   public isNumberZero(number: number): boolean {
     return number >= 0 && number < 1;
+  }
+
+  // replace the commas and convert to number
+  public checkType(value: string | number): number {
+    return typeof value === 'string' ? Number(value.toString().replace(/,/g, '')) : value;
   }
 }
