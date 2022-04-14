@@ -1,18 +1,16 @@
 import { ConstructorOf, ConverterOptions, LocaleInterface, NumberWordMap, ToWordsOptions } from './types';
-import enBd from './locales/en-BD';
 import enGh from './locales/en-GH';
 import enIn from './locales/en-IN';
 import enMm from './locales/en-MM';
 import enMu from './locales/en-MU';
 import enNg from './locales/en-NG';
 import enUs from './locales/en-US';
-import enGb from './locales/en-GB';
 import faIr from './locales/fa-IR';
 import frFr from './locales/fr-FR';
 import guIn from './locales/gu-IN';
 import hiIn from './locales/hi-IN';
 import mrIn from './locales/mr-IN';
-import trTr from './locales/tr-TR';
+import nlSr from './locales/nl-SR';
 
 export const DefaultConverterOptions: ConverterOptions = {
   currency: false,
@@ -38,8 +36,6 @@ export class ToWords {
   public getLocaleClass(): ConstructorOf<LocaleInterface> {
     /* eslint-disable @typescript-eslint/no-var-requires */
     switch (this.options.localeCode) {
-      case 'en-BD':
-        return enBd;
       case 'en-GH':
         return enGh;
       case 'en-IN':
@@ -52,8 +48,6 @@ export class ToWords {
         return enNg;
       case 'en-US':
         return enUs;
-      case 'en-GB':
-        return enGb;
       case 'fa-IR':
         return faIr;
       case 'fr-FR':
@@ -64,8 +58,8 @@ export class ToWords {
         return hiIn;
       case 'mr-IN':
         return mrIn;
-      case 'tr-TR':
-        return trTr;
+      case 'nl-SR':
+        return nlSr;
     }
     /* eslint-enable @typescript-eslint/no-var-requires */
     throw new Error(`Unknown Locale "${this.options.localeCode}"`);
@@ -231,7 +225,7 @@ export class ToWords {
     if (quotient > 1 && locale.config?.pluralWords?.find((word) => word === match.value) && locale.config?.pluralMark) {
       matchValue += locale.config.pluralMark;
     }
-    if (quotient === 1 && locale.config?.ignoreOneForWords?.includes(matchValue)) {
+    if (quotient === 1 && locale.config?.ignoreOneForWords) {
       words.push(matchValue);
     } else {
       words.push(...this.convertInternal(quotient), matchValue);
