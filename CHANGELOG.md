@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.2.0](https://github.com/mastermunj/to-words/compare/v3.1.1...v3.2.0) (2022-04-16)
+
+
+### Features
+
+* **language:** added support for dutch nl-SR language and currency ([#805](https://github.com/mastermunj/to-words/issues/805)) ([4ac84c3](https://github.com/mastermunj/to-words/commit/4ac84c3c53093838b8787c0f3d1749c127204d9f))
+
 ### [3.1.1](https://github.com/mastermunj/to-words/compare/v3.1.0...v3.1.1) (2022-03-28)
 
 
