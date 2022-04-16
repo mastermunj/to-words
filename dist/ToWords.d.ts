@@ -6,27 +6,23 @@ export declare class ToWords {
     private locale;
     constructor(options?: ToWordsOptions);
     /**
-     * getting language locale class based on user
-     * passed config options
-     * It contains the mapping for currency, texts and
-     * numberToWord mapping
-     *
+     * Get locale class for the locale passed in the options.
      * @returns {class} - based on selected currency
      */
     getLocaleClass(): ConstructorOf<LocaleInterface>;
     /**
-     * Instantiating the passed user currency local option in configuration
-     * object
+     * Create instance of the locale class.
+     *
      * @returns {class}
      */
     getLocale(): InstanceType<ConstructorOf<LocaleInterface>>;
     /**
      *
-     * @param number - user input number to be converted
-     * @param options - configuration set by user
-     * @returns {string} - converted number to words string
+     * @param number - The number to be converted into the words.
+     * @param options - Converter Options object.
+     * @returns {string} - converted number to words
      */
-    convert(number: number, options?: ConverterOptions): string;
+    convert(number: number | string, options?: ConverterOptions): string;
     /**
      *
      * @param number
@@ -39,4 +35,5 @@ export declare class ToWords {
     isFloat(number: number | string): boolean;
     isValidNumber(number: number | string): boolean;
     isNumberZero(number: number): boolean;
+    clean(value: string | number): number;
 }

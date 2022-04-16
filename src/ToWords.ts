@@ -36,11 +36,7 @@ export class ToWords {
   }
 
   /**
-   * getting language locale class based on user
-   * passed config options
-   * It contains the mapping for currency, texts and
-   * numberToWord mapping
-   *
+   * Get locale class for the locale passed in the options.
    * @returns {class} - based on selected currency
    */
 
@@ -81,8 +77,8 @@ export class ToWords {
   }
 
   /**
-   * Instantiating the passed user currency local option in configuration
-   * object
+   * Create instance of the locale class.
+   *
    * @returns {class}
    */
   public getLocale(): InstanceType<ConstructorOf<LocaleInterface>> {
@@ -95,16 +91,16 @@ export class ToWords {
 
   /**
    *
-   * @param number - user input number to be converted
-   * @param options - configuration set by user
-   * @returns {string} - converted number to words string
+   * @param number - The number to be converted into the words.
+   * @param options - Converter Options object.
+   * @returns {string} - converted number to words
    */
   public convert(number: number | string, options: ConverterOptions = {}): string {
     options = Object.assign({}, this.options.converterOptions, options);
 
     //check type of the user input and replace any commas
     // and convert the input to number if string
-    number = this.checkType(number);
+    number = this.clean(number);
 
     if (!this.isValidNumber(number)) {
       throw new Error(`Invalid Number "${number}"`);
@@ -292,7 +288,7 @@ export class ToWords {
   }
 
   // replace the commas and convert to number
-  public checkType(value: string | number): number {
+  public clean(value: string | number): number {
     return typeof value === 'string' ? Number(value.toString().replace(/,/g, '')) : value;
   }
 }
