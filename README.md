@@ -95,19 +95,21 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | Country  | Language | Locale |
 | ------------- | ------------- | ------------- |
 | Bangladesh | English | en-BD |
-| France | French | fr-FR |
+| UK | English | en-GB |
 | Ghana | English | en-GH |
 | India | English | en-IN (default) |
+| Myanmar | English | en-MM |
+| Mauritius | English | en-MU |
+| Nigeria | English | en-NG |
+| USA | English | en-US |
+| Iran | Persian | fa-IR |
+| France | French | fr-FR |
 | India | Gujarati | gu-IN |
 | India | Hindi | hi-IN |
 | India | Marathi | mr-IN |
-| Iran | Persian | fa-IR |
-| Mauritius | English | en-MU |
-| Myanmar | English | en-MM |
-| Nigeria | English | en-NG |
+| Suriname | Dutch | nl-SR |
 | Turkey | Turkish | tr-TR |
-| UK | English | en-GB |
-| USA | English | en-US |
+
 
 ## Inspiration for core logic
 [https://stackoverflow.com/a/46221860](https://stackoverflow.com/a/46221860)
