@@ -44,6 +44,11 @@ class ToWords {
         switch (this.options.localeCode) {
             case 'en-BD':
                 return en_BD_1.default;
+    /**
+     * Instantiating the passed user currency local option in configuration
+     * object
+     * @returns {class}
+     */
             case 'en-GH':
                 return en_GH_1.default;
             case 'en-IN':
@@ -51,7 +56,18 @@ class ToWords {
             case 'en-MM':
                 return en_MM_1.default;
             case 'en-MU':
+    /**
+     *
+     * @param number - user input number to be converted
+     * @param options - configuration set by user
+     * @returns {string} - converted number to words string
+     */
                 return en_MU_1.default;
+    /**
+     * Instantiating the passed user currency local option in configuration
+     * object
+     * @returns {class}
+     */
             case 'en-NG':
                 return en_NG_1.default;
             case 'en-US':
@@ -59,7 +75,23 @@ class ToWords {
             case 'en-GB':
                 return en_GB_1.default;
             case 'fa-IR':
+    /**
+     *
+     * @param number - user input number to be converted
+     * @param options - configuration set by user
+    /**
+     *
+     * @param number
+     * @returns {Array<string>} converted words as array of strings
+     */
+     * @returns {string} - converted number to words string
+     */
                 return fa_IR_1.default;
+    /**
+     * Instantiating the passed user currency local option in configuration
+     * object
+     * @returns {class}
+     */
             case 'fr-FR':
                 return fr_FR_1.default;
             case 'gu-IN':
@@ -67,7 +99,23 @@ class ToWords {
             case 'hi-IN':
                 return hi_IN_1.default;
             case 'mr-IN':
+    /**
+     *
+     * @param number - user input number to be converted
+     * @param options - configuration set by user
+    /**
+     *
+     * @param number
+     * @returns {Array<string>} converted words as array of strings
+     */
+     * @returns {string} - converted number to words string
+     */
                 return mr_IN_1.default;
+    /**
+     * Instantiating the passed user currency local option in configuration
+     * object
+     * @returns {class}
+     */
             case 'tr-TR':
                 return tr_TR_1.default;
             case 'nl-SR':
@@ -75,6 +123,17 @@ class ToWords {
         }
         /* eslint-enable @typescript-eslint/no-var-requires */
         throw new Error(`Unknown Locale "${this.options.localeCode}"`);
+    /**
+     *
+     * @param number - user input number to be converted
+     * @param options - configuration set by user
+    /**
+     *
+     * @param number
+     * @returns {Array<string>} converted words as array of strings
+     */
+     * @returns {string} - converted number to words string
+     */
     }
     /**
      * Create instance of the locale class.
