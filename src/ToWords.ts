@@ -36,6 +36,11 @@ export class ToWords {
     this.options = Object.assign({}, DefaultToWordsOptions, options);
   }
 
+  /**
+   * Get locale class for the locale passed in the options.
+   * @returns {class} - based on selected currency
+   */
+
   public getLocaleClass(): ConstructorOf<LocaleInterface> {
     /* eslint-disable @typescript-eslint/no-var-requires */
     switch (this.options.localeCode) {
@@ -74,6 +79,11 @@ export class ToWords {
     throw new Error(`Unknown Locale "${this.options.localeCode}"`);
   }
 
+  /**
+   * Create instance of the locale class.
+   *
+   * @returns {class}
+   */
   public getLocale(): InstanceType<ConstructorOf<LocaleInterface>> {
     if (this.locale === undefined) {
       const LocaleClass = this.getLocaleClass();
@@ -82,8 +92,18 @@ export class ToWords {
     return this.locale;
   }
 
-  public convert(number: number, options: ConverterOptions = {}): string {
+  /**
+   *
+   * @param number - The number to be converted into the words.
+   * @param options - Converter Options object.
+   * @returns {string} - converted number to words
+   */
+  public convert(number: number | string, options: ConverterOptions = {}): string {
     options = Object.assign({}, this.options.converterOptions, options);
+
+    //check type of the user input and replace any commas
+    // and convert the input to number if string
+    number = this.clean(number);
 
     if (!this.isValidNumber(number)) {
       throw new Error(`Invalid Number "${number}"`);
@@ -102,6 +122,11 @@ export class ToWords {
     return words.join(' ');
   }
 
+  /**
+   *
+   * @param number
+   * @returns {Array<string>} converted words as array of strings
+   */
   protected convertNumber(number: number): string[] {
     const locale = this.getLocale();
 
@@ -263,5 +288,10 @@ export class ToWords {
 
   public isNumberZero(number: number): boolean {
     return number >= 0 && number < 1;
+  }
+
+  // replace the commas and convert to number
+  public clean(value: string | number): number {
+    return typeof value === 'string' ? Number(value.toString().replace(/,/g, '')) : value;
   }
 }
