@@ -41,7 +41,7 @@
     }
   },
   "devDependencies": {
-    "@commitlint/cli": "^16.2.3",
+    "@commitlint/cli": "^17.0.0",
     "@commitlint/config-conventional": "^17.0.0",
     "@types/jest": "^27.4.1",
     "@types/lodash": "^4.14.181",
