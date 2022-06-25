@@ -233,3 +233,34 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
     },
   );
 });
+
+const testFloatsWithEuroCurrency = [
+  [0.0, `Zero Euros Only`],
+  [0.04, `Zero Euros And Four Eurocents Only`],
+  [0.0468, `Zero Euros And Five Eurocents Only`],
+  [0.4, `Zero Euros And Forty Eurocents Only`],
+  [0.63, `Zero Euros And Sixty Three Eurocents Only`],
+  [0.973, `Zero Euros And Ninety Seven Eurocents Only`],
+  [0.999, `One Euros Only`],
+  [37.06, `Thirty Seven Euros And Six Eurocents Only`],
+  [37.068, `Thirty Seven Euros And Seven Eurocents Only`],
+  [37.68, `Thirty Seven Euros And Sixty Eight Eurocents Only`],
+  [37.683, `Thirty Seven Euros And Sixty Eight Eurocents Only`],
+];
+
+const euroCurrencyOptions = {
+  name: 'Euro',
+  plural: 'Euros',
+  symbol: '€',
+  fractionalUnit: {
+    name: 'Eurocent',
+    plural: 'Eurocents',
+    symbol: '¢',
+  },
+};
+
+describe('Test Floats with options = { currency: true, currencyOptions }', () => {
+  test.concurrent.each(testFloatsWithEuroCurrency)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { currency: true, currencyOptions: euroCurrencyOptions })).toBe(expected);
+  });
+});
