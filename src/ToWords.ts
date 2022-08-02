@@ -147,6 +147,8 @@ export class ToWords {
   protected convertCurrency(number: number, options: ConverterOptions = {}): string[] {
     const locale = this.getLocale();
 
+    const currencyOptions = options.currencyOptions ?? locale.config.currency;
+
     const isNegativeNumber = number < 0;
     if (isNegativeNumber) {
       number = Math.abs(number);
@@ -156,8 +158,8 @@ export class ToWords {
     // Extra check for isFloat to overcome 1.999 rounding off to 2
     const split = number.toString().split('.');
     let words = [...this.convertInternal(Number(split[0]))];
-    if (locale.config.currency.plural) {
-      words.push(locale.config.currency.plural);
+    if (currencyOptions.plural) {
+      words.push(currencyOptions.plural);
     }
     const ignoreZero =
       this.isNumberZero(number) &&
@@ -182,9 +184,9 @@ export class ToWords {
       if (decimalLengthWord?.length) {
         wordsWithDecimal.push(decimalLengthWord);
       }
-      wordsWithDecimal.push(locale.config.currency.fractionalUnit.plural);
+      wordsWithDecimal.push(currencyOptions.fractionalUnit.plural);
     } else if (locale.config.decimalLengthWordMapping && words.length) {
-      wordsWithDecimal.push(locale.config.currency.fractionalUnit.plural);
+      wordsWithDecimal.push(currencyOptions.fractionalUnit.plural);
     }
     const isEmpty = words.length <= 0 && wordsWithDecimal.length <= 0;
     if (!isEmpty && isNegativeNumber) {

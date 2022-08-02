@@ -138,8 +138,9 @@ class ToWords {
         return words;
     }
     convertCurrency(number, options = {}) {
-        var _a, _b, _c;
+        var _a, _b, _c, _d;
         const locale = this.getLocale();
+        const currencyOptions = (_a = options.currencyOptions) !== null && _a !== void 0 ? _a : locale.config.currency;
         const isNegativeNumber = number < 0;
         if (isNegativeNumber) {
             number = Math.abs(number);
@@ -148,11 +149,11 @@ class ToWords {
         // Extra check for isFloat to overcome 1.999 rounding off to 2
         const split = number.toString().split('.');
         let words = [...this.convertInternal(Number(split[0]))];
-        if (locale.config.currency.plural) {
-            words.push(locale.config.currency.plural);
+        if (currencyOptions.plural) {
+            words.push(currencyOptions.plural);
         }
         const ignoreZero = this.isNumberZero(number) &&
-            (options.ignoreZeroCurrency || (((_a = locale.config) === null || _a === void 0 ? void 0 : _a.ignoreZeroInDecimals) && number !== 0));
+            (options.ignoreZeroCurrency || (((_b = locale.config) === null || _b === void 0 ? void 0 : _b.ignoreZeroInDecimals) && number !== 0));
         if (ignoreZero) {
             words = [];
         }
@@ -163,14 +164,14 @@ class ToWords {
                 wordsWithDecimal.push(locale.config.texts.and);
             }
             wordsWithDecimal.push(...this.convertInternal(Number(split[1]) * (!locale.config.decimalLengthWordMapping ? Math.pow(10, 2 - split[1].length) : 1)));
-            const decimalLengthWord = (_c = (_b = locale.config) === null || _b === void 0 ? void 0 : _b.decimalLengthWordMapping) === null || _c === void 0 ? void 0 : _c[split[1].length];
+            const decimalLengthWord = (_d = (_c = locale.config) === null || _c === void 0 ? void 0 : _c.decimalLengthWordMapping) === null || _d === void 0 ? void 0 : _d[split[1].length];
             if (decimalLengthWord === null || decimalLengthWord === void 0 ? void 0 : decimalLengthWord.length) {
                 wordsWithDecimal.push(decimalLengthWord);
             }
-            wordsWithDecimal.push(locale.config.currency.fractionalUnit.plural);
+            wordsWithDecimal.push(currencyOptions.fractionalUnit.plural);
         }
         else if (locale.config.decimalLengthWordMapping && words.length) {
-            wordsWithDecimal.push(locale.config.currency.fractionalUnit.plural);
+            wordsWithDecimal.push(currencyOptions.fractionalUnit.plural);
         }
         const isEmpty = words.length <= 0 && wordsWithDecimal.length <= 0;
         if (!isEmpty && isNegativeNumber) {
