@@ -1,4 +1,5 @@
 import { ConstructorOf, ConverterOptions, LocaleInterface, NumberWordMap, ToWordsOptions } from './types';
+import enAe from './locales/en-AE';
 import enBd from './locales/en-BD';
 import enGh from './locales/en-GH';
 import enIn from './locales/en-IN';
@@ -39,6 +40,8 @@ export class ToWords {
   public getLocaleClass(): ConstructorOf<LocaleInterface> {
     /* eslint-disable @typescript-eslint/no-var-requires */
     switch (this.options.localeCode) {
+      case 'en-AE':
+        return enAe;
       case 'en-BD':
         return enBd;
       case 'en-GH':
