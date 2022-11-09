@@ -120,6 +120,7 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | India | Marathi | mr-IN |
 | Suriname | Dutch | nl-SR |
 | Turkey | Turkish | tr-TR |
+| UAE | English | en-AE |
 
 
 ## Inspiration for core logic
