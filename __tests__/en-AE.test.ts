@@ -196,7 +196,7 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
     if (row[0] === 0.999) {
       row[1] = `Zero Dirhams Only`;
     } else {
-      row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ Cents`), '');
+      row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ Fils`), '');
     }
   });
 
@@ -217,7 +217,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
     if (row[0] > 0 && row[0] < 1) {
       row[1] = '';
     }
-    row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ Cents`), '');
+    row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ Fils`), '');
   });
 
   test.concurrent.each(testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals)(
