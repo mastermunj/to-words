@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ToWords = exports.DefaultToWordsOptions = exports.DefaultConverterOptions = void 0;
+const en_AE_1 = __importDefault(require("./locales/en-AE"));
 const en_BD_1 = __importDefault(require("./locales/en-BD"));
 const en_GH_1 = __importDefault(require("./locales/en-GH"));
 const en_IN_1 = __importDefault(require("./locales/en-IN"));
@@ -38,6 +39,8 @@ class ToWords {
     getLocaleClass() {
         /* eslint-disable @typescript-eslint/no-var-requires */
         switch (this.options.localeCode) {
+            case 'en-AE':
+                return en_AE_1.default;
             case 'en-BD':
                 return en_BD_1.default;
             case 'en-GH':
