@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.3.1](https://github.com/mastermunj/to-words/compare/v3.3.0...v3.3.1) (2022-11-10)
+
+
+### Bug Fixes
+
+* add dist ([ca7e4c9](https://github.com/mastermunj/to-words/commit/ca7e4c915cb6b393e50b941f6fd3a5cfd1186463))
+
 ## [3.3.0](https://github.com/mastermunj/to-words/compare/v3.2.0...v3.3.0) (2022-08-02)
 
 
