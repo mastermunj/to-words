@@ -8,25 +8,25 @@ export interface CurrencyOptions {
         symbol: string;
     };
 }
-export declare type ConverterOptions = {
+export type ConverterOptions = {
     currency?: boolean;
     ignoreDecimal?: boolean;
     ignoreZeroCurrency?: boolean;
     doNotAddOnly?: boolean;
     currencyOptions?: CurrencyOptions;
 };
-export declare type ToWordsOptions = {
+export type ToWordsOptions = {
     localeCode?: string;
     converterOptions?: ConverterOptions;
 };
 export interface ConstructorOf<T> {
     new (...args: unknown[]): T;
 }
-export declare type NumberWordMap = {
+export type NumberWordMap = {
     number: number;
     value: string;
 };
-export declare type LocaleConfig = {
+export type LocaleConfig = {
     currency: CurrencyOptions;
     texts: {
         and: string;
