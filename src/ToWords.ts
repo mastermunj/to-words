@@ -167,8 +167,10 @@ export class ToWords {
     // Extra check for isFloat to overcome 1.999 rounding off to 2
     const split = number.toString().split('.');
     let words = [...this.convertInternal(Number(split[0]))];
-    if (currencyOptions.plural) {
+    if (currencyOptions.plural && number !== 1) {
       words.push(currencyOptions.plural);
+    } else {
+      words.push(currencyOptions.name);
     }
     const ignoreZero =
       this.isNumberZero(number) &&
