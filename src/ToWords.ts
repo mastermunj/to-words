@@ -1,6 +1,8 @@
 import { ConstructorOf, ConverterOptions, LocaleInterface, NumberWordMap, ToWordsOptions } from './types';
+import eeEE from './locales/ee-EE';
 import enAe from './locales/en-AE';
 import enBd from './locales/en-BD';
+import enGb from './locales/en-GB';
 import enGh from './locales/en-GH';
 import enIe from './locales/en-IE';
 import enIn from './locales/en-IN';
@@ -8,20 +10,20 @@ import enMm from './locales/en-MM';
 import enMu from './locales/en-MU';
 import enNg from './locales/en-NG';
 import enNp from './locales/en-NP';
-import enUs from './locales/en-US';
-import enGb from './locales/en-GB';
 import enPh from './locales/en-PH';
+import enUs from './locales/en-US';
+import esES from './locales/es-ES';
+import esMX from './locales/es-MX';
 import faIr from './locales/fa-IR';
 import frBe from './locales/fr-BE';
 import frFr from './locales/fr-FR';
 import guIn from './locales/gu-IN';
 import hiIn from './locales/hi-IN';
+import koKr from './locales/ko-KR';
 import mrIn from './locales/mr-IN';
+import nlSr from './locales/nl-SR';
 import ptBR from './locales/pt-BR';
 import trTr from './locales/tr-TR';
-import nlSr from './locales/nl-SR';
-import eeEE from './locales/ee-EE';
-import koKr from './locales/ko-KR';
 
 export const DefaultConverterOptions: ConverterOptions = {
   currency: false,
@@ -53,6 +55,8 @@ export class ToWords {
         return enAe;
       case 'en-BD':
         return enBd;
+      case 'en-GB':
+        return enGb;
       case 'en-GH':
         return enGh;
       case 'en-IE':
@@ -67,12 +71,14 @@ export class ToWords {
         return enNg;
       case 'en-NP':
         return enNp;
-      case 'en-US':
-        return enUs;
-      case 'en-GB':
-        return enGb;
       case 'en-PH':
         return enPh;
+      case 'en-US':
+        return enUs;
+      case 'es-ES':
+        return esES;
+      case 'es-MX':
+        return esMX;
       case 'fa-IR':
         return faIr;
       case 'fr-BE':
@@ -83,16 +89,16 @@ export class ToWords {
         return guIn;
       case 'hi-IN':
         return hiIn;
+      case 'ko-KR':
+        return koKr;
       case 'mr-IN':
         return mrIn;
+      case 'nl-SR':
+        return nlSr;
       case 'pt-BR':
         return ptBR;
       case 'tr-TR':
         return trTr;
-      case 'nl-SR':
-        return nlSr;
-      case 'ko-KR':
-        return koKr;
     }
     /* eslint-enable @typescript-eslint/no-var-requires */
     throw new Error(`Unknown Locale "${this.options.localeCode}"`);
