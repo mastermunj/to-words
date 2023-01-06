@@ -8,6 +8,8 @@ import enMu from './locales/en-MU';
 import enNg from './locales/en-NG';
 import enUs from './locales/en-US';
 import enGb from './locales/en-GB';
+import esES from './locales/es-ES';
+import esMX from './locales/es-MX';
 import faIr from './locales/fa-IR';
 import frFr from './locales/fr-FR';
 import guIn from './locales/gu-IN';
@@ -58,6 +60,10 @@ export class ToWords {
         return enUs;
       case 'en-GB':
         return enGb;
+      case 'es-ES':
+        return esES;
+      case 'es-MX':
+        return esMX;
       case 'fa-IR':
         return faIr;
       case 'fr-FR':
