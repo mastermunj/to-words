@@ -18,6 +18,7 @@ const fr_FR_1 = __importDefault(require("./locales/fr-FR"));
 const gu_IN_1 = __importDefault(require("./locales/gu-IN"));
 const hi_IN_1 = __importDefault(require("./locales/hi-IN"));
 const mr_IN_1 = __importDefault(require("./locales/mr-IN"));
+const pt_BR_1 = __importDefault(require("./locales/pt-BR"));
 const tr_TR_1 = __importDefault(require("./locales/tr-TR"));
 const nl_SR_1 = __importDefault(require("./locales/nl-SR"));
 exports.DefaultConverterOptions = {
@@ -67,6 +68,8 @@ class ToWords {
                 return hi_IN_1.default;
             case 'mr-IN':
                 return mr_IN_1.default;
+            case 'pt-BR':
+                return pt_BR_1.default;
             case 'tr-TR':
                 return tr_TR_1.default;
             case 'nl-SR':
@@ -189,7 +192,7 @@ class ToWords {
         return words;
     }
     convertInternal(number) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
         const locale = this.getLocale();
         if (locale.config.exactWordsMapping) {
             const exactMatch = (_b = (_a = locale.config) === null || _a === void 0 ? void 0 : _a.exactWordsMapping) === null || _b === void 0 ? void 0 : _b.find((elem) => {
@@ -228,7 +231,9 @@ class ToWords {
         }
         if (remainder > 0) {
             if ((_l = (_k = locale.config) === null || _k === void 0 ? void 0 : _k.splitWord) === null || _l === void 0 ? void 0 : _l.length) {
-                words.push(locale.config.splitWord);
+                if (!((_o = (_m = locale.config) === null || _m === void 0 ? void 0 : _m.noSplitWordAfter) === null || _o === void 0 ? void 0 : _o.find((word) => word === match.value))) {
+                    words.push(locale.config.splitWord);
+                }
             }
             words.push(...this.convertInternal(remainder));
         }
