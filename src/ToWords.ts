@@ -13,6 +13,7 @@ import frFr from './locales/fr-FR';
 import guIn from './locales/gu-IN';
 import hiIn from './locales/hi-IN';
 import mrIn from './locales/mr-IN';
+import ptBR from './locales/pt-BR';
 import trTr from './locales/tr-TR';
 import nlSr from './locales/nl-SR';
 
@@ -68,6 +69,8 @@ export class ToWords {
         return hiIn;
       case 'mr-IN':
         return mrIn;
+      case 'pt-BR':
+        return ptBR;
       case 'tr-TR':
         return trTr;
       case 'nl-SR':
@@ -247,7 +250,9 @@ export class ToWords {
 
     if (remainder > 0) {
       if (locale.config?.splitWord?.length) {
-        words.push(locale.config.splitWord);
+        if (!locale.config?.noSplitWordAfter?.find((word) => word === match.value)) {
+          words.push(locale.config.splitWord);
+        }
       }
       words.push(...this.convertInternal(remainder));
     }

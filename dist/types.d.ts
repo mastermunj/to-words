@@ -43,6 +43,7 @@ export type LocaleConfig = {
     ignoreOneForWords?: string[];
     pluralMark?: string;
     pluralWords?: string[];
+    noSplitWordAfter?: string[];
 };
 export interface LocaleInterface {
     config: LocaleConfig;
