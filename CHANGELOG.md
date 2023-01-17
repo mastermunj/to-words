@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.4.0](https://github.com/mastermunj/to-words/compare/v3.3.2...v3.4.0) (2023-01-17)
+
+
+### Features
+
+* **locale:** add support to pt-BR locale ([b4061ef](https://github.com/mastermunj/to-words/commit/b4061ef0f55091e2fcea2834e893f1c14c860ce4))
+
 ### [3.3.2](https://github.com/mastermunj/to-words/compare/v3.3.1...v3.3.2) (2022-12-16)
 
 ### [3.3.1](https://github.com/mastermunj/to-words/compare/v3.3.0...v3.3.1) (2022-11-10)
