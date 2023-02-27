@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.5.0](https://github.com/mastermunj/to-words/compare/v3.4.0...v3.5.0) (2023-02-27)
+
+
+### Features
+
+* **locale:** add support for en-NP locale ([c66759a](https://github.com/mastermunj/to-words/commit/c66759a0ffdc8411cdaec5c8dcfcf382cb90fa27))
+
 ## [3.4.0](https://github.com/mastermunj/to-words/compare/v3.3.2...v3.4.0) (2023-01-17)
 
 
