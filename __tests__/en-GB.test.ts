@@ -1,15 +1,15 @@
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
-import enUs from '../src/locales/en-US';
+import enGb from '../src/locales/en-GB';
 
-const localeCode = 'en-US';
+const localeCode = 'en-GB';
 const toWords = new ToWords({
   localeCode,
 });
 
 describe('Test Locale', () => {
   test(`Locale Class: ${localeCode}`, () => {
-    expect(toWords.getLocaleClass()).toBe(enUs);
+    expect(toWords.getLocaleClass()).toBe(enGb);
   });
 
   const wrongLocaleCode = localeCode + '-wrong';
@@ -76,7 +76,7 @@ describe('Test Negative Integers with options = {}', () => {
 describe('Test Integers with options = { currency: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} Dollars Only`;
+    row[1] = `${row[1]} Pounds Only`;
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -87,7 +87,7 @@ describe('Test Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, doNotAddOnly: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} Dollars`;
+    row[1] = `${row[1]} Pounds`;
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -99,11 +99,11 @@ describe('Test Negative Integers with options = { currency: true }', () => {
   const testNegativeIntegersWithCurrency = cloneDeep(testIntegers);
   testNegativeIntegersWithCurrency.map((row, i) => {
     if (i === 0) {
-      row[1] = `${row[1]} Dollars Only`;
+      row[1] = `${row[1]} Pounds Only`;
       return;
     }
     row[0] = -row[0];
-    row[1] = `Minus ${row[1]} Dollars Only`;
+    row[1] = `Minus ${row[1]} Pounds Only`;
   });
 
   test.concurrent.each(testNegativeIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -114,7 +114,7 @@ describe('Test Negative Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, ignoreZeroCurrency: true }', () => {
   const testIntegersWithCurrencyAndIgnoreZeroCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrencyAndIgnoreZeroCurrency.map((row, i) => {
-    row[1] = i === 0 ? '' : `${row[1]} Dollars Only`;
+    row[1] = i === 0 ? '' : `${row[1]} Pounds Only`;
   });
 
   test.concurrent.each(testIntegersWithCurrencyAndIgnoreZeroCurrency)('convert %d => %s', (input, expected) => {
@@ -148,17 +148,17 @@ describe('Test Floats with options = {}', () => {
 });
 
 const testFloatsWithCurrency = [
-  [0.0, `Zero Dollars Only`],
-  [0.04, `Zero Dollars And Four Cents Only`],
-  [0.0468, `Zero Dollars And Five Cents Only`],
-  [0.4, `Zero Dollars And Forty Cents Only`],
-  [0.63, `Zero Dollars And Sixty Three Cents Only`],
-  [0.973, `Zero Dollars And Ninety Seven Cents Only`],
-  [0.999, `One Dollars Only`],
-  [37.06, `Thirty Seven Dollars And Six Cents Only`],
-  [37.068, `Thirty Seven Dollars And Seven Cents Only`],
-  [37.68, `Thirty Seven Dollars And Sixty Eight Cents Only`],
-  [37.683, `Thirty Seven Dollars And Sixty Eight Cents Only`],
+  [0.0, `Zero Pounds Only`],
+  [0.04, `Zero Pounds And Four Pence Only`],
+  [0.0468, `Zero Pounds And Five Pence Only`],
+  [0.4, `Zero Pounds And Forty Pence Only`],
+  [0.63, `Zero Pounds And Sixty Three Pence Only`],
+  [0.973, `Zero Pounds And Ninety Seven Pence Only`],
+  [0.999, `One Pounds Only`],
+  [37.06, `Thirty Seven Pounds And Six Pence Only`],
+  [37.068, `Thirty Seven Pounds And Seven Pence Only`],
+  [37.68, `Thirty Seven Pounds And Sixty Eight Pence Only`],
+  [37.683, `Thirty Seven Pounds And Sixty Eight Pence Only`],
 ];
 
 describe('Test Floats with options = { currency: true }', () => {
@@ -176,7 +176,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true 
       return;
     }
     if (row[0] > 0 && row[0] < 1) {
-      row[1] = (row[1] as string).replace(`Zero Dollars And `, '');
+      row[1] = (row[1] as string).replace(`Zero Pounds And `, '');
     }
   });
 
@@ -194,9 +194,9 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
   const testFloatsWithCurrencyAndIgnoreDecimal = cloneDeep(testFloatsWithCurrency);
   testFloatsWithCurrencyAndIgnoreDecimal.map((row) => {
     if (row[0] === 0.999) {
-      row[1] = `Zero Dollars Only`;
+      row[1] = `Zero Pounds Only`;
     } else {
-      row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ Cents`), '');
+      row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ Pence`), '');
     }
   });
 
@@ -217,7 +217,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
     if (row[0] > 0 && row[0] < 1) {
       row[1] = '';
     }
-    row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ Cents`), '');
+    row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ Pence`), '');
   });
 
   test.concurrent.each(testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals)(
@@ -232,35 +232,4 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
       ).toBe(expected);
     },
   );
-});
-
-const testFloatsWithEuroCurrency = [
-  [0.0, `Zero Euros Only`],
-  [0.04, `Zero Euros And Four Eurocents Only`],
-  [0.0468, `Zero Euros And Five Eurocents Only`],
-  [0.4, `Zero Euros And Forty Eurocents Only`],
-  [0.63, `Zero Euros And Sixty Three Eurocents Only`],
-  [0.973, `Zero Euros And Ninety Seven Eurocents Only`],
-  [0.999, `One Euros Only`],
-  [37.06, `Thirty Seven Euros And Six Eurocents Only`],
-  [37.068, `Thirty Seven Euros And Seven Eurocents Only`],
-  [37.68, `Thirty Seven Euros And Sixty Eight Eurocents Only`],
-  [37.683, `Thirty Seven Euros And Sixty Eight Eurocents Only`],
-];
-
-const euroCurrencyOptions = {
-  name: 'Euro',
-  plural: 'Euros',
-  symbol: '€',
-  fractionalUnit: {
-    name: 'Eurocent',
-    plural: 'Eurocents',
-    symbol: '¢',
-  },
-};
-
-describe('Test Floats with options = { currency: true, currencyOptions }', () => {
-  test.concurrent.each(testFloatsWithEuroCurrency)('convert %d => %s', (input, expected) => {
-    expect(toWords.convert(input as number, { currency: true, currencyOptions: euroCurrencyOptions })).toBe(expected);
-  });
 });

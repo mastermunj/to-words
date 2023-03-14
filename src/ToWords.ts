@@ -1,18 +1,23 @@
 import { ConstructorOf, ConverterOptions, LocaleInterface, NumberWordMap, ToWordsOptions } from './types';
+import enAe from './locales/en-AE';
 import enBd from './locales/en-BD';
 import enGh from './locales/en-GH';
 import enIn from './locales/en-IN';
 import enMm from './locales/en-MM';
 import enMu from './locales/en-MU';
 import enNg from './locales/en-NG';
+import enNp from './locales/en-NP';
 import enUs from './locales/en-US';
+import enGb from './locales/en-GB';
 import faIr from './locales/fa-IR';
 import frFr from './locales/fr-FR';
 import guIn from './locales/gu-IN';
 import hiIn from './locales/hi-IN';
 import mrIn from './locales/mr-IN';
+import ptBR from './locales/pt-BR';
 import trTr from './locales/tr-TR';
 import lvLv from './locales/lv-LV';
+import nlSr from './locales/nl-SR';
 
 export const DefaultConverterOptions: ConverterOptions = {
   currency: false,
@@ -38,6 +43,8 @@ export class ToWords {
   public getLocaleClass(): ConstructorOf<LocaleInterface> {
     /* eslint-disable @typescript-eslint/no-var-requires */
     switch (this.options.localeCode) {
+      case 'en-AE':
+        return enAe;
       case 'en-BD':
         return enBd;
       case 'en-GH':
@@ -50,8 +57,12 @@ export class ToWords {
         return enMu;
       case 'en-NG':
         return enNg;
+      case 'en-NP':
+        return enNp;
       case 'en-US':
         return enUs;
+      case 'en-GB':
+        return enGb;
       case 'fa-IR':
         return faIr;
       case 'fr-FR':
@@ -62,10 +73,14 @@ export class ToWords {
         return hiIn;
       case 'mr-IN':
         return mrIn;
+      case 'pt-BR':
+        return ptBR;
       case 'tr-TR':
         return trTr;
       case 'lv-LV':
         return lvLv;
+      case 'nl-SR':
+        return nlSr;
     }
     /* eslint-enable @typescript-eslint/no-var-requires */
     throw new Error(`Unknown Locale "${this.options.localeCode}"`);
@@ -144,6 +159,8 @@ export class ToWords {
   protected convertCurrency(number: number, options: ConverterOptions = {}): string[] {
     const locale = this.getLocale();
 
+    const currencyOptions = options.currencyOptions ?? locale.config.currency;
+
     const isNegativeNumber = number < 0;
     if (isNegativeNumber) {
       number = Math.abs(number);
@@ -153,8 +170,8 @@ export class ToWords {
     // Extra check for isFloat to overcome 1.999 rounding off to 2
     const split = number.toString().split('.');
     let words = [...this.convertInternal(Number(split[0]))];
-    if (locale.config.currency.plural) {
-      words.push(locale.config.currency.plural);
+    if (currencyOptions.plural) {
+      words.push(currencyOptions.plural);
     }
     const ignoreZero =
       this.isNumberZero(number) &&
@@ -179,9 +196,9 @@ export class ToWords {
       if (decimalLengthWord?.length) {
         wordsWithDecimal.push(decimalLengthWord);
       }
-      wordsWithDecimal.push(locale.config.currency.fractionalUnit.plural);
+      wordsWithDecimal.push(currencyOptions.fractionalUnit.plural);
     } else if (locale.config.decimalLengthWordMapping && words.length) {
-      wordsWithDecimal.push(locale.config.currency.fractionalUnit.plural);
+      wordsWithDecimal.push(currencyOptions.fractionalUnit.plural);
     }
     const isEmpty = words.length <= 0 && wordsWithDecimal.length <= 0;
     if (!isEmpty && isNegativeNumber) {
@@ -231,7 +248,7 @@ export class ToWords {
     if (quotient > 1 && locale.config?.pluralWords?.find((word) => word === match.value) && locale.config?.pluralMark) {
       matchValue += locale.config.pluralMark;
     }
-    if (quotient === 1 && locale.config?.ignoreOneForWords) {
+    if (quotient === 1 && locale.config?.ignoreOneForWords?.includes(matchValue)) {
       words.push(matchValue);
     } else {
       words.push(...this.convertInternal(quotient), matchValue);
@@ -239,7 +256,9 @@ export class ToWords {
 
     if (remainder > 0) {
       if (locale.config?.splitWord?.length) {
-        words.push(locale.config.splitWord);
+        if (!locale.config?.noSplitWordAfter?.find((word) => word === match.value)) {
+          words.push(locale.config.splitWord);
+        }
       }
       words.push(...this.convertInternal(remainder));
     }

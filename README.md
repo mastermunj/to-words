@@ -30,6 +30,16 @@ const toWords = new ToWords({
     ignoreDecimal: false,
     ignoreZeroCurrency: false,
     doNotAddOnly: false,
+    currencyOptions: { // can be used to override defaults for the selected locale
+      name: 'Rupee',
+      plural: 'Rupees',
+      symbol: '₹',
+      fractionalUnit: {
+        name: 'Paisa',
+        plural: 'Paise',
+        symbol: '',
+      },
+    }
   }
 });
 ```
@@ -90,25 +100,31 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | ignoreDecimal | boolean | false | Whether to ignore fractional unit of number while converting into words. |
 | ignoreZeroCurrency | boolean | false | Whether to ignore zero currency value while converting into words. |
 | doNotAddOnly | boolean | false | Do not add `only` at the end of the words. This works only when currency = true |
+| currencyOptions | object | undefined | By default currency options are taken from the specified locale.<br/>This option allows to specify different currency options while keeping the language details from the selected locale (e.g. convert to English text but use EUR as a currency). You can define different currencies for each call to `convert()` so it works also if you need to dynamically support multiple currencies.<br/>*This works only when `currency = true`* |
 
 ## Supported Locale
 | Country  | Language | Locale |
 | ------------- | ------------- | ------------- |
+| UAE | English | en-AE |
 | Bangladesh | English | en-BD |
+| UK | English | en-GB |
 | Ghana | English | en-GH |
 | India | English | en-IN (default) |
 | Myanmar | English | en-MM |
 | Mauritius | English | en-MU |
 | Nigeria | English | en-NG |
-| Ghana | English | en-GH |
+| Nepal | English | en-NP |
 | USA | English | en-US |
 | Iran | Persian | fa-IR |
 | France | French | fr-FR |
 | India | Gujarati | gu-IN |
 | India | Hindi | hi-IN |
 | India | Marathi | mr-IN |
+| Suriname | Dutch | nl-SR |
+| Brazil | Portuguese | pt-BR |
 | Turkey | Turkish | tr-TR |
 | Latvia | Latvian | lv-LR |
+
 
 ## Inspiration for core logic
 [https://stackoverflow.com/a/46221860](https://stackoverflow.com/a/46221860)

@@ -24,7 +24,7 @@ describe('Test Wrong Inputs', () => {
     Number.NEGATIVE_INFINITY,
   ];
 
-  test.concurrent.each(testWrongInputs)('test input %s', (input) => {
+  test.concurrent.each(testWrongInputs)('Input %s', (input) => {
     expect(() => toWords.convert(input as number)).toThrow(/Invalid Number/);
   });
 });

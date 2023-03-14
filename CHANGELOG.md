@@ -2,6 +2,58 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.5.0](https://github.com/mastermunj/to-words/compare/v3.4.0...v3.5.0) (2023-02-27)
+
+
+### Features
+
+* **locale:** add support for en-NP locale ([c66759a](https://github.com/mastermunj/to-words/commit/c66759a0ffdc8411cdaec5c8dcfcf382cb90fa27))
+
+## [3.4.0](https://github.com/mastermunj/to-words/compare/v3.3.2...v3.4.0) (2023-01-17)
+
+
+### Features
+
+* **locale:** add support to pt-BR locale ([b4061ef](https://github.com/mastermunj/to-words/commit/b4061ef0f55091e2fcea2834e893f1c14c860ce4))
+
+### [3.3.2](https://github.com/mastermunj/to-words/compare/v3.3.1...v3.3.2) (2022-12-16)
+
+### [3.3.1](https://github.com/mastermunj/to-words/compare/v3.3.0...v3.3.1) (2022-11-10)
+
+
+### Bug Fixes
+
+* add dist ([ca7e4c9](https://github.com/mastermunj/to-words/commit/ca7e4c915cb6b393e50b941f6fd3a5cfd1186463))
+
+## [3.3.0](https://github.com/mastermunj/to-words/compare/v3.2.0...v3.3.0) (2022-08-02)
+
+
+### Features
+
+* allow overriding currency details per conversion ([380831e](https://github.com/mastermunj/to-words/commit/380831e7e8e07e7537db0351fba1906e328e2ee8))
+
+## [3.2.0](https://github.com/mastermunj/to-words/compare/v3.1.1...v3.2.0) (2022-04-16)
+
+
+### Features
+
+* **language:** added support for dutch nl-SR language and currency ([#805](https://github.com/mastermunj/to-words/issues/805)) ([4ac84c3](https://github.com/mastermunj/to-words/commit/4ac84c3c53093838b8787c0f3d1749c127204d9f))
+
+### [3.1.1](https://github.com/mastermunj/to-words/compare/v3.1.0...v3.1.1) (2022-03-28)
+
+
+### Bug Fixes
+
+* add includes of ignore one for words ([a289892](https://github.com/mastermunj/to-words/commit/a2898923e96a7dfbbde8518d6d794014bb81ba88))
+* generate build ([6d08e8a](https://github.com/mastermunj/to-words/commit/6d08e8aaee3e55cbbab211894a87722254a7fe50))
+
+## [3.1.0](https://github.com/mastermunj/to-words/compare/v3.0.3...v3.1.0) (2022-02-09)
+
+
+### Features
+
+* **GB:** added tests for GB support ([b9f488f](https://github.com/mastermunj/to-words/commit/b9f488f6fd787666c3f164db834763d76cdbca09))
+
 ### [3.0.3](https://github.com/mastermunj/to-words/compare/v3.0.2...v3.0.3) (2022-01-06)
 
 

@@ -1,15 +1,15 @@
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
-import enUs from '../src/locales/en-US';
+import enNp from '../src/locales/en-NP';
 
-const localeCode = 'en-US';
+const localeCode = 'en-NP';
 const toWords = new ToWords({
   localeCode,
 });
 
 describe('Test Locale', () => {
   test(`Locale Class: ${localeCode}`, () => {
-    expect(toWords.getLocaleClass()).toBe(enUs);
+    expect(toWords.getLocaleClass()).toBe(enNp);
   });
 
   const wrongLocaleCode = localeCode + '-wrong';
@@ -29,26 +29,20 @@ const testIntegers = [
   [4680, 'Four Thousand Six Hundred Eighty'],
   [63892, 'Sixty Three Thousand Eight Hundred Ninety Two'],
   [86100, 'Eighty Six Thousand One Hundred'],
-  [792581, 'Seven Hundred Ninety Two Thousand Five Hundred Eighty One'],
-  [2741034, 'Two Million Seven Hundred Forty One Thousand Thirty Four'],
-  [86429753, 'Eighty Six Million Four Hundred Twenty Nine Thousand Seven Hundred Fifty Three'],
-  [975310864, 'Nine Hundred Seventy Five Million Three Hundred Ten Thousand Eight Hundred Sixty Four'],
-  [9876543210, 'Nine Billion Eight Hundred Seventy Six Million Five Hundred Forty Three Thousand Two Hundred Ten'],
+  [792581, 'Seven Lakh Ninety Two Thousand Five Hundred Eighty One'],
+  [2741034, 'Twenty Seven Lakh Forty One Thousand Thirty Four'],
+  [86429753, 'Eight Crore Sixty Four Lakh Twenty Nine Thousand Seven Hundred Fifty Three'],
+  [975310864, 'Ninety Seven Crore Fifty Three Lakh Ten Thousand Eight Hundred Sixty Four'],
+  [9876543210, 'Nine Arab Eighty Seven Crore Sixty Five Lakh Forty Three Thousand Two Hundred Ten'],
+  [98765432101, 'Ninety Eight Arab Seventy Six Crore Fifty Four Lakh Thirty Two Thousand One Hundred One'],
+  [9_87_65_43_21_012, 'Nine Kharab Eighty Seven Arab Sixty Five Crore Forty Three Lakh Twenty One Thousand Twelve'],
   [
-    98765432101,
-    'Ninety Eight Billion Seven Hundred Sixty Five Million Four Hundred Thirty Two Thousand One Hundred One',
+    98_76_54_32_10_123,
+    'Ninety Eight Kharab Seventy Six Arab Fifty Four Crore Thirty Two Lakh Ten Thousand One Hundred Twenty Three',
   ],
   [
-    987654321012,
-    'Nine Hundred Eighty Seven Billion Six Hundred Fifty Four Million Three Hundred Twenty One Thousand Twelve',
-  ],
-  [
-    9876543210123,
-    'Nine Trillion Eight Hundred Seventy Six Billion Five Hundred Forty Three Million Two Hundred Ten Thousand One Hundred Twenty Three',
-  ],
-  [
-    98765432101234,
-    'Ninety Eight Trillion Seven Hundred Sixty Five Billion Four Hundred Thirty Two Million One Hundred One Thousand Two Hundred Thirty Four',
+    9_87_65_43_21_01_234,
+    'Nine Hundred Eighty Seven Kharab Sixty Five Arab Forty Three Crore Twenty One Lakh One Thousand Two Hundred Thirty Four',
   ],
 ];
 
@@ -76,7 +70,7 @@ describe('Test Negative Integers with options = {}', () => {
 describe('Test Integers with options = { currency: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} Dollars Only`;
+    row[1] = `${row[1]} Rupees Only`;
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -87,7 +81,7 @@ describe('Test Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, doNotAddOnly: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} Dollars`;
+    row[1] = `${row[1]} Rupees`;
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -99,11 +93,11 @@ describe('Test Negative Integers with options = { currency: true }', () => {
   const testNegativeIntegersWithCurrency = cloneDeep(testIntegers);
   testNegativeIntegersWithCurrency.map((row, i) => {
     if (i === 0) {
-      row[1] = `${row[1]} Dollars Only`;
+      row[1] = `${row[1]} Rupees Only`;
       return;
     }
     row[0] = -row[0];
-    row[1] = `Minus ${row[1]} Dollars Only`;
+    row[1] = `Minus ${row[1]} Rupees Only`;
   });
 
   test.concurrent.each(testNegativeIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -114,7 +108,7 @@ describe('Test Negative Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, ignoreZeroCurrency: true }', () => {
   const testIntegersWithCurrencyAndIgnoreZeroCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrencyAndIgnoreZeroCurrency.map((row, i) => {
-    row[1] = i === 0 ? '' : `${row[1]} Dollars Only`;
+    row[1] = i === 0 ? '' : `${row[1]} Rupees Only`;
   });
 
   test.concurrent.each(testIntegersWithCurrencyAndIgnoreZeroCurrency)('convert %d => %s', (input, expected) => {
@@ -148,17 +142,17 @@ describe('Test Floats with options = {}', () => {
 });
 
 const testFloatsWithCurrency = [
-  [0.0, `Zero Dollars Only`],
-  [0.04, `Zero Dollars And Four Cents Only`],
-  [0.0468, `Zero Dollars And Five Cents Only`],
-  [0.4, `Zero Dollars And Forty Cents Only`],
-  [0.63, `Zero Dollars And Sixty Three Cents Only`],
-  [0.973, `Zero Dollars And Ninety Seven Cents Only`],
-  [0.999, `One Dollars Only`],
-  [37.06, `Thirty Seven Dollars And Six Cents Only`],
-  [37.068, `Thirty Seven Dollars And Seven Cents Only`],
-  [37.68, `Thirty Seven Dollars And Sixty Eight Cents Only`],
-  [37.683, `Thirty Seven Dollars And Sixty Eight Cents Only`],
+  [0.0, `Zero Rupees Only`],
+  [0.04, `Zero Rupees And Four Paisa Only`],
+  [0.0468, `Zero Rupees And Five Paisa Only`],
+  [0.4, `Zero Rupees And Forty Paisa Only`],
+  [0.63, `Zero Rupees And Sixty Three Paisa Only`],
+  [0.973, `Zero Rupees And Ninety Seven Paisa Only`],
+  [0.999, `One Rupees Only`],
+  [37.06, `Thirty Seven Rupees And Six Paisa Only`],
+  [37.068, `Thirty Seven Rupees And Seven Paisa Only`],
+  [37.68, `Thirty Seven Rupees And Sixty Eight Paisa Only`],
+  [37.683, `Thirty Seven Rupees And Sixty Eight Paisa Only`],
 ];
 
 describe('Test Floats with options = { currency: true }', () => {
@@ -176,7 +170,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true 
       return;
     }
     if (row[0] > 0 && row[0] < 1) {
-      row[1] = (row[1] as string).replace(`Zero Dollars And `, '');
+      row[1] = (row[1] as string).replace(`Zero Rupees And `, '');
     }
   });
 
@@ -194,9 +188,9 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
   const testFloatsWithCurrencyAndIgnoreDecimal = cloneDeep(testFloatsWithCurrency);
   testFloatsWithCurrencyAndIgnoreDecimal.map((row) => {
     if (row[0] === 0.999) {
-      row[1] = `Zero Dollars Only`;
+      row[1] = `Zero Rupees Only`;
     } else {
-      row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ Cents`), '');
+      row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ Paisa`), '');
     }
   });
 
@@ -217,7 +211,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
     if (row[0] > 0 && row[0] < 1) {
       row[1] = '';
     }
-    row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ Cents`), '');
+    row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ Paisa`), '');
   });
 
   test.concurrent.each(testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals)(
@@ -232,35 +226,4 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
       ).toBe(expected);
     },
   );
-});
-
-const testFloatsWithEuroCurrency = [
-  [0.0, `Zero Euros Only`],
-  [0.04, `Zero Euros And Four Eurocents Only`],
-  [0.0468, `Zero Euros And Five Eurocents Only`],
-  [0.4, `Zero Euros And Forty Eurocents Only`],
-  [0.63, `Zero Euros And Sixty Three Eurocents Only`],
-  [0.973, `Zero Euros And Ninety Seven Eurocents Only`],
-  [0.999, `One Euros Only`],
-  [37.06, `Thirty Seven Euros And Six Eurocents Only`],
-  [37.068, `Thirty Seven Euros And Seven Eurocents Only`],
-  [37.68, `Thirty Seven Euros And Sixty Eight Eurocents Only`],
-  [37.683, `Thirty Seven Euros And Sixty Eight Eurocents Only`],
-];
-
-const euroCurrencyOptions = {
-  name: 'Euro',
-  plural: 'Euros',
-  symbol: '€',
-  fractionalUnit: {
-    name: 'Eurocent',
-    plural: 'Eurocents',
-    symbol: '¢',
-  },
-};
-
-describe('Test Floats with options = { currency: true, currencyOptions }', () => {
-  test.concurrent.each(testFloatsWithEuroCurrency)('convert %d => %s', (input, expected) => {
-    expect(toWords.convert(input as number, { currency: true, currencyOptions: euroCurrencyOptions })).toBe(expected);
-  });
 });

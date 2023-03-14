@@ -1,8 +1,8 @@
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
-import enUs from '../src/locales/en-US';
+import enUs from '../src/locales/en-AE';
 
-const localeCode = 'en-US';
+const localeCode = 'en-AE';
 const toWords = new ToWords({
   localeCode,
 });
@@ -76,7 +76,7 @@ describe('Test Negative Integers with options = {}', () => {
 describe('Test Integers with options = { currency: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} Dollars Only`;
+    row[1] = `${row[1]} Dirhams Only`;
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -87,7 +87,7 @@ describe('Test Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, doNotAddOnly: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} Dollars`;
+    row[1] = `${row[1]} Dirhams`;
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -99,11 +99,11 @@ describe('Test Negative Integers with options = { currency: true }', () => {
   const testNegativeIntegersWithCurrency = cloneDeep(testIntegers);
   testNegativeIntegersWithCurrency.map((row, i) => {
     if (i === 0) {
-      row[1] = `${row[1]} Dollars Only`;
+      row[1] = `${row[1]} Dirhams Only`;
       return;
     }
     row[0] = -row[0];
-    row[1] = `Minus ${row[1]} Dollars Only`;
+    row[1] = `Minus ${row[1]} Dirhams Only`;
   });
 
   test.concurrent.each(testNegativeIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -114,7 +114,7 @@ describe('Test Negative Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, ignoreZeroCurrency: true }', () => {
   const testIntegersWithCurrencyAndIgnoreZeroCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrencyAndIgnoreZeroCurrency.map((row, i) => {
-    row[1] = i === 0 ? '' : `${row[1]} Dollars Only`;
+    row[1] = i === 0 ? '' : `${row[1]} Dirhams Only`;
   });
 
   test.concurrent.each(testIntegersWithCurrencyAndIgnoreZeroCurrency)('convert %d => %s', (input, expected) => {
@@ -148,17 +148,17 @@ describe('Test Floats with options = {}', () => {
 });
 
 const testFloatsWithCurrency = [
-  [0.0, `Zero Dollars Only`],
-  [0.04, `Zero Dollars And Four Cents Only`],
-  [0.0468, `Zero Dollars And Five Cents Only`],
-  [0.4, `Zero Dollars And Forty Cents Only`],
-  [0.63, `Zero Dollars And Sixty Three Cents Only`],
-  [0.973, `Zero Dollars And Ninety Seven Cents Only`],
-  [0.999, `One Dollars Only`],
-  [37.06, `Thirty Seven Dollars And Six Cents Only`],
-  [37.068, `Thirty Seven Dollars And Seven Cents Only`],
-  [37.68, `Thirty Seven Dollars And Sixty Eight Cents Only`],
-  [37.683, `Thirty Seven Dollars And Sixty Eight Cents Only`],
+  [0.0, `Zero Dirhams Only`],
+  [0.04, `Zero Dirhams And Four Fils Only`],
+  [0.0468, `Zero Dirhams And Five Fils Only`],
+  [0.4, `Zero Dirhams And Forty Fils Only`],
+  [0.63, `Zero Dirhams And Sixty Three Fils Only`],
+  [0.973, `Zero Dirhams And Ninety Seven Fils Only`],
+  [0.999, `One Dirhams Only`],
+  [37.06, `Thirty Seven Dirhams And Six Fils Only`],
+  [37.068, `Thirty Seven Dirhams And Seven Fils Only`],
+  [37.68, `Thirty Seven Dirhams And Sixty Eight Fils Only`],
+  [37.683, `Thirty Seven Dirhams And Sixty Eight Fils Only`],
 ];
 
 describe('Test Floats with options = { currency: true }', () => {
@@ -176,7 +176,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true 
       return;
     }
     if (row[0] > 0 && row[0] < 1) {
-      row[1] = (row[1] as string).replace(`Zero Dollars And `, '');
+      row[1] = (row[1] as string).replace(`Zero Dirhams And `, '');
     }
   });
 
@@ -194,9 +194,9 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
   const testFloatsWithCurrencyAndIgnoreDecimal = cloneDeep(testFloatsWithCurrency);
   testFloatsWithCurrencyAndIgnoreDecimal.map((row) => {
     if (row[0] === 0.999) {
-      row[1] = `Zero Dollars Only`;
+      row[1] = `Zero Dirhams Only`;
     } else {
-      row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ Cents`), '');
+      row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ Fils`), '');
     }
   });
 
@@ -217,7 +217,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
     if (row[0] > 0 && row[0] < 1) {
       row[1] = '';
     }
-    row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ Cents`), '');
+    row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ Fils`), '');
   });
 
   test.concurrent.each(testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals)(
@@ -232,35 +232,4 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
       ).toBe(expected);
     },
   );
-});
-
-const testFloatsWithEuroCurrency = [
-  [0.0, `Zero Euros Only`],
-  [0.04, `Zero Euros And Four Eurocents Only`],
-  [0.0468, `Zero Euros And Five Eurocents Only`],
-  [0.4, `Zero Euros And Forty Eurocents Only`],
-  [0.63, `Zero Euros And Sixty Three Eurocents Only`],
-  [0.973, `Zero Euros And Ninety Seven Eurocents Only`],
-  [0.999, `One Euros Only`],
-  [37.06, `Thirty Seven Euros And Six Eurocents Only`],
-  [37.068, `Thirty Seven Euros And Seven Eurocents Only`],
-  [37.68, `Thirty Seven Euros And Sixty Eight Eurocents Only`],
-  [37.683, `Thirty Seven Euros And Sixty Eight Eurocents Only`],
-];
-
-const euroCurrencyOptions = {
-  name: 'Euro',
-  plural: 'Euros',
-  symbol: '€',
-  fractionalUnit: {
-    name: 'Eurocent',
-    plural: 'Eurocents',
-    symbol: '¢',
-  },
-};
-
-describe('Test Floats with options = { currency: true, currencyOptions }', () => {
-  test.concurrent.each(testFloatsWithEuroCurrency)('convert %d => %s', (input, expected) => {
-    expect(toWords.convert(input as number, { currency: true, currencyOptions: euroCurrencyOptions })).toBe(expected);
-  });
 });
