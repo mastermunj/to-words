@@ -63,7 +63,17 @@ class Locale {
                 { number: 1, value: 'viens' },
                 { number: 0, value: 'nulle' },
             ],
-            ignoreOneForWords: ['simti'],
+            ignoreOneForWords: [
+                'simtu',
+                'divi simti',
+                'trīs simti',
+                'četri simti',
+                'pieci simti',
+                'seši simti',
+                'septiņi simti',
+                'astoņi simti',
+                'deviņi simti',
+            ],
         };
     }
 }

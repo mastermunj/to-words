@@ -123,7 +123,7 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | Suriname | Dutch | nl-SR |
 | Brazil | Portuguese | pt-BR |
 | Turkey | Turkish | tr-TR |
-| Latvia | Latvian | lv-LR |
+| Latvia | Latvian | lv-LV |
 
 
 ## Inspiration for core logic
