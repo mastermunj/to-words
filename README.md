@@ -107,6 +107,7 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | ------------- | ------------- | ------------- |
 | UAE | English | en-AE |
 | Bangladesh | English | en-BD |
+| Bulgarian | Bulgarian | bg-BG |
 | UK | English | en-GB |
 | Ghana | English | en-GH |
 | India | English | en-IN (default) |
