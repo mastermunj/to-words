@@ -103,8 +103,8 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | currencyOptions | object | undefined | By default currency options are taken from the specified locale.<br/>This option allows to specify different currency options while keeping the language details from the selected locale (e.g. convert to English text but use EUR as a currency). You can define different currencies for each call to `convert()` so it works also if you need to dynamically support multiple currencies.<br/>*This works only when `currency = true`* |
 
 ## Supported Locale
-| Country  | Language | Locale |
-| ------------- | ------------- | ------------- |
+| Country | Language | Locale |
+| ---------- | --------- | ------------ |
 | UAE | English | en-AE |
 | Bangladesh | English | en-BD |
 | UK | English | en-GB |
@@ -120,6 +120,7 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | India | Gujarati | gu-IN |
 | India | Hindi | hi-IN |
 | India | Marathi | mr-IN |
+| Poland | Polish | pl-PL |
 | Suriname | Dutch | nl-SR |
 | Brazil | Portuguese | pt-BR |
 | Turkey | Turkish | tr-TR |

@@ -15,6 +15,7 @@ import guIn from './locales/gu-IN';
 import hiIn from './locales/hi-IN';
 import mrIn from './locales/mr-IN';
 import ptBR from './locales/pt-BR';
+import plPL from './locales/pl-PL';
 import trTr from './locales/tr-TR';
 import nlSr from './locales/nl-SR';
 
@@ -72,6 +73,8 @@ export class ToWords {
         return hiIn;
       case 'mr-IN':
         return mrIn;
+      case 'pl-PL':
+        return plPL;
       case 'pt-BR':
         return ptBR;
       case 'tr-TR':

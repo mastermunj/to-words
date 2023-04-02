@@ -20,6 +20,7 @@ const gu_IN_1 = __importDefault(require("./locales/gu-IN"));
 const hi_IN_1 = __importDefault(require("./locales/hi-IN"));
 const mr_IN_1 = __importDefault(require("./locales/mr-IN"));
 const pt_BR_1 = __importDefault(require("./locales/pt-BR"));
+const pl_PL_1 = __importDefault(require("./locales/pl-PL"));
 const tr_TR_1 = __importDefault(require("./locales/tr-TR"));
 const nl_SR_1 = __importDefault(require("./locales/nl-SR"));
 exports.DefaultConverterOptions = {
@@ -71,6 +72,8 @@ class ToWords {
                 return hi_IN_1.default;
             case 'mr-IN':
                 return mr_IN_1.default;
+            case 'pl-PL':
+                return pl_PL_1.default;
             case 'pt-BR':
                 return pt_BR_1.default;
             case 'tr-TR':
