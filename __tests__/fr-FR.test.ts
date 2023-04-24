@@ -130,7 +130,7 @@ describe('Test Floats with options = {}', () => {
   });
 });
 
-const testFloatsWithCurrency = [
+const testFloatsWithCurrency: [number, string][] = [
   [0.0, `Zéro Euros`],
   [0.04, `Zéro Euros Et Quatre Centimes`],
   [0.0468, `Zéro Euros Et Cinq Centimes`],

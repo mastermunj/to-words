@@ -117,7 +117,7 @@ describe('Test Floats with options = {}', () => {
   });
 });
 
-const testFloatsWithCurrency = [
+const testFloatsWithCurrency: [number, string][] = [
   [0.0, 'શૂન્ય રૂપિયા'],
   [0.04, 'શૂન્ય રૂપિયા અને ચાર પૈસા'],
   [0.0468, 'શૂન્ય રૂપિયા અને પાંચ પૈસા'],
