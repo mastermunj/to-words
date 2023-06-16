@@ -16,6 +16,7 @@ import hiIn from './locales/hi-IN';
 import mrIn from './locales/mr-IN';
 import ptBR from './locales/pt-BR';
 import trTr from './locales/tr-TR';
+import lvLv from './locales/lv-LV';
 import nlSr from './locales/nl-SR';
 
 export const DefaultConverterOptions: ConverterOptions = {
@@ -76,6 +77,8 @@ export class ToWords {
         return ptBR;
       case 'tr-TR':
         return trTr;
+      case 'lv-LV':
+        return lvLv;
       case 'nl-SR':
         return nlSr;
     }
