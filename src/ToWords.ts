@@ -201,12 +201,17 @@ export class ToWords {
     if (!isEmpty && isNegativeNumber) {
       words.unshift(locale.config.texts.minus);
     }
-    if (!isEmpty && locale.config.texts.only && !options.doNotAddOnly) {
+    if (!isEmpty && locale.config.texts.only && !options.doNotAddOnly && !locale.config.onlyInFront) {
       wordsWithDecimal.push(locale.config.texts.only);
     }
     if (wordsWithDecimal.length) {
       words.push(...wordsWithDecimal);
     }
+
+    if (!isEmpty && !options.doNotAddOnly && locale.config.onlyInFront) {
+      words.splice(0, 0, locale.config.texts.only);
+    }
+
     return words;
   }
 
