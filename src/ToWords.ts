@@ -17,6 +17,7 @@ import mrIn from './locales/mr-IN';
 import ptBR from './locales/pt-BR';
 import trTr from './locales/tr-TR';
 import nlSr from './locales/nl-SR';
+import eeEE from './locales/ee-EE';
 
 export const DefaultConverterOptions: ConverterOptions = {
   currency: false,
@@ -42,6 +43,8 @@ export class ToWords {
   public getLocaleClass(): ConstructorOf<LocaleInterface> {
     /* eslint-disable @typescript-eslint/no-var-requires */
     switch (this.options.localeCode) {
+      case 'ee-EE':
+        return eeEE;
       case 'en-AE':
         return enAe;
       case 'en-BD':
