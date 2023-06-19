@@ -115,6 +115,7 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | Nigeria | English | en-NG |
 | Nepal | English | en-NP |
 | USA | English | en-US |
+| Philippines | English | en-PH |
 | Iran | Persian | fa-IR |
 | France | French | fr-FR |
 | India | Gujarati | gu-IN |
@@ -123,7 +124,6 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | Suriname | Dutch | nl-SR |
 | Brazil | Portuguese | pt-BR |
 | Turkey | Turkish | tr-TR |
-| Philippines | English | en-PH |
 
 
 ## Inspiration for core logic
