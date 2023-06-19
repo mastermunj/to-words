@@ -110,7 +110,7 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | UK | English | en-GB |
 | Ghana | English | en-GH |
 | India | English | en-IN (default) |
-| Myanmar | English | en-MM |
+| Myanmar | English | en-MM |/
 | Mauritius | English | en-MU |
 | Nigeria | English | en-NG |
 | Nepal | English | en-NP |
