@@ -17,6 +17,7 @@ import mrIn from './locales/mr-IN';
 import ptBR from './locales/pt-BR';
 import trTr from './locales/tr-TR';
 import nlSr from './locales/nl-SR';
+import eeEE from './locales/ee-EE';
 
 export const DefaultConverterOptions: ConverterOptions = {
   currency: false,
@@ -42,6 +43,8 @@ export class ToWords {
   public getLocaleClass(): ConstructorOf<LocaleInterface> {
     /* eslint-disable @typescript-eslint/no-var-requires */
     switch (this.options.localeCode) {
+      case 'ee-EE':
+        return eeEE;
       case 'en-AE':
         return enAe;
       case 'en-BD':
@@ -201,12 +204,17 @@ export class ToWords {
     if (!isEmpty && isNegativeNumber) {
       words.unshift(locale.config.texts.minus);
     }
-    if (!isEmpty && locale.config.texts.only && !options.doNotAddOnly) {
+    if (!isEmpty && locale.config.texts.only && !options.doNotAddOnly && !locale.config.onlyInFront) {
       wordsWithDecimal.push(locale.config.texts.only);
     }
     if (wordsWithDecimal.length) {
       words.push(...wordsWithDecimal);
     }
+
+    if (!isEmpty && !options.doNotAddOnly && locale.config.onlyInFront) {
+      words.splice(0, 0, locale.config.texts.only);
+    }
+
     return words;
   }
 

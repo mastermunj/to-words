@@ -22,6 +22,7 @@ const mr_IN_1 = __importDefault(require("./locales/mr-IN"));
 const pt_BR_1 = __importDefault(require("./locales/pt-BR"));
 const tr_TR_1 = __importDefault(require("./locales/tr-TR"));
 const nl_SR_1 = __importDefault(require("./locales/nl-SR"));
+const ee_EE_1 = __importDefault(require("./locales/ee-EE"));
 exports.DefaultConverterOptions = {
     currency: false,
     ignoreDecimal: false,
@@ -41,6 +42,8 @@ class ToWords {
     getLocaleClass() {
         /* eslint-disable @typescript-eslint/no-var-requires */
         switch (this.options.localeCode) {
+            case 'ee-EE':
+                return ee_EE_1.default;
             case 'en-AE':
                 return en_AE_1.default;
             case 'en-BD':
@@ -186,11 +189,14 @@ class ToWords {
         if (!isEmpty && isNegativeNumber) {
             words.unshift(locale.config.texts.minus);
         }
-        if (!isEmpty && locale.config.texts.only && !options.doNotAddOnly) {
+        if (!isEmpty && locale.config.texts.only && !options.doNotAddOnly && !locale.config.onlyInFront) {
             wordsWithDecimal.push(locale.config.texts.only);
         }
         if (wordsWithDecimal.length) {
             words.push(...wordsWithDecimal);
+        }
+        if (!isEmpty && !options.doNotAddOnly && locale.config.onlyInFront) {
+            words.splice(0, 0, locale.config.texts.only);
         }
         return words;
     }
