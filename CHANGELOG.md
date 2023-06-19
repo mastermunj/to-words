@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.6.0](https://github.com/mastermunj/to-words/compare/v3.5.1...v3.6.0) (2023-06-19)
+
+
+### Features
+
+* add support for only text to be in front of number words ([e96ca2f](https://github.com/mastermunj/to-words/commit/e96ca2fcd80f2366723b7ad43f8ecc8c046355c9))
+* **locale:** add estonian (ee-EE) language support ([df44a3f](https://github.com/mastermunj/to-words/commit/df44a3f4d456edd83363393524a8a4e01e21bfef))
+
 ### [3.5.1](https://github.com/mastermunj/to-words/compare/v3.5.0...v3.5.1) (2023-04-24)
 
 ## [3.5.0](https://github.com/mastermunj/to-words/compare/v3.4.0...v3.5.0) (2023-02-27)
