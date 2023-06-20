@@ -44,6 +44,7 @@ export type LocaleConfig = {
     pluralMark?: string;
     pluralWords?: string[];
     noSplitWordAfter?: string[];
+    onlyInFront?: boolean;
 };
 export interface LocaleInterface {
     config: LocaleConfig;
