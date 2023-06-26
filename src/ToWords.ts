@@ -9,6 +9,8 @@ import enNg from './locales/en-NG';
 import enNp from './locales/en-NP';
 import enUs from './locales/en-US';
 import enGb from './locales/en-GB';
+import esES from './locales/es-ES';
+import esMX from './locales/es-MX';
 import faIr from './locales/fa-IR';
 import frFr from './locales/fr-FR';
 import guIn from './locales/gu-IN';
@@ -65,6 +67,10 @@ export class ToWords {
         return enUs;
       case 'en-GB':
         return enGb;
+      case 'es-ES':
+        return esES;
+      case 'es-MX':
+        return esMX;
       case 'fa-IR':
         return faIr;
       case 'fr-FR':
@@ -170,8 +176,10 @@ export class ToWords {
     // Extra check for isFloat to overcome 1.999 rounding off to 2
     const split = number.toString().split('.');
     let words = [...this.convertInternal(Number(split[0]))];
-    if (currencyOptions.plural) {
+    if (currencyOptions.plural && number !== 1) {
       words.push(currencyOptions.plural);
+    } else {
+      words.push(currencyOptions.name);
     }
     const ignoreZero =
       this.isNumberZero(number) &&
