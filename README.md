@@ -103,27 +103,28 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | currencyOptions | object | undefined | By default currency options are taken from the specified locale.<br/>This option allows to specify different currency options while keeping the language details from the selected locale (e.g. convert to English text but use EUR as a currency). You can define different currencies for each call to `convert()` so it works also if you need to dynamically support multiple currencies.<br/>*This works only when `currency = true`* |
 
 ## Supported Locale
-| Country    | Language   | Locale          |
-|------------|------------|-----------------|
-| UAE        | English    | en-AE           |
-| Bangladesh | English    | en-BD           |
-| UK         | English    | en-GB           |
-| Ghana      | English    | en-GH           |
-| India      | English    | en-IN (default) |
-| Myanmar    | English    | en-MM           |
-| Mauritius  | English    | en-MU           |
-| Nigeria    | English    | en-NG           |
-| Nepal      | English    | en-NP           |
-| USA        | English    | en-US           |
-| Estonia    | Estonian   | ee-EE           |
-| Iran       | Persian    | fa-IR           |
-| France     | French     | fr-FR           |
-| India      | Gujarati   | gu-IN           |
-| India      | Hindi      | hi-IN           |
-| India      | Marathi    | mr-IN           |
-| Suriname   | Dutch      | nl-SR           |
-| Brazil     | Portuguese | pt-BR           |
-| Turkey     | Turkish    | tr-TR           |
+| Country     | Language   | Locale          |
+|-------------|------------|-----------------|
+| UAE         | English    | en-AE           |
+| Bangladesh  | English    | en-BD           |
+| UK          | English    | en-GB           |
+| Ghana       | English    | en-GH           |
+| India       | English    | en-IN (default) |
+| Myanmar     | English    | en-MM           |
+| Mauritius   | English    | en-MU           |
+| Nigeria     | English    | en-NG           |
+| Nepal       | English    | en-NP           |
+| USA         | English    | en-US           |
+| Philippines | English    | en-PH           |
+| Estonia     | Estonian   | ee-EE           |
+| Iran        | Persian    | fa-IR           |
+| France      | French     | fr-FR           |
+| India       | Gujarati   | gu-IN           |
+| India       | Hindi      | hi-IN           |
+| India       | Marathi    | mr-IN           |
+| Suriname    | Dutch      | nl-SR           |
+| Brazil      | Portuguese | pt-BR           |
+| Turkey      | Turkish    | tr-TR           |
 
 
 ## Inspiration for core logic
