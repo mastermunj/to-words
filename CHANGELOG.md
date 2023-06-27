@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.6.1](https://github.com/mastermunj/to-words/compare/v3.6.0...v3.6.1) (2023-06-27)
+
+
+### Bug Fixes
+
+* Added PH entry ([e26d507](https://github.com/mastermunj/to-words/commit/e26d507cb9ef5f43dfc00d0b2ce094f0bad209b7))
+* **impl:** include file ([004fe95](https://github.com/mastermunj/to-words/commit/004fe95ffd9ea0e34a26f92b8a21124541f02cdf))
+
 ## [3.6.0](https://github.com/mastermunj/to-words/compare/v3.5.1...v3.6.0) (2023-06-19)
 
 
