@@ -9,6 +9,7 @@ import enNg from './locales/en-NG';
 import enNp from './locales/en-NP';
 import enUs from './locales/en-US';
 import enGb from './locales/en-GB';
+import enPh from './locales/en-PH';
 import faIr from './locales/fa-IR';
 import frFr from './locales/fr-FR';
 import guIn from './locales/gu-IN';
@@ -65,6 +66,8 @@ export class ToWords {
         return enUs;
       case 'en-GB':
         return enGb;
+      case 'en-PH':
+        return enPh;
       case 'fa-IR':
         return faIr;
       case 'fr-FR':
