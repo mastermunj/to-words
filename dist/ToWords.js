@@ -16,6 +16,7 @@ const en_US_1 = __importDefault(require("./locales/en-US"));
 const en_GB_1 = __importDefault(require("./locales/en-GB"));
 const en_PH_1 = __importDefault(require("./locales/en-PH"));
 const fa_IR_1 = __importDefault(require("./locales/fa-IR"));
+const fr_BE_1 = __importDefault(require("./locales/fr-BE"));
 const fr_FR_1 = __importDefault(require("./locales/fr-FR"));
 const gu_IN_1 = __importDefault(require("./locales/gu-IN"));
 const hi_IN_1 = __importDefault(require("./locales/hi-IN"));
@@ -69,6 +70,8 @@ class ToWords {
                 return en_PH_1.default;
             case 'fa-IR':
                 return fa_IR_1.default;
+            case 'fr-BE':
+                return fr_BE_1.default;
             case 'fr-FR':
                 return fr_FR_1.default;
             case 'gu-IN':

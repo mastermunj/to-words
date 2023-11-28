@@ -11,6 +11,7 @@ import enUs from './locales/en-US';
 import enGb from './locales/en-GB';
 import enPh from './locales/en-PH';
 import faIr from './locales/fa-IR';
+import frBe from './locales/fr-BE';
 import frFr from './locales/fr-FR';
 import guIn from './locales/gu-IN';
 import hiIn from './locales/hi-IN';
@@ -70,6 +71,8 @@ export class ToWords {
         return enPh;
       case 'fa-IR':
         return faIr;
+      case 'fr-BE':
+        return frBe;
       case 'fr-FR':
         return frFr;
       case 'gu-IN':
