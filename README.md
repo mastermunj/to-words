@@ -118,6 +118,7 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | Philippines | English    | en-PH           |
 | Estonia     | Estonian   | ee-EE           |
 | Iran        | Persian    | fa-IR           |
+| Belgium     | French     | fr-BE           |
 | France      | French     | fr-FR           |
 | India       | Gujarati   | gu-IN           |
 | India       | Hindi      | hi-IN           |
