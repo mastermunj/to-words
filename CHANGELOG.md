@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.7.0](https://github.com/mastermunj/to-words/compare/v3.6.1...v3.7.0) (2023-11-28)
+
+
+### Features
+
+* **locale:** add fr-BE support ([85de6d0](https://github.com/mastermunj/to-words/commit/85de6d0ae86f775205d99b01010b06e86f54489d))
+
 ### [3.6.1](https://github.com/mastermunj/to-words/compare/v3.6.0...v3.6.1) (2023-06-27)
 
 
