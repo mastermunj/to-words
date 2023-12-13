@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ToWords = exports.DefaultToWordsOptions = exports.DefaultConverterOptions = void 0;
 const en_AE_1 = __importDefault(require("./locales/en-AE"));
 const en_BD_1 = __importDefault(require("./locales/en-BD"));
+const en_EU_1 = __importDefault(require("./locales/en-EU"));
 const en_GH_1 = __importDefault(require("./locales/en-GH"));
 const en_IN_1 = __importDefault(require("./locales/en-IN"));
 const en_MM_1 = __importDefault(require("./locales/en-MM"));
@@ -50,6 +51,8 @@ class ToWords {
                 return en_AE_1.default;
             case 'en-BD':
                 return en_BD_1.default;
+            case 'en-EU':
+                return en_EU_1.default;
             case 'en-GH':
                 return en_GH_1.default;
             case 'en-IN':
