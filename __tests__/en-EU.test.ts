@@ -149,16 +149,17 @@ describe('Test Floats with options = {}', () => {
 
 const testFloatsWithCurrency: [number, string][] = [
   [0.0, `Zero Euros Only`],
-  [0.04, `Zero Euros And Four Cents Only`],
-  [0.0468, `Zero Euros And Five Cents Only`],
-  [0.4, `Zero Euros And Forty Cents Only`],
-  [0.63, `Zero Euros And Sixty Three Cents Only`],
-  [0.973, `Zero Euros And Ninety Seven Cents Only`],
-  [0.999, `One Euros Only`],
-  [37.06, `Thirty Seven Euros And Six Cents Only`],
-  [37.068, `Thirty Seven Euros And Seven Cents Only`],
-  [37.68, `Thirty Seven Euros And Sixty Eight Cents Only`],
-  [37.683, `Thirty Seven Euros And Sixty Eight Cents Only`],
+  [0.01, `Zero Euros And One Eurocent Only`],
+  [0.04, `Zero Euros And Four Eurocents Only`],
+  [0.0468, `Zero Euros And Five Eurocents Only`],
+  [0.4, `Zero Euros And Forty Eurocents Only`],
+  [0.63, `Zero Euros And Sixty Three Eurocents Only`],
+  [0.973, `Zero Euros And Ninety Seven Eurocents Only`],
+  [0.999, `One Euro Only`],
+  [37.06, `Thirty Seven Euros And Six Eurocents Only`],
+  [37.068, `Thirty Seven Euros And Seven Eurocents Only`],
+  [37.68, `Thirty Seven Euros And Sixty Eight Eurocents Only`],
+  [37.683, `Thirty Seven Euros And Sixty Eight Eurocents Only`],
 ];
 
 describe('Test Floats with options = { currency: true }', () => {
@@ -196,7 +197,7 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
     if (row[0] === 0.999) {
       row[1] = `Zero Euros Only`;
     } else {
-      row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ Cents`), '');
+      row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ (Eurocents|Eurocent)`), '');
     }
   });
 
@@ -217,7 +218,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
     if (row[0] > 0 && row[0] < 1) {
       row[1] = '';
     }
-    row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ Cents`), '');
+    row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ Eurocents`), '');
   });
 
   test.concurrent.each(testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals)(

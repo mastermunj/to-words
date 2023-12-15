@@ -5,11 +5,13 @@ export default class Locale implements LocaleInterface {
     currency: {
       name: 'Euro',
       plural: 'Euros',
+      singular: 'Euro',
       symbol: '€',
       fractionalUnit: {
-        name: 'Cent',
-        plural: 'Cents',
-        symbol: 'c',
+        name: 'Eurocent',
+        plural: 'Eurocents',
+        singular: 'Eurocent',
+        symbol: '¢',
       },
     },
     texts: {

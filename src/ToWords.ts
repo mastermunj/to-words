@@ -53,7 +53,7 @@ export class ToWords {
       case 'en-BD':
         return enBd;
       case 'en-EU':
-        return enEu
+        return enEu;
       case 'en-GH':
         return enGh;
       case 'en-IN':
