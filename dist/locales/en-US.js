@@ -6,10 +6,12 @@ class Locale {
             currency: {
                 name: 'Dollar',
                 plural: 'Dollars',
+                singular: 'Dollar',
                 symbol: '$',
                 fractionalUnit: {
                     name: 'Cent',
                     plural: 'Cents',
+                    singular: 'Cent',
                     symbol: '¢',
                 },
             },
