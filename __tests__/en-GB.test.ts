@@ -149,12 +149,13 @@ describe('Test Floats with options = {}', () => {
 
 const testFloatsWithCurrency: [number, string][] = [
   [0.0, `Zero Pounds Only`],
+  [0.01, `Zero Pounds And One Penny Only`],
   [0.04, `Zero Pounds And Four Pence Only`],
   [0.0468, `Zero Pounds And Five Pence Only`],
   [0.4, `Zero Pounds And Forty Pence Only`],
   [0.63, `Zero Pounds And Sixty Three Pence Only`],
   [0.973, `Zero Pounds And Ninety Seven Pence Only`],
-  [0.999, `One Pounds Only`],
+  [0.999, `One Pound Only`],
   [37.06, `Thirty Seven Pounds And Six Pence Only`],
   [37.068, `Thirty Seven Pounds And Seven Pence Only`],
   [37.68, `Thirty Seven Pounds And Sixty Eight Pence Only`],
@@ -196,7 +197,7 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
     if (row[0] === 0.999) {
       row[1] = `Zero Pounds Only`;
     } else {
-      row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ Pence`), '');
+      row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ (Pence|Penny)`), '');
     }
   });
 
