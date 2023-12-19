@@ -5,9 +5,11 @@ export default class Locale implements LocaleInterface {
     currency: {
       name: 'Surinaamse dollar',
       plural: 'Surinaamse dollars',
+      singular: 'Surinaamse dollar',
       symbol: 'SRD',
       fractionalUnit: {
         name: 'Cent',
+        singular: 'Cent',
         plural: 'Centen',
         symbol: 'SRD',
       },

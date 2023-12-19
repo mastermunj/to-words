@@ -154,7 +154,7 @@ const testFloatsWithCurrency: [number, string][] = [
   [0.4, `Zero Dirhams And Forty Fils Only`],
   [0.63, `Zero Dirhams And Sixty Three Fils Only`],
   [0.973, `Zero Dirhams And Ninety Seven Fils Only`],
-  [0.999, `One Dirhams Only`],
+  [0.999, `One Dirham Only`],
   [37.06, `Thirty Seven Dirhams And Six Fils Only`],
   [37.068, `Thirty Seven Dirhams And Seven Fils Only`],
   [37.68, `Thirty Seven Dirhams And Sixty Eight Fils Only`],

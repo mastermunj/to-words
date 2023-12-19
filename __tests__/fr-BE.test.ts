@@ -134,7 +134,7 @@ const testFloatsWithCurrency: [number, string][] = [
   [0.4, `Zéro Euros Et Quarante Centimes`],
   [0.63, `Zéro Euros Et Soixante-Trois Centimes`],
   [0.973, `Zéro Euros Et Nonante-Sept Centimes`],
-  [0.999, `Un Euros`],
+  [0.999, `Un Euro`],
   [37.06, `Trente-Sept Euros Et Six Centimes`],
   [37.068, `Trente-Sept Euros Et Sept Centimes`],
   [37.68, `Trente-Sept Euros Et Soixante-Huit Centimes`],

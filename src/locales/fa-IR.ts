@@ -5,9 +5,11 @@ export default class Locale implements LocaleInterface {
     currency: {
       name: 'تومان',
       plural: '',
+      singular: '',
       symbol: 'تومان',
       fractionalUnit: {
         name: '',
+        singular: 'ریال',
         plural: 'تومان',
         symbol: '',
       },

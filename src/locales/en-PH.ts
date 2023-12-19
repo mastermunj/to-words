@@ -5,9 +5,11 @@ export default class Locale implements LocaleInterface {
     currency: {
       name: 'Peso',
       plural: 'Pesos',
+      singular: 'Peso',
       symbol: '₱',
       fractionalUnit: {
         name: 'Cent',
+        singular: 'Cent',
         plural: 'Cents',
         symbol: '¢',
       },

@@ -156,7 +156,7 @@ const testFloatsWithCurrency: [number, string][] = [
   // DEBUG Not recieving expected results
   // [0.63, `Nul Surinaamse dollars En Drieënzestig Centen`],
   [0.973, `Nul Surinaamse dollars En Zevenennegentig Centen`],
-  [0.999, `Een Surinaamse dollars`],
+  [0.999, `Een Surinaamse dollar`],
   [37.06, `Zevenendertig Surinaamse dollars En Zes Centen`],
   [37.068, `Zevenendertig Surinaamse dollars En Zeven Centen`],
   [37.68, `Zevenendertig Surinaamse dollars En Achtenzestig Centen`],

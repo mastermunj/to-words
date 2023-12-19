@@ -148,7 +148,7 @@ const testFloatsWithCurrency: [number, string][] = [
   [0.4, `Zero Rupees And Forty Cents Only`],
   [0.63, `Zero Rupees And Sixty Three Cents Only`],
   [0.973, `Zero Rupees And Ninety Seven Cents Only`],
-  [0.999, `One Rupees Only`],
+  [0.999, `One Rupee Only`],
   [37.06, `Thirty Seven Rupees And Six Cents Only`],
   [37.068, `Thirty Seven Rupees And Seven Cents Only`],
   [37.68, `Thirty Seven Rupees And Sixty Eight Cents Only`],
