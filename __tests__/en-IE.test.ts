@@ -1,15 +1,15 @@
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
-import enEu from '../src/locales/en-EU';
+import enIe from '../src/locales/en-IE';
 
-const localeCode = 'en-EU';
+const localeCode = 'en-IE';
 const toWords = new ToWords({
   localeCode,
 });
 
 describe('Test Locale', () => {
   test(`Locale Class: ${localeCode}`, () => {
-    expect(toWords.getLocaleClass()).toBe(enEu);
+    expect(toWords.getLocaleClass()).toBe(enIe);
   });
 
   const wrongLocaleCode = localeCode + '-wrong';
