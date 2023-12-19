@@ -7,8 +7,8 @@ export default class Locale implements LocaleInterface {
       plural: 'Euros',
       symbol: '€',
       fractionalUnit: {
-        name: 'Cent',
-        plural: 'Cents',
+        name: 'Eurocent',
+        plural: 'Eurocents',
         symbol: 'c',
       },
     },
