@@ -109,6 +109,7 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | Bangladesh  | English    | en-BD           |
 | UK          | English    | en-GB           |
 | Ghana       | English    | en-GH           |
+| Ireland     | English    | en-IE           |
 | India       | English    | en-IN (default) |
 | Myanmar     | English    | en-MM           |
 | Mauritius   | English    | en-MU           |

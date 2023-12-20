@@ -2,6 +2,7 @@ import { ConstructorOf, ConverterOptions, LocaleInterface, NumberWordMap, ToWord
 import enAe from './locales/en-AE';
 import enBd from './locales/en-BD';
 import enGh from './locales/en-GH';
+import enIe from './locales/en-IE';
 import enIn from './locales/en-IN';
 import enMm from './locales/en-MM';
 import enMu from './locales/en-MU';
@@ -53,6 +54,8 @@ export class ToWords {
         return enBd;
       case 'en-GH':
         return enGh;
+      case 'en-IE':
+        return enIe;
       case 'en-IN':
         return enIn;
       case 'en-MM':
