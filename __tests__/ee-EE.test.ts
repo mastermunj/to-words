@@ -142,7 +142,7 @@ const testFloatsWithCurrency: [number, string][] = [
   [0.4, `Ainult Null Eurot Ja Nelikümmend Senti`],
   [0.63, `Ainult Null Eurot Ja Kuuskümmend Kolm Senti`],
   [0.973, `Ainult Null Eurot Ja Üheksakümmend Seitse Senti`],
-  [0.999, `Ainult Üks Eurot`],
+  [0.999, `Ainult Üks Euro`],
   [37.06, `Ainult Kolmkümmend Seitse Eurot Ja Kuus Senti`],
   [37.068, `Ainult Kolmkümmend Seitse Eurot Ja Seitse Senti`],
   [37.0684, `Ainult Kolmkümmend Seitse Eurot Ja Seitse Senti`],

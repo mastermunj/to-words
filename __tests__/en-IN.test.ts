@@ -143,12 +143,13 @@ describe('Test Floats with options = {}', () => {
 
 const testFloatsWithCurrency: [number, string][] = [
   [0.0, `Zero Rupees Only`],
+  [0.01, `Zero Rupees And One Paisa Only`],
   [0.04, `Zero Rupees And Four Paise Only`],
   [0.0468, `Zero Rupees And Five Paise Only`],
   [0.4, `Zero Rupees And Forty Paise Only`],
   [0.63, `Zero Rupees And Sixty Three Paise Only`],
   [0.973, `Zero Rupees And Ninety Seven Paise Only`],
-  [0.999, `One Rupees Only`],
+  [0.999, `One Rupee Only`],
   [37.06, `Thirty Seven Rupees And Six Paise Only`],
   [37.068, `Thirty Seven Rupees And Seven Paise Only`],
   [37.68, `Thirty Seven Rupees And Sixty Eight Paise Only`],
@@ -190,7 +191,7 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
     if (row[0] === 0.999) {
       row[1] = `Zero Rupees Only`;
     } else {
-      row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ Paise`), '');
+      row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ (Paise|Paisa)`), '');
     }
   });
 
@@ -211,7 +212,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
     if (row[0] > 0 && row[0] < 1) {
       row[1] = '';
     }
-    row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ Paise`), '');
+    row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ (Paise|Paisa)`), '');
   });
 
   test.concurrent.each(testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals)(

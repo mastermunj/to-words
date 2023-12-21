@@ -6,10 +6,12 @@ class Locale {
             currency: {
                 name: 'Pound',
                 plural: 'Pounds',
+                singular: 'Pound',
                 symbol: '£',
                 fractionalUnit: {
                     name: 'Pence',
                     plural: 'Pence',
+                    singular: 'Penny',
                     symbol: '',
                 },
             },

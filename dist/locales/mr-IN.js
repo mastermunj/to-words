@@ -6,9 +6,11 @@ class Locale {
             currency: {
                 name: 'रुपया',
                 plural: 'रुपये',
+                singular: 'रुपया',
                 symbol: '₹',
                 fractionalUnit: {
                     name: 'पैसा',
+                    singular: 'पैसा',
                     plural: 'पैसे',
                     symbol: '',
                 },

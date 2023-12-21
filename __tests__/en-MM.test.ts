@@ -154,7 +154,7 @@ const testFloatsWithCurrency: [number, string][] = [
   [0.4, `Zero Kyats And Forty Pyas Only`],
   [0.63, `Zero Kyats And Sixty Three Pyas Only`],
   [0.973, `Zero Kyats And Ninety Seven Pyas Only`],
-  [0.999, `One Kyats Only`],
+  [0.999, `One Kyat Only`],
   [37.06, `Thirty Seven Kyats And Six Pyas Only`],
   [37.068, `Thirty Seven Kyats And Seven Pyas Only`],
   [37.68, `Thirty Seven Kyats And Sixty Eight Pyas Only`],

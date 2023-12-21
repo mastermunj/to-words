@@ -154,7 +154,7 @@ const testFloatsWithCurrency: [number, string][] = [
   [0.4, `Zero Cedis And Forty Pesewas Only`],
   [0.63, `Zero Cedis And Sixty Three Pesewas Only`],
   [0.973, `Zero Cedis And Ninety Seven Pesewas Only`],
-  [0.999, `One Cedis Only`],
+  [0.999, `One Cedi Only`],
   [37.06, `Thirty Seven Cedis And Six Pesewas Only`],
   [37.068, `Thirty Seven Cedis And Seven Pesewas Only`],
   [37.68, `Thirty Seven Cedis And Sixty Eight Pesewas Only`],

@@ -6,9 +6,11 @@ class Locale {
             currency: {
                 name: 'Taka',
                 plural: 'Taka',
+                singular: 'Taka',
                 symbol: '৳',
                 fractionalUnit: {
                     name: 'Poysha',
+                    singular: 'Poysha',
                     plural: 'Poysha',
                     symbol: '',
                 },

@@ -5,10 +5,12 @@ export default class Locale implements LocaleInterface {
     currency: {
       name: 'Rupee',
       plural: 'Rupees',
+      singular: 'Rupee',
       symbol: '₹',
       fractionalUnit: {
         name: 'Paisa',
         plural: 'Paise',
+        singular: 'Paisa',
         symbol: '',
       },
     },

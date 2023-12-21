@@ -179,7 +179,12 @@ export class ToWords {
     // Extra check for isFloat to overcome 1.999 rounding off to 2
     const split = number.toString().split('.');
     let words = [...this.convertInternal(Number(split[0]))];
-    if (currencyOptions.plural) {
+    // Determine if the main currency should be in singular form
+    // e.g. 1 Dollar Only instead of 1 Dollars Only
+
+    if (Number(split[0]) === 1 && currencyOptions.singular) {
+      words.push(currencyOptions.name);
+    } else if (currencyOptions.plural) {
       words.push(currencyOptions.plural);
     }
     const ignoreZero =
@@ -196,16 +201,20 @@ export class ToWords {
       if (!ignoreZero) {
         wordsWithDecimal.push(locale.config.texts.and);
       }
-      wordsWithDecimal.push(
-        ...this.convertInternal(
-          Number(split[1]) * (!locale.config.decimalLengthWordMapping ? Math.pow(10, 2 - split[1].length) : 1),
-        ),
-      );
+      const decimalPart =
+        Number(split[1]) * (!locale.config.decimalLengthWordMapping ? Math.pow(10, 2 - split[1].length) : 1);
+      wordsWithDecimal.push(...this.convertInternal(decimalPart));
       const decimalLengthWord = locale.config?.decimalLengthWordMapping?.[split[1].length];
       if (decimalLengthWord?.length) {
         wordsWithDecimal.push(decimalLengthWord);
       }
-      wordsWithDecimal.push(currencyOptions.fractionalUnit.plural);
+      // Determine if the fractional unit should be in singular form
+      // e.g. 1 Dollar and 1 Cent Only instead of 1 Dollar and 1 Cents Only
+      if (decimalPart === 1 && currencyOptions.fractionalUnit.singular) {
+        wordsWithDecimal.push(currencyOptions.fractionalUnit.singular);
+      } else {
+        wordsWithDecimal.push(currencyOptions.fractionalUnit.plural);
+      }
     } else if (locale.config.decimalLengthWordMapping && words.length) {
       wordsWithDecimal.push(currencyOptions.fractionalUnit.plural);
     }

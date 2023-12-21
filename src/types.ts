@@ -2,9 +2,11 @@ export interface CurrencyOptions {
   name: string;
   plural: string;
   symbol: string;
+  singular?: string;
   fractionalUnit: {
     name: string;
     plural: string;
+    singular?: string;
     symbol: string;
   };
 }
