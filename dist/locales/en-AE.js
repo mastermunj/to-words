@@ -6,9 +6,11 @@ class Locale {
             currency: {
                 name: 'Dirham',
                 plural: 'Dirhams',
+                singular: 'Dirham',
                 symbol: '',
                 fractionalUnit: {
                     name: 'Fil',
+                    singular: 'Fil',
                     plural: 'Fils',
                     symbol: '',
                 },

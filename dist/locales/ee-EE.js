@@ -6,9 +6,11 @@ class Locale {
             currency: {
                 name: 'Euro',
                 plural: 'Eurot',
+                singular: 'Euro',
                 symbol: '€',
                 fractionalUnit: {
                     name: 'Sent',
+                    singular: 'Sent',
                     plural: 'Senti',
                     symbol: '¢',
                 },

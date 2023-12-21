@@ -6,9 +6,11 @@ class Locale {
             currency: {
                 name: 'lira',
                 plural: '',
+                singular: '',
                 symbol: '₺',
                 fractionalUnit: {
                     name: '',
+                    singular: 'lira',
                     plural: 'lira',
                     symbol: '',
                 },

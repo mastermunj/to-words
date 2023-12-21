@@ -6,9 +6,11 @@ class Locale {
             currency: {
                 name: 'Kyat',
                 plural: 'Kyats',
+                singular: 'Kyat',
                 symbol: 'K',
                 fractionalUnit: {
                     name: 'Pya',
+                    singular: 'Pya',
                     plural: 'Pyas',
                     symbol: '',
                 },
