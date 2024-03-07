@@ -115,6 +115,26 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
   });
 });
 
+const testFloats = [
+  [0.0, '영'],
+  [0.04, '영점영사'],
+  [0.0468, '영점영사육팔'],
+  [0.4, '영점사'],
+  [0.63, '영점육십삼'],
+  [0.973, '영점구백칠십삼'],
+  [0.999, '영점구백구십구'],
+  [37.06, '삼십칠점영육'],
+  [37.068, '삼십칠점영육팔'],
+  [37.68, '삼십칠점육십팔'],
+  [37.683, '삼십칠점육백팔십삼'],
+];
+
+describe('Test Floats with options = {}', () => {
+  test.concurrent.each(testFloats)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number)).toBe(expected);
+  });
+});
+
 const testFloatsWithCurrency: [number, string][] = [
   [0, `영원`],
   [40, `사십원`],
