@@ -26,6 +26,7 @@ const pt_BR_1 = __importDefault(require("./locales/pt-BR"));
 const tr_TR_1 = __importDefault(require("./locales/tr-TR"));
 const nl_SR_1 = __importDefault(require("./locales/nl-SR"));
 const ee_EE_1 = __importDefault(require("./locales/ee-EE"));
+const ko_KR_1 = __importDefault(require("./locales/ko-KR"));
 exports.DefaultConverterOptions = {
     currency: false,
     ignoreDecimal: false,
@@ -89,6 +90,8 @@ class ToWords {
                 return tr_TR_1.default;
             case 'nl-SR':
                 return nl_SR_1.default;
+            case 'ko-KR':
+                return ko_KR_1.default;
         }
         /* eslint-enable @typescript-eslint/no-var-requires */
         throw new Error(`Unknown Locale "${this.options.localeCode}"`);
@@ -101,6 +104,7 @@ class ToWords {
         return this.locale;
     }
     convert(number, options = {}) {
+        var _a;
         options = Object.assign({}, this.options.converterOptions, options);
         if (!this.isValidNumber(number)) {
             throw new Error(`Invalid Number "${number}"`);
@@ -114,6 +118,9 @@ class ToWords {
         }
         else {
             words = this.convertNumber(number);
+        }
+        if ((_a = this.locale) === null || _a === void 0 ? void 0 : _a.config.trim) {
+            return words.join('');
         }
         return words.join(' ');
     }
