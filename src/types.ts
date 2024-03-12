@@ -52,6 +52,7 @@ export type LocaleConfig = {
   pluralWords?: string[];
   noSplitWordAfter?: string[];
   onlyInFront?: boolean;
+  trim?: boolean;
 };
 
 export interface LocaleInterface {
