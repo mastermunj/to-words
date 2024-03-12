@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.0.1](https://github.com/mastermunj/to-words/compare/v4.0.0...v4.0.1) (2024-03-12)
+
+
+### Bug Fixes
+
+* build the package ([2b006be](https://github.com/mastermunj/to-words/commit/2b006be43a8ab40ed87499ea2dc48d17143757a1))
+
 ## [4.0.0](https://github.com/mastermunj/to-words/compare/v3.7.0...v4.0.0) (2023-12-21)
 
 ## [3.7.0](https://github.com/mastermunj/to-words/compare/v3.6.1...v3.7.0) (2023-11-28)
