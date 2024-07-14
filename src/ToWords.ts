@@ -197,7 +197,7 @@ export class ToWords {
     // e.g. 1 Dollar Only instead of 1 Dollars Only
 
     if (Number(split[0]) === 1 && currencyOptions.singular) {
-      words.push(currencyOptions.name);
+      words.push(currencyOptions.singular);
     } else if (currencyOptions.plural) {
       words.push(currencyOptions.plural);
     }

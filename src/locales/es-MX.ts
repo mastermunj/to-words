@@ -4,10 +4,12 @@ export default class Locale implements LocaleInterface {
     currency: {
       name: 'Peso Mexicano',
       plural: 'Pesos Mexicanos',
+      singular: 'Peso Mexicano',
       symbol: '$',
       fractionalUnit: {
         name: 'Centavo',
         plural: 'Centavos',
+        singular: 'Centavo',
         symbol: '¢',
       },
     },

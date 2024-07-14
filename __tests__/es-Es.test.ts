@@ -276,10 +276,12 @@ const testFloatsWithDollarCurrency = [
 const dollarCurrencyOptions = {
   name: 'Dolar',
   plural: 'Dolares',
+  singular: 'Dolar',
   symbol: '$',
   fractionalUnit: {
     name: 'Centavo',
     plural: 'Centavos',
+    singular: 'Centavo',
     symbol: '¢',
   },
 };
