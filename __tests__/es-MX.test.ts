@@ -173,7 +173,7 @@ describe('Test Floats with options = {}', () => {
   });
 });
 
-const testFloatsWithCurrency = [
+const testFloatsWithCurrency: [number, string][] = [
   [0.0, `Cero Pesos Mexicanos`],
   [0.04, `Cero Pesos Mexicanos Y Cuatro Centavos`],
   [0.0468, `Cero Pesos Mexicanos Y Cinco Centavos`],
