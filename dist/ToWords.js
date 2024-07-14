@@ -139,7 +139,7 @@ class ToWords {
         }
         const split = number.toString().split('.');
         const ignoreZero = this.isNumberZero(number) && locale.config.ignoreZeroInDecimals;
-        let words = this.convertInternal(Number(split[0]));
+        let words = this.convertInternal(Number(split[0]), true);
         const isFloat = this.isFloat(number);
         if (isFloat && ignoreZero) {
             words = [];
@@ -152,12 +152,12 @@ class ToWords {
             if (split[1].startsWith('0') && !((_a = locale.config) === null || _a === void 0 ? void 0 : _a.decimalLengthWordMapping)) {
                 const zeroWords = [];
                 for (const num of split[1]) {
-                    zeroWords.push(...this.convertInternal(Number(num)));
+                    zeroWords.push(...this.convertInternal(Number(num), true));
                 }
                 wordsWithDecimal.push(...zeroWords);
             }
             else {
-                wordsWithDecimal.push(...this.convertInternal(Number(split[1])));
+                wordsWithDecimal.push(...this.convertInternal(Number(split[1]), true));
                 const decimalLengthWord = (_c = (_b = locale.config) === null || _b === void 0 ? void 0 : _b.decimalLengthWordMapping) === null || _c === void 0 ? void 0 : _c[split[1].length];
                 if (decimalLengthWord) {
                     wordsWithDecimal.push(decimalLengthWord);
@@ -235,7 +235,7 @@ class ToWords {
         }
         return words;
     }
-    convertInternal(number) {
+    convertInternal(number, trailing = false) {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
         const locale = this.getLocale();
         if (locale.config.exactWordsMapping) {
@@ -243,7 +243,7 @@ class ToWords {
                 return number === elem.number;
             });
             if (exactMatch) {
-                return [exactMatch.value];
+                return [Array.isArray(exactMatch.value) ? exactMatch.value[+trailing] : exactMatch.value];
             }
         }
         const match = locale.config.numberWordsMapping.find((elem) => {
@@ -251,13 +251,13 @@ class ToWords {
         });
         const words = [];
         if (number <= 100 || (number < 1000 && locale.config.namedLessThan1000)) {
-            words.push(match.value);
+            words.push(Array.isArray(match.value) ? match.value[0] : match.value);
             number -= match.number;
             if (number > 0) {
                 if ((_d = (_c = locale.config) === null || _c === void 0 ? void 0 : _c.splitWord) === null || _d === void 0 ? void 0 : _d.length) {
                     words.push(locale.config.splitWord);
                 }
-                words.push(...this.convertInternal(number));
+                words.push(...this.convertInternal(number, trailing));
             }
             return words;
         }
@@ -267,11 +267,12 @@ class ToWords {
         if (quotient > 1 && ((_f = (_e = locale.config) === null || _e === void 0 ? void 0 : _e.pluralWords) === null || _f === void 0 ? void 0 : _f.find((word) => word === match.value)) && ((_g = locale.config) === null || _g === void 0 ? void 0 : _g.pluralMark)) {
             matchValue += locale.config.pluralMark;
         }
-        if (quotient === 1 && ((_j = (_h = locale.config) === null || _h === void 0 ? void 0 : _h.ignoreOneForWords) === null || _j === void 0 ? void 0 : _j.includes(matchValue))) {
-            words.push(matchValue);
+        if (quotient === 1 &&
+            ((_j = (_h = locale.config) === null || _h === void 0 ? void 0 : _h.ignoreOneForWords) === null || _j === void 0 ? void 0 : _j.includes(Array.isArray(matchValue) ? matchValue[0] : matchValue))) {
+            words.push(Array.isArray(matchValue) ? matchValue[1] : matchValue);
         }
         else {
-            words.push(...this.convertInternal(quotient), matchValue);
+            words.push(...this.convertInternal(quotient, false), Array.isArray(matchValue) ? matchValue[0] : matchValue);
         }
         if (remainder > 0) {
             if ((_l = (_k = locale.config) === null || _k === void 0 ? void 0 : _k.splitWord) === null || _l === void 0 ? void 0 : _l.length) {
@@ -279,7 +280,7 @@ class ToWords {
                     words.push(locale.config.splitWord);
                 }
             }
-            words.push(...this.convertInternal(remainder));
+            words.push(...this.convertInternal(remainder, trailing));
         }
         return words;
     }

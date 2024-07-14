@@ -21,8 +21,9 @@ describe('Test Locale', () => {
   });
 });
 
-const testIntegers = [
+const testIntegers: [number, string][] = [
   [0, 'Cero'],
+  [1, 'Uno'],
   [137, 'Ciento Treinta Y Siete'],
   [700, 'Setecientos'],
   [1100, 'Mil Cien'],

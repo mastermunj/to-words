@@ -10,7 +10,7 @@ export declare class ToWords {
   convert(number: number, options?: ConverterOptions): string;
   protected convertNumber(number: number): string[];
   protected convertCurrency(number: number, options?: ConverterOptions): string[];
-  protected convertInternal(number: number): string[];
+  protected convertInternal(number: number, trailing?: boolean): string[];
   toFixed(number: number, precision?: number): number;
   isFloat(number: number | string): boolean;
   isValidNumber(number: number | string): boolean;

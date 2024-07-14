@@ -147,7 +147,7 @@ export class ToWords {
 
     const split = number.toString().split('.');
     const ignoreZero = this.isNumberZero(number) && locale.config.ignoreZeroInDecimals;
-    let words = this.convertInternal(Number(split[0]));
+    let words = this.convertInternal(Number(split[0]), true);
     const isFloat = this.isFloat(number);
     if (isFloat && ignoreZero) {
       words = [];
@@ -160,11 +160,11 @@ export class ToWords {
       if (split[1].startsWith('0') && !locale.config?.decimalLengthWordMapping) {
         const zeroWords = [];
         for (const num of split[1]) {
-          zeroWords.push(...this.convertInternal(Number(num)));
+          zeroWords.push(...this.convertInternal(Number(num), true));
         }
         wordsWithDecimal.push(...zeroWords);
       } else {
-        wordsWithDecimal.push(...this.convertInternal(Number(split[1])));
+        wordsWithDecimal.push(...this.convertInternal(Number(split[1]), true));
         const decimalLengthWord = locale.config?.decimalLengthWordMapping?.[split[1].length];
         if (decimalLengthWord) {
           wordsWithDecimal.push(decimalLengthWord);
@@ -250,7 +250,7 @@ export class ToWords {
     return words;
   }
 
-  protected convertInternal(number: number): string[] {
+  protected convertInternal(number: number, trailing: boolean = false): string[] {
     const locale = this.getLocale();
 
     if (locale.config.exactWordsMapping) {
@@ -258,7 +258,7 @@ export class ToWords {
         return number === elem.number;
       });
       if (exactMatch) {
-        return [exactMatch.value];
+        return [Array.isArray(exactMatch.value) ? exactMatch.value[+trailing] : exactMatch.value];
       }
     }
 
@@ -268,13 +268,13 @@ export class ToWords {
 
     const words: string[] = [];
     if (number <= 100 || (number < 1000 && locale.config.namedLessThan1000)) {
-      words.push(match.value);
+      words.push(Array.isArray(match.value) ? match.value[0] : match.value);
       number -= match.number;
       if (number > 0) {
         if (locale.config?.splitWord?.length) {
           words.push(locale.config.splitWord);
         }
-        words.push(...this.convertInternal(number));
+        words.push(...this.convertInternal(number, trailing));
       }
       return words;
     }
@@ -285,10 +285,13 @@ export class ToWords {
     if (quotient > 1 && locale.config?.pluralWords?.find((word) => word === match.value) && locale.config?.pluralMark) {
       matchValue += locale.config.pluralMark;
     }
-    if (quotient === 1 && locale.config?.ignoreOneForWords?.includes(matchValue)) {
-      words.push(matchValue);
+    if (
+      quotient === 1 &&
+      locale.config?.ignoreOneForWords?.includes(Array.isArray(matchValue) ? matchValue[0] : matchValue)
+    ) {
+      words.push(Array.isArray(matchValue) ? matchValue[1] : matchValue);
     } else {
-      words.push(...this.convertInternal(quotient), matchValue);
+      words.push(...this.convertInternal(quotient, false), Array.isArray(matchValue) ? matchValue[0] : matchValue);
     }
 
     if (remainder > 0) {
@@ -297,7 +300,7 @@ export class ToWords {
           words.push(locale.config.splitWord);
         }
       }
-      words.push(...this.convertInternal(remainder));
+      words.push(...this.convertInternal(remainder, trailing));
     }
     return words;
   }

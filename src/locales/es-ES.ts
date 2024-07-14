@@ -95,7 +95,7 @@ export default class Locale implements LocaleInterface {
       { number: 50, value: 'Cincuenta' },
       { number: 40, value: 'Cuarenta' },
       { number: 30, value: 'Treinta' },
-      { number: 1, value: 'Un' },
+      { number: 1, value: ['Un', 'Uno'] },
     ],
   };
 }
