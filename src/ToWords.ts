@@ -1,29 +1,7 @@
 import { ConstructorOf, ConverterOptions, LocaleInterface, NumberWordMap, ToWordsOptions } from './types';
-import eeEE from './locales/ee-EE';
-import enAe from './locales/en-AE';
-import enBd from './locales/en-BD';
-import enGb from './locales/en-GB';
-import enGh from './locales/en-GH';
-import enIe from './locales/en-IE';
-import enIn from './locales/en-IN';
-import enMm from './locales/en-MM';
-import enMu from './locales/en-MU';
-import enNg from './locales/en-NG';
-import enNp from './locales/en-NP';
-import enPh from './locales/en-PH';
-import enUs from './locales/en-US';
-import esES from './locales/es-ES';
-import esMX from './locales/es-MX';
-import faIr from './locales/fa-IR';
-import frBe from './locales/fr-BE';
-import frFr from './locales/fr-FR';
-import guIn from './locales/gu-IN';
-import hiIn from './locales/hi-IN';
-import koKr from './locales/ko-KR';
-import mrIn from './locales/mr-IN';
-import nlSr from './locales/nl-SR';
-import ptBR from './locales/pt-BR';
-import trTr from './locales/tr-TR';
+import LOCALES from './locales';
+
+export { LOCALES };
 
 export const DefaultConverterOptions: ConverterOptions = {
   currency: false,
@@ -47,61 +25,11 @@ export class ToWords {
   }
 
   public getLocaleClass(): ConstructorOf<LocaleInterface> {
-    /* eslint-disable @typescript-eslint/no-var-requires */
-    switch (this.options.localeCode) {
-      case 'ee-EE':
-        return eeEE;
-      case 'en-AE':
-        return enAe;
-      case 'en-BD':
-        return enBd;
-      case 'en-GB':
-        return enGb;
-      case 'en-GH':
-        return enGh;
-      case 'en-IE':
-        return enIe;
-      case 'en-IN':
-        return enIn;
-      case 'en-MM':
-        return enMm;
-      case 'en-MU':
-        return enMu;
-      case 'en-NG':
-        return enNg;
-      case 'en-NP':
-        return enNp;
-      case 'en-PH':
-        return enPh;
-      case 'en-US':
-        return enUs;
-      case 'es-ES':
-        return esES;
-      case 'es-MX':
-        return esMX;
-      case 'fa-IR':
-        return faIr;
-      case 'fr-BE':
-        return frBe;
-      case 'fr-FR':
-        return frFr;
-      case 'gu-IN':
-        return guIn;
-      case 'hi-IN':
-        return hiIn;
-      case 'ko-KR':
-        return koKr;
-      case 'mr-IN':
-        return mrIn;
-      case 'nl-SR':
-        return nlSr;
-      case 'pt-BR':
-        return ptBR;
-      case 'tr-TR':
-        return trTr;
+    if (!(this.options.localeCode! in LOCALES)) {
+      /* eslint-enable @typescript-eslint/no-var-requires */
+      throw new Error(`Unknown Locale "${this.options.localeCode}"`);
     }
-    /* eslint-enable @typescript-eslint/no-var-requires */
-    throw new Error(`Unknown Locale "${this.options.localeCode}"`);
+    return LOCALES[this.options.localeCode!];
   }
 
   public getLocale(): InstanceType<ConstructorOf<LocaleInterface>> {
