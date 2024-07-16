@@ -30,7 +30,7 @@ export interface ConstructorOf<T> {
 
 export type NumberWordMap = {
   number: number;
-  value: string;
+  value: string | [string, string];
 };
 
 export type LocaleConfig = {
