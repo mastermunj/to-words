@@ -3,32 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ToWords = exports.DefaultToWordsOptions = exports.DefaultConverterOptions = void 0;
-const ee_EE_1 = __importDefault(require("./locales/ee-EE"));
-const en_AE_1 = __importDefault(require("./locales/en-AE"));
-const en_BD_1 = __importDefault(require("./locales/en-BD"));
-const en_GB_1 = __importDefault(require("./locales/en-GB"));
-const en_GH_1 = __importDefault(require("./locales/en-GH"));
-const en_IE_1 = __importDefault(require("./locales/en-IE"));
-const en_IN_1 = __importDefault(require("./locales/en-IN"));
-const en_MM_1 = __importDefault(require("./locales/en-MM"));
-const en_MU_1 = __importDefault(require("./locales/en-MU"));
-const en_NG_1 = __importDefault(require("./locales/en-NG"));
-const en_NP_1 = __importDefault(require("./locales/en-NP"));
-const en_PH_1 = __importDefault(require("./locales/en-PH"));
-const en_US_1 = __importDefault(require("./locales/en-US"));
-const es_ES_1 = __importDefault(require("./locales/es-ES"));
-const es_MX_1 = __importDefault(require("./locales/es-MX"));
-const fa_IR_1 = __importDefault(require("./locales/fa-IR"));
-const fr_BE_1 = __importDefault(require("./locales/fr-BE"));
-const fr_FR_1 = __importDefault(require("./locales/fr-FR"));
-const gu_IN_1 = __importDefault(require("./locales/gu-IN"));
-const hi_IN_1 = __importDefault(require("./locales/hi-IN"));
-const ko_KR_1 = __importDefault(require("./locales/ko-KR"));
-const mr_IN_1 = __importDefault(require("./locales/mr-IN"));
-const nl_SR_1 = __importDefault(require("./locales/nl-SR"));
-const pt_BR_1 = __importDefault(require("./locales/pt-BR"));
-const tr_TR_1 = __importDefault(require("./locales/tr-TR"));
+exports.ToWords = exports.DefaultToWordsOptions = exports.DefaultConverterOptions = exports.LOCALES = void 0;
+const locales_1 = __importDefault(require("./locales"));
+exports.LOCALES = locales_1.default;
 exports.DefaultConverterOptions = {
     currency: false,
     ignoreDecimal: false,
@@ -46,61 +23,11 @@ class ToWords {
         this.options = Object.assign({}, exports.DefaultToWordsOptions, options);
     }
     getLocaleClass() {
-        /* eslint-disable @typescript-eslint/no-var-requires */
-        switch (this.options.localeCode) {
-            case 'ee-EE':
-                return ee_EE_1.default;
-            case 'en-AE':
-                return en_AE_1.default;
-            case 'en-BD':
-                return en_BD_1.default;
-            case 'en-GB':
-                return en_GB_1.default;
-            case 'en-GH':
-                return en_GH_1.default;
-            case 'en-IE':
-                return en_IE_1.default;
-            case 'en-IN':
-                return en_IN_1.default;
-            case 'en-MM':
-                return en_MM_1.default;
-            case 'en-MU':
-                return en_MU_1.default;
-            case 'en-NG':
-                return en_NG_1.default;
-            case 'en-NP':
-                return en_NP_1.default;
-            case 'en-PH':
-                return en_PH_1.default;
-            case 'en-US':
-                return en_US_1.default;
-            case 'es-ES':
-                return es_ES_1.default;
-            case 'es-MX':
-                return es_MX_1.default;
-            case 'fa-IR':
-                return fa_IR_1.default;
-            case 'fr-BE':
-                return fr_BE_1.default;
-            case 'fr-FR':
-                return fr_FR_1.default;
-            case 'gu-IN':
-                return gu_IN_1.default;
-            case 'hi-IN':
-                return hi_IN_1.default;
-            case 'ko-KR':
-                return ko_KR_1.default;
-            case 'mr-IN':
-                return mr_IN_1.default;
-            case 'nl-SR':
-                return nl_SR_1.default;
-            case 'pt-BR':
-                return pt_BR_1.default;
-            case 'tr-TR':
-                return tr_TR_1.default;
+        if (!(this.options.localeCode in locales_1.default)) {
+            /* eslint-enable @typescript-eslint/no-var-requires */
+            throw new Error(`Unknown Locale "${this.options.localeCode}"`);
         }
-        /* eslint-enable @typescript-eslint/no-var-requires */
-        throw new Error(`Unknown Locale "${this.options.localeCode}"`);
+        return locales_1.default[this.options.localeCode];
     }
     getLocale() {
         if (this.locale === undefined) {
