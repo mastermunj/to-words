@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.1.0](https://github.com/mastermunj/to-words/compare/v4.0.1...v4.1.0) (2024-07-17)
+
+
+### Features
+
+* expose locales in an iterable capacity ([cb7b8cf](https://github.com/mastermunj/to-words/commit/cb7b8cfed2b9d728eb08383bfcd79f2332825a4a))
+* **locales:** spanish support added ([20b7aa6](https://github.com/mastermunj/to-words/commit/20b7aa6c0f11480d314c0a1933aaed0635387d23))
+
+
+### Bug Fixes
+
+* add optional trailing variant to exactWordsMapping ([44fd000](https://github.com/mastermunj/to-words/commit/44fd000f193f0b9ac5409cbeaf453c026261c66e))
+* annotate types of test macro entries properly ([37c7768](https://github.com/mastermunj/to-words/commit/37c7768a8e2194fdbfb3dbc6398c5964d0c9b404))
+* use singular field of `CurrencyOptions` ([566ae94](https://github.com/mastermunj/to-words/commit/566ae94c7cb6e2a03daa11693fdddafdb3057963))
+
 ### [4.0.1](https://github.com/mastermunj/to-words/compare/v4.0.0...v4.0.1) (2024-03-12)
 
 
