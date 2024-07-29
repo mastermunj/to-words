@@ -45,7 +45,7 @@
     "@commitlint/config-conventional": "^19.0.3",
     "@types/jest": "^29.5.12",
     "@types/lodash": "^4.14.202",
-    "@types/node": "^20.11.26",
+    "@types/node": "^22.0.0",
     "@types/source-map-support": "^0.5.10",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
