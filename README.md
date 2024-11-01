@@ -134,6 +134,7 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | Brazil              | Portuguese | pt-BR           |
 | Turkey              | Turkish    | tr-TR           |
 | Korean, Republic of | Hangul     | ko-KR           |
+| Vietnam             | Vietnamese | vi-VN           |
 
 ## Inspiration for core logic
 
