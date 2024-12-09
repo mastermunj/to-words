@@ -13,6 +13,7 @@ import enNg from './en-NG';
 import enNp from './en-NP';
 import enPh from './en-PH';
 import enUs from './en-US';
+import esAr from './es-AR';
 import esEs from './es-ES';
 import esMx from './es-MX';
 import faIr from './fa-IR';
@@ -40,6 +41,7 @@ const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
   'en-NP': enNp,
   'en-PH': enPh,
   'en-US': enUs,
+  'es-AR': esAr,
   'es-ES': esEs,
   'es-MX': esMx,
   'fa-IR': faIr,
