@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.2.0](https://github.com/mastermunj/to-words/compare/v4.1.0...v4.2.0) (2024-12-11)
+
+
+### Features
+
+* added es-AR  format support ([5f5ffb6](https://github.com/mastermunj/to-words/commit/5f5ffb659bcc504d6f69357bfcb5ae90c5da7777))
+* added files and readme updated ([c3c02f5](https://github.com/mastermunj/to-words/commit/c3c02f573744bbf84721cc2297211f8a86e1fcbc))
+* Argentinian currency added ([d28e351](https://github.com/mastermunj/to-words/commit/d28e35165413f91bd3f9bb976baca1aad9b4fe8e))
+
+
+### Bug Fixes
+
+* **pre-commit:** added again text ([85bdf0b](https://github.com/mastermunj/to-words/commit/85bdf0bb21de604d98f7779512ea1e24810de214))
+
 ## [4.1.0](https://github.com/mastermunj/to-words/compare/v4.0.1...v4.1.0) (2024-07-17)
 
 
