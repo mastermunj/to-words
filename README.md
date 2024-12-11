@@ -132,6 +132,9 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | India               | Marathi    | mr-IN           |
 | Suriname            | Dutch      | nl-SR           |
 | Brazil              | Portuguese | pt-BR           |
+| Argentina           | Spanish    | es-AR           |
+| España              | Spanish    | es-ES           |
+| Mexico              | Spanish    | es-MX           |
 | Turkey              | Turkish    | tr-TR           |
 | Korean, Republic of | Hangul     | ko-KR           |
 
