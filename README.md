@@ -2,7 +2,23 @@
 
 ## Introduction
 
-Converts Numbers (including decimal points) into words. It also converts the numbers into words for currency.
+Convert numbers (including decimals) into words with multi-locale and currency support. Ideal for invoicing, e-commerce, and financial apps.
+
+### Features
+
+- **Number to Words**: Convert integers and decimals to text.
+- **Currency Support**: Easily handle conversions with locale-specific currency options.
+- **Multi-Locale**: Supports multiple languages and regions.
+- **Highly Configurable**: Tailor conversion rules to your needs.
+
+### Use Cases
+
+- **Financial Applications**: Generate amount-in-words for invoices or cheques.
+- **E-commerce Platforms**: Display totals in words for user receipts.
+- **Educational Tools**: Teach number systems through text conversions.
+- **Localization**: Support multiple languages and currencies seamlessly.
+
+
 
 ## Installation
 
