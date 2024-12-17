@@ -26,7 +26,6 @@ export class ToWords {
 
   public getLocaleClass(): ConstructorOf<LocaleInterface> {
     if (!(this.options.localeCode! in LOCALES)) {
-      /* eslint-enable @typescript-eslint/no-var-requires */
       throw new Error(`Unknown Locale "${this.options.localeCode}"`);
     }
     return LOCALES[this.options.localeCode!];

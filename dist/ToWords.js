@@ -24,7 +24,6 @@ class ToWords {
     }
     getLocaleClass() {
         if (!(this.options.localeCode in locales_1.default)) {
-            /* eslint-enable @typescript-eslint/no-var-requires */
             throw new Error(`Unknown Locale "${this.options.localeCode}"`);
         }
         return locales_1.default[this.options.localeCode];
