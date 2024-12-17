@@ -62,7 +62,7 @@
     "lodash": "^4.17.21",
     "prettier": "^3.4.2",
     "rimraf": "^6.0.1",
-    "sort-package-json": "^1.57.0",
+    "sort-package-json": "^2.12.0",
     "source-map-support": "^0.5.21",
     "standard-version": "^9.5.0",
     "ts-jest": "^29.2.5",
