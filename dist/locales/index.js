@@ -29,6 +29,7 @@ const mr_IN_1 = __importDefault(require("./mr-IN"));
 const nl_SR_1 = __importDefault(require("./nl-SR"));
 const pt_BR_1 = __importDefault(require("./pt-BR"));
 const tr_TR_1 = __importDefault(require("./tr-TR"));
+const ur_PK_1 = __importDefault(require("./ur-PK"));
 const LOCALES = {
     'ee-EE': ee_EE_1.default,
     'en-AE': en_AE_1.default,
@@ -56,5 +57,6 @@ const LOCALES = {
     'nl-SR': nl_SR_1.default,
     'pt-BR': pt_BR_1.default,
     'tr-TR': tr_TR_1.default,
+    'ur-PK': ur_PK_1.default,
 };
 exports.default = LOCALES;

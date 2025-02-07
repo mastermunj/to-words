@@ -153,6 +153,7 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | Mexico              | Spanish    | es-MX           |
 | Turkey              | Turkish    | tr-TR           |
 | Korean, Republic of | Hangul     | ko-KR           |
+| Pakistan            | Urdu       | ur-PK           |
 
 ## Inspiration for core logic
 
