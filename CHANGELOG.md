@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.3.0](https://github.com/mastermunj/to-words/compare/v4.2.0...v4.3.0) (2025-02-08)
+
+
+### Features
+
+* **locales:** add Pakistan Urdu language support ([93f4dbb](https://github.com/mastermunj/to-words/commit/93f4dbbc8f860dfcf22abd88acf3e2b0aa6dd6e4))
+
 ## [4.2.0](https://github.com/mastermunj/to-words/compare/v4.1.0...v4.2.0) (2024-12-11)
 
 
