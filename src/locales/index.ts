@@ -26,6 +26,7 @@ import mrIn from './mr-IN';
 import nlSr from './nl-SR';
 import ptBR from './pt-BR';
 import trTr from './tr-TR';
+import arMA from './ar-MA';
 
 const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
   'ee-EE': eeEE,
@@ -54,6 +55,7 @@ const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
   'nl-SR': nlSr,
   'pt-BR': ptBR,
   'tr-TR': trTr,
+  'ar-MA': arMA,
 };
 
 export default LOCALES;
