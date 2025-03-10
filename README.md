@@ -154,6 +154,7 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | Turkey              | Turkish    | tr-TR           |
 | Korean, Republic of | Hangul     | ko-KR           |
 | Pakistan            | Urdu       | ur-PK           |
+| Morocco             | Arabic     | ar-MA           |
 
 ## Inspiration for core logic
 
