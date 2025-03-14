@@ -1,5 +1,4 @@
 import typescriptEslint from '@typescript-eslint/eslint-plugin';
-import jest from 'eslint-plugin-jest';
 import globals from 'globals';
 import tsParser from '@typescript-eslint/parser';
 import path from 'node:path';
@@ -20,15 +19,12 @@ export default [
     'eslint:recommended',
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
-    'plugin:jest/recommended',
-    'plugin:jest/style',
     'prettier',
     'plugin:prettier/recommended',
   ),
   {
     plugins: {
       '@typescript-eslint': typescriptEslint,
-      jest,
     },
 
     languageOptions: {

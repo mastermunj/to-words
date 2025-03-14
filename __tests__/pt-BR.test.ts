@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
 import ptBr from '../src/locales/pt-BR';
