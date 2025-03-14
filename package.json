@@ -23,6 +23,9 @@
   "license": "MIT",
   "author": "Munjal Dhamecha",
   "main": "dist/ToWords.js",
+  "files": [
+    "dist/*"
+  ],
   "scripts": {
     "build": "npm run clean && tsc --noEmitOnError",
     "build:watch": "npm run build -- --watch",
