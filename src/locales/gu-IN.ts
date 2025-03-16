@@ -5,9 +5,11 @@ export default class Locale implements LocaleInterface {
     currency: {
       name: 'રૂપિયો',
       plural: 'રૂપિયા',
+      singular: 'રૂપિયો',
       symbol: '₹',
       fractionalUnit: {
         name: 'પૈસા',
+        singular: 'પૈસા',
         plural: 'પૈસા',
         symbol: '',
       },

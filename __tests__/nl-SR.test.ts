@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
 import nlSr from '../src/locales/nl-SR';
@@ -148,7 +149,7 @@ describe('Test Floats with options = {}', () => {
   });
 });
 
-const testFloatsWithCurrency = [
+const testFloatsWithCurrency: [number, string][] = [
   [0.0, `Nul Surinaamse dollars`],
   [0.04, `Nul Surinaamse dollars En Vier Centen`],
   [0.0468, `Nul Surinaamse dollars En Vijf Centen`],
@@ -156,7 +157,7 @@ const testFloatsWithCurrency = [
   // DEBUG Not recieving expected results
   // [0.63, `Nul Surinaamse dollars En Drieënzestig Centen`],
   [0.973, `Nul Surinaamse dollars En Zevenennegentig Centen`],
-  [0.999, `Een Surinaamse dollars`],
+  [0.999, `Een Surinaamse dollar`],
   [37.06, `Zevenendertig Surinaamse dollars En Zes Centen`],
   [37.068, `Zevenendertig Surinaamse dollars En Zeven Centen`],
   [37.68, `Zevenendertig Surinaamse dollars En Achtenzestig Centen`],

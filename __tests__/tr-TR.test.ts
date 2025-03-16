@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
 import trTr from '../src/locales/tr-TR';
@@ -120,7 +121,7 @@ describe('Test Floats with options = {}', () => {
   });
 });
 
-const testFloatsWithCurrency = [
+const testFloatsWithCurrency: [number, string][] = [
   [0.0, 'sıfır lira'],
   [0.04, 'dört yüzüncü lira'],
   [0.0468, 'beş yüzüncü lira'],

@@ -6,9 +6,11 @@ class Locale {
             currency: {
                 name: 'Cedi',
                 plural: 'Cedis',
+                singular: 'Cedi',
                 symbol: 'GH¢',
                 fractionalUnit: {
                     name: 'Pesewa',
+                    singular: 'Pesewa',
                     plural: 'Pesewas',
                     symbol: 'Gp',
                 },

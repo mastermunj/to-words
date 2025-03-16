@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
 import enMm from '../src/locales/en-MM';
@@ -147,14 +148,14 @@ describe('Test Floats with options = {}', () => {
   });
 });
 
-const testFloatsWithCurrency = [
+const testFloatsWithCurrency: [number, string][] = [
   [0.0, `Zero Kyats Only`],
   [0.04, `Zero Kyats And Four Pyas Only`],
   [0.0468, `Zero Kyats And Five Pyas Only`],
   [0.4, `Zero Kyats And Forty Pyas Only`],
   [0.63, `Zero Kyats And Sixty Three Pyas Only`],
   [0.973, `Zero Kyats And Ninety Seven Pyas Only`],
-  [0.999, `One Kyats Only`],
+  [0.999, `One Kyat Only`],
   [37.06, `Thirty Seven Kyats And Six Pyas Only`],
   [37.068, `Thirty Seven Kyats And Seven Pyas Only`],
   [37.68, `Thirty Seven Kyats And Sixty Eight Pyas Only`],

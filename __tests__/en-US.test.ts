@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
 import enUs from '../src/locales/en-US';
@@ -147,14 +148,14 @@ describe('Test Floats with options = {}', () => {
   });
 });
 
-const testFloatsWithCurrency = [
+const testFloatsWithCurrency: [number, string][] = [
   [0.0, `Zero Dollars Only`],
   [0.04, `Zero Dollars And Four Cents Only`],
   [0.0468, `Zero Dollars And Five Cents Only`],
   [0.4, `Zero Dollars And Forty Cents Only`],
   [0.63, `Zero Dollars And Sixty Three Cents Only`],
   [0.973, `Zero Dollars And Ninety Seven Cents Only`],
-  [0.999, `One Dollars Only`],
+  [0.999, `One Dollar Only`],
   [37.06, `Thirty Seven Dollars And Six Cents Only`],
   [37.068, `Thirty Seven Dollars And Seven Cents Only`],
   [37.68, `Thirty Seven Dollars And Sixty Eight Cents Only`],
@@ -241,7 +242,7 @@ const testFloatsWithEuroCurrency = [
   [0.4, `Zero Euros And Forty Eurocents Only`],
   [0.63, `Zero Euros And Sixty Three Eurocents Only`],
   [0.973, `Zero Euros And Ninety Seven Eurocents Only`],
-  [0.999, `One Euros Only`],
+  [0.999, `One Euro Only`],
   [37.06, `Thirty Seven Euros And Six Eurocents Only`],
   [37.068, `Thirty Seven Euros And Seven Eurocents Only`],
   [37.68, `Thirty Seven Euros And Sixty Eight Eurocents Only`],
@@ -251,10 +252,12 @@ const testFloatsWithEuroCurrency = [
 const euroCurrencyOptions = {
   name: 'Euro',
   plural: 'Euros',
+  singular: 'Euro',
   symbol: '€',
   fractionalUnit: {
     name: 'Eurocent',
     plural: 'Eurocents',
+    singular: 'Eurocent',
     symbol: '¢',
   },
 };

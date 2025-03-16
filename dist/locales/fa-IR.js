@@ -6,9 +6,11 @@ class Locale {
             currency: {
                 name: 'تومان',
                 plural: '',
+                singular: '',
                 symbol: 'تومان',
                 fractionalUnit: {
                     name: '',
+                    singular: 'ریال',
                     plural: 'تومان',
                     symbol: '',
                 },

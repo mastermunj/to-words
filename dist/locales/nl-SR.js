@@ -6,9 +6,11 @@ class Locale {
             currency: {
                 name: 'Surinaamse dollar',
                 plural: 'Surinaamse dollars',
+                singular: 'Surinaamse dollar',
                 symbol: 'SRD',
                 fractionalUnit: {
                     name: 'Cent',
+                    singular: 'Cent',
                     plural: 'Centen',
                     symbol: 'SRD',
                 },

@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
 import frFr from '../src/locales/fr-FR';
@@ -130,14 +131,14 @@ describe('Test Floats with options = {}', () => {
   });
 });
 
-const testFloatsWithCurrency = [
+const testFloatsWithCurrency: [number, string][] = [
   [0.0, `Zéro Euros`],
   [0.04, `Zéro Euros Et Quatre Centimes`],
   [0.0468, `Zéro Euros Et Cinq Centimes`],
   [0.4, `Zéro Euros Et Quarante Centimes`],
   [0.63, `Zéro Euros Et Soixante-Trois Centimes`],
   [0.973, `Zéro Euros Et Quatre-Vingt-Dix-Sept Centimes`],
-  [0.999, `Un Euros`],
+  [0.999, `Un Euro`],
   [37.06, `Trente-Sept Euros Et Six Centimes`],
   [37.068, `Trente-Sept Euros Et Sept Centimes`],
   [37.68, `Trente-Sept Euros Et Soixante-Huit Centimes`],

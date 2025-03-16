@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
 import hiIn from '../src/locales/hi-IN';
@@ -121,14 +122,14 @@ describe('Test Floats with options = {}', () => {
   });
 });
 
-const testFloatsWithCurrency = [
+const testFloatsWithCurrency: [number, string][] = [
   [0.0, 'शून्य रुपये'],
   [0.04, 'शून्य रुपये और चार पैसे'],
   [0.0468, 'शून्य रुपये और पांच पैसे'],
   [0.4, 'शून्य रुपये और चालीस पैसे'],
   [0.63, 'शून्य रुपये और तिरसठ पैसे'],
   [0.973, 'शून्य रुपये और सत्तानवे पैसे'],
-  [0.999, 'एक रुपये'],
+  [0.999, 'एक रुपया'],
   [37.06, 'सैंतीस रुपये और छह पैसे'],
   [37.068, 'सैंतीस रुपये और सात पैसे'],
   [37.68, 'सैंतीस रुपये और अड़सठ पैसे'],

@@ -2,6 +2,78 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.3.1](https://github.com/mastermunj/to-words/compare/v4.3.0...v4.3.1) (2025-03-14)
+
+## [4.3.0](https://github.com/mastermunj/to-words/compare/v4.2.0...v4.3.0) (2025-02-08)
+
+
+### Features
+
+* **locales:** add Pakistan Urdu language support ([93f4dbb](https://github.com/mastermunj/to-words/commit/93f4dbbc8f860dfcf22abd88acf3e2b0aa6dd6e4))
+
+## [4.2.0](https://github.com/mastermunj/to-words/compare/v4.1.0...v4.2.0) (2024-12-11)
+
+
+### Features
+
+* added es-AR  format support ([5f5ffb6](https://github.com/mastermunj/to-words/commit/5f5ffb659bcc504d6f69357bfcb5ae90c5da7777))
+* added files and readme updated ([c3c02f5](https://github.com/mastermunj/to-words/commit/c3c02f573744bbf84721cc2297211f8a86e1fcbc))
+* Argentinian currency added ([d28e351](https://github.com/mastermunj/to-words/commit/d28e35165413f91bd3f9bb976baca1aad9b4fe8e))
+
+
+### Bug Fixes
+
+* **pre-commit:** added again text ([85bdf0b](https://github.com/mastermunj/to-words/commit/85bdf0bb21de604d98f7779512ea1e24810de214))
+
+## [4.1.0](https://github.com/mastermunj/to-words/compare/v4.0.1...v4.1.0) (2024-07-17)
+
+
+### Features
+
+* expose locales in an iterable capacity ([cb7b8cf](https://github.com/mastermunj/to-words/commit/cb7b8cfed2b9d728eb08383bfcd79f2332825a4a))
+* **locales:** spanish support added ([20b7aa6](https://github.com/mastermunj/to-words/commit/20b7aa6c0f11480d314c0a1933aaed0635387d23))
+
+
+### Bug Fixes
+
+* add optional trailing variant to exactWordsMapping ([44fd000](https://github.com/mastermunj/to-words/commit/44fd000f193f0b9ac5409cbeaf453c026261c66e))
+* annotate types of test macro entries properly ([37c7768](https://github.com/mastermunj/to-words/commit/37c7768a8e2194fdbfb3dbc6398c5964d0c9b404))
+* use singular field of `CurrencyOptions` ([566ae94](https://github.com/mastermunj/to-words/commit/566ae94c7cb6e2a03daa11693fdddafdb3057963))
+
+### [4.0.1](https://github.com/mastermunj/to-words/compare/v4.0.0...v4.0.1) (2024-03-12)
+
+
+### Bug Fixes
+
+* build the package ([2b006be](https://github.com/mastermunj/to-words/commit/2b006be43a8ab40ed87499ea2dc48d17143757a1))
+
+## [4.0.0](https://github.com/mastermunj/to-words/compare/v3.7.0...v4.0.0) (2023-12-21)
+
+## [3.7.0](https://github.com/mastermunj/to-words/compare/v3.6.1...v3.7.0) (2023-11-28)
+
+
+### Features
+
+* **locale:** add fr-BE support ([85de6d0](https://github.com/mastermunj/to-words/commit/85de6d0ae86f775205d99b01010b06e86f54489d))
+
+### [3.6.1](https://github.com/mastermunj/to-words/compare/v3.6.0...v3.6.1) (2023-06-27)
+
+
+### Bug Fixes
+
+* Added PH entry ([e26d507](https://github.com/mastermunj/to-words/commit/e26d507cb9ef5f43dfc00d0b2ce094f0bad209b7))
+* **impl:** include file ([004fe95](https://github.com/mastermunj/to-words/commit/004fe95ffd9ea0e34a26f92b8a21124541f02cdf))
+
+## [3.6.0](https://github.com/mastermunj/to-words/compare/v3.5.1...v3.6.0) (2023-06-19)
+
+
+### Features
+
+* add support for only text to be in front of number words ([e96ca2f](https://github.com/mastermunj/to-words/commit/e96ca2fcd80f2366723b7ad43f8ecc8c046355c9))
+* **locale:** add estonian (ee-EE) language support ([df44a3f](https://github.com/mastermunj/to-words/commit/df44a3f4d456edd83363393524a8a4e01e21bfef))
+
+### [3.5.1](https://github.com/mastermunj/to-words/compare/v3.5.0...v3.5.1) (2023-04-24)
+
 ## [3.5.0](https://github.com/mastermunj/to-words/compare/v3.4.0...v3.5.0) (2023-02-27)
 
 

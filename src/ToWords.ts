@@ -1,23 +1,7 @@
 import { ConstructorOf, ConverterOptions, LocaleInterface, NumberWordMap, ToWordsOptions } from './types';
-import enAe from './locales/en-AE';
-import enBd from './locales/en-BD';
-import enGh from './locales/en-GH';
-import enIn from './locales/en-IN';
-import enMm from './locales/en-MM';
-import enMu from './locales/en-MU';
-import enNg from './locales/en-NG';
-import enNp from './locales/en-NP';
-import enUs from './locales/en-US';
-import enGb from './locales/en-GB';
-import faIr from './locales/fa-IR';
-import frFr from './locales/fr-FR';
-import guIn from './locales/gu-IN';
-import hiIn from './locales/hi-IN';
-import mrIn from './locales/mr-IN';
-import ptBR from './locales/pt-BR';
-import trTr from './locales/tr-TR';
-import lvLv from './locales/lv-LV';
-import nlSr from './locales/nl-SR';
+import LOCALES from './locales';
+
+export { LOCALES };
 
 export const DefaultConverterOptions: ConverterOptions = {
   currency: false,
@@ -41,49 +25,10 @@ export class ToWords {
   }
 
   public getLocaleClass(): ConstructorOf<LocaleInterface> {
-    /* eslint-disable @typescript-eslint/no-var-requires */
-    switch (this.options.localeCode) {
-      case 'en-AE':
-        return enAe;
-      case 'en-BD':
-        return enBd;
-      case 'en-GH':
-        return enGh;
-      case 'en-IN':
-        return enIn;
-      case 'en-MM':
-        return enMm;
-      case 'en-MU':
-        return enMu;
-      case 'en-NG':
-        return enNg;
-      case 'en-NP':
-        return enNp;
-      case 'en-US':
-        return enUs;
-      case 'en-GB':
-        return enGb;
-      case 'fa-IR':
-        return faIr;
-      case 'fr-FR':
-        return frFr;
-      case 'gu-IN':
-        return guIn;
-      case 'hi-IN':
-        return hiIn;
-      case 'mr-IN':
-        return mrIn;
-      case 'pt-BR':
-        return ptBR;
-      case 'tr-TR':
-        return trTr;
-      case 'lv-LV':
-        return lvLv;
-      case 'nl-SR':
-        return nlSr;
+    if (!(this.options.localeCode! in LOCALES)) {
+      throw new Error(`Unknown Locale "${this.options.localeCode}"`);
     }
-    /* eslint-enable @typescript-eslint/no-var-requires */
-    throw new Error(`Unknown Locale "${this.options.localeCode}"`);
+    return LOCALES[this.options.localeCode!];
   }
 
   public getLocale(): InstanceType<ConstructorOf<LocaleInterface>> {
@@ -111,6 +56,11 @@ export class ToWords {
     } else {
       words = this.convertNumber(number);
     }
+
+    if (this.locale?.config.trim) {
+      return words.join('');
+    }
+
     return words.join(' ');
   }
 
@@ -124,7 +74,7 @@ export class ToWords {
 
     const split = number.toString().split('.');
     const ignoreZero = this.isNumberZero(number) && locale.config.ignoreZeroInDecimals;
-    let words = this.convertInternal(Number(split[0]));
+    let words = this.convertInternal(Number(split[0]), true);
     const isFloat = this.isFloat(number);
     if (isFloat && ignoreZero) {
       words = [];
@@ -137,11 +87,11 @@ export class ToWords {
       if (split[1].startsWith('0') && !locale.config?.decimalLengthWordMapping) {
         const zeroWords = [];
         for (const num of split[1]) {
-          zeroWords.push(...this.convertInternal(Number(num)));
+          zeroWords.push(...this.convertInternal(Number(num), true));
         }
         wordsWithDecimal.push(...zeroWords);
       } else {
-        wordsWithDecimal.push(...this.convertInternal(Number(split[1])));
+        wordsWithDecimal.push(...this.convertInternal(Number(split[1]), true));
         const decimalLengthWord = locale.config?.decimalLengthWordMapping?.[split[1].length];
         if (decimalLengthWord) {
           wordsWithDecimal.push(decimalLengthWord);
@@ -170,7 +120,12 @@ export class ToWords {
     // Extra check for isFloat to overcome 1.999 rounding off to 2
     const split = number.toString().split('.');
     let words = [...this.convertInternal(Number(split[0]))];
-    if (currencyOptions.plural) {
+    // Determine if the main currency should be in singular form
+    // e.g. 1 Dollar Only instead of 1 Dollars Only
+
+    if (Number(split[0]) === 1 && currencyOptions.singular) {
+      words.push(currencyOptions.singular);
+    } else if (currencyOptions.plural) {
       words.push(currencyOptions.plural);
     }
     const ignoreZero =
@@ -187,16 +142,20 @@ export class ToWords {
       if (!ignoreZero) {
         wordsWithDecimal.push(locale.config.texts.and);
       }
-      wordsWithDecimal.push(
-        ...this.convertInternal(
-          Number(split[1]) * (!locale.config.decimalLengthWordMapping ? Math.pow(10, 2 - split[1].length) : 1),
-        ),
-      );
+      const decimalPart =
+        Number(split[1]) * (!locale.config.decimalLengthWordMapping ? Math.pow(10, 2 - split[1].length) : 1);
+      wordsWithDecimal.push(...this.convertInternal(decimalPart));
       const decimalLengthWord = locale.config?.decimalLengthWordMapping?.[split[1].length];
       if (decimalLengthWord?.length) {
         wordsWithDecimal.push(decimalLengthWord);
       }
-      wordsWithDecimal.push(currencyOptions.fractionalUnit.plural);
+      // Determine if the fractional unit should be in singular form
+      // e.g. 1 Dollar and 1 Cent Only instead of 1 Dollar and 1 Cents Only
+      if (decimalPart === 1 && currencyOptions.fractionalUnit.singular) {
+        wordsWithDecimal.push(currencyOptions.fractionalUnit.singular);
+      } else {
+        wordsWithDecimal.push(currencyOptions.fractionalUnit.plural);
+      }
     } else if (locale.config.decimalLengthWordMapping && words.length) {
       wordsWithDecimal.push(currencyOptions.fractionalUnit.plural);
     }
@@ -204,16 +163,21 @@ export class ToWords {
     if (!isEmpty && isNegativeNumber) {
       words.unshift(locale.config.texts.minus);
     }
-    if (!isEmpty && locale.config.texts.only && !options.doNotAddOnly) {
+    if (!isEmpty && locale.config.texts.only && !options.doNotAddOnly && !locale.config.onlyInFront) {
       wordsWithDecimal.push(locale.config.texts.only);
     }
     if (wordsWithDecimal.length) {
       words.push(...wordsWithDecimal);
     }
+
+    if (!isEmpty && !options.doNotAddOnly && locale.config.onlyInFront) {
+      words.splice(0, 0, locale.config.texts.only);
+    }
+
     return words;
   }
 
-  protected convertInternal(number: number): string[] {
+  protected convertInternal(number: number, trailing: boolean = false): string[] {
     const locale = this.getLocale();
 
     if (locale.config.exactWordsMapping) {
@@ -221,7 +185,7 @@ export class ToWords {
         return number === elem.number;
       });
       if (exactMatch) {
-        return [exactMatch.value];
+        return [Array.isArray(exactMatch.value) ? exactMatch.value[+trailing] : exactMatch.value];
       }
     }
 
@@ -231,13 +195,13 @@ export class ToWords {
 
     const words: string[] = [];
     if (number <= 100 || (number < 1000 && locale.config.namedLessThan1000)) {
-      words.push(match.value);
+      words.push(Array.isArray(match.value) ? match.value[0] : match.value);
       number -= match.number;
       if (number > 0) {
         if (locale.config?.splitWord?.length) {
           words.push(locale.config.splitWord);
         }
-        words.push(...this.convertInternal(number));
+        words.push(...this.convertInternal(number, trailing));
       }
       return words;
     }
@@ -248,10 +212,13 @@ export class ToWords {
     if (quotient > 1 && locale.config?.pluralWords?.find((word) => word === match.value) && locale.config?.pluralMark) {
       matchValue += locale.config.pluralMark;
     }
-    if (quotient === 1 && locale.config?.ignoreOneForWords?.includes(matchValue)) {
-      words.push(matchValue);
+    if (
+      quotient === 1 &&
+      locale.config?.ignoreOneForWords?.includes(Array.isArray(matchValue) ? matchValue[0] : matchValue)
+    ) {
+      words.push(Array.isArray(matchValue) ? matchValue[1] : matchValue);
     } else {
-      words.push(...this.convertInternal(quotient), matchValue);
+      words.push(...this.convertInternal(quotient, false), Array.isArray(matchValue) ? matchValue[0] : matchValue);
     }
 
     if (remainder > 0) {
@@ -260,7 +227,7 @@ export class ToWords {
           words.push(locale.config.splitWord);
         }
       }
-      words.push(...this.convertInternal(remainder));
+      words.push(...this.convertInternal(remainder, trailing));
     }
     return words;
   }

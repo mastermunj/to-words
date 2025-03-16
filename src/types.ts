@@ -2,9 +2,11 @@ export interface CurrencyOptions {
   name: string;
   plural: string;
   symbol: string;
+  singular?: string;
   fractionalUnit: {
     name: string;
     plural: string;
+    singular?: string;
     symbol: string;
   };
 }
@@ -28,7 +30,7 @@ export interface ConstructorOf<T> {
 
 export type NumberWordMap = {
   number: number;
-  value: string;
+  value: string | [string, string];
 };
 
 export type LocaleConfig = {
@@ -49,6 +51,8 @@ export type LocaleConfig = {
   pluralMark?: string;
   pluralWords?: string[];
   noSplitWordAfter?: string[];
+  onlyInFront?: boolean;
+  trim?: boolean;
 };
 
 export interface LocaleInterface {

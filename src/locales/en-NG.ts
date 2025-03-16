@@ -5,9 +5,11 @@ export default class Locale implements LocaleInterface {
     currency: {
       name: 'Naira',
       plural: 'Naira',
+      singular: 'Naira',
       symbol: '₦',
       fractionalUnit: {
         name: 'Kobo',
+        singular: 'Kobo',
         plural: 'Kobo',
         symbol: '',
       },
