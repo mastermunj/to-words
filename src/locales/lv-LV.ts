@@ -19,11 +19,11 @@ export default class Locale implements LocaleInterface {
       point: 'punkts',
     },
     numberWordsMapping: [
-      { number: 1000000000000000, value: 'kvadriljoni' },
-      { number: 1000000000000, value: 'triljoni' },
-      { number: 1000000000, value: 'miljardi' },
-      { number: 1000000, value: 'miljoni' },
-      { number: 1000, value: 'tūkstoši' },
+      { number: 1000000000000000, value: 'kvadriljon' },
+      { number: 1000000000000, value: 'triljon' },
+      { number: 1000000000, value: 'miljard' },
+      { number: 1000000, value: 'miljon' },
+      { number: 1000, value: 'tūkstoš' },
       { number: 900, value: 'deviņi simti' },
       { number: 800, value: 'astoņi simti' },
       { number: 700, value: 'septiņi simti' },
@@ -73,5 +73,11 @@ export default class Locale implements LocaleInterface {
       'astoņi simti',
       'deviņi simti',
     ],
+    exactWordsMapping: [
+      { number: 100, value: 'Simtu' },
+      { number: 1000, value: 'Tūkstotis' },
+    ],
+    pluralMark: 'i',
+    pluralWords: ['kvadriljon', 'triljon', 'miljard', 'miljon', 'tūkstoš'],
   };
 }
