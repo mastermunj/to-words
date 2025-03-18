@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-class KannadaLocale {
+class Locale {
     constructor() {
         this.config = {
             currency: {
@@ -130,4 +130,4 @@ class KannadaLocale {
         };
     }
 }
-exports.default = KannadaLocale;
+exports.default = Locale;
