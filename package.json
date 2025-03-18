@@ -1,6 +1,6 @@
 {
   "name": "to-words",
-  "version": "4.3.1",
+  "version": "4.4.0",
   "description": "Converts numbers (including decimal points) into words & currency.",
   "keywords": [
     "to words",
