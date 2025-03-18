@@ -24,6 +24,7 @@ const fr_BE_1 = __importDefault(require("./fr-BE"));
 const fr_FR_1 = __importDefault(require("./fr-FR"));
 const gu_IN_1 = __importDefault(require("./gu-IN"));
 const hi_IN_1 = __importDefault(require("./hi-IN"));
+const kn_IN_1 = __importDefault(require("./kn-IN"));
 const ko_KR_1 = __importDefault(require("./ko-KR"));
 const mr_IN_1 = __importDefault(require("./mr-IN"));
 const nl_SR_1 = __importDefault(require("./nl-SR"));
@@ -52,6 +53,7 @@ const LOCALES = {
     'fr-FR': fr_FR_1.default,
     'gu-IN': gu_IN_1.default,
     'hi-IN': hi_IN_1.default,
+    'kn-IN': kn_IN_1.default,
     'ko-KR': ko_KR_1.default,
     'mr-IN': mr_IN_1.default,
     'nl-SR': nl_SR_1.default,

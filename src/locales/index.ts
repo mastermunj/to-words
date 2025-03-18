@@ -21,6 +21,7 @@ import frBe from './fr-BE';
 import frFr from './fr-FR';
 import guIn from './gu-IN';
 import hiIn from './hi-IN';
+import knIn from './kn-IN';
 import koKr from './ko-KR';
 import mrIn from './mr-IN';
 import nlSr from './nl-SR';
@@ -50,6 +51,7 @@ const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
   'fr-FR': frFr,
   'gu-IN': guIn,
   'hi-IN': hiIn,
+  'kn-IN': knIn,
   'ko-KR': koKr,
   'mr-IN': mrIn,
   'nl-SR': nlSr,
