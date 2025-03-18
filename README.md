@@ -127,6 +127,7 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 
 | Country             | Language   | Locale          |
 | ------------------- | ---------- | --------------- |
+| India               | Bengali    | bn-IN           |
 | Estonia             | Estonian   | ee-EE           |
 | UAE                 | English    | en-AE           |
 | Bangladesh          | English    | en-BD           |
