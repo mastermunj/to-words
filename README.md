@@ -153,6 +153,7 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | Korean, Republic of | Hangul     | ko-KR           |
 | India               | Marathi    | mr-IN           |
 | Suriname            | Dutch      | nl-SR           |
+| Nepal               | Nepali     | np-NP           |
 | Brazil              | Portuguese | pt-BR           |
 | Turkey              | Turkish    | tr-TR           |
 | Pakistan            | Urdu       | ur-PK           |
