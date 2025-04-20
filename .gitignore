@@ -115,3 +115,5 @@ web_modules/
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
+
+.idea
