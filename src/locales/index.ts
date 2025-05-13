@@ -30,6 +30,7 @@ import npNp from './np-NP';
 import ptBR from './pt-BR';
 import trTr from './tr-TR';
 import urPk from './ur-PK';
+import esVE from './es-VE';
 
 const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
   'bn-IN': bnIn,
@@ -62,6 +63,7 @@ const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
   'pt-BR': ptBR,
   'tr-TR': trTr,
   'ur-PK': urPk,
+  'es-VE': esVE,
 };
 
 export default LOCALES;

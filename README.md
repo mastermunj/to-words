@@ -157,6 +157,7 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | Brazil              | Portuguese | pt-BR           |
 | Turkey              | Turkish    | tr-TR           |
 | Pakistan            | Urdu       | ur-PK           |
+| Venezuela           | Spanish    | es-VE           |
 
 ## Inspiration for core logic
 

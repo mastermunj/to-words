@@ -33,6 +33,7 @@ const np_NP_1 = __importDefault(require("./np-NP"));
 const pt_BR_1 = __importDefault(require("./pt-BR"));
 const tr_TR_1 = __importDefault(require("./tr-TR"));
 const ur_PK_1 = __importDefault(require("./ur-PK"));
+const es_VE_1 = __importDefault(require("./es-VE"));
 const LOCALES = {
     'bn-IN': bn_IN_1.default,
     'ee-EE': ee_EE_1.default,
@@ -64,5 +65,6 @@ const LOCALES = {
     'pt-BR': pt_BR_1.default,
     'tr-TR': tr_TR_1.default,
     'ur-PK': ur_PK_1.default,
+    'es-VE': es_VE_1.default,
 };
 exports.default = LOCALES;
