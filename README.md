@@ -144,6 +144,7 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | Argentina           | Spanish    | es-AR           |
 | España              | Spanish    | es-ES           |
 | Mexico              | Spanish    | es-MX           |
+| Venezuela           | Spanish    | es-VE           |
 | Iran                | Persian    | fa-IR           |
 | Belgium             | French     | fr-BE           |
 | France              | French     | fr-FR           |
@@ -157,7 +158,7 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | Brazil              | Portuguese | pt-BR           |
 | Turkey              | Turkish    | tr-TR           |
 | Pakistan            | Urdu       | ur-PK           |
-| Venezuela           | Spanish    | es-VE           |
+
 
 ## Inspiration for core logic
 
