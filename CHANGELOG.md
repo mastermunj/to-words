@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.5.1](https://github.com/mastermunj/to-words/compare/v4.5.0...v4.5.1) (2025-05-15)
+
+
+### Bug Fixes
+
+* **test:** fixed unit test to support Venezuelan Spanish language ([e9a3f79](https://github.com/mastermunj/to-words/commit/e9a3f79f091754fa33833ace6d71a697239627ee))
+
 ## [4.5.0](https://github.com/mastermunj/to-words/compare/v4.4.0...v4.5.0) (2025-04-20)
 
 
