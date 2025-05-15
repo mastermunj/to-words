@@ -73,7 +73,7 @@ describe('Test Negative Integers with options = {}', () => {
 
 const testIntegersCurrency = [
   [0, 'Cero'],
-  // [1, 'Un Peso Mexicano'],
+  // [1, 'Un Bolivar'],
   [137, 'Ciento Treinta Y Siete'],
   [700, 'Setecientos'],
   [1100, 'Mil Cien'],
@@ -156,16 +156,16 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
 
 const testFloats = [
   [0.0, 'Cero'],
-  [0.04, 'Cero Punto Cero Cuatro'],
-  [0.0468, 'Cero Punto Cero Cuatro Seis Ocho'],
-  [0.4, 'Cero Punto Cuatro'],
-  [0.63, 'Cero Punto Sesenta Y Tres'],
-  [0.973, 'Cero Punto Novecientos Setenta Y Tres'],
-  [0.999, 'Cero Punto Novecientos Noventa Y Nueve'],
-  [37.06, 'Treinta Y Siete Punto Cero Seis'],
-  [37.068, 'Treinta Y Siete Punto Cero Seis Ocho'],
-  [37.68, 'Treinta Y Siete Punto Sesenta Y Ocho'],
-  [37.683, 'Treinta Y Siete Punto Seiscientos Ochenta Y Tres'],
+  [0.04, 'Cero Coma Cero Cuatro'],
+  [0.0468, 'Cero Coma Cero Cuatro Seis Ocho'],
+  [0.4, 'Cero Coma Cuatro'],
+  [0.63, 'Cero Coma Sesenta Y Tres'],
+  [0.973, 'Cero Coma Novecientos Setenta Y Tres'],
+  [0.999, 'Cero Coma Novecientos Noventa Y Nueve'],
+  [37.06, 'Treinta Y Siete Coma Cero Seis'],
+  [37.068, 'Treinta Y Siete Coma Cero Seis Ocho'],
+  [37.68, 'Treinta Y Siete Coma Sesenta Y Ocho'],
+  [37.683, 'Treinta Y Siete Coma Seiscientos Ochenta Y Tres'],
 ];
 
 describe('Test Floats with options = {}', () => {
@@ -176,16 +176,16 @@ describe('Test Floats with options = {}', () => {
 
 const testFloatsWithCurrency: [number, string][] = [
   [0.0, `Cero Bolivares`],
-  [0.04, `Cero Bolivares Y Cuatro Centimos`],
-  [0.0468, `Cero Bolivares Y Cinco Centimos`],
-  [0.4, `Cero Bolivares Y Cuarenta Centimos`],
-  [0.63, `Cero Bolivares Y Sesenta Y Tres Centimos`],
-  [0.973, `Cero Bolivares Y Noventa Y Siete Centimos`],
-  [0.999, `Un Peso Mexicano`],
-  [37.06, `Treinta Y Siete Bolivares Y Seis Centimos`],
-  [37.068, `Treinta Y Siete Bolivares Y Siete Centimos`],
-  [37.68, `Treinta Y Siete Bolivares Y Sesenta Y Ocho Centimos`],
-  [37.683, `Treinta Y Siete Bolivares Y Sesenta Y Ocho Centimos`],
+  [0.04, `Cero Bolivares Con Cuatro Centimos`],
+  [0.0468, `Cero Bolivares Con Cinco Centimos`],
+  [0.4, `Cero Bolivares Con Cuarenta Centimos`],
+  [0.63, `Cero Bolivares Con Sesenta Y Tres Centimos`],
+  [0.973, `Cero Bolivares Con Noventa Y Siete Centimos`],
+  [0.999, `Un Bolivar`],
+  [37.06, `Treinta Y Siete Bolivares Con Seis Centimos`],
+  [37.068, `Treinta Y Siete Bolivares Con Siete Centimos`],
+  [37.68, `Treinta Y Siete Bolivares Con Sesenta Y Ocho Centimos`],
+  [37.683, `Treinta Y Siete Bolivares Con Sesenta Y Ocho Centimos`],
 ];
 
 describe('Test Floats with options = { currency: true }', () => {
@@ -203,7 +203,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true 
       return;
     }
     if (row[0] > 0 && row[0] < 1) {
-      row[1] = (row[1] as string).replace(`Cero Bolivares Y `, '');
+      row[1] = (row[1] as string).replace(`Cero Bolivares Con `, '');
     }
   });
 
@@ -223,7 +223,7 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
     if (row[0] === 0.999) {
       row[1] = `Cero Bolivares`;
     } else {
-      row[1] = (row[1] as string).replace(new RegExp(` Bolivares Y [\\w ]+ Centimos`), ' Bolivares');
+      row[1] = (row[1] as string).replace(new RegExp(` Bolivares Con [\\w ]+ Centimos`), ' Bolivares');
     }
   });
 
@@ -244,7 +244,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
     if (row[0] > 0 && row[0] < 1) {
       row[1] = '';
     }
-    row[1] = (row[1] as string).replace(new RegExp(` Bolivares Y [\\w ]+ Centimos`), ' Bolivares');
+    row[1] = (row[1] as string).replace(new RegExp(` Bolivares Con [\\w ]+ Centimos`), ' Bolivares');
   });
 
   test.concurrent.each(testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals)(
@@ -263,16 +263,16 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
 
 const testFloatsWithDollarCurrency = [
   [0.0, `Cero Dolares`],
-  [0.04, `Cero Dolares Y Cuatro Centavos`],
-  [0.0468, `Cero Dolares Y Cinco Centavos`],
-  [0.4, `Cero Dolares Y Cuarenta Centavos`],
-  [0.63, `Cero Dolares Y Sesenta Y Tres Centavos`],
-  [0.973, `Cero Dolares Y Noventa Y Siete Centavos`],
+  [0.04, `Cero Dolares Con Cuatro Centavos`],
+  [0.0468, `Cero Dolares Con Cinco Centavos`],
+  [0.4, `Cero Dolares Con Cuarenta Centavos`],
+  [0.63, `Cero Dolares Con Sesenta Y Tres Centavos`],
+  [0.973, `Cero Dolares Con Noventa Y Siete Centavos`],
   [0.999, `Un Dolar`],
-  [37.06, `Treinta Y Siete Dolares Y Seis Centavos`],
-  [37.068, `Treinta Y Siete Dolares Y Siete Centavos`],
-  [37.68, `Treinta Y Siete Dolares Y Sesenta Y Ocho Centavos`],
-  [37.683, `Treinta Y Siete Dolares Y Sesenta Y Ocho Centavos`],
+  [37.06, `Treinta Y Siete Dolares Con Seis Centavos`],
+  [37.068, `Treinta Y Siete Dolares Con Siete Centavos`],
+  [37.68, `Treinta Y Siete Dolares Con Sesenta Y Ocho Centavos`],
+  [37.683, `Treinta Y Siete Dolares Con Sesenta Y Ocho Centavos`],
 ];
 
 const dollarCurrencyOptions = {
