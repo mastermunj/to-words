@@ -127,6 +127,8 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 
 | Country             | Language   | Locale          |
 | ------------------- | ---------- | --------------- |
+| India               | Bengali    | bn-IN           |
+| Estonia             | Estonian   | ee-EE           |
 | UAE                 | English    | en-AE           |
 | Bangladesh          | English    | en-BD           |
 | UK                  | English    | en-GB           |
@@ -139,21 +141,24 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | Nepal               | English    | en-NP           |
 | USA                 | English    | en-US           |
 | Philippines         | English    | en-PH           |
-| Estonia             | Estonian   | ee-EE           |
+| Argentina           | Spanish    | es-AR           |
+| España              | Spanish    | es-ES           |
+| Mexico              | Spanish    | es-MX           |
+| Venezuela           | Spanish    | es-VE           |
 | Iran                | Persian    | fa-IR           |
 | Belgium             | French     | fr-BE           |
 | France              | French     | fr-FR           |
 | India               | Gujarati   | gu-IN           |
 | India               | Hindi      | hi-IN           |
+| India               | Kannada    | kn-IN           |
+| Korean, Republic of | Hangul     | ko-KR           |
 | India               | Marathi    | mr-IN           |
 | Suriname            | Dutch      | nl-SR           |
+| Nepal               | Nepali     | np-NP           |
 | Brazil              | Portuguese | pt-BR           |
-| Argentina           | Spanish    | es-AR           |
-| España              | Spanish    | es-ES           |
-| Mexico              | Spanish    | es-MX           |
 | Turkey              | Turkish    | tr-TR           |
-| Korean, Republic of | Hangul     | ko-KR           |
 | Pakistan            | Urdu       | ur-PK           |
+
 
 ## Inspiration for core logic
 

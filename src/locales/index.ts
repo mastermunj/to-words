@@ -1,5 +1,6 @@
 import { ConstructorOf, LocaleInterface } from '../types';
 
+import bnIn from './bn-IN';
 import eeEE from './ee-EE';
 import enAe from './en-AE';
 import enBd from './en-BD';
@@ -21,15 +22,19 @@ import frBe from './fr-BE';
 import frFr from './fr-FR';
 import guIn from './gu-IN';
 import hiIn from './hi-IN';
+import knIn from './kn-IN';
 import koKr from './ko-KR';
 import lvLv from './lv-LV';
 import mrIn from './mr-IN';
 import nlSr from './nl-SR';
+import npNp from './np-NP';
 import ptBR from './pt-BR';
 import trTr from './tr-TR';
 import urPk from './ur-PK';
+import esVE from './es-VE';
 
 const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
+  'bn-IN': bnIn,
   'ee-EE': eeEE,
   'en-AE': enAe,
   'en-BD': enBd,
@@ -51,13 +56,16 @@ const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
   'fr-FR': frFr,
   'gu-IN': guIn,
   'hi-IN': hiIn,
+  'kn-IN': knIn,
   'ko-KR': koKr,
   'lv-LV': lvLv,
   'mr-IN': mrIn,
   'nl-SR': nlSr,
+  'np-NP': npNp,
   'pt-BR': ptBR,
   'tr-TR': trTr,
   'ur-PK': urPk,
+  'es-VE': esVE,
 };
 
 export default LOCALES;

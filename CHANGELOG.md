@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.5.1](https://github.com/mastermunj/to-words/compare/v4.5.0...v4.5.1) (2025-05-15)
+
+
+### Bug Fixes
+
+* **test:** fixed unit test to support Venezuelan Spanish language ([e9a3f79](https://github.com/mastermunj/to-words/commit/e9a3f79f091754fa33833ace6d71a697239627ee))
+
+## [4.5.0](https://github.com/mastermunj/to-words/compare/v4.4.0...v4.5.0) (2025-04-20)
+
+
+### Features
+
+* add support for Bengali ([a39af4d](https://github.com/mastermunj/to-words/commit/a39af4db673a2903f577ef67da4d46134ac0a752))
+* **locales:** add np_NP support ([232ec01](https://github.com/mastermunj/to-words/commit/232ec01f1669e754c4227c456b23852a326d8cf3))
+
+## [4.4.0](https://github.com/mastermunj/to-words/compare/v4.3.1...v4.4.0) (2025-03-18)
+
+
+### Features
+
+* add support for Kannada ([bdd88ff](https://github.com/mastermunj/to-words/commit/bdd88ffa0282c44690f256dc41a60da181adcfbd))
+
+
+### Bug Fixes
+
+* locale class name ([a8dc67d](https://github.com/mastermunj/to-words/commit/a8dc67d33f024fa4b940ca2d4966110670331bd4))
+
 ### [4.3.1](https://github.com/mastermunj/to-words/compare/v4.3.0...v4.3.1) (2025-03-14)
 
 ## [4.3.0](https://github.com/mastermunj/to-words/compare/v4.2.0...v4.3.0) (2025-02-08)
