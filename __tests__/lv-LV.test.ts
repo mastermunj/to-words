@@ -79,7 +79,7 @@ describe('Test Negative Integers with options = {}', () => {
 describe('Test Integers with options = { currency: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} euro`;
+    row[1] = `${row[1]} eiro`;
   });
 
   test.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -90,7 +90,7 @@ describe('Test Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, doNotAddOnly: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} euro`;
+    row[1] = `${row[1]} eiro`;
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -101,7 +101,7 @@ describe('Test Integers with options = { currency: true, doNotAddOnly: true }', 
 describe('Test Integers with options = { currency: true, ignoreZeroCurrency: true }', () => {
   const testIntegersWithCurrencyAndIgnoreZeroCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrencyAndIgnoreZeroCurrency.map((row, i) => {
-    row[1] = i === 0 ? '' : `${row[1]} euro`;
+    row[1] = i === 0 ? '' : `${row[1]} eiro`;
   });
 
   test.each(testIntegersWithCurrencyAndIgnoreZeroCurrency)('convert %d => %s', (input, expected) => {
@@ -116,16 +116,16 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
 
 const testFloats = [
   [0.0, 'nulle'],
-  // [0.04, 'Zéro Virgule Zéro Quatre'],
-  // [0.0468, 'Zéro Virgule Zéro Quatre Six Huit'],
-  // [0.4, 'Zéro Virgule Quatre'],
-  // [0.63, 'Zéro Virgule Soixante-Trois'],
-  // [0.973, 'Zéro Virgule Neuf Cent Soixante-Treize'],
-  // [0.999, 'Zéro Virgule Neuf Cent Quatre-Vingt-Dix-Neuf'],
-  // [37.06, 'Trente-Sept Virgule Zéro Six'],
-  // [37.068, 'Trente-Sept Virgule Zéro Six Huit'],
-  // [37.68, 'Trente-Sept Virgule Soixante-Huit'],
-  // [37.683, 'Trente-Sept Virgule Six Cent Quatre-Vingt-Trois'],
+  [0.04, 'nulle komats nulle četri'],
+  [0.0468, 'nulle komats nulle četri seši astoņi'],
+  [0.4, 'nulle komats četri'],
+  [0.63, 'nulle komats sešdesmit trīs'],
+  [0.973, 'nulle komats deviņi simti septiņdesmit trīs'],
+  [0.999, 'nulle komats deviņi simti deviņdesmit deviņi'],
+  [37.06, 'trīsdesmit septiņi komats nulle seši'],
+  [37.068, 'trīsdesmit septiņi komats nulle seši astoņi'],
+  [37.68, 'trīsdesmit septiņi komats sešdesmit astoņi'],
+  [37.683, 'trīsdesmit septiņi komats seši simti astoņdesmit trīs'],
 ];
 
 describe('Test Floats with options = {}', () => {
@@ -135,17 +135,17 @@ describe('Test Floats with options = {}', () => {
 });
 
 const testFloatsWithCurrency = [
-  [0.0, `nulle euro`],
-  // [0.04, `nulle euro un četri centi`],
-  // [0.0468, `Zéro Euros Et Cinq Centimes`],
-  // [0.4, `nulle euro un četrdesmit centi`],
-  // [0.63, `Zéro Euros Et Soixante-Trois Centimes`],
-  // [0.973, `Zéro Euros Et Quatre-Vingt-Dix-Sept Centimes`],
-  // [0.999, `Un Euros`],
-  // [37.06, `Trente-Sept Euros Et Six Centimes`],
-  // [37.068, `Trente-Sept Euros Et Sept Centimes`],
-  // [37.68, `Trente-Sept Euros Et Soixante-Huit Centimes`],
-  // [37.683, `Trente-Sept Euros Et Soixante-Huit Centimes`],
+  [0.0, `nulle eiro`],
+  [0.04, `nulle eiro un četri centi`],
+  [0.0468, `nulle eiro un pieci centi`],
+  [0.4, `nulle eiro un četrdesmit centi`],
+  [0.63, `nulle eiro un sešdesmit trīs centi`],
+  [0.973, `nulle eiro un deviņdesmit septiņi centi`],
+  [0.999, `viens eiro`],
+  [37.06, `trīsdesmit septiņi eiro un seši centi`],
+  [37.068, `trīsdesmit septiņi eiro un septiņi centi`],
+  [37.68, `trīsdesmit septiņi eiro un sešdesmit astoņi centi`],
+  [37.683, `trīsdesmit septiņi eiro un sešdesmit astoņi centi`],
 ];
 
 describe('Test Floats with options = { currency: true }', () => {
@@ -181,9 +181,9 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
   const testFloatsWithCurrencyAndIgnoreDecimal = cloneDeep(testFloatsWithCurrency);
   testFloatsWithCurrencyAndIgnoreDecimal.map((row) => {
     if (row[0] === 0.999) {
-      row[1] = `nulle euro`;
+      row[1] = `nulle eiro`;
     } else {
-      row[1] = (row[1] as string).replace(new RegExp(` un [\\w\\- ]+ centi`), '');
+      row[1] = (row[1] as string).replace(new RegExp(` un .* centi`), '');
     }
   });
 
@@ -204,7 +204,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
     if (row[0] > 0 && row[0] < 1) {
       row[1] = '';
     }
-    row[1] = (row[1] as string).replace(new RegExp(` Et [\\w\\- ]+ Centimes`), '');
+    row[1] = (row[1] as string).replace(new RegExp(` un .* centi`), '');
   });
 
   test.each(testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals)('convert %d => %s', (input, expected) => {

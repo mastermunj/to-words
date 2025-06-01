@@ -3,8 +3,8 @@ import { LocaleConfig, LocaleInterface } from '../types';
 export default class Locale implements LocaleInterface {
   public config: LocaleConfig = {
     currency: {
-      name: 'euro',
-      plural: 'euro',
+      name: 'eiro',
+      plural: 'eiro',
       symbol: '€',
       fractionalUnit: {
         name: 'cents',
@@ -16,14 +16,14 @@ export default class Locale implements LocaleInterface {
       and: 'un',
       minus: 'mīnus',
       only: '',
-      point: 'punkts',
+      point: 'komats',
     },
     numberWordsMapping: [
       { number: 1000000000000000, value: 'kvadriljon' },
       { number: 1000000000000, value: 'triljon' },
       { number: 1000000000, value: 'miljard' },
-      { number: 1000000, value: 'miljon' },
-      { number: 1000, value: 'tūkstoš' },
+      { number: 1000000, value: 'miljoni', singularValue: 'miljons' },
+      { number: 1000, value: 'tūkstoši', singularValue: 'tūkstotis' },
       { number: 900, value: 'deviņi simti' },
       { number: 800, value: 'astoņi simti' },
       { number: 700, value: 'septiņi simti' },
@@ -73,11 +73,8 @@ export default class Locale implements LocaleInterface {
       'astoņi simti',
       'deviņi simti',
     ],
-    exactWordsMapping: [
-      { number: 100, value: 'Simtu' },
-      { number: 1000, value: 'Tūkstotis' },
-    ],
+    exactWordsMapping: [{ number: 100, value: 'Simtu' }],
     pluralMark: 'i',
-    pluralWords: ['kvadriljon', 'triljon', 'miljard', 'miljon', 'tūkstoš'],
+    pluralWords: ['kvadriljon', 'triljon', 'miljard'],
   };
 }
