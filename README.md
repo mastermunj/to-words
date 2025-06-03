@@ -152,13 +152,13 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | India               | Hindi      | hi-IN           |
 | India               | Kannada    | kn-IN           |
 | Korean, Republic of | Hangul     | ko-KR           |
+| Latvia              | Latvian    | lv-LV           |
 | India               | Marathi    | mr-IN           |
 | Suriname            | Dutch      | nl-SR           |
 | Nepal               | Nepali     | np-NP           |
 | Brazil              | Portuguese | pt-BR           |
 | Turkey              | Turkish    | tr-TR           |
 | Pakistan            | Urdu       | ur-PK           |
-| Latvia              | Latvian    | lv-LV           |
 
 
 ## Inspiration for core logic
