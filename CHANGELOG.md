@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.6.0](https://github.com/mastermunj/to-words/compare/v4.5.1...v4.6.0) (2025-06-03)
+
+
+### Features
+
+* add support for singular value. Fix decimal tests ([cf838ef](https://github.com/mastermunj/to-words/commit/cf838efe5d5dd3d299b2c4b167a2b1b90ce0188f))
+* fixed conflicts ([ac6fe1f](https://github.com/mastermunj/to-words/commit/ac6fe1f7099777f1d0f716a17512e9fbd246304d))
+* update README.md to add Latvian locale ([d777b2d](https://github.com/mastermunj/to-words/commit/d777b2d62e88a0f1e9ae11a58061694ada7cf562))
+
 ### [4.5.1](https://github.com/mastermunj/to-words/compare/v4.5.0...v4.5.1) (2025-05-15)
 
 
