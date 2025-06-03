@@ -24,6 +24,7 @@ import guIn from './gu-IN';
 import hiIn from './hi-IN';
 import knIn from './kn-IN';
 import koKr from './ko-KR';
+import lvLv from './lv-LV';
 import mrIn from './mr-IN';
 import nlSr from './nl-SR';
 import npNp from './np-NP';
@@ -57,6 +58,7 @@ const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
   'hi-IN': hiIn,
   'kn-IN': knIn,
   'ko-KR': koKr,
+  'lv-LV': lvLv,
   'mr-IN': mrIn,
   'nl-SR': nlSr,
   'np-NP': npNp,

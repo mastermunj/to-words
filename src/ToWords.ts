@@ -208,17 +208,17 @@ export class ToWords {
 
     const quotient = Math.floor(number / match.number);
     const remainder = number % match.number;
-    let matchValue = match.value;
+    let matchValue = Array.isArray(match.value) ? match.value[0] : match.value;
     if (quotient > 1 && locale.config?.pluralWords?.find((word) => word === match.value) && locale.config?.pluralMark) {
       matchValue += locale.config.pluralMark;
     }
-    if (
-      quotient === 1 &&
-      locale.config?.ignoreOneForWords?.includes(Array.isArray(matchValue) ? matchValue[0] : matchValue)
-    ) {
-      words.push(Array.isArray(matchValue) ? matchValue[1] : matchValue);
+    if (quotient % 10 === 1) {
+      matchValue = match.singularValue || (Array.isArray(matchValue) ? matchValue[0] : matchValue);
+    }
+    if (quotient === 1 && locale.config?.ignoreOneForWords?.includes(matchValue)) {
+      words.push(matchValue);
     } else {
-      words.push(...this.convertInternal(quotient, false), Array.isArray(matchValue) ? matchValue[0] : matchValue);
+      words.push(...this.convertInternal(quotient, false), matchValue);
     }
 
     if (remainder > 0) {

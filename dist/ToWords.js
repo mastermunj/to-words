@@ -189,16 +189,18 @@ class ToWords {
         }
         const quotient = Math.floor(number / match.number);
         const remainder = number % match.number;
-        let matchValue = match.value;
+        let matchValue = Array.isArray(match.value) ? match.value[0] : match.value;
         if (quotient > 1 && ((_f = (_e = locale.config) === null || _e === void 0 ? void 0 : _e.pluralWords) === null || _f === void 0 ? void 0 : _f.find((word) => word === match.value)) && ((_g = locale.config) === null || _g === void 0 ? void 0 : _g.pluralMark)) {
             matchValue += locale.config.pluralMark;
         }
-        if (quotient === 1 &&
-            ((_j = (_h = locale.config) === null || _h === void 0 ? void 0 : _h.ignoreOneForWords) === null || _j === void 0 ? void 0 : _j.includes(Array.isArray(matchValue) ? matchValue[0] : matchValue))) {
-            words.push(Array.isArray(matchValue) ? matchValue[1] : matchValue);
+        if (quotient % 10 === 1) {
+            matchValue = match.singularValue || (Array.isArray(matchValue) ? matchValue[0] : matchValue);
+        }
+        if (quotient === 1 && ((_j = (_h = locale.config) === null || _h === void 0 ? void 0 : _h.ignoreOneForWords) === null || _j === void 0 ? void 0 : _j.includes(matchValue))) {
+            words.push(matchValue);
         }
         else {
-            words.push(...this.convertInternal(quotient, false), Array.isArray(matchValue) ? matchValue[0] : matchValue);
+            words.push(...this.convertInternal(quotient, false), matchValue);
         }
         if (remainder > 0) {
             if ((_l = (_k = locale.config) === null || _k === void 0 ? void 0 : _k.splitWord) === null || _l === void 0 ? void 0 : _l.length) {
