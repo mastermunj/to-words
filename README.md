@@ -145,6 +145,7 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | España              | Spanish    | es-ES           |
 | Mexico              | Spanish    | es-MX           |
 | Venezuela           | Spanish    | es-VE           |
+| Oman                | Arabic     | ar-OM           |
 | Iran                | Persian    | fa-IR           |
 | Belgium             | French     | fr-BE           |
 | France              | French     | fr-FR           |

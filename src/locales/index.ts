@@ -12,6 +12,7 @@ import enMm from './en-MM';
 import enMu from './en-MU';
 import enNg from './en-NG';
 import enNp from './en-NP';
+import enOm from './en-OM';
 import enPh from './en-PH';
 import enUs from './en-US';
 import esAr from './es-AR';
@@ -46,6 +47,7 @@ const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
   'en-MU': enMu,
   'en-NG': enNg,
   'en-NP': enNp,
+  'en-OM': enOm,
   'en-PH': enPh,
   'en-US': enUs,
   'es-AR': esAr,
