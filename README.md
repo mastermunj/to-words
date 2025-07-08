@@ -137,9 +137,9 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | Mauritius           | English    | en-MU           |
 | Nigeria             | English    | en-NG           |
 | Nepal               | English    | en-NP           |
-| USA                 | English    | en-US           |
-| Philippines         | English    | en-PH           |
 | Oman                | English    | en-OM           |
+| Philippines         | English    | en-PH           |
+| USA                 | English    | en-US           |
 | Argentina           | Spanish    | es-AR           |
 | España              | Spanish    | es-ES           |
 | Mexico              | Spanish    | es-MX           |
