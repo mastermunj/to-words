@@ -18,8 +18,6 @@ Convert numbers (including decimals) into words with multi-locale and currency s
 - **Educational Tools**: Teach number systems through text conversions.
 - **Localization**: Support multiple languages and currencies seamlessly.
 
-
-
 ## Installation
 
 ```js
@@ -141,6 +139,7 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | Nepal               | English    | en-NP           |
 | USA                 | English    | en-US           |
 | Philippines         | English    | en-PH           |
+| Oman                | English    | en-OM           |
 | Argentina           | Spanish    | es-AR           |
 | España              | Spanish    | es-ES           |
 | Mexico              | Spanish    | es-MX           |
@@ -159,7 +158,6 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | Brazil              | Portuguese | pt-BR           |
 | Turkey              | Turkish    | tr-TR           |
 | Pakistan            | Urdu       | ur-PK           |
-
 
 ## Inspiration for core logic
 

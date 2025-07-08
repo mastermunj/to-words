@@ -15,6 +15,7 @@ const en_MM_1 = __importDefault(require("./en-MM"));
 const en_MU_1 = __importDefault(require("./en-MU"));
 const en_NG_1 = __importDefault(require("./en-NG"));
 const en_NP_1 = __importDefault(require("./en-NP"));
+const en_OM_1 = __importDefault(require("./en-OM"));
 const en_PH_1 = __importDefault(require("./en-PH"));
 const en_US_1 = __importDefault(require("./en-US"));
 const es_AR_1 = __importDefault(require("./es-AR"));
@@ -48,6 +49,7 @@ const LOCALES = {
     'en-MU': en_MU_1.default,
     'en-NG': en_NG_1.default,
     'en-NP': en_NP_1.default,
+    'en-OM': en_OM_1.default,
     'en-PH': en_PH_1.default,
     'en-US': en_US_1.default,
     'es-AR': es_AR_1.default,
