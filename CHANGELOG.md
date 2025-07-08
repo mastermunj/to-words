@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.7.0](https://github.com/mastermunj/to-words/compare/v4.6.0...v4.7.0) (2025-07-08)
+
+
+### Features
+
+* add Omani Rial (en-OM) ([59a6bdb](https://github.com/mastermunj/to-words/commit/59a6bdba9f04d9dacb5561e8d59ae042ec6244d0))
+
+
+### Bug Fixes
+
+* fix readme ([412dbff](https://github.com/mastermunj/to-words/commit/412dbff8b5b808ea97f8205e2c62012befbc182e))
+
 ## [4.6.0](https://github.com/mastermunj/to-words/compare/v4.5.1...v4.6.0) (2025-06-03)
 
 
