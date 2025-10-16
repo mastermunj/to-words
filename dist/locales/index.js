@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const bn_IN_1 = __importDefault(require("./bn-IN"));
 const ee_EE_1 = __importDefault(require("./ee-EE"));
 const en_AE_1 = __importDefault(require("./en-AE"));
+const en_AU_1 = __importDefault(require("./en-AU"));
 const en_BD_1 = __importDefault(require("./en-BD"));
 const en_GB_1 = __importDefault(require("./en-GB"));
 const en_GH_1 = __importDefault(require("./en-GH"));
@@ -40,6 +41,7 @@ const LOCALES = {
     'bn-IN': bn_IN_1.default,
     'ee-EE': ee_EE_1.default,
     'en-AE': en_AE_1.default,
+    'en-AU': en_AU_1.default,
     'en-BD': en_BD_1.default,
     'en-GB': en_GB_1.default,
     'en-GH': en_GH_1.default,
