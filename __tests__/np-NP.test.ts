@@ -188,7 +188,6 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
       row[1] = (row[1] as string).replace(new RegExp(` र [\\W]+ पैसा`), '');
     }
   });
-  console.log({ testFloatsWithCurrencyAndIgnoreDecimal });
 
   test.concurrent.each(testFloatsWithCurrencyAndIgnoreDecimal)('convert %d => %s', (input, expected) => {
     expect(
