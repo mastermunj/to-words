@@ -229,16 +229,44 @@ export class ToWords {
     const quotient = Math.floor(number / match.number);
     const remainder = number % match.number;
     let matchValue = Array.isArray(match.value) ? match.value[0] : match.value;
-    if (quotient > 1 && locale.config?.pluralWords?.find((word) => word === match.value) && locale.config?.pluralMark) {
-      matchValue += locale.config.pluralMark;
+
+    const pluralForms = locale.config?.pluralForms?.[match.number];
+    let usedPluralForm = false;
+
+    if (pluralForms) {
+      const lastTwoDigits = quotient % 100;
+      const useLastDigits = quotient >= 11 && lastTwoDigits >= 3 && lastTwoDigits <= 10;
+
+      if (quotient === 2 && pluralForms.dual) {
+        matchValue = pluralForms.dual;
+        usedPluralForm = true;
+      } else if (
+        (quotient >= (locale.config?.paucalConfig?.min ?? 3) && quotient <= (locale.config?.paucalConfig?.max ?? 10)) ||
+        useLastDigits
+      ) {
+        if (pluralForms.paucal) {
+          matchValue = pluralForms.paucal;
+        }
+      } else if (quotient >= 11 && pluralForms.plural) {
+        matchValue = pluralForms.plural;
+      }
+    } else {
+      if (
+        quotient > 1 &&
+        locale.config?.pluralWords?.find((word) => word === match.value) &&
+        locale.config?.pluralMark
+      ) {
+        matchValue += locale.config.pluralMark;
+      }
+      if (quotient % 10 === 1) {
+        matchValue = match.singularValue || (Array.isArray(matchValue) ? matchValue[0] : matchValue);
+      }
     }
-    if (quotient % 10 === 1) {
-      matchValue = match.singularValue || (Array.isArray(matchValue) ? matchValue[0] : matchValue);
-    }
-    if (quotient === 1 && locale.config?.ignoreOneForWords?.includes(matchValue)) {
+
+    if ((quotient === 1 && locale.config?.ignoreOneForWords?.includes(matchValue)) || usedPluralForm) {
       words.push(matchValue);
     } else {
-      words.push(...this.convertInternal(quotient, false), matchValue);
+      words.push(...this.convertInternal(quotient, false, overrides), matchValue);
     }
 
     if (remainder > 0) {
@@ -247,7 +275,7 @@ export class ToWords {
           words.push(locale.config.splitWord);
         }
       }
-      words.push(...this.convertInternal(remainder, trailing));
+      words.push(...this.convertInternal(remainder, trailing, overrides));
     }
     return words;
   }
