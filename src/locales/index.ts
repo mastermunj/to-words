@@ -1,5 +1,6 @@
 import { ConstructorOf, LocaleInterface } from '../types';
 
+import arAe from './ar-AE';
 import bnIn from './bn-IN';
 import eeEE from './ee-EE';
 import enAe from './en-AE';
@@ -36,6 +37,7 @@ import urPk from './ur-PK';
 import esVE from './es-VE';
 
 const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
+  'ar-AE': arAe,
   'bn-IN': bnIn,
   'ee-EE': eeEE,
   'en-AE': enAe,
