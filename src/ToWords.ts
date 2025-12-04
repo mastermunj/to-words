@@ -119,14 +119,20 @@ export class ToWords {
     number = this.toFixed(number);
     // Extra check for isFloat to overcome 1.999 rounding off to 2
     const split = number.toString().split('.');
-    let words = [...this.convertInternal(Number(split[0]))];
-    // Determine if the main currency should be in singular form
-    // e.g. 1 Dollar Only instead of 1 Dollars Only
+    const mainAmount = Number(split[0]);
+    let words: string[] = [];
 
-    if (Number(split[0]) === 1 && currencyOptions.singular) {
-      words.push(currencyOptions.singular);
-    } else if (currencyOptions.plural) {
-      words.push(currencyOptions.plural);
+    if (currencyOptions.numberSpecificForms?.[mainAmount]) {
+      words = [currencyOptions.numberSpecificForms[mainAmount]];
+    } else {
+      // Determine if the main currency should be in singular form
+      // e.g. 1 Dollar Only instead of 1 Dollars Only
+      words = [...this.convertInternal(mainAmount, false)];
+      if (mainAmount === 1 && currencyOptions.singular) {
+        words.push(currencyOptions.singular);
+      } else if (currencyOptions.plural) {
+        words.push(currencyOptions.plural);
+      }
     }
     const ignoreZero =
       this.isNumberZero(number) &&
@@ -144,17 +150,23 @@ export class ToWords {
       }
       const decimalPart =
         Number(split[1]) * (!locale.config.decimalLengthWordMapping ? Math.pow(10, 2 - split[1].length) : 1);
-      wordsWithDecimal.push(...this.convertInternal(decimalPart));
+
       const decimalLengthWord = locale.config?.decimalLengthWordMapping?.[split[1].length];
-      if (decimalLengthWord?.length) {
-        wordsWithDecimal.push(decimalLengthWord);
-      }
-      // Determine if the fractional unit should be in singular form
-      // e.g. 1 Dollar and 1 Cent Only instead of 1 Dollar and 1 Cents Only
-      if (decimalPart === 1 && currencyOptions.fractionalUnit.singular) {
-        wordsWithDecimal.push(currencyOptions.fractionalUnit.singular);
+
+      if (currencyOptions.fractionalUnit.numberSpecificForms?.[decimalPart]) {
+        wordsWithDecimal.push(currencyOptions.fractionalUnit.numberSpecificForms[decimalPart]);
       } else {
-        wordsWithDecimal.push(currencyOptions.fractionalUnit.plural);
+        wordsWithDecimal.push(...this.convertInternal(decimalPart, false));
+
+        if (decimalLengthWord?.length) {
+          wordsWithDecimal.push(decimalLengthWord);
+        }
+
+        if (decimalPart === 1 && currencyOptions.fractionalUnit.singular) {
+          wordsWithDecimal.push(currencyOptions.fractionalUnit.singular);
+        } else {
+          wordsWithDecimal.push(currencyOptions.fractionalUnit.plural);
+        }
       }
     } else if (locale.config.decimalLengthWordMapping && words.length) {
       wordsWithDecimal.push(currencyOptions.fractionalUnit.plural);
@@ -177,8 +189,16 @@ export class ToWords {
     return words;
   }
 
-  protected convertInternal(number: number, trailing: boolean = false): string[] {
+  protected convertInternal(
+    number: number,
+    trailing: boolean = false,
+    overrides: Record<number, string> = {},
+  ): string[] {
     const locale = this.getLocale();
+
+    if (overrides[number]) {
+      return [overrides[number]];
+    }
 
     if (locale.config.exactWordsMapping) {
       const exactMatch = locale.config?.exactWordsMapping?.find((elem) => {
@@ -201,7 +221,7 @@ export class ToWords {
         if (locale.config?.splitWord?.length) {
           words.push(locale.config.splitWord);
         }
-        words.push(...this.convertInternal(number, trailing));
+        words.push(...this.convertInternal(number, trailing, overrides));
       }
       return words;
     }
@@ -209,16 +229,44 @@ export class ToWords {
     const quotient = Math.floor(number / match.number);
     const remainder = number % match.number;
     let matchValue = Array.isArray(match.value) ? match.value[0] : match.value;
-    if (quotient > 1 && locale.config?.pluralWords?.find((word) => word === match.value) && locale.config?.pluralMark) {
-      matchValue += locale.config.pluralMark;
+
+    const pluralForms = locale.config?.pluralForms?.[match.number];
+    let usedPluralForm = false;
+
+    if (pluralForms) {
+      const lastTwoDigits = quotient % 100;
+      const useLastDigits = quotient >= 11 && lastTwoDigits >= 3 && lastTwoDigits <= 10;
+
+      if (quotient === 2 && pluralForms.dual) {
+        matchValue = pluralForms.dual;
+        usedPluralForm = true;
+      } else if (
+        (quotient >= (locale.config?.paucalConfig?.min ?? 3) && quotient <= (locale.config?.paucalConfig?.max ?? 10)) ||
+        useLastDigits
+      ) {
+        if (pluralForms.paucal) {
+          matchValue = pluralForms.paucal;
+        }
+      } else if (quotient >= 11 && pluralForms.plural) {
+        matchValue = pluralForms.plural;
+      }
+    } else {
+      if (
+        quotient > 1 &&
+        locale.config?.pluralWords?.find((word) => word === match.value) &&
+        locale.config?.pluralMark
+      ) {
+        matchValue += locale.config.pluralMark;
+      }
+      if (quotient % 10 === 1) {
+        matchValue = match.singularValue || (Array.isArray(matchValue) ? matchValue[0] : matchValue);
+      }
     }
-    if (quotient % 10 === 1) {
-      matchValue = match.singularValue || (Array.isArray(matchValue) ? matchValue[0] : matchValue);
-    }
-    if (quotient === 1 && locale.config?.ignoreOneForWords?.includes(matchValue)) {
+
+    if ((quotient === 1 && locale.config?.ignoreOneForWords?.includes(matchValue)) || usedPluralForm) {
       words.push(matchValue);
     } else {
-      words.push(...this.convertInternal(quotient, false), matchValue);
+      words.push(...this.convertInternal(quotient, false, overrides), matchValue);
     }
 
     if (remainder > 0) {
@@ -227,7 +275,7 @@ export class ToWords {
           words.push(locale.config.splitWord);
         }
       }
-      words.push(...this.convertInternal(remainder, trailing));
+      words.push(...this.convertInternal(remainder, trailing, overrides));
     }
     return words;
   }

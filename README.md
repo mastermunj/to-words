@@ -159,6 +159,7 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | Brazil              | Portuguese | pt-BR           |
 | Turkey              | Turkish    | tr-TR           |
 | Pakistan            | Urdu       | ur-PK           |
+| UAE                 | Arabic     | ar-AE           |
 
 ## Inspiration for core logic
 
