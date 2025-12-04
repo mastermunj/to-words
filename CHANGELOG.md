@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.9.0](https://github.com/mastermunj/to-words/compare/v4.8.0...v4.9.0) (2025-12-04)
+
+
+### Features
+
+* **locales:** add Arabic (UAE) locale with currency and number-specific forms ([d775d59](https://github.com/mastermunj/to-words/commit/d775d5911241bed4cebb8dd593f386985eb0be92))
+* **ToWords:** improve pluralization logic adding support for dual and paucal forms ([c0f1fc0](https://github.com/mastermunj/to-words/commit/c0f1fc0e5efa89a396d717d8eb01bd650b0f040f))
+* **types:** add support for number-specific forms and pluralization configurations ([d792ba0](https://github.com/mastermunj/to-words/commit/d792ba0b1244f33022fc644d5693a49f3a44e956))
+
 ## [4.8.0](https://github.com/mastermunj/to-words/compare/v4.7.0...v4.8.0) (2025-10-16)
 
 ## [4.7.0](https://github.com/mastermunj/to-words/compare/v4.6.0...v4.7.0) (2025-07-08)
