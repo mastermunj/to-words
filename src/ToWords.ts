@@ -8,6 +8,7 @@ export const DefaultConverterOptions: ConverterOptions = {
   ignoreDecimal: false,
   ignoreZeroCurrency: false,
   doNotAddOnly: false,
+  readZeroDecimal: false,
 };
 
 export const DefaultToWordsOptions: ToWordsOptions = {
@@ -108,87 +109,58 @@ export class ToWords {
 
   protected convertCurrency(number: number, options: ConverterOptions = {}): string[] {
     const locale = this.getLocale();
-
     const currencyOptions = options.currencyOptions ?? locale.config.currency;
 
     const isNegativeNumber = number < 0;
-    if (isNegativeNumber) {
-      number = Math.abs(number);
-    }
+    if (isNegativeNumber) number = Math.abs(number);
 
-    number = this.toFixed(number);
-    // Extra check for isFloat to overcome 1.999 rounding off to 2
-    const split = number.toString().split('.');
-    const mainAmount = Number(split[0]);
+    const fixed = Number(number).toFixed(2);
+    const [mainStr, decStr = '00'] = fixed.split('.');
+    const mainAmount = Number(mainStr);
+    const decimalPart = Number(decStr);
+
     let words: string[] = [];
 
     if (currencyOptions.numberSpecificForms?.[mainAmount]) {
       words = [currencyOptions.numberSpecificForms[mainAmount]];
     } else {
-      // Determine if the main currency should be in singular form
-      // e.g. 1 Dollar Only instead of 1 Dollars Only
       words = [...this.convertInternal(mainAmount, false)];
-      if (mainAmount === 1 && currencyOptions.singular) {
-        words.push(currencyOptions.singular);
-      } else if (currencyOptions.plural) {
-        words.push(currencyOptions.plural);
-      }
+      if (mainAmount === 1 && currencyOptions.singular) words.push(currencyOptions.singular);
+      else if (currencyOptions.plural) words.push(currencyOptions.plural);
     }
+
     const ignoreZero =
-      this.isNumberZero(number) &&
-      (options.ignoreZeroCurrency || (locale.config?.ignoreZeroInDecimals && number !== 0));
+      this.isNumberZero(Number(fixed)) &&
+      (options.ignoreZeroCurrency || (locale.config?.ignoreZeroInDecimals && Number(fixed) !== 0));
 
-    if (ignoreZero) {
-      words = [];
-    }
+    if (ignoreZero) words = [];
 
-    const wordsWithDecimal = [];
-    const isFloat = this.isFloat(number);
-    if (isFloat) {
-      if (!ignoreZero) {
-        wordsWithDecimal.push(locale.config.texts.and);
-      }
-      const decimalPart =
-        Number(split[1]) * (!locale.config.decimalLengthWordMapping ? Math.pow(10, 2 - split[1].length) : 1);
-
-      const decimalLengthWord = locale.config?.decimalLengthWordMapping?.[split[1].length];
+    const shouldReadDecimals = options.readZeroDecimal ? true : decimalPart !== 0;
+    if (shouldReadDecimals && currencyOptions.fractionalUnit?.plural) {
+      if (words.length) words.push(locale.config.texts.and);
 
       if (currencyOptions.fractionalUnit.numberSpecificForms?.[decimalPart]) {
-        wordsWithDecimal.push(currencyOptions.fractionalUnit.numberSpecificForms[decimalPart]);
+        words.push(currencyOptions.fractionalUnit.numberSpecificForms[decimalPart]);
       } else {
-        wordsWithDecimal.push(...this.convertInternal(decimalPart, false));
-
-        if (decimalLengthWord?.length) {
-          wordsWithDecimal.push(decimalLengthWord);
-        }
-
+        words.push(...this.convertInternal(decimalPart, false));
         if (decimalPart === 1 && currencyOptions.fractionalUnit.singular) {
-          wordsWithDecimal.push(currencyOptions.fractionalUnit.singular);
+          words.push(currencyOptions.fractionalUnit.singular);
         } else {
-          wordsWithDecimal.push(currencyOptions.fractionalUnit.plural);
+          words.push(currencyOptions.fractionalUnit.plural);
         }
       }
-    } else if (locale.config.decimalLengthWordMapping && words.length) {
-      wordsWithDecimal.push(currencyOptions.fractionalUnit.plural);
-    }
-    const isEmpty = words.length <= 0 && wordsWithDecimal.length <= 0;
-    if (!isEmpty && isNegativeNumber) {
-      words.unshift(locale.config.texts.minus);
-    }
-    if (!isEmpty && locale.config.texts.only && !options.doNotAddOnly && !locale.config.onlyInFront) {
-      wordsWithDecimal.push(locale.config.texts.only);
-    }
-    if (wordsWithDecimal.length) {
-      words.push(...wordsWithDecimal);
     }
 
-    if (!isEmpty && !options.doNotAddOnly && locale.config.onlyInFront) {
-      words.splice(0, 0, locale.config.texts.only);
+    if (words.length && locale.config.texts.only && !options.doNotAddOnly && !locale.config.onlyInFront) {
+      words.push(locale.config.texts.only);
     }
+    if (words.length && !options.doNotAddOnly && locale.config.onlyInFront) {
+      words.unshift(locale.config.texts.only);
+    }
+    if (isNegativeNumber && words.length) words.unshift(locale.config.texts.minus);
 
     return words;
   }
-
   protected convertInternal(
     number: number,
     trailing: boolean = false,
