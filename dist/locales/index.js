@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const ar_AE_1 = __importDefault(require("./ar-AE"));
 const bn_IN_1 = __importDefault(require("./bn-IN"));
 const ee_EE_1 = __importDefault(require("./ee-EE"));
 const en_AE_1 = __importDefault(require("./en-AE"));
@@ -38,6 +39,7 @@ const tr_TR_1 = __importDefault(require("./tr-TR"));
 const ur_PK_1 = __importDefault(require("./ur-PK"));
 const es_VE_1 = __importDefault(require("./es-VE"));
 const LOCALES = {
+    'ar-AE': ar_AE_1.default,
     'bn-IN': bn_IN_1.default,
     'ee-EE': ee_EE_1.default,
     'en-AE': en_AE_1.default,

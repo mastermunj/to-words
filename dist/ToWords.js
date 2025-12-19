@@ -57,34 +57,41 @@ class ToWords {
         return words.join(' ');
     }
     convertNumber(number) {
-        var _a, _b, _c;
+        var _a, _b;
         const locale = this.getLocale();
+        const localeConfig = locale.config;
         const isNegativeNumber = number < 0;
         if (isNegativeNumber) {
             number = Math.abs(number);
         }
-        const split = number.toString().split('.');
-        const ignoreZero = this.isNumberZero(number) && locale.config.ignoreZeroInDecimals;
-        let words = this.convertInternal(Number(split[0]), true);
         const isFloat = this.isFloat(number);
+        let integerPart = Math.trunc(number);
+        let fractionalPart = '';
+        if (isFloat) {
+            const segments = number.toString().split('.');
+            integerPart = Number(segments[0]);
+            fractionalPart = (_a = segments[1]) !== null && _a !== void 0 ? _a : '';
+        }
+        const ignoreZero = this.isNumberZero(number) && localeConfig.ignoreZeroInDecimals;
+        let words = this.convertInternal(integerPart, true, undefined, locale);
         if (isFloat && ignoreZero) {
             words = [];
         }
         const wordsWithDecimal = [];
         if (isFloat) {
             if (!ignoreZero) {
-                wordsWithDecimal.push(locale.config.texts.point);
+                wordsWithDecimal.push(localeConfig.texts.point);
             }
-            if (split[1].startsWith('0') && !((_a = locale.config) === null || _a === void 0 ? void 0 : _a.decimalLengthWordMapping)) {
+            if (fractionalPart.startsWith('0') && !(localeConfig === null || localeConfig === void 0 ? void 0 : localeConfig.decimalLengthWordMapping)) {
                 const zeroWords = [];
-                for (const num of split[1]) {
-                    zeroWords.push(...this.convertInternal(Number(num), true));
+                for (const num of fractionalPart) {
+                    zeroWords.push(...this.convertInternal(Number(num), true, undefined, locale));
                 }
                 wordsWithDecimal.push(...zeroWords);
             }
-            else {
-                wordsWithDecimal.push(...this.convertInternal(Number(split[1]), true));
-                const decimalLengthWord = (_c = (_b = locale.config) === null || _b === void 0 ? void 0 : _b.decimalLengthWordMapping) === null || _c === void 0 ? void 0 : _c[split[1].length];
+            else if (fractionalPart.length) {
+                wordsWithDecimal.push(...this.convertInternal(Number(fractionalPart), true, undefined, locale));
+                const decimalLengthWord = (_b = localeConfig === null || localeConfig === void 0 ? void 0 : localeConfig.decimalLengthWordMapping) === null || _b === void 0 ? void 0 : _b[fractionalPart.length];
                 if (decimalLengthWord) {
                     wordsWithDecimal.push(decimalLengthWord);
                 }
@@ -92,123 +99,166 @@ class ToWords {
         }
         const isEmpty = words.length <= 0;
         if (!isEmpty && isNegativeNumber) {
-            words.unshift(locale.config.texts.minus);
+            words.unshift(localeConfig.texts.minus);
         }
         words.push(...wordsWithDecimal);
         return words;
     }
     convertCurrency(number, options = {}) {
-        var _a, _b, _c, _d;
+        var _a, _b, _c, _d, _e;
         const locale = this.getLocale();
-        const currencyOptions = (_a = options.currencyOptions) !== null && _a !== void 0 ? _a : locale.config.currency;
+        const localeConfig = locale.config;
+        const currencyOptions = (_a = options.currencyOptions) !== null && _a !== void 0 ? _a : localeConfig.currency;
         const isNegativeNumber = number < 0;
         if (isNegativeNumber) {
             number = Math.abs(number);
         }
         number = this.toFixed(number);
         // Extra check for isFloat to overcome 1.999 rounding off to 2
-        const split = number.toString().split('.');
-        let words = [...this.convertInternal(Number(split[0]))];
-        // Determine if the main currency should be in singular form
-        // e.g. 1 Dollar Only instead of 1 Dollars Only
-        if (Number(split[0]) === 1 && currencyOptions.singular) {
-            words.push(currencyOptions.singular);
+        const isFloat = this.isFloat(number);
+        let mainAmount = Math.trunc(number);
+        let fractionalPart = '';
+        if (isFloat) {
+            const segments = number.toString().split('.');
+            mainAmount = Number(segments[0]);
+            fractionalPart = (_b = segments[1]) !== null && _b !== void 0 ? _b : '';
         }
-        else if (currencyOptions.plural) {
-            words.push(currencyOptions.plural);
+        let words = [];
+        if ((_c = currencyOptions.numberSpecificForms) === null || _c === void 0 ? void 0 : _c[mainAmount]) {
+            words = [currencyOptions.numberSpecificForms[mainAmount]];
         }
-        const ignoreZero = this.isNumberZero(number) &&
-            (options.ignoreZeroCurrency || (((_b = locale.config) === null || _b === void 0 ? void 0 : _b.ignoreZeroInDecimals) && number !== 0));
+        else {
+            // Determine if the main currency should be in singular form
+            // e.g. 1 Dollar Only instead of 1 Dollars Only
+            words = [...this.convertInternal(mainAmount, false, undefined, locale)];
+            if (mainAmount === 1 && currencyOptions.singular) {
+                words.push(currencyOptions.singular);
+            }
+            else if (currencyOptions.plural) {
+                words.push(currencyOptions.plural);
+            }
+        }
+        const ignoreZero = this.isNumberZero(number) && (options.ignoreZeroCurrency || ((localeConfig === null || localeConfig === void 0 ? void 0 : localeConfig.ignoreZeroInDecimals) && number !== 0));
         if (ignoreZero) {
             words = [];
         }
         const wordsWithDecimal = [];
-        const isFloat = this.isFloat(number);
         if (isFloat) {
             if (!ignoreZero) {
-                wordsWithDecimal.push(locale.config.texts.and);
+                wordsWithDecimal.push(localeConfig.texts.and);
             }
-            const decimalPart = Number(split[1]) * (!locale.config.decimalLengthWordMapping ? Math.pow(10, 2 - split[1].length) : 1);
-            wordsWithDecimal.push(...this.convertInternal(decimalPart));
-            const decimalLengthWord = (_d = (_c = locale.config) === null || _c === void 0 ? void 0 : _c.decimalLengthWordMapping) === null || _d === void 0 ? void 0 : _d[split[1].length];
-            if (decimalLengthWord === null || decimalLengthWord === void 0 ? void 0 : decimalLengthWord.length) {
-                wordsWithDecimal.push(decimalLengthWord);
-            }
-            // Determine if the fractional unit should be in singular form
-            // e.g. 1 Dollar and 1 Cent Only instead of 1 Dollar and 1 Cents Only
-            if (decimalPart === 1 && currencyOptions.fractionalUnit.singular) {
-                wordsWithDecimal.push(currencyOptions.fractionalUnit.singular);
+            const decimalBase = !localeConfig.decimalLengthWordMapping && fractionalPart.length
+                ? Math.pow(10, Math.max(0, 2 - fractionalPart.length))
+                : 1;
+            const decimalPart = Number(fractionalPart || '0') * decimalBase;
+            const decimalLengthWord = (_d = localeConfig === null || localeConfig === void 0 ? void 0 : localeConfig.decimalLengthWordMapping) === null || _d === void 0 ? void 0 : _d[fractionalPart.length];
+            if ((_e = currencyOptions.fractionalUnit.numberSpecificForms) === null || _e === void 0 ? void 0 : _e[decimalPart]) {
+                wordsWithDecimal.push(currencyOptions.fractionalUnit.numberSpecificForms[decimalPart]);
             }
             else {
-                wordsWithDecimal.push(currencyOptions.fractionalUnit.plural);
+                wordsWithDecimal.push(...this.convertInternal(decimalPart, false, undefined, locale));
+                if (decimalLengthWord === null || decimalLengthWord === void 0 ? void 0 : decimalLengthWord.length) {
+                    wordsWithDecimal.push(decimalLengthWord);
+                }
+                if (decimalPart === 1 && currencyOptions.fractionalUnit.singular) {
+                    wordsWithDecimal.push(currencyOptions.fractionalUnit.singular);
+                }
+                else {
+                    wordsWithDecimal.push(currencyOptions.fractionalUnit.plural);
+                }
             }
         }
-        else if (locale.config.decimalLengthWordMapping && words.length) {
+        else if (localeConfig.decimalLengthWordMapping && words.length) {
             wordsWithDecimal.push(currencyOptions.fractionalUnit.plural);
         }
         const isEmpty = words.length <= 0 && wordsWithDecimal.length <= 0;
         if (!isEmpty && isNegativeNumber) {
-            words.unshift(locale.config.texts.minus);
+            words.unshift(localeConfig.texts.minus);
         }
-        if (!isEmpty && locale.config.texts.only && !options.doNotAddOnly && !locale.config.onlyInFront) {
-            wordsWithDecimal.push(locale.config.texts.only);
+        if (!isEmpty && localeConfig.texts.only && !options.doNotAddOnly && !localeConfig.onlyInFront) {
+            wordsWithDecimal.push(localeConfig.texts.only);
         }
         if (wordsWithDecimal.length) {
             words.push(...wordsWithDecimal);
         }
-        if (!isEmpty && !options.doNotAddOnly && locale.config.onlyInFront) {
-            words.splice(0, 0, locale.config.texts.only);
+        if (!isEmpty && !options.doNotAddOnly && localeConfig.onlyInFront) {
+            words.splice(0, 0, localeConfig.texts.only);
         }
         return words;
     }
-    convertInternal(number, trailing = false) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
-        const locale = this.getLocale();
-        if (locale.config.exactWordsMapping) {
-            const exactMatch = (_b = (_a = locale.config) === null || _a === void 0 ? void 0 : _a.exactWordsMapping) === null || _b === void 0 ? void 0 : _b.find((elem) => {
+    convertInternal(number, trailing = false, overrides = {}, localeInstance) {
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
+        const locale = localeInstance !== null && localeInstance !== void 0 ? localeInstance : this.getLocale();
+        const localeConfig = locale.config;
+        if (overrides[number]) {
+            return [overrides[number]];
+        }
+        if (localeConfig.exactWordsMapping) {
+            const exactMatch = (_a = localeConfig === null || localeConfig === void 0 ? void 0 : localeConfig.exactWordsMapping) === null || _a === void 0 ? void 0 : _a.find((elem) => {
                 return number === elem.number;
             });
             if (exactMatch) {
                 return [Array.isArray(exactMatch.value) ? exactMatch.value[+trailing] : exactMatch.value];
             }
         }
-        const match = locale.config.numberWordsMapping.find((elem) => {
+        const match = localeConfig.numberWordsMapping.find((elem) => {
             return number >= elem.number;
         });
         const words = [];
-        if (number <= 100 || (number < 1000 && locale.config.namedLessThan1000)) {
+        if (number <= 100 || (number < 1000 && localeConfig.namedLessThan1000)) {
             words.push(Array.isArray(match.value) ? match.value[0] : match.value);
             number -= match.number;
             if (number > 0) {
-                if ((_d = (_c = locale.config) === null || _c === void 0 ? void 0 : _c.splitWord) === null || _d === void 0 ? void 0 : _d.length) {
-                    words.push(locale.config.splitWord);
+                if ((_b = localeConfig === null || localeConfig === void 0 ? void 0 : localeConfig.splitWord) === null || _b === void 0 ? void 0 : _b.length) {
+                    words.push(localeConfig.splitWord);
                 }
-                words.push(...this.convertInternal(number, trailing));
+                words.push(...this.convertInternal(number, trailing, overrides, locale));
             }
             return words;
         }
         const quotient = Math.floor(number / match.number);
         const remainder = number % match.number;
         let matchValue = Array.isArray(match.value) ? match.value[0] : match.value;
-        if (quotient > 1 && ((_f = (_e = locale.config) === null || _e === void 0 ? void 0 : _e.pluralWords) === null || _f === void 0 ? void 0 : _f.find((word) => word === match.value)) && ((_g = locale.config) === null || _g === void 0 ? void 0 : _g.pluralMark)) {
-            matchValue += locale.config.pluralMark;
+        const pluralForms = (_c = localeConfig === null || localeConfig === void 0 ? void 0 : localeConfig.pluralForms) === null || _c === void 0 ? void 0 : _c[match.number];
+        let usedPluralForm = false;
+        if (pluralForms) {
+            const lastTwoDigits = quotient % 100;
+            const useLastDigits = quotient >= 11 && lastTwoDigits >= 3 && lastTwoDigits <= 10;
+            if (quotient === 2 && pluralForms.dual) {
+                matchValue = pluralForms.dual;
+                usedPluralForm = true;
+            }
+            else if ((quotient >= ((_e = (_d = localeConfig === null || localeConfig === void 0 ? void 0 : localeConfig.paucalConfig) === null || _d === void 0 ? void 0 : _d.min) !== null && _e !== void 0 ? _e : 3) && quotient <= ((_g = (_f = localeConfig === null || localeConfig === void 0 ? void 0 : localeConfig.paucalConfig) === null || _f === void 0 ? void 0 : _f.max) !== null && _g !== void 0 ? _g : 10)) ||
+                useLastDigits) {
+                if (pluralForms.paucal) {
+                    matchValue = pluralForms.paucal;
+                }
+            }
+            else if (quotient >= 11 && pluralForms.plural) {
+                matchValue = pluralForms.plural;
+            }
         }
-        if (quotient % 10 === 1) {
-            matchValue = match.singularValue || (Array.isArray(matchValue) ? matchValue[0] : matchValue);
+        else {
+            if (quotient > 1 && ((_h = localeConfig === null || localeConfig === void 0 ? void 0 : localeConfig.pluralWords) === null || _h === void 0 ? void 0 : _h.find((word) => word === match.value)) && (localeConfig === null || localeConfig === void 0 ? void 0 : localeConfig.pluralMark)) {
+                matchValue += localeConfig.pluralMark;
+            }
+            if (quotient % 10 === 1) {
+                matchValue = match.singularValue || (Array.isArray(matchValue) ? matchValue[0] : matchValue);
+            }
         }
-        if (quotient === 1 && ((_j = (_h = locale.config) === null || _h === void 0 ? void 0 : _h.ignoreOneForWords) === null || _j === void 0 ? void 0 : _j.includes(matchValue))) {
+        if ((quotient === 1 && ((_j = localeConfig === null || localeConfig === void 0 ? void 0 : localeConfig.ignoreOneForWords) === null || _j === void 0 ? void 0 : _j.includes(matchValue))) || usedPluralForm) {
             words.push(matchValue);
         }
         else {
-            words.push(...this.convertInternal(quotient, false), matchValue);
+            words.push(...this.convertInternal(quotient, false, overrides, locale), matchValue);
         }
         if (remainder > 0) {
-            if ((_l = (_k = locale.config) === null || _k === void 0 ? void 0 : _k.splitWord) === null || _l === void 0 ? void 0 : _l.length) {
-                if (!((_o = (_m = locale.config) === null || _m === void 0 ? void 0 : _m.noSplitWordAfter) === null || _o === void 0 ? void 0 : _o.find((word) => word === match.value))) {
-                    words.push(locale.config.splitWord);
+            if ((_k = localeConfig === null || localeConfig === void 0 ? void 0 : localeConfig.splitWord) === null || _k === void 0 ? void 0 : _k.length) {
+                if (!((_l = localeConfig === null || localeConfig === void 0 ? void 0 : localeConfig.noSplitWordAfter) === null || _l === void 0 ? void 0 : _l.find((word) => word === match.value))) {
+                    words.push(localeConfig.splitWord);
                 }
             }
-            words.push(...this.convertInternal(remainder, trailing));
+            words.push(...this.convertInternal(remainder, trailing, overrides, locale));
         }
         return words;
     }

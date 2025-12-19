@@ -3,10 +3,12 @@ export interface CurrencyOptions {
     plural: string;
     symbol: string;
     singular?: string;
+    numberSpecificForms?: Record<number, string>;
     fractionalUnit: {
         name: string;
         plural: string;
         singular?: string;
+        numberSpecificForms?: Record<number, string>;
         symbol: string;
     };
 }
@@ -29,6 +31,17 @@ export type NumberWordMap = {
     value: string | [string, string];
     singularValue?: string;
 };
+export type PluralFormsMapping = {
+    [scaleNumber: number]: {
+        dual?: string;
+        paucal?: string;
+        plural?: string;
+    };
+};
+export type PaucalConfig = {
+    min: number;
+    max: number;
+};
 export type LocaleConfig = {
     currency: CurrencyOptions;
     texts: {
@@ -46,6 +59,8 @@ export type LocaleConfig = {
     ignoreOneForWords?: string[];
     pluralMark?: string;
     pluralWords?: string[];
+    pluralForms?: PluralFormsMapping;
+    paucalConfig?: PaucalConfig;
     noSplitWordAfter?: string[];
     onlyInFront?: boolean;
     trim?: boolean;
