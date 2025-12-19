@@ -19,6 +19,7 @@ export type ConverterOptions = {
   ignoreZeroCurrency?: boolean;
   doNotAddOnly?: boolean; // applicable only when currency = true
   currencyOptions?: CurrencyOptions; // applicable only when currency = true, overwrites options from locales
+  readZeroDecimal?: boolean;
 };
 
 export type ToWordsOptions = {
