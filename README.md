@@ -161,6 +161,16 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | Pakistan            | Urdu       | ur-PK           |
 | UAE                 | Arabic     | ar-AE           |
 
+## Adding a New Locale
+
+Follow these steps when contributing support for another locale:
+
+1. **Create the locale file**: Add `src/locales/<locale-code>.ts` exporting a class that implements `LocaleInterface` from `src/types.ts`. Populate its `LocaleConfig` (currency metadata, number word mappings, pluralization rules, etc.). Use an existing locale file as a template and adjust texts and mappings for the new language.
+2. **Register the locale**: Import your new class in `src/locales/index.ts` and add it to the `LOCALES` map so the `ToWords` constructor can resolve it via `localeCode`.
+3. **Add regression tests**: Create `__tests__/<locale-code>.test.ts` (copy a nearby locale test) to cover integer, negative, fractional, and currency scenarios. Ensure the new tests instantiate `ToWords` with your locale and assert both plain and currency conversions.
+4. **Update documentation**: Extend the Supported Locale table above with the new locale entry so users can discover it.
+5. **Build and include artifacts**: Run `npm run test` to confirm the suite passes, then `npm run build` to regenerate `dist/*`. Commit both your source changes and the updated build output in the pull request.
+
 ## Inspiration for core logic
 
 [https://stackoverflow.com/a/46221860](https://stackoverflow.com/a/46221860)
