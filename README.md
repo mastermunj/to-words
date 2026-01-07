@@ -135,11 +135,13 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | Ireland             | English    | en-IE           |
 | India               | English    | en-IN (default) |
 | Myanmar             | English    | en-MM           |
+| Morocco             | English    | en-MA           |
 | Mauritius           | English    | en-MU           |
 | Nigeria             | English    | en-NG           |
 | Nepal               | English    | en-NP           |
 | Oman                | English    | en-OM           |
 | Philippines         | English    | en-PH           |
+| Saudi Arabia        | English    | en-SA           |
 | USA                 | English    | en-US           |
 | Argentina           | Spanish    | es-AR           |
 | España              | Spanish    | es-ES           |
@@ -148,6 +150,8 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | Iran                | Persian    | fa-IR           |
 | Belgium             | French     | fr-BE           |
 | France              | French     | fr-FR           |
+| Morocco             | French     | fr-MA           |
+| Saudi Arabia        | French     | fr-SA           |
 | India               | Gujarati   | gu-IN           |
 | India               | Hindi      | hi-IN           |
 | India               | Kannada    | kn-IN           |
@@ -160,6 +164,8 @@ let words = toWords.convert(0.572, { currency: true, ignoreZeroCurrency: true })
 | Turkey              | Turkish    | tr-TR           |
 | Pakistan            | Urdu       | ur-PK           |
 | UAE                 | Arabic     | ar-AE           |
+| Morocco             | Arabic     | ar-MA           |
+| Saudi Arabia        | Arabic     | ar-SA           |
 
 ## Adding a New Locale
 
