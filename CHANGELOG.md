@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.10.0](https://github.com/mastermunj/to-words/compare/v4.9.0...v4.10.0) (2026-01-07)
+
+
+### Features
+
+* add support for Morocco and Saudi Arabia locales ([4baeb3d](https://github.com/mastermunj/to-words/commit/4baeb3d5efd905e0242336065e032c4f3101bff5))
+
+
+### Bug Fixes
+
+* **tests:** fix prettier formatting for large number test entries ([de5fb86](https://github.com/mastermunj/to-words/commit/de5fb86bf9de74e2e5c2835d82bf280d8585cdbc))
+
 ## [4.9.0](https://github.com/mastermunj/to-words/compare/v4.8.0...v4.9.0) (2025-12-04)
 
 
