@@ -1,38 +1,133 @@
+/**
+ * Comprehensive benchmark.
+ *
+ * Measures performance across multiple locales with various number types:
+ * - Small, medium, and large integers
+ * - Currency conversion
+ * - BigInt values (including beyond MAX_SAFE_INTEGER)
+ *
+ */
+
 import { bench, describe } from 'vitest';
 import { ToWords } from '../src/ToWords';
 import type { ConverterOptions } from '../src/types';
 
-const localeCodes = ['en-IN', 'en-US', 'es-MX', 'ar-AE', 'fr-FR'];
-const integerSamples = [0, 15, 105, 999, 1234, 98765, 1234567, 900719925474];
-const decimalSamples = [0.42, 12.34, 100.01, 9999.99, 12345.678, 4500000.56];
-const currencySamples = [0.5, 1, 9.99, 19.5, 101.01, 999.75, 12345.43, 987654.21];
+// =============================================================================
+// Configuration
+// =============================================================================
 
-const toWordsInstances = localeCodes.map((localeCode) => new ToWords({ localeCode }));
-const currencyConversionOptions: ConverterOptions = { currency: true };
+const testValues = {
+  small: 42,
+  medium: 12345,
+  large: 900719925474099,
+  maxSafe: Number.MAX_SAFE_INTEGER,
+};
 
-let sink = '';
+const bigIntValues = {
+  medium: 12345n,
+  beyondSafe: 9007199254740992n, // MAX_SAFE_INTEGER + 1
+  veryLarge: 123456789012345678901234567890n,
+};
 
-function runConversion(samples: number[], options?: ConverterOptions): void {
-  for (const sample of samples) {
-    for (const toWords of toWordsInstances) {
-      sink = toWords.convert(sample, options);
-    }
-  }
+// Locales to benchmark (representative sample)
+const locales = ['en-IN', 'en-US', 'en-GB', 'es-ES', 'es-MX', 'fr-FR', 'ar-AE', 'hi-IN', 'pt-BR', 'ko-KR'];
+
+const currencyOptions: ConverterOptions = { currency: true };
+
+let sink: string = '';
+
+// =============================================================================
+// Per-locale Benchmarks
+// =============================================================================
+
+for (const localeCode of locales) {
+  describe(`${localeCode}`, () => {
+    const toWords = new ToWords({ localeCode });
+
+    bench(`small int (${testValues.small})`, () => {
+      sink = toWords.convert(testValues.small);
+    });
+
+    bench(`medium int (${testValues.medium})`, () => {
+      sink = toWords.convert(testValues.medium);
+    });
+
+    bench(`large int`, () => {
+      sink = toWords.convert(testValues.large);
+    });
+
+    bench(`currency`, () => {
+      sink = toWords.convert(1234.56, currencyOptions);
+    });
+
+    bench(`BigInt medium`, () => {
+      sink = toWords.convert(bigIntValues.medium);
+    });
+
+    bench(`BigInt large`, () => {
+      sink = toWords.convert(bigIntValues.veryLarge);
+    });
+  });
 }
 
-describe('ToWords performance', () => {
-  bench('convert integers across locales', () => {
-    runConversion(integerSamples);
+// =============================================================================
+// Stress Tests (en-IN vs en-US comparison)
+// =============================================================================
+
+describe('Stress: MAX_SAFE_INTEGER', () => {
+  const enIn = new ToWords({ localeCode: 'en-IN' });
+  const enUs = new ToWords({ localeCode: 'en-US' });
+
+  bench('en-IN', () => {
+    sink = enIn.convert(testValues.maxSafe);
   });
 
-  bench('convert decimals across locales', () => {
-    runConversion(decimalSamples);
-  });
-
-  bench('convert currencies across locales', () => {
-    runConversion(currencySamples, currencyConversionOptions);
+  bench('en-US', () => {
+    sink = enUs.convert(testValues.maxSafe);
   });
 });
 
-// Prevent tree-shaking in case the benchmark file is bundled in the future
+describe('Stress: BigInt beyond safe', () => {
+  const enIn = new ToWords({ localeCode: 'en-IN' });
+  const enUs = new ToWords({ localeCode: 'en-US' });
+
+  bench('en-IN', () => {
+    sink = enIn.convert(bigIntValues.beyondSafe);
+  });
+
+  bench('en-US', () => {
+    sink = enUs.convert(bigIntValues.beyondSafe);
+  });
+});
+
+describe('Stress: Very large BigInt', () => {
+  const enIn = new ToWords({ localeCode: 'en-IN' });
+  const enUs = new ToWords({ localeCode: 'en-US' });
+
+  bench('en-IN', () => {
+    sink = enIn.convert(bigIntValues.veryLarge);
+  });
+
+  bench('en-US', () => {
+    sink = enUs.convert(bigIntValues.veryLarge);
+  });
+});
+
+// =============================================================================
+// Instance Creation Overhead
+// =============================================================================
+
+describe('Instance creation', () => {
+  bench('create + convert', () => {
+    const instance = new ToWords({ localeCode: 'en-IN' });
+    sink = instance.convert(12345);
+  });
+
+  const existingInstance = new ToWords({ localeCode: 'en-IN' });
+  bench('reuse instance', () => {
+    sink = existingInstance.convert(12345);
+  });
+});
+
+// Prevent tree-shaking
 export { sink };

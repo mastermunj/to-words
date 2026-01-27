@@ -15,6 +15,21 @@ export const DefaultToWordsOptions: ToWordsOptions = {
   converterOptions: DefaultConverterOptions,
 };
 
+// Cached BigInt mappings per locale to avoid repeated conversions
+interface CachedNumberWordMap extends NumberWordMap {
+  numberBigInt: bigint;
+  resolvedValue: string; // Pre-resolved value (first element if array)
+}
+
+interface LocaleCache {
+  numberWordsMappingBigInt: CachedNumberWordMap[];
+  exactWordsMap: Map<bigint, CachedNumberWordMap>; // O(1) lookup for exact matches
+  smallNumbersMap: Map<bigint, CachedNumberWordMap>; // Direct lookup for 0-100
+}
+
+// Global cache for all locales (computed once per locale)
+const localeCache = new WeakMap<InstanceType<ConstructorOf<LocaleInterface>>, LocaleCache>();
+
 export class ToWords {
   private options: ToWordsOptions = {};
 
@@ -35,8 +50,59 @@ export class ToWords {
     if (this.locale === undefined) {
       const LocaleClass = this.getLocaleClass();
       this.locale = new LocaleClass();
+      // Initialize cache for this locale
+      this.initLocaleCache(this.locale);
     }
     return this.locale;
+  }
+
+  private initLocaleCache(locale: InstanceType<ConstructorOf<LocaleInterface>>): void {
+    if (localeCache.has(locale)) return;
+
+    const config = locale.config;
+
+    // Pre-compute BigInt values and resolved string values for numberWordsMapping
+    const numberWordsMappingBigInt: CachedNumberWordMap[] = config.numberWordsMapping.map((elem) => ({
+      ...elem,
+      numberBigInt: BigInt(elem.number),
+      resolvedValue: Array.isArray(elem.value) ? elem.value[0] : elem.value,
+    }));
+
+    // Create Map for O(1) exact match lookup
+    const exactWordsMap = new Map<bigint, CachedNumberWordMap>();
+    if (config.exactWordsMapping) {
+      for (const elem of config.exactWordsMapping) {
+        const cached: CachedNumberWordMap = {
+          ...elem,
+          numberBigInt: BigInt(elem.number),
+          resolvedValue: Array.isArray(elem.value) ? elem.value[0] : elem.value,
+        };
+        exactWordsMap.set(cached.numberBigInt, cached);
+      }
+    }
+
+    // Create direct lookup map for small numbers (0-100) for O(1) access
+    const smallNumbersMap = new Map<bigint, CachedNumberWordMap>();
+    for (const elem of numberWordsMappingBigInt) {
+      if (elem.numberBigInt <= 100n) {
+        smallNumbersMap.set(elem.numberBigInt, elem);
+      }
+    }
+
+    localeCache.set(locale, {
+      numberWordsMappingBigInt,
+      exactWordsMap,
+      smallNumbersMap,
+    });
+  }
+
+  private getLocaleCache(locale: InstanceType<ConstructorOf<LocaleInterface>>): LocaleCache {
+    let cache = localeCache.get(locale);
+    if (!cache) {
+      this.initLocaleCache(locale);
+      cache = localeCache.get(locale)!;
+    }
+    return cache;
   }
 
   public convert(number: NumberInput, options: ConverterOptions = {}): string {
@@ -233,32 +299,40 @@ export class ToWords {
   ): string[] {
     const locale = localeInstance ?? this.getLocale();
     const localeConfig = locale.config;
+    const cache = this.getLocaleCache(locale);
 
     const numberAsNum = number <= BigInt(Number.MAX_SAFE_INTEGER) ? Number(number) : -1;
     if (numberAsNum !== -1 && overrides[numberAsNum]) {
       return [overrides[numberAsNum]];
     }
 
-    if (localeConfig.exactWordsMapping) {
-      const exactMatch = localeConfig?.exactWordsMapping?.find((elem) => {
-        return number === BigInt(elem.number);
-      });
-      if (exactMatch) {
-        return [Array.isArray(exactMatch.value) ? exactMatch.value[+trailing] : exactMatch.value];
-      }
+    // Check exactWordsMapping using O(1) Map lookup
+    const exactMatch = cache.exactWordsMap.get(number);
+    if (exactMatch) {
+      return [trailing && Array.isArray(exactMatch.value) ? exactMatch.value[1] : exactMatch.resolvedValue];
     }
 
-    const match = localeConfig.numberWordsMapping.find((elem) => {
-      return number >= BigInt(elem.number);
-    }) as NumberWordMap;
+    // Fast path: Use O(1) Map lookup for small numbers (0-100)
+    let match: CachedNumberWordMap;
+    if (number <= 100n) {
+      const directMatch = cache.smallNumbersMap.get(number);
+      if (directMatch) {
+        return [trailing && Array.isArray(directMatch.value) ? directMatch.value[1] : directMatch.resolvedValue];
+      }
+      // Number not directly in map, use binary search (e.g., 21 = 20 + 1)
+      match = this.binarySearchDescending(cache.numberWordsMappingBigInt, number);
+    } else {
+      // Use binary search on pre-computed BigInt values (array is sorted descending)
+      match = this.binarySearchDescending(cache.numberWordsMappingBigInt, number);
+    }
 
-    const matchNumber = BigInt(match.number);
+    const matchNumber = match.numberBigInt;
     const words: string[] = [];
     if (number <= 100n || (number < 1000n && localeConfig.namedLessThan1000)) {
-      words.push(Array.isArray(match.value) ? match.value[0] : match.value);
+      words.push(match.resolvedValue);
       number -= matchNumber;
       if (number > 0n) {
-        if (localeConfig?.splitWord?.length) {
+        if (localeConfig.splitWord) {
           words.push(localeConfig.splitWord);
         }
         words.push(...this.convertInternal(number, trailing, overrides, locale));
@@ -268,7 +342,7 @@ export class ToWords {
 
     const quotient = number / matchNumber;
     const remainder = number % matchNumber;
-    let matchValue = Array.isArray(match.value) ? match.value[0] : match.value;
+    let matchValue = match.resolvedValue;
 
     const matchNumberNum = Number(matchNumber);
     const pluralForms = localeConfig?.pluralForms?.[matchNumberNum];
@@ -312,14 +386,36 @@ export class ToWords {
     }
 
     if (remainder > 0n) {
-      if (localeConfig?.splitWord?.length) {
-        if (!localeConfig?.noSplitWordAfter?.find((word) => word === match.value)) {
+      if (localeConfig.splitWord) {
+        if (!localeConfig.noSplitWordAfter?.includes(match.resolvedValue)) {
           words.push(localeConfig.splitWord);
         }
       }
       words.push(...this.convertInternal(remainder, trailing, overrides, locale));
     }
     return words;
+  }
+
+  /**
+   * Binary search on a descending-sorted array of CachedNumberWordMap.
+   * Finds the first element where numberBigInt <= target.
+   */
+  private binarySearchDescending(arr: CachedNumberWordMap[], target: bigint): CachedNumberWordMap {
+    let left = 0;
+    let right = arr.length - 1;
+    let result = arr[arr.length - 1]; // Default to smallest (last element)
+
+    while (left <= right) {
+      const mid = Math.floor((left + right) / 2);
+      if (arr[mid].numberBigInt <= target) {
+        result = arr[mid];
+        right = mid - 1; // Look for larger match in left half
+      } else {
+        left = mid + 1; // Look in right half
+      }
+    }
+
+    return result;
   }
 
   public toFixed(number: number, precision = 2): number {
