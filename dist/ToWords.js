@@ -17,9 +17,9 @@ exports.DefaultToWordsOptions = {
     converterOptions: exports.DefaultConverterOptions,
 };
 class ToWords {
+    options = {};
+    locale = undefined;
     constructor(options = {}) {
-        this.options = {};
-        this.locale = undefined;
         this.options = Object.assign({}, exports.DefaultToWordsOptions, options);
     }
     getLocaleClass() {
@@ -36,41 +36,48 @@ class ToWords {
         return this.locale;
     }
     convert(number, options = {}) {
-        var _a;
         options = Object.assign({}, this.options.converterOptions, options);
         if (!this.isValidNumber(number)) {
             throw new Error(`Invalid Number "${number}"`);
         }
-        if (options.ignoreDecimal) {
-            number = Number.parseInt(number.toString());
+        const isBigInt = typeof number === 'bigint';
+        let numericValue = isBigInt ? number : Number(number);
+        if (options.ignoreDecimal && !isBigInt) {
+            numericValue = Number.parseInt(numericValue.toString());
         }
         let words = [];
         if (options.currency) {
-            words = this.convertCurrency(number, options);
+            words = this.convertCurrency(numericValue, options);
         }
         else {
-            words = this.convertNumber(number);
+            words = this.convertNumber(numericValue);
         }
-        if ((_a = this.locale) === null || _a === void 0 ? void 0 : _a.config.trim) {
+        if (this.locale?.config.trim) {
             return words.join('');
         }
         return words.join(' ');
     }
     convertNumber(number) {
-        var _a, _b;
         const locale = this.getLocale();
         const localeConfig = locale.config;
-        const isNegativeNumber = number < 0;
+        const isNegativeNumber = number < 0 || (typeof number === 'bigint' && number < 0n);
         if (isNegativeNumber) {
-            number = Math.abs(number);
+            number = typeof number === 'bigint' ? -number : Math.abs(number);
         }
-        const isFloat = this.isFloat(number);
-        let integerPart = Math.trunc(number);
+        const isBigInt = typeof number === 'bigint';
+        const isFloat = !isBigInt && this.isFloat(number);
+        let integerPart;
         let fractionalPart = '';
-        if (isFloat) {
+        if (isBigInt) {
+            integerPart = number;
+        }
+        else if (isFloat) {
             const segments = number.toString().split('.');
-            integerPart = Number(segments[0]);
-            fractionalPart = (_a = segments[1]) !== null && _a !== void 0 ? _a : '';
+            integerPart = BigInt(segments[0]);
+            fractionalPart = segments[1] ?? '';
+        }
+        else {
+            integerPart = BigInt(Math.trunc(number));
         }
         const ignoreZero = this.isNumberZero(number) && localeConfig.ignoreZeroInDecimals;
         let words = this.convertInternal(integerPart, true, undefined, locale);
@@ -82,16 +89,16 @@ class ToWords {
             if (!ignoreZero) {
                 wordsWithDecimal.push(localeConfig.texts.point);
             }
-            if (fractionalPart.startsWith('0') && !(localeConfig === null || localeConfig === void 0 ? void 0 : localeConfig.decimalLengthWordMapping)) {
+            if (fractionalPart.startsWith('0') && !localeConfig?.decimalLengthWordMapping) {
                 const zeroWords = [];
                 for (const num of fractionalPart) {
-                    zeroWords.push(...this.convertInternal(Number(num), true, undefined, locale));
+                    zeroWords.push(...this.convertInternal(BigInt(num), true, undefined, locale));
                 }
                 wordsWithDecimal.push(...zeroWords);
             }
             else if (fractionalPart.length) {
-                wordsWithDecimal.push(...this.convertInternal(Number(fractionalPart), true, undefined, locale));
-                const decimalLengthWord = (_b = localeConfig === null || localeConfig === void 0 ? void 0 : localeConfig.decimalLengthWordMapping) === null || _b === void 0 ? void 0 : _b[fractionalPart.length];
+                wordsWithDecimal.push(...this.convertInternal(BigInt(fractionalPart), true, undefined, locale));
+                const decimalLengthWord = localeConfig?.decimalLengthWordMapping?.[fractionalPart.length];
                 if (decimalLengthWord) {
                     wordsWithDecimal.push(decimalLengthWord);
                 }
@@ -105,40 +112,50 @@ class ToWords {
         return words;
     }
     convertCurrency(number, options = {}) {
-        var _a, _b, _c, _d, _e;
         const locale = this.getLocale();
         const localeConfig = locale.config;
-        const currencyOptions = (_a = options.currencyOptions) !== null && _a !== void 0 ? _a : localeConfig.currency;
-        const isNegativeNumber = number < 0;
+        const currencyOptions = options.currencyOptions ?? localeConfig.currency;
+        const isNegativeNumber = number < 0 || (typeof number === 'bigint' && number < 0n);
         if (isNegativeNumber) {
-            number = Math.abs(number);
+            number = typeof number === 'bigint' ? -number : Math.abs(number);
         }
-        number = this.toFixed(number);
+        const isBigInt = typeof number === 'bigint';
+        if (!isBigInt) {
+            number = this.toFixed(number);
+        }
         // Extra check for isFloat to overcome 1.999 rounding off to 2
-        const isFloat = this.isFloat(number);
-        let mainAmount = Math.trunc(number);
+        const isFloat = !isBigInt && this.isFloat(number);
+        let mainAmount;
         let fractionalPart = '';
-        if (isFloat) {
+        if (isBigInt) {
+            mainAmount = number;
+        }
+        else if (isFloat) {
             const segments = number.toString().split('.');
-            mainAmount = Number(segments[0]);
-            fractionalPart = (_b = segments[1]) !== null && _b !== void 0 ? _b : '';
+            mainAmount = BigInt(segments[0]);
+            fractionalPart = segments[1] ?? '';
+        }
+        else {
+            mainAmount = BigInt(Math.trunc(number));
         }
         let words = [];
-        if ((_c = currencyOptions.numberSpecificForms) === null || _c === void 0 ? void 0 : _c[mainAmount]) {
-            words = [currencyOptions.numberSpecificForms[mainAmount]];
+        const mainAmountNum = mainAmount <= BigInt(Number.MAX_SAFE_INTEGER) ? Number(mainAmount) : -1;
+        if (mainAmountNum !== -1 && currencyOptions.numberSpecificForms?.[mainAmountNum]) {
+            words = [currencyOptions.numberSpecificForms[mainAmountNum]];
         }
         else {
             // Determine if the main currency should be in singular form
             // e.g. 1 Dollar Only instead of 1 Dollars Only
             words = [...this.convertInternal(mainAmount, false, undefined, locale)];
-            if (mainAmount === 1 && currencyOptions.singular) {
+            if (mainAmount === 1n && currencyOptions.singular) {
                 words.push(currencyOptions.singular);
             }
             else if (currencyOptions.plural) {
                 words.push(currencyOptions.plural);
             }
         }
-        const ignoreZero = this.isNumberZero(number) && (options.ignoreZeroCurrency || ((localeConfig === null || localeConfig === void 0 ? void 0 : localeConfig.ignoreZeroInDecimals) && number !== 0));
+        const ignoreZero = this.isNumberZero(number) &&
+            (options.ignoreZeroCurrency || (localeConfig?.ignoreZeroInDecimals && number !== 0 && number !== 0n));
         if (ignoreZero) {
             words = [];
         }
@@ -151,13 +168,13 @@ class ToWords {
                 ? Math.pow(10, Math.max(0, 2 - fractionalPart.length))
                 : 1;
             const decimalPart = Number(fractionalPart || '0') * decimalBase;
-            const decimalLengthWord = (_d = localeConfig === null || localeConfig === void 0 ? void 0 : localeConfig.decimalLengthWordMapping) === null || _d === void 0 ? void 0 : _d[fractionalPart.length];
-            if ((_e = currencyOptions.fractionalUnit.numberSpecificForms) === null || _e === void 0 ? void 0 : _e[decimalPart]) {
+            const decimalLengthWord = localeConfig?.decimalLengthWordMapping?.[fractionalPart.length];
+            if (currencyOptions.fractionalUnit.numberSpecificForms?.[decimalPart]) {
                 wordsWithDecimal.push(currencyOptions.fractionalUnit.numberSpecificForms[decimalPart]);
             }
             else {
-                wordsWithDecimal.push(...this.convertInternal(decimalPart, false, undefined, locale));
-                if (decimalLengthWord === null || decimalLengthWord === void 0 ? void 0 : decimalLengthWord.length) {
+                wordsWithDecimal.push(...this.convertInternal(BigInt(decimalPart), false, undefined, locale));
+                if (decimalLengthWord?.length) {
                     wordsWithDecimal.push(decimalLengthWord);
                 }
                 if (decimalPart === 1 && currencyOptions.fractionalUnit.singular) {
@@ -187,74 +204,79 @@ class ToWords {
         return words;
     }
     convertInternal(number, trailing = false, overrides = {}, localeInstance) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
-        const locale = localeInstance !== null && localeInstance !== void 0 ? localeInstance : this.getLocale();
+        const locale = localeInstance ?? this.getLocale();
         const localeConfig = locale.config;
-        if (overrides[number]) {
-            return [overrides[number]];
+        const numberAsNum = number <= BigInt(Number.MAX_SAFE_INTEGER) ? Number(number) : -1;
+        if (numberAsNum !== -1 && overrides[numberAsNum]) {
+            return [overrides[numberAsNum]];
         }
         if (localeConfig.exactWordsMapping) {
-            const exactMatch = (_a = localeConfig === null || localeConfig === void 0 ? void 0 : localeConfig.exactWordsMapping) === null || _a === void 0 ? void 0 : _a.find((elem) => {
-                return number === elem.number;
+            const exactMatch = localeConfig?.exactWordsMapping?.find((elem) => {
+                return number === BigInt(elem.number);
             });
             if (exactMatch) {
                 return [Array.isArray(exactMatch.value) ? exactMatch.value[+trailing] : exactMatch.value];
             }
         }
         const match = localeConfig.numberWordsMapping.find((elem) => {
-            return number >= elem.number;
+            return number >= BigInt(elem.number);
         });
+        const matchNumber = BigInt(match.number);
         const words = [];
-        if (number <= 100 || (number < 1000 && localeConfig.namedLessThan1000)) {
+        if (number <= 100n || (number < 1000n && localeConfig.namedLessThan1000)) {
             words.push(Array.isArray(match.value) ? match.value[0] : match.value);
-            number -= match.number;
-            if (number > 0) {
-                if ((_b = localeConfig === null || localeConfig === void 0 ? void 0 : localeConfig.splitWord) === null || _b === void 0 ? void 0 : _b.length) {
+            number -= matchNumber;
+            if (number > 0n) {
+                if (localeConfig?.splitWord?.length) {
                     words.push(localeConfig.splitWord);
                 }
                 words.push(...this.convertInternal(number, trailing, overrides, locale));
             }
             return words;
         }
-        const quotient = Math.floor(number / match.number);
-        const remainder = number % match.number;
+        const quotient = number / matchNumber;
+        const remainder = number % matchNumber;
         let matchValue = Array.isArray(match.value) ? match.value[0] : match.value;
-        const pluralForms = (_c = localeConfig === null || localeConfig === void 0 ? void 0 : localeConfig.pluralForms) === null || _c === void 0 ? void 0 : _c[match.number];
+        const matchNumberNum = Number(matchNumber);
+        const pluralForms = localeConfig?.pluralForms?.[matchNumberNum];
         let usedPluralForm = false;
         if (pluralForms) {
-            const lastTwoDigits = quotient % 100;
-            const useLastDigits = quotient >= 11 && lastTwoDigits >= 3 && lastTwoDigits <= 10;
-            if (quotient === 2 && pluralForms.dual) {
+            const lastTwoDigits = Number(quotient % 100n);
+            const useLastDigits = quotient >= 11n && lastTwoDigits >= 3 && lastTwoDigits <= 10;
+            if (quotient === 2n && pluralForms.dual) {
                 matchValue = pluralForms.dual;
                 usedPluralForm = true;
             }
-            else if ((quotient >= ((_e = (_d = localeConfig === null || localeConfig === void 0 ? void 0 : localeConfig.paucalConfig) === null || _d === void 0 ? void 0 : _d.min) !== null && _e !== void 0 ? _e : 3) && quotient <= ((_g = (_f = localeConfig === null || localeConfig === void 0 ? void 0 : localeConfig.paucalConfig) === null || _f === void 0 ? void 0 : _f.max) !== null && _g !== void 0 ? _g : 10)) ||
+            else if ((quotient >= BigInt(localeConfig?.paucalConfig?.min ?? 3) &&
+                quotient <= BigInt(localeConfig?.paucalConfig?.max ?? 10)) ||
                 useLastDigits) {
                 if (pluralForms.paucal) {
                     matchValue = pluralForms.paucal;
                 }
             }
-            else if (quotient >= 11 && pluralForms.plural) {
+            else if (quotient >= 11n && pluralForms.plural) {
                 matchValue = pluralForms.plural;
             }
         }
         else {
-            if (quotient > 1 && ((_h = localeConfig === null || localeConfig === void 0 ? void 0 : localeConfig.pluralWords) === null || _h === void 0 ? void 0 : _h.find((word) => word === match.value)) && (localeConfig === null || localeConfig === void 0 ? void 0 : localeConfig.pluralMark)) {
+            if (quotient > 1n &&
+                localeConfig?.pluralWords?.find((word) => word === match.value) &&
+                localeConfig?.pluralMark) {
                 matchValue += localeConfig.pluralMark;
             }
-            if (quotient % 10 === 1) {
+            if (quotient % 10n === 1n) {
                 matchValue = match.singularValue || (Array.isArray(matchValue) ? matchValue[0] : matchValue);
             }
         }
-        if ((quotient === 1 && ((_j = localeConfig === null || localeConfig === void 0 ? void 0 : localeConfig.ignoreOneForWords) === null || _j === void 0 ? void 0 : _j.includes(matchValue))) || usedPluralForm) {
+        if ((quotient === 1n && localeConfig?.ignoreOneForWords?.includes(matchValue)) || usedPluralForm) {
             words.push(matchValue);
         }
         else {
             words.push(...this.convertInternal(quotient, false, overrides, locale), matchValue);
         }
-        if (remainder > 0) {
-            if ((_k = localeConfig === null || localeConfig === void 0 ? void 0 : localeConfig.splitWord) === null || _k === void 0 ? void 0 : _k.length) {
-                if (!((_l = localeConfig === null || localeConfig === void 0 ? void 0 : localeConfig.noSplitWordAfter) === null || _l === void 0 ? void 0 : _l.find((word) => word === match.value))) {
+        if (remainder > 0n) {
+            if (localeConfig?.splitWord?.length) {
+                if (!localeConfig?.noSplitWordAfter?.find((word) => word === match.value)) {
                     words.push(localeConfig.splitWord);
                 }
             }
@@ -269,9 +291,15 @@ class ToWords {
         return Number(number) === number && number % 1 !== 0;
     }
     isValidNumber(number) {
+        if (typeof number === 'bigint') {
+            return true;
+        }
         return !isNaN(parseFloat(number)) && isFinite(number);
     }
     isNumberZero(number) {
+        if (typeof number === 'bigint') {
+            return number === 0n;
+        }
         return number >= 0 && number < 1;
     }
 }

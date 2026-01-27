@@ -31,10 +31,12 @@ export interface ConstructorOf<T> {
 }
 
 export type NumberWordMap = {
-  number: number;
+  number: number | bigint;
   value: string | [string, string];
   singularValue?: string;
 };
+
+export type NumberInput = number | bigint | string;
 
 export type PluralFormsMapping = {
   [scaleNumber: number]: {

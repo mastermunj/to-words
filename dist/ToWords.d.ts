@@ -1,4 +1,4 @@
-import { ConstructorOf, ConverterOptions, LocaleInterface, ToWordsOptions } from './types';
+import { ConstructorOf, ConverterOptions, LocaleInterface, NumberInput, ToWordsOptions } from './types';
 import LOCALES from './locales';
 export { LOCALES };
 export declare const DefaultConverterOptions: ConverterOptions;
@@ -9,12 +9,12 @@ export declare class ToWords {
     constructor(options?: ToWordsOptions);
     getLocaleClass(): ConstructorOf<LocaleInterface>;
     getLocale(): InstanceType<ConstructorOf<LocaleInterface>>;
-    convert(number: number, options?: ConverterOptions): string;
-    protected convertNumber(number: number): string[];
-    protected convertCurrency(number: number, options?: ConverterOptions): string[];
-    protected convertInternal(number: number, trailing?: boolean, overrides?: Record<number, string>, localeInstance?: InstanceType<ConstructorOf<LocaleInterface>>): string[];
+    convert(number: NumberInput, options?: ConverterOptions): string;
+    protected convertNumber(number: number | bigint): string[];
+    protected convertCurrency(number: number | bigint, options?: ConverterOptions): string[];
+    protected convertInternal(number: bigint, trailing?: boolean, overrides?: Record<number, string>, localeInstance?: InstanceType<ConstructorOf<LocaleInterface>>): string[];
     toFixed(number: number, precision?: number): number;
     isFloat(number: number | string): boolean;
-    isValidNumber(number: number | string): boolean;
-    isNumberZero(number: number): boolean;
+    isValidNumber(number: NumberInput): boolean;
+    isNumberZero(number: number | bigint): boolean;
 }
