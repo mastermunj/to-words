@@ -9,10 +9,17 @@ export declare class ToWords {
     constructor(options?: ToWordsOptions);
     getLocaleClass(): ConstructorOf<LocaleInterface>;
     getLocale(): InstanceType<ConstructorOf<LocaleInterface>>;
+    private initLocaleCache;
+    private getLocaleCache;
     convert(number: NumberInput, options?: ConverterOptions): string;
     protected convertNumber(number: number | bigint): string[];
     protected convertCurrency(number: number | bigint, options?: ConverterOptions): string[];
     protected convertInternal(number: bigint, trailing?: boolean, overrides?: Record<number, string>, localeInstance?: InstanceType<ConstructorOf<LocaleInterface>>): string[];
+    /**
+     * Binary search on a descending-sorted array of CachedNumberWordMap.
+     * Finds the first element where numberBigInt <= target.
+     */
+    private binarySearchDescending;
     toFixed(number: number, precision?: number): number;
     isFloat(number: number | string): boolean;
     isValidNumber(number: NumberInput): boolean;
