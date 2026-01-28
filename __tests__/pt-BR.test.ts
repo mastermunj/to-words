@@ -265,3 +265,66 @@ describe('Test Floats with options = { currency: true, currencyOptions }', () =>
     expect(toWords.convert(input as number, { currency: true, currencyOptions: euroCurrencyOptions })).toBe(expected);
   });
 });
+
+const testOrdinals: [number, string][] = [
+  // Numbers 1-20
+  [1, 'Primeiro'],
+  [2, 'Segundo'],
+  [3, 'Terceiro'],
+  [4, 'Quarto'],
+  [5, 'Quinto'],
+  [6, 'Sexto'],
+  [7, 'Sétimo'],
+  [8, 'Oitavo'],
+  [9, 'Nono'],
+  [10, 'Décimo'],
+  [11, 'Décimo Primeiro'],
+  [12, 'Décimo Segundo'],
+  [13, 'Décimo Terceiro'],
+  [14, 'Décimo Quarto'],
+  [15, 'Décimo Quinto'],
+  [16, 'Décimo Sexto'],
+  [17, 'Décimo Sétimo'],
+  [18, 'Décimo Oitavo'],
+  [19, 'Décimo Nono'],
+  [20, 'Vigésimo'],
+  // Composite numbers (21, 22, 30, 40, 50, 60, 70, 80, 90)
+  [21, 'Vinte E Primeiro'],
+  [22, 'Vinte E Segundo'],
+  [30, 'Trigésimo'],
+  [40, 'Quadragésimo'],
+  [50, 'Quinquagésimo'],
+  [60, 'Sexagésimo'],
+  [70, 'Septuagésimo'],
+  [80, 'Octogésimo'],
+  [90, 'Nonagésimo'],
+  // Round numbers (100, 200, 1000, 1000000)
+  [100, 'Centésimo'],
+  [200, 'Ducentésimo'],
+  [1000, 'Milésimo'],
+  [1000000, 'Milionésimo'],
+  // Complex numbers (101, 123, 1234)
+  [101, 'Cento E Primeiro'],
+  [123, 'Cento E Vinte E Terceiro'],
+  [1234, 'Mil Duzentos E Trinta E Quarto'],
+];
+
+describe('Test Ordinal Numbers', () => {
+  test.concurrent.each(testOrdinals)('toOrdinal(%d) => %s', (input, expected) => {
+    expect(toWords.toOrdinal(input as number)).toBe(expected);
+  });
+});
+
+describe('Test Ordinal Error Cases', () => {
+  test('should throw error for negative numbers', () => {
+    expect(() => toWords.toOrdinal(-1)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+
+  test('should throw error for decimal numbers', () => {
+    expect(() => toWords.toOrdinal(1.5)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+
+  test('should throw error for negative decimal numbers', () => {
+    expect(() => toWords.toOrdinal(-2.5)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+});

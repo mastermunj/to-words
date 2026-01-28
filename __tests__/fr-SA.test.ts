@@ -227,3 +227,114 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
     },
   );
 });
+
+const testOrdinals: [number, string][] = [
+  // Numbers 1-20
+  [1, 'Premier'],
+  [2, 'Deuxième'],
+  [3, 'Troisième'],
+  [4, 'Quatrième'],
+  [5, 'Cinquième'],
+  [6, 'Sixième'],
+  [7, 'Septième'],
+  [8, 'Huitième'],
+  [9, 'Neuvième'],
+  [10, 'Dixième'],
+  [11, 'Onzième'],
+  [12, 'Douzième'],
+  [13, 'Treizième'],
+  [14, 'Quatorzième'],
+  [15, 'Quinzième'],
+  [16, 'Seizième'],
+  [17, 'Dix-Septième'],
+  [18, 'Dix-Huitième'],
+  [19, 'Dix-Neuvième'],
+  [20, 'Vingtième'],
+  // Composite numbers (21-29)
+  [21, 'Vingt Et Un'],
+  [22, 'Vingt-Deux'],
+  [23, 'Vingt-Trois'],
+  [24, 'Vingt-Quatre'],
+  [25, 'Vingt-Cinq'],
+  [26, 'Vingt-Six'],
+  [27, 'Vingt-Sept'],
+  [28, 'Vingt-Huit'],
+  [29, 'Vingt-Neuf'],
+  // Tens (round numbers)
+  [30, 'Trentième'],
+  [31, 'Trente Et Un'],
+  [40, 'Quarantième'],
+  [41, 'Quarante Et Un'],
+  [50, 'Cinquantième'],
+  [51, 'Cinquante Et Un'],
+  [60, 'Soixantième'],
+  [61, 'Soixante Et Un'],
+  // Special French numbers (60-79 based on 60, 80-99 based on 80)
+  [70, 'Soixante-Dixième'],
+  [71, 'Soixante Et Onze'],
+  [72, 'Soixante-Douze'],
+  [73, 'Soixante-Treize'],
+  [79, 'Soixante-Dix-Neuf'],
+  [80, 'Quatre-Vingtième'],
+  [81, 'Quatre-Vingt-Un'],
+  [82, 'Quatre-Vingt-Deux'],
+  [89, 'Quatre-Vingt-Neuf'],
+  [90, 'Quatre-Vingt-Dixième'],
+  [91, 'Quatre-Vingt-Onze'],
+  [92, 'Quatre-Vingt-Douze'],
+  [99, 'Quatre-Vingt-Dix-Neuf'],
+  // Round numbers (100, 200, etc.)
+  [100, 'Centième'],
+  [200, 'Deux Centième'],
+  [300, 'Trois Centième'],
+  [500, 'Cinq Centième'],
+  // Complex numbers
+  [101, 'Cent Premier'],
+  [110, 'Cent Dixième'],
+  [111, 'Cent Onzième'],
+  [123, 'Cent Vingt-Trois'],
+  [150, 'Cent Cinquantième'],
+  [199, 'Cent Quatre-Vingt-Dix-Neuf'],
+  // Thousands
+  [1000, 'Millième'],
+  [1001, 'Mille Premier'],
+  [1010, 'Mille Dixième'],
+  [1100, 'Mille Centième'],
+  [1234, 'Mille Deux Cent Trente-Quatre'],
+  [2000, 'Deux Millième'],
+  [10000, 'Dix Millième'],
+  [100000, 'Cent Millième'],
+  // Millions and beyond
+  [1000000, 'Un Millionième'],
+  [10000000, 'Dix Millionième'],
+  [100000000, 'Cent Millionième'],
+  [1000000000, 'Un Milliardième'],
+];
+
+describe('Test Ordinals', () => {
+  test.concurrent.each(testOrdinals)('toOrdinal %d => %s', (input, expected) => {
+    expect(toWords.toOrdinal(input as number)).toBe(expected);
+  });
+});
+
+describe('Test Ordinal Error Cases', () => {
+  test('should throw error for negative numbers', () => {
+    expect(() => toWords.toOrdinal(-1)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+
+  test('should throw error for negative large numbers', () => {
+    expect(() => toWords.toOrdinal(-100)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+
+  test('should throw error for decimal numbers', () => {
+    expect(() => toWords.toOrdinal(1.5)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+
+  test('should throw error for decimal numbers with small fraction', () => {
+    expect(() => toWords.toOrdinal(10.01)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+
+  test('should throw error for negative decimal numbers', () => {
+    expect(() => toWords.toOrdinal(-3.14)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+});

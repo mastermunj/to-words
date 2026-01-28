@@ -1,4 +1,4 @@
-import { ConstructorOf, ConverterOptions, LocaleInterface, NumberInput, ToWordsOptions } from './types';
+import { ConstructorOf, ConverterOptions, LocaleInterface, NumberInput, OrdinalOptions, ToWordsOptions } from './types';
 import LOCALES from './locales';
 export { LOCALES };
 export declare const DefaultConverterOptions: ConverterOptions;
@@ -12,6 +12,9 @@ export declare class ToWords {
     private initLocaleCache;
     private getLocaleCache;
     convert(number: NumberInput, options?: ConverterOptions): string;
+    toOrdinal(number: NumberInput, options?: OrdinalOptions): string;
+    protected convertOrdinal(number: number, _options: OrdinalOptions, localeInstance: InstanceType<ConstructorOf<LocaleInterface>>): string[];
+    protected getLastNumberComponent(number: number, localeConfig: LocaleInterface['config']): number;
     protected convertNumber(number: number | bigint): string[];
     protected convertCurrency(number: number | bigint, options?: ConverterOptions): string[];
     protected convertInternal(number: bigint, trailing?: boolean, overrides?: Record<number, string>, localeInstance?: InstanceType<ConstructorOf<LocaleInterface>>): string[];

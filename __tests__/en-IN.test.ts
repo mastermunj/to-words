@@ -229,3 +229,117 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
     },
   );
 });
+
+// Comprehensive Ordinal Tests (Indian Numbering System - Lakhs, Crores)
+const testOrdinalNumbers: [number, string][] = [
+  // Numbers 1-20 (special ordinal forms)
+  [1, 'First'],
+  [2, 'Second'],
+  [3, 'Third'],
+  [4, 'Fourth'],
+  [5, 'Fifth'],
+  [6, 'Sixth'],
+  [7, 'Seventh'],
+  [8, 'Eighth'],
+  [9, 'Ninth'],
+  [10, 'Tenth'],
+  [11, 'Eleventh'],
+  [12, 'Twelfth'],
+  [13, 'Thirteenth'],
+  [14, 'Fourteenth'],
+  [15, 'Fifteenth'],
+  [16, 'Sixteenth'],
+  [17, 'Seventeenth'],
+  [18, 'Eighteenth'],
+  [19, 'Nineteenth'],
+  [20, 'Twentieth'],
+
+  // Composite numbers (21-29, 30, 40, 50, etc.)
+  [21, 'Twenty First'],
+  [22, 'Twenty Second'],
+  [23, 'Twenty Third'],
+  [30, 'Thirtieth'],
+  [40, 'Fortieth'],
+  [50, 'Fiftieth'],
+  [60, 'Sixtieth'],
+  [70, 'Seventieth'],
+  [80, 'Eightieth'],
+  [90, 'Ninetieth'],
+
+  // Numbers ending in 1, 2, 3 (various decades)
+  [31, 'Thirty First'],
+  [32, 'Thirty Second'],
+  [33, 'Thirty Third'],
+  [41, 'Forty First'],
+  [42, 'Forty Second'],
+  [43, 'Forty Third'],
+  [51, 'Fifty First'],
+  [52, 'Fifty Second'],
+  [53, 'Fifty Third'],
+
+  // Round numbers (100, 200, 1000, etc.)
+  [100, 'One Hundredth'],
+  [200, 'Two Hundredth'],
+  [1000, 'One Thousandth'],
+  [10000, 'Ten Thousandth'],
+
+  // Indian numbering system - Lakhs
+  [100000, 'One Lakh'],
+  [200000, 'Two Lakh'],
+  [100001, 'One Lakh First'],
+  [100002, 'One Lakh Second'],
+  [100003, 'One Lakh Third'],
+  [100011, 'One Lakh Eleventh'],
+  [100021, 'One Lakh Twenty First'],
+  [100100, 'One Lakh Hundredth'],
+
+  // Indian numbering system - Ten Lakhs
+  [1000000, 'Ten Lakh'],
+  [1000001, 'Ten Lakh First'],
+
+  // Indian numbering system - Crores
+  [10000000, 'One Crore'],
+  [10000001, 'One Crore First'],
+  [100000000, 'Ten Crore'],
+
+  // Numbers in the hundreds with endings
+  [101, 'One Hundred First'],
+  [102, 'One Hundred Second'],
+  [103, 'One Hundred Third'],
+  [111, 'One Hundred Eleventh'],
+  [112, 'One Hundred Twelfth'],
+  [113, 'One Hundred Thirteenth'],
+  [123, 'One Hundred Twenty Third'],
+
+  // Complex numbers
+  [1001, 'One Thousand First'],
+  [1234, 'One Thousand Two Hundred Thirty Fourth'],
+];
+
+describe('Test Ordinal Numbers (Indian Numbering System)', () => {
+  test.concurrent.each(testOrdinalNumbers)('toOrdinal %d => %s', (input, expected) => {
+    expect(toWords.toOrdinal(input as number)).toBe(expected);
+  });
+});
+
+describe('Test Ordinal Error Cases', () => {
+  test('should throw error for negative numbers', () => {
+    expect(() => toWords.toOrdinal(-1)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+
+  test('should throw error for negative large numbers', () => {
+    expect(() => toWords.toOrdinal(-100)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+
+  test('should throw error for decimal numbers', () => {
+    expect(() => toWords.toOrdinal(1.5)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+
+  test('should throw error for decimal numbers with small fraction', () => {
+    expect(() => toWords.toOrdinal(10.01)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+
+  test('should throw error for decimal numbers with large fraction', () => {
+    expect(() => toWords.toOrdinal(99.99)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+});

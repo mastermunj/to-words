@@ -203,3 +203,67 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
     ).toBe(expected);
   });
 });
+
+const testOrdinals: [number, string][] = [
+  [0, 'صفرم'],
+  [1, 'اول'],
+  [2, 'دوم'],
+  [3, 'سوم'],
+  [4, 'چهارم'],
+  [5, 'پنجم'],
+  [6, 'ششم'],
+  [7, 'هفتم'],
+  [8, 'هشتم'],
+  [9, 'نهم'],
+  [10, 'دهم'],
+  [11, 'یازدهم'],
+  [12, 'دوازدهم'],
+  [13, 'سیزدهم'],
+  [14, 'چهاردهم'],
+  [15, 'پانزدهم'],
+  [16, 'شانزدهم'],
+  [17, 'هفدهم'],
+  [18, 'هجدهم'],
+  [19, 'نوزدهم'],
+  [20, 'بیستم'],
+  [21, 'بیست و اول'],
+  [22, 'بیست و دوم'],
+  [23, 'بیست و سوم'],
+  [30, 'سی‌ام'],
+  [31, 'سی و اول'],
+  [40, 'چهلم'],
+  [50, 'پنجاهم'],
+  [60, 'شصتم'],
+  [70, 'هفتادم'],
+  [80, 'هشتادم'],
+  [90, 'نودم'],
+  [99, 'نود و نهم'],
+  [100, 'صدم'],
+  [101, 'صد و اول'],
+  [111, 'صد و یازدهم'],
+  [123, 'صد و بیست و سوم'],
+  [200, 'دویستم'],
+  [500, 'پانصدم'],
+  [1000, 'یک هزارم'],
+  [1001, 'یک هزار و اول'],
+  [10000, 'ده هزارم'],
+  [100000, 'صد هزارم'],
+  [1000000, 'یک میلیونم'],
+  [1000000000, 'یک میلیاردم'],
+];
+
+describe('Test Ordinals', () => {
+  test.each(testOrdinals)('toOrdinal(%d) => %s', (input, expected) => {
+    expect(toWords.toOrdinal(input)).toBe(expected);
+  });
+});
+
+describe('Test Ordinal Error Cases', () => {
+  test('should throw error for negative numbers', () => {
+    expect(() => toWords.toOrdinal(-1)).toThrow(/must be non-negative/);
+  });
+
+  test('should throw error for decimal numbers', () => {
+    expect(() => toWords.toOrdinal(1.5)).toThrow(/must be non-negative integers/);
+  });
+});

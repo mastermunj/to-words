@@ -211,3 +211,28 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
     ).toBe(expected);
   });
 });
+
+const testOrdinals: [number, string][] = [
+  [1, 'ಮೊದಲನೇ'],
+  [2, 'ಎರಡನೇ'],
+  [3, 'ಮೂರನೇ'],
+  [10, 'ಹತ್ತನೇ'],
+  [11, 'ಹನ್ನೊಂದನೇ'],
+  [19, 'ಹತ್ತೊಂಬತ್ತನೇ'],
+  [20, 'ಇಪ್ಪತ್ತನೇ'],
+  [21, 'ಇಪ್ಪತ್ತೊಂದನೇ'],
+  [25, 'ಇಪ್ಪತ್ತೈದನೇ'],
+  [50, 'ಐವತ್ತನೇ'],
+  [55, 'ಐವತ್ತೈದನೇ'],
+  [99, 'ತೊಂಬತ್ತೊಂಬತ್ತನೇ'],
+  [100, 'ನೂರನೇ'],
+  [123, 'ಒಂದು ನೂರು ಇಪ್ಪತ್ತಮೂರನೇ'],
+  [1000, 'ಒಂದು ಸಾವಿರನೇ'],
+  [1001, 'ಒಂದು ಸಾವಿರ ಮೊದಲನೇ'],
+];
+
+describe('Test Ordinals', () => {
+  test.each(testOrdinals)('toOrdinal(%d) => %s', (input, expected) => {
+    expect(toWords.toOrdinal(input)).toBe(expected);
+  });
+});

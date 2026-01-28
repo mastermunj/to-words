@@ -21,6 +21,10 @@ export type ConverterOptions = {
   currencyOptions?: CurrencyOptions; // applicable only when currency = true, overwrites options from locales
 };
 
+export type OrdinalOptions = {
+  gender?: 'masculine' | 'feminine';
+};
+
 export type ToWordsOptions = {
   localeCode?: string;
   converterOptions?: ConverterOptions;
@@ -34,6 +38,11 @@ export type NumberWordMap = {
   number: number | bigint;
   value: string | [string, string];
   singularValue?: string;
+};
+
+export type OrdinalWordMap = {
+  number: number;
+  value: string;
 };
 
 export type NumberInput = number | bigint | string;
@@ -61,6 +70,9 @@ export type LocaleConfig = {
   };
   numberWordsMapping: NumberWordMap[];
   exactWordsMapping?: NumberWordMap[];
+  ordinalWordsMapping?: OrdinalWordMap[];
+  ordinalSuffix?: string;
+  ordinalExactWordsMapping?: OrdinalWordMap[];
   namedLessThan1000?: boolean;
   splitWord?: string;
   ignoreZeroInDecimals?: boolean;

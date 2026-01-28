@@ -7,8 +7,9 @@ Convert numbers (including decimals) into words with multi-locale and currency s
 ### Features
 
 - **Number to Words**: Convert integers and decimals to text.
+- **Ordinal Numbers**: Convert numbers to ordinal words (First, Second, Third, etc.).
 - **Currency Support**: Easily handle conversions with locale-specific currency options.
-- **Multi-Locale**: Supports multiple languages and regions.
+- **Multi-Locale**: Supports 39+ languages and regions.
 - **Highly Configurable**: Tailor conversion rules to your needs.
 
 ### Use Cases
@@ -79,6 +80,23 @@ words = toWords.convert(123.045);
 ```
 
 _Note: When fractional part starts with zero, the digits after decimal points are converted into respective numbers individually_
+
+To convert to ordinal numbers
+
+```js
+const toWords = new ToWords({ localeCode: 'en-US' });
+
+let words = toWords.toOrdinal(1);
+// words = First
+
+words = toWords.toOrdinal(21);
+// words = Twenty First
+
+words = toWords.toOrdinal(100);
+// words = One Hundredth
+```
+
+_Note: Ordinal numbers are supported for English, Spanish, French, Portuguese, Turkish, and Dutch locales with full word mappings. Other locales use suffix-based ordinals._
 
 To convert to currency
 

@@ -104,6 +104,109 @@ class ToWords {
         }
         return words.join(' ');
     }
+    toOrdinal(number, options = {}) {
+        if (!this.isValidNumber(number)) {
+            throw new Error(`Invalid Number "${number}"`);
+        }
+        const locale = this.getLocale();
+        const localeConfig = locale.config;
+        // Convert to number (ordinals typically don't need BigInt support for practical use)
+        const numValue = typeof number === 'bigint' ? Number(number) : Number(number);
+        if (!Number.isInteger(numValue) || numValue < 0) {
+            throw new Error(`Ordinal numbers must be non-negative integers, got "${number}"`);
+        }
+        // Check if locale supports ordinals
+        if (!localeConfig.ordinalWordsMapping && !localeConfig.ordinalSuffix) {
+            throw new Error(`Ordinal conversion not supported for locale "${this.options.localeCode}"`);
+        }
+        const words = this.convertOrdinal(numValue, options, locale);
+        if (localeConfig.trim) {
+            return words.join('');
+        }
+        return words.join(' ');
+    }
+    convertOrdinal(number, _options, localeInstance) {
+        const localeConfig = localeInstance.config;
+        // Check exact ordinal mapping first (for special cases like 100 that need special wording)
+        if (localeConfig.ordinalExactWordsMapping) {
+            const exactMatch = localeConfig.ordinalExactWordsMapping.find((m) => m.number === number);
+            if (exactMatch) {
+                return [exactMatch.value];
+            }
+        }
+        // For simple numbers (0-20), use direct ordinal mapping
+        if (number <= 20 && localeConfig.ordinalWordsMapping) {
+            const ordinalMatch = localeConfig.ordinalWordsMapping.find((m) => m.number === number);
+            if (ordinalMatch) {
+                return [ordinalMatch.value];
+            }
+        }
+        // For composite numbers (like 21, 1000, 1234), convert to cardinal then modify last component
+        // Strategy: Convert the number to cardinal, then find the last component and replace it with ordinal
+        const cardinalWords = this.convertInternal(BigInt(number), true, undefined, localeInstance);
+        if (cardinalWords.length > 0) {
+            // We need to convert only the last number word to ordinal form
+            // For composite numbers like 21 (Twenty One), only "One" should become "First"
+            // For 1000 (One Thousand), "Thousand" becomes "Thousandth"
+            const lastWordIndex = cardinalWords.length - 1;
+            const lastWord = cardinalWords[lastWordIndex];
+            // Find what number the last word represents
+            const lastNumberComponent = this.getLastNumberComponent(number, localeConfig);
+            // Try to find ordinal mapping for the last component
+            if (localeConfig.ordinalWordsMapping) {
+                const ordinalMatch = localeConfig.ordinalWordsMapping.find((m) => m.number === lastNumberComponent);
+                if (ordinalMatch) {
+                    cardinalWords[lastWordIndex] = ordinalMatch.value;
+                    return cardinalWords;
+                }
+            }
+            // If ordinalSuffix is available, use it
+            if (localeConfig.ordinalSuffix) {
+                cardinalWords[lastWordIndex] = lastWord + localeConfig.ordinalSuffix;
+            }
+        }
+        return cardinalWords;
+    }
+    getLastNumberComponent(number, localeConfig) {
+        // Find the last number component that makes up this number
+        // This is locale-aware: Hindi/Indic locales have atomic words for 21-99,
+        // while English composes them (Twenty + One)
+        // For numbers 1-20, return the number itself
+        if (number <= 20) {
+            return number;
+        }
+        // Get the units defined in the locale (sorted descending)
+        const unitMappings = localeConfig.numberWordsMapping
+            .filter((m) => Number(m.number) >= 100) // Units are 100 and above
+            .sort((a, b) => Number(b.number) - Number(a.number));
+        // Find if this is a round number ending in a unit
+        for (const mapping of unitMappings) {
+            const unit = Number(mapping.number);
+            if (number % unit === 0) {
+                // This number is a multiple of this unit
+                // Return the unit itself (e.g., for 1000000 = 10 × 100000, return 100000)
+                return unit;
+            }
+        }
+        // Get the last two digits
+        const lastTwoDigits = number % 100;
+        // Check if locale has atomic word for the last two digits (1-99)
+        // This is true for Hindi, Bengali, Gujarati, Marathi, etc.
+        // For numbers like 111 (last two digits = 11), check if locale has word for 11
+        if (lastTwoDigits >= 1 && lastTwoDigits <= 99) {
+            const hasAtomicWord = localeConfig.numberWordsMapping.some((m) => Number(m.number) === lastTwoDigits);
+            if (hasAtomicWord) {
+                return lastTwoDigits;
+            }
+        }
+        // For English-style locales that compose 21-99 (Twenty + One)
+        // Check for decade (20, 30, 40, etc.)
+        if (lastTwoDigits % 10 === 0) {
+            return lastTwoDigits;
+        }
+        // Return the ones digit
+        return number % 10;
+    }
     convertNumber(number) {
         const locale = this.getLocale();
         const localeConfig = locale.config;

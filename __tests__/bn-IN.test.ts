@@ -205,3 +205,52 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
     ).toBe(expected);
   });
 });
+const testOrdinals: [number, string][] = [
+  [0, 'শূন্যতম'],
+  [1, 'প্রথম'],
+  [2, 'দ্বিতীয়'],
+  [3, 'তৃতীয়'],
+  [4, 'চতুর্থ'],
+  [5, 'পঞ্চম'],
+  [6, 'ষষ্ঠ'],
+  [7, 'সপ্তম'],
+  [8, 'অষ্টম'],
+  [9, 'নবম'],
+  [10, 'দশম'],
+  [11, 'এগারোতম'],
+  [12, 'বারোতম'],
+  [15, 'পনেরোতম'],
+  [20, 'বিশতম'],
+  [21, 'একুশতম'],
+  [23, 'তেইশতম'],
+  [25, 'পঁচিশতম'],
+  [30, 'ত্রিশতম'],
+  [50, 'পঞ্চাশতম'],
+  [99, 'নিরানব্বইতম'],
+  [100, 'শততম'],
+  [101, 'এক শত প্রথম'],
+  [111, 'এক শত এগারোতম'],
+  [123, 'এক শত তেইশতম'],
+  [500, 'পাঁচ শততম'],
+  [1000, 'এক সহস্রতম'],
+  [1001, 'এক হাজার প্রথম'],
+  [1234, 'এক হাজার দুই শত চৌত্রিশতম'],
+  [100000, 'এক লক্ষতম'],
+  [10000000, 'এক কোটিতম'],
+];
+
+describe('Test Ordinals', () => {
+  test.each(testOrdinals)('toOrdinal(%d) => %s', (input, expected) => {
+    expect(toWords.toOrdinal(input)).toBe(expected);
+  });
+});
+
+describe('Test Ordinal Error Cases', () => {
+  test('should throw error for negative numbers', () => {
+    expect(() => toWords.toOrdinal(-1)).toThrow(/must be non-negative/);
+  });
+
+  test('should throw error for decimal numbers', () => {
+    expect(() => toWords.toOrdinal(1.5)).toThrow(/must be non-negative integers/);
+  });
+});

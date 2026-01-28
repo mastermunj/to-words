@@ -204,3 +204,42 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
     ).toBe(expected);
   });
 });
+
+const testOrdinals: [number, string][] = [
+  [0, 'शून्यावा'],
+  [1, 'पहिला'],
+  [2, 'दुसरा'],
+  [3, 'तिसरा'],
+  [4, 'चौथा'],
+  [5, 'पाचवा'],
+  [10, 'दहावा'],
+  [20, 'विसावा'],
+  [21, 'एकवीसावा'],
+  [23, 'तेवीसावा'],
+  [50, 'पन्नासावा'],
+  [99, 'नव्व्याण्णवावा'],
+  [100, 'शंभरावा'],
+  [101, 'एकशे पहिला'],
+  [123, 'एकशे तेवीसावा'],
+  [500, 'पाचशेवा'],
+  [1000, 'एक हजारावा'],
+  [1234, 'एक हजार दोनशे चौतीसावा'],
+  [100000, 'एक लाखावा'],
+  [10000000, 'एक कोटीवा'],
+];
+
+describe('Test Ordinals', () => {
+  test.each(testOrdinals)('toOrdinal(%d) => %s', (input, expected) => {
+    expect(toWords.toOrdinal(input)).toBe(expected);
+  });
+});
+
+describe('Test Ordinal Error Cases', () => {
+  test('should throw error for negative numbers', () => {
+    expect(() => toWords.toOrdinal(-1)).toThrow(/must be non-negative/);
+  });
+
+  test('should throw error for decimal numbers', () => {
+    expect(() => toWords.toOrdinal(1.5)).toThrow(/must be non-negative integers/);
+  });
+});

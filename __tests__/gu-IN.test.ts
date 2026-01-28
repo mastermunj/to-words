@@ -201,3 +201,62 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
     ).toBe(expected);
   });
 });
+
+const testOrdinals: [number, string][] = [
+  [0, 'શૂન્યમું'],
+  [1, 'પહેલું'],
+  [2, 'બીજું'],
+  [3, 'ત્રીજું'],
+  [4, 'ચોથું'],
+  [5, 'પાંચમું'],
+  [6, 'છઠ્ઠું'],
+  [7, 'સાતમું'],
+  [8, 'આઠમું'],
+  [9, 'નવમું'],
+  [10, 'દસમું'],
+  [11, 'અગિયારમું'],
+  [12, 'બારમું'],
+  [15, 'પંદરમું'],
+  [20, 'વીસમું'],
+  [21, 'એકવીસમું'],
+  [22, 'બાવીસમું'],
+  [23, 'તેવીસમું'],
+  [25, 'પચ્ચીસમું'],
+  [30, 'ત્રીસમું'],
+  [40, 'ચાલીસમું'],
+  [50, 'પચાસમું'],
+  [60, 'સાઈઠમું'],
+  [70, 'સિત્તેરમું'],
+  [80, 'એંસીમું'],
+  [90, 'નેવુંમું'],
+  [99, 'નવ્વાણુંમું'],
+  [100, 'સોમું'],
+  [101, 'એક સો પહેલું'],
+  [111, 'એક સો અગિયારમું'],
+  [123, 'એક સો તેવીસમું'],
+  [200, 'બે સોમું'],
+  [500, 'પાંચ સોમું'],
+  [1000, 'એક હજારમું'],
+  [1001, 'એક હજાર પહેલું'],
+  [1234, 'એક હજાર બે સો ચોત્રીસમું'],
+  [10000, 'દસ હજારમું'],
+  [100000, 'એક લાખમું'],
+  [1000000, 'દસ લાખમું'],
+  [10000000, 'એક કરોડમું'],
+];
+
+describe('Test Ordinals', () => {
+  test.each(testOrdinals)('toOrdinal(%d) => %s', (input, expected) => {
+    expect(toWords.toOrdinal(input)).toBe(expected);
+  });
+});
+
+describe('Test Ordinal Error Cases', () => {
+  test('should throw error for negative numbers', () => {
+    expect(() => toWords.toOrdinal(-1)).toThrow(/must be non-negative/);
+  });
+
+  test('should throw error for decimal numbers', () => {
+    expect(() => toWords.toOrdinal(1.5)).toThrow(/must be non-negative integers/);
+  });
+});
