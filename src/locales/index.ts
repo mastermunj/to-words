@@ -40,6 +40,7 @@ import frFr from './fr-FR';
 import frMa from './fr-MA';
 import frSa from './fr-SA';
 import guIn from './gu-IN';
+import haNg from './ha-NG';
 import hiIn from './hi-IN';
 import idId from './id-ID';
 import itIt from './it-IT';
@@ -52,9 +53,15 @@ import nbNo from './nb-NO';
 import nlNl from './nl-NL';
 import nlSr from './nl-SR';
 import npNp from './np-NP';
+import paIn from './pa-IN';
+import plPl from './pl-PL';
 import ptBR from './pt-BR';
 import ptPT from './pt-PT';
+import ruRu from './ru-RU';
+import srRs from './sr-RS';
 import svSe from './sv-SE';
+import taIn from './ta-IN';
+import teIn from './te-IN';
 import trTr from './tr-TR';
 import urPk from './ur-PK';
 import esVE from './es-VE';
@@ -104,6 +111,7 @@ const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
   'fr-MA': frMa,
   'fr-SA': frSa,
   'gu-IN': guIn,
+  'ha-NG': haNg,
   'hi-IN': hiIn,
   'id-ID': idId,
   'it-IT': itIt,
@@ -116,11 +124,17 @@ const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
   'nl-NL': nlNl,
   'nl-SR': nlSr,
   'np-NP': npNp,
+  'pa-IN': paIn,
+  'pl-PL': plPl,
   'pt-BR': ptBR,
   'pt-PT': ptPT,
   'ro-RO': roRo,
+  'ru-RU': ruRu,
+  'sr-RS': srRs,
   'sv-SE': svSe,
   'sw-KE': swKe,
+  'ta-IN': taIn,
+  'te-IN': teIn,
   'tr-TR': trTr,
   'ur-PK': urPk,
   'es-VE': esVE,

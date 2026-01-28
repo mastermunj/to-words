@@ -43,6 +43,7 @@ const fr_FR_1 = __importDefault(require("./fr-FR"));
 const fr_MA_1 = __importDefault(require("./fr-MA"));
 const fr_SA_1 = __importDefault(require("./fr-SA"));
 const gu_IN_1 = __importDefault(require("./gu-IN"));
+const ha_NG_1 = __importDefault(require("./ha-NG"));
 const hi_IN_1 = __importDefault(require("./hi-IN"));
 const id_ID_1 = __importDefault(require("./id-ID"));
 const it_IT_1 = __importDefault(require("./it-IT"));
@@ -55,9 +56,15 @@ const nb_NO_1 = __importDefault(require("./nb-NO"));
 const nl_NL_1 = __importDefault(require("./nl-NL"));
 const nl_SR_1 = __importDefault(require("./nl-SR"));
 const np_NP_1 = __importDefault(require("./np-NP"));
+const pa_IN_1 = __importDefault(require("./pa-IN"));
+const pl_PL_1 = __importDefault(require("./pl-PL"));
 const pt_BR_1 = __importDefault(require("./pt-BR"));
 const pt_PT_1 = __importDefault(require("./pt-PT"));
+const ru_RU_1 = __importDefault(require("./ru-RU"));
+const sr_RS_1 = __importDefault(require("./sr-RS"));
 const sv_SE_1 = __importDefault(require("./sv-SE"));
+const ta_IN_1 = __importDefault(require("./ta-IN"));
+const te_IN_1 = __importDefault(require("./te-IN"));
 const tr_TR_1 = __importDefault(require("./tr-TR"));
 const ur_PK_1 = __importDefault(require("./ur-PK"));
 const es_VE_1 = __importDefault(require("./es-VE"));
@@ -106,6 +113,7 @@ const LOCALES = {
     'fr-MA': fr_MA_1.default,
     'fr-SA': fr_SA_1.default,
     'gu-IN': gu_IN_1.default,
+    'ha-NG': ha_NG_1.default,
     'hi-IN': hi_IN_1.default,
     'id-ID': id_ID_1.default,
     'it-IT': it_IT_1.default,
@@ -118,11 +126,17 @@ const LOCALES = {
     'nl-NL': nl_NL_1.default,
     'nl-SR': nl_SR_1.default,
     'np-NP': np_NP_1.default,
+    'pa-IN': pa_IN_1.default,
+    'pl-PL': pl_PL_1.default,
     'pt-BR': pt_BR_1.default,
     'pt-PT': pt_PT_1.default,
     'ro-RO': ro_RO_1.default,
+    'ru-RU': ru_RU_1.default,
+    'sr-RS': sr_RS_1.default,
     'sv-SE': sv_SE_1.default,
     'sw-KE': sw_KE_1.default,
+    'ta-IN': ta_IN_1.default,
+    'te-IN': te_IN_1.default,
     'tr-TR': tr_TR_1.default,
     'ur-PK': ur_PK_1.default,
     'es-VE': es_VE_1.default,
