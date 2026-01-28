@@ -483,10 +483,14 @@ export class ToWords {
     const quotient = number / matchNumber;
     const remainder = number % matchNumber;
     let matchValue = match.resolvedValue;
+    const originalMatchValue = match.resolvedValue;
 
     const matchNumberNum = Number(matchNumber);
     const pluralForms = localeConfig?.pluralForms?.[matchNumberNum];
     let usedPluralForm = false;
+
+    // Check if this word uses ignoreOneForWords
+    const usesIgnoreOne = localeConfig?.ignoreOneForWords?.includes(originalMatchValue);
 
     if (pluralForms) {
       const lastTwoDigits = Number(quotient % 100n);
@@ -514,13 +518,17 @@ export class ToWords {
       ) {
         matchValue += localeConfig.pluralMark;
       }
-      if (quotient % 10n === 1n) {
+      // Apply singularValue only when quotient ends in 1 AND this word doesn't use ignoreOneForWords
+      // For ignoreOneForWords words, singularValue is handled separately below
+      if (quotient % 10n === 1n && !usesIgnoreOne) {
         matchValue = match.singularValue || (Array.isArray(matchValue) ? matchValue[0] : matchValue);
       }
     }
 
-    if ((quotient === 1n && localeConfig?.ignoreOneForWords?.includes(matchValue)) || usedPluralForm) {
-      words.push(matchValue);
+    if ((quotient === 1n && usesIgnoreOne) || usedPluralForm) {
+      // When ignoring "one" and quotient is exactly 1, use singularValue if available
+      const valueToUse = quotient === 1n && match.singularValue ? match.singularValue : matchValue;
+      words.push(valueToUse);
     } else {
       words.push(...this.convertInternal(quotient, false, overrides, locale), matchValue);
     }
