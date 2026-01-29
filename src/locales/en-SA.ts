@@ -8,9 +8,9 @@ export default class Locale implements LocaleInterface {
       singular: 'Riyal',
       symbol: 'SAR',
       fractionalUnit: {
-        name: 'Halalah',
-        singular: 'Halalah',
-        plural: 'Halalahs',
+        name: 'Halala',
+        singular: 'Halala',
+        plural: 'Halalas',
         symbol: '',
       },
     },

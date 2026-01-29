@@ -6,7 +6,7 @@ export default class Locale implements LocaleInterface {
       name: 'Rupee',
       plural: 'Rupees',
       singular: 'Rupee',
-      symbol: '₹',
+      symbol: 'Rs',
       fractionalUnit: {
         name: 'Paisa',
         singular: 'Paisa',

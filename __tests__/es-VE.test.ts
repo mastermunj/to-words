@@ -73,7 +73,7 @@ describe('Test Negative Integers with options = {}', () => {
 
 const testIntegersCurrency = [
   [0, 'Cero'],
-  // [1, 'Un Bolivar'],
+  // [1, 'Un Bolívar'],
   [137, 'Ciento Treinta Y Siete'],
   [700, 'Setecientos'],
   [1100, 'Mil Cien'],
@@ -103,7 +103,7 @@ const testIntegersCurrency = [
 describe('Test Integers with options = { currency: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegersCurrency);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} Bolivares`;
+    row[1] = `${row[1]} Bolívares`;
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -114,7 +114,7 @@ describe('Test Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, doNotAddOnly: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegersCurrency);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} Bolivares`;
+    row[1] = `${row[1]} Bolívares`;
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -126,11 +126,11 @@ describe('Test Negative Integers with options = { currency: true }', () => {
   const testNegativeIntegersWithCurrency = cloneDeep(testIntegersCurrency);
   testNegativeIntegersWithCurrency.map((row, i) => {
     if (i === 0) {
-      row[1] = `${row[1]} Bolivares`;
+      row[1] = `${row[1]} Bolívares`;
       return;
     }
     row[0] = -row[0];
-    row[1] = `Menos ${row[1]} Bolivares`;
+    row[1] = `Menos ${row[1]} Bolívares`;
   });
 
   test.concurrent.each(testNegativeIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -141,7 +141,7 @@ describe('Test Negative Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, ignoreZeroCurrency: true }', () => {
   const testIntegersWithCurrencyAndIgnoreZeroCurrency = cloneDeep(testIntegersCurrency);
   testIntegersWithCurrencyAndIgnoreZeroCurrency.map((row, i) => {
-    row[1] = i === 0 ? '' : `${row[1]} Bolivares`;
+    row[1] = i === 0 ? '' : `${row[1]} Bolívares`;
   });
 
   test.concurrent.each(testIntegersWithCurrencyAndIgnoreZeroCurrency)('convert %d => %s', (input, expected) => {
@@ -175,17 +175,17 @@ describe('Test Floats with options = {}', () => {
 });
 
 const testFloatsWithCurrency: [number, string][] = [
-  [0.0, `Cero Bolivares`],
-  [0.04, `Cero Bolivares Con Cuatro Centimos`],
-  [0.0468, `Cero Bolivares Con Cinco Centimos`],
-  [0.4, `Cero Bolivares Con Cuarenta Centimos`],
-  [0.63, `Cero Bolivares Con Sesenta Y Tres Centimos`],
-  [0.973, `Cero Bolivares Con Noventa Y Siete Centimos`],
-  [0.999, `Un Bolivar`],
-  [37.06, `Treinta Y Siete Bolivares Con Seis Centimos`],
-  [37.068, `Treinta Y Siete Bolivares Con Siete Centimos`],
-  [37.68, `Treinta Y Siete Bolivares Con Sesenta Y Ocho Centimos`],
-  [37.683, `Treinta Y Siete Bolivares Con Sesenta Y Ocho Centimos`],
+  [0.0, `Cero Bolívares`],
+  [0.04, `Cero Bolívares Con Cuatro Céntimos`],
+  [0.0468, `Cero Bolívares Con Cinco Céntimos`],
+  [0.4, `Cero Bolívares Con Cuarenta Céntimos`],
+  [0.63, `Cero Bolívares Con Sesenta Y Tres Céntimos`],
+  [0.973, `Cero Bolívares Con Noventa Y Siete Céntimos`],
+  [0.999, `Un Bolívar`],
+  [37.06, `Treinta Y Siete Bolívares Con Seis Céntimos`],
+  [37.068, `Treinta Y Siete Bolívares Con Siete Céntimos`],
+  [37.68, `Treinta Y Siete Bolívares Con Sesenta Y Ocho Céntimos`],
+  [37.683, `Treinta Y Siete Bolívares Con Sesenta Y Ocho Céntimos`],
 ];
 
 describe('Test Floats with options = { currency: true }', () => {
@@ -203,7 +203,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true 
       return;
     }
     if (row[0] > 0 && row[0] < 1) {
-      row[1] = (row[1] as string).replace(`Cero Bolivares Con `, '');
+      row[1] = (row[1] as string).replace(`Cero Bolívares Con `, '');
     }
   });
 
@@ -221,9 +221,9 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
   const testFloatsWithCurrencyAndIgnoreDecimal = cloneDeep(testFloatsWithCurrency);
   testFloatsWithCurrencyAndIgnoreDecimal.map((row) => {
     if (row[0] === 0.999) {
-      row[1] = `Cero Bolivares`;
+      row[1] = `Cero Bolívares`;
     } else {
-      row[1] = (row[1] as string).replace(new RegExp(` Bolivares Con [\\w ]+ Centimos`), ' Bolivares');
+      row[1] = (row[1] as string).replace(new RegExp(` Bolívares Con [\\w ]+ Céntimos`), ' Bolívares');
     }
   });
 
@@ -244,7 +244,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
     if (row[0] > 0 && row[0] < 1) {
       row[1] = '';
     }
-    row[1] = (row[1] as string).replace(new RegExp(` Bolivares Con [\\w ]+ Centimos`), ' Bolivares');
+    row[1] = (row[1] as string).replace(new RegExp(` Bolívares Con [\\w ]+ Céntimos`), ' Bolívares');
   });
 
   test.concurrent.each(testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals)(
@@ -319,7 +319,7 @@ const testOrdinals: [number, string][] = [
   [20, 'Vigésimo'],
   // Composite numbers (21-29)
   [21, 'Veintiuno'],
-  [22, 'Veintidos'],
+  [22, 'Veintidós'],
   [23, 'Veintitrés'],
   [24, 'Veinticuatro'],
   [25, 'Veinticinco'],

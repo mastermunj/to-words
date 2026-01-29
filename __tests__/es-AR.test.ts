@@ -318,7 +318,7 @@ const testOrdinals: [number, string][] = [
   [20, 'Vigésimo'],
   // Composite numbers (21-29)
   [21, 'Veintiuno'],
-  [22, 'Veintidos'],
+  [22, 'Veintidós'],
   [23, 'Veintitrés'],
   [24, 'Veinticuatro'],
   [25, 'Veinticinco'],

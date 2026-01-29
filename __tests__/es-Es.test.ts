@@ -176,16 +176,16 @@ describe('Test Floats with options = {}', () => {
 
 const testFloatsWithCurrency: [number, string][] = [
   [0.0, `Cero Euros`],
-  [0.04, `Cero Euros Y Cuatro Centimos`],
-  [0.0468, `Cero Euros Y Cinco Centimos`],
-  [0.4, `Cero Euros Y Cuarenta Centimos`],
-  [0.63, `Cero Euros Y Sesenta Y Tres Centimos`],
-  [0.973, `Cero Euros Y Noventa Y Siete Centimos`],
+  [0.04, `Cero Euros Y Cuatro Céntimos`],
+  [0.0468, `Cero Euros Y Cinco Céntimos`],
+  [0.4, `Cero Euros Y Cuarenta Céntimos`],
+  [0.63, `Cero Euros Y Sesenta Y Tres Céntimos`],
+  [0.973, `Cero Euros Y Noventa Y Siete Céntimos`],
   [0.999, `Un Euro`],
-  [37.06, `Treinta Y Siete Euros Y Seis Centimos`],
-  [37.068, `Treinta Y Siete Euros Y Siete Centimos`],
-  [37.68, `Treinta Y Siete Euros Y Sesenta Y Ocho Centimos`],
-  [37.683, `Treinta Y Siete Euros Y Sesenta Y Ocho Centimos`],
+  [37.06, `Treinta Y Siete Euros Y Seis Céntimos`],
+  [37.068, `Treinta Y Siete Euros Y Siete Céntimos`],
+  [37.68, `Treinta Y Siete Euros Y Sesenta Y Ocho Céntimos`],
+  [37.683, `Treinta Y Siete Euros Y Sesenta Y Ocho Céntimos`],
 ];
 
 describe('Test Floats with options = { currency: true }', () => {
@@ -223,7 +223,7 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
     if (row[0] === 0.999) {
       row[1] = `Cero Euros`;
     } else {
-      row[1] = (row[1] as string).replace(new RegExp(` Euros Y [\\w ]+ Centimos`), ' Euros');
+      row[1] = (row[1] as string).replace(new RegExp(` Euros Y [\\w ]+ Céntimos`), ' Euros');
     }
   });
 
@@ -244,7 +244,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
     if (row[0] > 0 && row[0] < 1) {
       row[1] = '';
     }
-    row[1] = (row[1] as string).replace(new RegExp(` Euros Y [\\w ]+ Centimos`), ' Euros');
+    row[1] = (row[1] as string).replace(new RegExp(` Euros Y [\\w ]+ Céntimos`), ' Euros');
   });
 
   test.concurrent.each(testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals)(
@@ -319,7 +319,7 @@ const testOrdinals: [number, string][] = [
   [20, 'Vigésimo'],
   // Composite numbers (21-29)
   [21, 'Veintiuno'],
-  [22, 'Veintidos'],
+  [22, 'Veintidós'],
   [23, 'Veintitrés'],
   [24, 'Veinticuatro'],
   [25, 'Veinticinco'],

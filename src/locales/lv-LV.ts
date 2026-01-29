@@ -46,7 +46,7 @@ export default class Locale implements LocaleInterface {
       { number: 17, value: 'septiņpadsmit' },
       { number: 16, value: 'sešpadsmit' },
       { number: 15, value: 'piecpadsmit' },
-      { number: 14, value: 'četrdpadsmit' },
+      { number: 14, value: 'četrpadsmit' },
       { number: 13, value: 'trīspadsmit' },
       { number: 12, value: 'divpadsmit' },
       { number: 11, value: 'vienpadsmit' },

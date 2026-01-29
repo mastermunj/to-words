@@ -25,8 +25,8 @@ describe('Test Locale', () => {
 const testIntegers = [
   [0, 'Zéro'],
   [137, 'Cent Trente-Sept'],
-  [700, 'Sept Cent'],
-  [4680, 'Quatre Mille Six Cent Quatre-Vingt'],
+  [700, 'Sept Cents'],
+  [4680, 'Quatre Mille Six Cent Quatre-Vingts'],
   [63892, 'Soixante-Trois Mille Huit Cent Quatre-Vingt-Douze'],
   [792581, 'Sept Cent Quatre-Vingt-Douze Mille Cinq Cent Quatre-Vingt-Un'],
   [1342823, 'Un Million Trois Cent Quarante-Deux Mille Huit Cent Vingt-Trois'],

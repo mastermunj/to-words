@@ -8,9 +8,9 @@ export default class Locale implements LocaleInterface {
       singular: 'Peso',
       symbol: '₱',
       fractionalUnit: {
-        name: 'Cent',
-        singular: 'Cent',
-        plural: 'Cents',
+        name: 'Centavo',
+        singular: 'Centavo',
+        plural: 'Centavos',
         symbol: '¢',
       },
     },

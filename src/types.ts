@@ -80,11 +80,13 @@ export type LocaleConfig = {
   ignoreOneForWords?: string[];
   pluralMark?: string;
   pluralWords?: string[];
+  pluralWordsOnlyWhenTrailing?: string[]; // Words that only get pluralMark when not followed by another number
   pluralForms?: PluralFormsMapping;
   paucalConfig?: PaucalConfig;
   noSplitWordAfter?: string[];
   onlyInFront?: boolean;
   trim?: boolean;
+  useTrailingForCurrency?: boolean; // If true, use trailing=true in currency mode (for French-style plurals)
 };
 
 export interface LocaleInterface {

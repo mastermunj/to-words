@@ -113,7 +113,7 @@ export default class Locale implements LocaleInterface {
         value: 'Ükssada',
       },
     ],
-    pluralWords: ['Miljon', 'Miljard', 'Trillion', 'Kvadriljon'],
+    pluralWords: ['Miljon', 'Miljard', 'Triljon', 'Kvadriljon'],
     pluralMark: 'it',
     onlyInFront: true,
   };

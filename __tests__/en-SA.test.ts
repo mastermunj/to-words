@@ -163,18 +163,18 @@ describe('Test Floats with options = {}', () => {
 
 const testFloatsWithCurrency: [number, string][] = [
   [0.0, `Zero Riyals Only`],
-  [0.01, `Zero Riyals And One Halalah Only`],
-  [0.04, `Zero Riyals And Four Halalahs Only`],
-  [0.0468, `Zero Riyals And Five Halalahs Only`],
-  [0.4, `Zero Riyals And Forty Halalahs Only`],
-  [0.63, `Zero Riyals And Sixty Three Halalahs Only`],
-  [0.973, `Zero Riyals And Ninety Seven Halalahs Only`],
+  [0.01, `Zero Riyals And One Halala Only`],
+  [0.04, `Zero Riyals And Four Halalas Only`],
+  [0.0468, `Zero Riyals And Five Halalas Only`],
+  [0.4, `Zero Riyals And Forty Halalas Only`],
+  [0.63, `Zero Riyals And Sixty Three Halalas Only`],
+  [0.973, `Zero Riyals And Ninety Seven Halalas Only`],
   [0.999, `One Riyal Only`],
   [1, `One Riyal Only`],
-  [37.06, `Thirty Seven Riyals And Six Halalahs Only`],
-  [37.068, `Thirty Seven Riyals And Seven Halalahs Only`],
-  [37.68, `Thirty Seven Riyals And Sixty Eight Halalahs Only`],
-  [37.683, `Thirty Seven Riyals And Sixty Eight Halalahs Only`],
+  [37.06, `Thirty Seven Riyals And Six Halalas Only`],
+  [37.068, `Thirty Seven Riyals And Seven Halalas Only`],
+  [37.68, `Thirty Seven Riyals And Sixty Eight Halalas Only`],
+  [37.683, `Thirty Seven Riyals And Sixty Eight Halalas Only`],
   [100, `One Hundred Riyals Only`],
 ];
 
@@ -215,7 +215,7 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
     } else if (row[0] === 1) {
       row[1] = `One Riyal Only`;
     } else {
-      row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ (Halalahs|Halalah)`), '');
+      row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ (Halalas|Halala)`), '');
     }
   });
 
@@ -238,7 +238,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
     } else if (row[0] === 1) {
       row[1] = `One Riyal Only`;
     } else {
-      row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ (Halalahs|Halalah)`), '');
+      row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ (Halalas|Halala)`), '');
     }
   });
 

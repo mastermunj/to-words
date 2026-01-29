@@ -367,7 +367,11 @@ export class ToWords {
     } else {
       // Determine if the main currency should be in singular form
       // e.g. 1 Dollar Only instead of 1 Dollars Only
-      words = [...this.convertInternal(mainAmount, false, undefined, locale)];
+      // Use useTrailingForCurrency config to determine trailing value
+      // French needs trailing=true to get "Quatre-Vingts Euros" (with 's')
+      // Spanish needs trailing=false to get "Un Euro" (not "Uno Euro")
+      const trailing = localeConfig.useTrailingForCurrency ?? false;
+      words = [...this.convertInternal(mainAmount, trailing, undefined, locale)];
       if (mainAmount === 1n && currencyOptions.singular) {
         words.push(currencyOptions.singular);
       } else if (currencyOptions.plural) {
@@ -511,10 +515,14 @@ export class ToWords {
         matchValue = pluralForms.plural;
       }
     } else {
+      // Check if this word should get plural mark
+      const isInPluralWords = localeConfig?.pluralWords?.includes(match.value as string);
+      const isInTrailingOnlyPluralWords = localeConfig?.pluralWordsOnlyWhenTrailing?.includes(match.value as string);
+
       if (
         quotient > 1n &&
-        localeConfig?.pluralWords?.find((word) => word === match.value) &&
-        localeConfig?.pluralMark
+        localeConfig?.pluralMark &&
+        (isInPluralWords || (isInTrailingOnlyPluralWords && remainder === 0n))
       ) {
         matchValue += localeConfig.pluralMark;
       }

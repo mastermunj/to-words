@@ -8,9 +8,9 @@ class Locale {
             singular: 'Euro',
             symbol: '€',
             fractionalUnit: {
-                name: 'Eurocent',
-                plural: 'Eurocents',
-                singular: 'Eurocent',
+                name: 'Cent',
+                plural: 'Cents',
+                singular: 'Cent',
                 symbol: '¢',
             },
         },

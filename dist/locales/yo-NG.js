@@ -39,7 +39,7 @@ class Locale {
             { number: 18, value: 'Méjìdínlógún' },
             { number: 17, value: 'Mẹ́tàdínlógún' },
             { number: 16, value: 'Mẹ́rìndínlógún' },
-            { number: 15, value: 'Àrùn-ún' },
+            { number: 15, value: 'Ẹ̀ẹ́dógún' },
             { number: 14, value: 'Mẹ́rìnlá' },
             { number: 13, value: 'Mẹ́tàlá' },
             { number: 12, value: 'Méjìlá' },

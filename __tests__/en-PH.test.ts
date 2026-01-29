@@ -150,16 +150,16 @@ describe('Test Floats with options = {}', () => {
 
 const testFloatsWithCurrency: [number, string][] = [
   [0.0, `Zero Pesos Only`],
-  [0.04, `Zero Pesos And Four Cents Only`],
-  [0.0468, `Zero Pesos And Five Cents Only`],
-  [0.4, `Zero Pesos And Forty Cents Only`],
-  [0.63, `Zero Pesos And Sixty Three Cents Only`],
-  [0.973, `Zero Pesos And Ninety Seven Cents Only`],
+  [0.04, `Zero Pesos And Four Centavos Only`],
+  [0.0468, `Zero Pesos And Five Centavos Only`],
+  [0.4, `Zero Pesos And Forty Centavos Only`],
+  [0.63, `Zero Pesos And Sixty Three Centavos Only`],
+  [0.973, `Zero Pesos And Ninety Seven Centavos Only`],
   [0.999, `One Peso Only`],
-  [37.06, `Thirty Seven Pesos And Six Cents Only`],
-  [37.068, `Thirty Seven Pesos And Seven Cents Only`],
-  [37.68, `Thirty Seven Pesos And Sixty Eight Cents Only`],
-  [37.683, `Thirty Seven Pesos And Sixty Eight Cents Only`],
+  [37.06, `Thirty Seven Pesos And Six Centavos Only`],
+  [37.068, `Thirty Seven Pesos And Seven Centavos Only`],
+  [37.68, `Thirty Seven Pesos And Sixty Eight Centavos Only`],
+  [37.683, `Thirty Seven Pesos And Sixty Eight Centavos Only`],
 ];
 
 describe('Test Floats with options = { currency: true }', () => {
@@ -197,7 +197,7 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
     if (row[0] === 0.999) {
       row[1] = `Zero Pesos Only`;
     } else {
-      row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ Cents`), '');
+      row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ Centavos`), '');
     }
   });
 
@@ -218,7 +218,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
     if (row[0] > 0 && row[0] < 1) {
       row[1] = '';
     }
-    row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ Cents`), '');
+    row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ Centavos`), '');
   });
 
   test.concurrent.each(testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals)(

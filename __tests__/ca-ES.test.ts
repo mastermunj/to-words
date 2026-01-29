@@ -76,8 +76,8 @@ const testIntegers: [number, string][] = [
   [63892, 'Seixanta Tres Mil Vuit-Cents Noranta Dos'],
   [100000, 'Cent Mil'],
   [1000000, 'Un Milió'],
-  [2000000, 'Dos Milions'],
-  [2741034, 'Dos Milions Set-Cents Quaranta Un Mil Trenta Quatre'],
+  [2000000, 'Dos Milións'],
+  [2741034, 'Dos Milións Set-Cents Quaranta Un Mil Trenta Quatre'],
   [1000000000, 'Mil Milions'],
   [2000000000, 'Dos Mil Milions'],
 ];

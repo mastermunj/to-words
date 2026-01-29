@@ -21,10 +21,10 @@ export default class Locale implements LocaleInterface {
       point: 'Coma',
     },
     numberWordsMapping: [
-      { number: 1000000000000000, value: 'Bilio' },
-      { number: 1000000000000, value: 'Bilio' },
+      { number: 1000000000000000, value: 'Bilió' },
+      { number: 1000000000000, value: 'Bilió' },
       { number: 1000000000, value: 'Mil Milions' },
-      { number: 1000000, value: 'Milio' },
+      { number: 1000000, value: 'Milió' },
       { number: 1000, value: 'Mil' },
       { number: 900, value: 'Nou-Cents' },
       { number: 800, value: 'Vuit-Cents' },
@@ -87,7 +87,7 @@ export default class Locale implements LocaleInterface {
       'Mil Milions',
     ],
     pluralMark: 'ns',
-    pluralWords: ['Milio', 'Bilio'],
+    pluralWords: ['Milió', 'Bilió'],
     exactWordsMapping: [
       { number: 100, value: 'Cent' },
       { number: 1000000, value: 'Un Milió' },

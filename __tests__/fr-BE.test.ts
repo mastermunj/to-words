@@ -25,8 +25,8 @@ describe('Test Locale', () => {
 const testIntegers = [
   [0, 'Zéro'],
   [137, 'Cent Trente-Sept'],
-  [700, 'Sept Cent'],
-  [4680, 'Quatre Mille Six Cent Quatre-Vingt'],
+  [700, 'Sept Cents'],
+  [4680, 'Quatre Mille Six Cent Quatre-Vingts'],
   [63892, 'Soixante-Trois Mille Huit Cent Nonante-Deux'],
   [792581, 'Sept Cent Nonante-Deux Mille Cinq Cent Quatre-Vingt-Un'],
   [1342823, 'Un Million Trois Cent Quarante-Deux Mille Huit Cent Vingt-Trois'],
@@ -254,7 +254,7 @@ const testOrdinals: [number, string][] = [
   [60, 'Soixantième'],
   [61, 'Soixante-Et-Un'],
   // Belgian French specific (septante = 70, nonante = 90)
-  [70, 'Soixante-Dixième'],
+  [70, 'Septantième'],
   [71, 'Septante-Et-Un'],
   [72, 'Septante-Deux'],
   [73, 'Septante-Trois'],
@@ -263,7 +263,7 @@ const testOrdinals: [number, string][] = [
   [81, 'Quatre-Vingt-Un'],
   [82, 'Quatre-Vingt-Deux'],
   [89, 'Quatre-Vingt-Neuf'],
-  [90, 'Quatre-Vingt-Dixième'],
+  [90, 'Nonantième'],
   [91, 'Nonante-Et-Un'],
   [92, 'Nonante-Deux'],
   [99, 'Nonante-Neuf'],

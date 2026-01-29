@@ -6,7 +6,7 @@ class Locale {
             name: 'Rupee',
             plural: 'Rupees',
             singular: 'Rupee',
-            symbol: '₹',
+            symbol: 'Rs',
             fractionalUnit: {
                 name: 'Paisa',
                 singular: 'Paisa',

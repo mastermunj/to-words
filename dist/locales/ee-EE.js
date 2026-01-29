@@ -113,7 +113,7 @@ class Locale {
                 value: 'Ükssada',
             },
         ],
-        pluralWords: ['Miljon', 'Miljard', 'Trillion', 'Kvadriljon'],
+        pluralWords: ['Miljon', 'Miljard', 'Triljon', 'Kvadriljon'],
         pluralMark: 'it',
         onlyInFront: true,
     };

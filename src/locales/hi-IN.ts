@@ -70,7 +70,7 @@ export default class Locale implements LocaleInterface {
       { number: 57, value: 'सत्तावन' },
       { number: 56, value: 'छप्पन' },
       { number: 55, value: 'पचपन' },
-      { number: 54, value: 'चौबन' },
+      { number: 54, value: 'चौवन' },
       { number: 53, value: 'तिरेपन' },
       { number: 52, value: 'बावन' },
       { number: 51, value: 'इक्याबन' },

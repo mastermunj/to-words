@@ -130,7 +130,7 @@ export default class Locale implements LocaleInterface {
       { number: 13, value: 'I Trembëdhjetëti' },
       { number: 12, value: 'I Dymbëdhjetëti' },
       { number: 11, value: 'I Njëmbëdhjetëti' },
-      { number: 10, value: 'I Dhjetë' },
+      { number: 10, value: 'I Dhjetëti' },
       { number: 9, value: 'I Nëntë' },
       { number: 8, value: 'I Tetë' },
       { number: 7, value: 'I Shtatë' },

@@ -70,11 +70,13 @@ export type LocaleConfig = {
     ignoreOneForWords?: string[];
     pluralMark?: string;
     pluralWords?: string[];
+    pluralWordsOnlyWhenTrailing?: string[];
     pluralForms?: PluralFormsMapping;
     paucalConfig?: PaucalConfig;
     noSplitWordAfter?: string[];
     onlyInFront?: boolean;
     trim?: boolean;
+    useTrailingForCurrency?: boolean;
 };
 export interface LocaleInterface {
     config: LocaleConfig;

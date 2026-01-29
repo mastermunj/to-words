@@ -254,7 +254,7 @@ const testOrdinalNumbers: [number, string][] = [
   [7, 'I Shtatë'],
   [8, 'I Tetë'],
   [9, 'I Nëntë'],
-  [10, 'I Dhjetë'],
+  [10, 'I Dhjetëti'],
   [11, 'I Njëmbëdhjetëti'],
   [12, 'I Dymbëdhjetëti'],
   [13, 'I Trembëdhjetëti'],
