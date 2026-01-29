@@ -46,7 +46,10 @@
     }
   },
   "main": "dist/cjs/ToWords.js",
+  "jsdelivr": "dist/umd/to-words.min.js",
+  "unpkg": "dist/umd/to-words.min.js",
   "module": "dist/esm/ToWords.js",
+  "browser": "dist/umd/to-words.min.js",
   "types": "dist/types/ToWords.d.ts",
   "typesVersions": {
     "*": {
@@ -66,12 +69,12 @@
   ],
   "scripts": {
     "bench": "vitest bench",
-    "build": "npm run clean && npm run build:cjs && npm run build:esm && npm run build:pkgjson",
+    "build": "npm run clean && npm run build:cjs && npm run build:esm && npm run build:umd && npm run build:pkgjson",
     "build:cjs": "tsc -p tsconfig.cjs.json",
     "build:esm": "tsc -p tsconfig.esm.json",
     "build:pkgjson": "echo '{\"type\":\"commonjs\"}' > dist/cjs/package.json",
+    "build:umd": "node --experimental-strip-types scripts/build-umd.ts",
     "build:watch": "npm run build -- --watch",
-    "bundle-size": "node scripts/check-bundle-size.ts",
     "clean": "rimraf dist coverage",
     "commit": "git-cz",
     "lint": "eslint --max-warnings=0 .",
