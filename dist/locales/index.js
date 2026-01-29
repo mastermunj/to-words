@@ -6,7 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ar_AE_1 = __importDefault(require("./ar-AE"));
 const ar_MA_1 = __importDefault(require("./ar-MA"));
 const ar_SA_1 = __importDefault(require("./ar-SA"));
+const bg_BG_1 = __importDefault(require("./bg-BG"));
 const bn_IN_1 = __importDefault(require("./bn-IN"));
+const ca_ES_1 = __importDefault(require("./ca-ES"));
 const cs_CZ_1 = __importDefault(require("./cs-CZ"));
 const da_DK_1 = __importDefault(require("./da-DK"));
 const de_DE_1 = __importDefault(require("./de-DE"));
@@ -39,6 +41,7 @@ const es_ES_1 = __importDefault(require("./es-ES"));
 const es_MX_1 = __importDefault(require("./es-MX"));
 const es_US_1 = __importDefault(require("./es-US"));
 const fa_IR_1 = __importDefault(require("./fa-IR"));
+const fi_FI_1 = __importDefault(require("./fi-FI"));
 const fr_BE_1 = __importDefault(require("./fr-BE"));
 const fr_FR_1 = __importDefault(require("./fr-FR"));
 const fr_MA_1 = __importDefault(require("./fr-MA"));
@@ -47,6 +50,7 @@ const gu_IN_1 = __importDefault(require("./gu-IN"));
 const ha_NG_1 = __importDefault(require("./ha-NG"));
 const hi_IN_1 = __importDefault(require("./hi-IN"));
 const hr_HR_1 = __importDefault(require("./hr-HR"));
+const hu_HU_1 = __importDefault(require("./hu-HU"));
 const id_ID_1 = __importDefault(require("./id-ID"));
 const it_IT_1 = __importDefault(require("./it-IT"));
 const kn_IN_1 = __importDefault(require("./kn-IN"));
@@ -64,6 +68,8 @@ const pl_PL_1 = __importDefault(require("./pl-PL"));
 const pt_BR_1 = __importDefault(require("./pt-BR"));
 const pt_PT_1 = __importDefault(require("./pt-PT"));
 const ru_RU_1 = __importDefault(require("./ru-RU"));
+const sk_SK_1 = __importDefault(require("./sk-SK"));
+const sl_SI_1 = __importDefault(require("./sl-SI"));
 const sr_RS_1 = __importDefault(require("./sr-RS"));
 const sv_SE_1 = __importDefault(require("./sv-SE"));
 const ta_IN_1 = __importDefault(require("./ta-IN"));
@@ -81,7 +87,9 @@ const LOCALES = {
     'ar-AE': ar_AE_1.default,
     'ar-MA': ar_MA_1.default,
     'ar-SA': ar_SA_1.default,
+    'bg-BG': bg_BG_1.default,
     'bn-IN': bn_IN_1.default,
+    'ca-ES': ca_ES_1.default,
     'cs-CZ': cs_CZ_1.default,
     'da-DK': da_DK_1.default,
     'de-DE': de_DE_1.default,
@@ -115,6 +123,7 @@ const LOCALES = {
     'es-MX': es_MX_1.default,
     'es-US': es_US_1.default,
     'fa-IR': fa_IR_1.default,
+    'fi-FI': fi_FI_1.default,
     'fil-PH': fil_PH_1.default,
     'fr-BE': fr_BE_1.default,
     'fr-FR': fr_FR_1.default,
@@ -124,6 +133,7 @@ const LOCALES = {
     'ha-NG': ha_NG_1.default,
     'hi-IN': hi_IN_1.default,
     'hr-HR': hr_HR_1.default,
+    'hu-HU': hu_HU_1.default,
     'id-ID': id_ID_1.default,
     'it-IT': it_IT_1.default,
     'kn-IN': kn_IN_1.default,
@@ -142,6 +152,8 @@ const LOCALES = {
     'pt-PT': pt_PT_1.default,
     'ro-RO': ro_RO_1.default,
     'ru-RU': ru_RU_1.default,
+    'sk-SK': sk_SK_1.default,
+    'sl-SI': sl_SI_1.default,
     'sr-RS': sr_RS_1.default,
     'sv-SE': sv_SE_1.default,
     'sw-KE': sw_KE_1.default,
