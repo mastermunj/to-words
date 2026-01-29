@@ -1,7 +1,8 @@
 import { describe, expect, test } from 'vitest';
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
-import urPk from '../src/locales/ur-PK';
+import urPk from '../src/locales/ur-PK.js';
+import { ToWords as LocaleToWords } from '../src/locales/ur-PK.js';
 
 const localeCode = 'ur-PK';
 const toWords = new ToWords({ localeCode });
@@ -9,6 +10,14 @@ const toWords = new ToWords({ localeCode });
 describe('Test Locale', () => {
   test(`Locale Class: ${localeCode}`, () => {
     expect(toWords.getLocaleClass()).toBe(urPk);
+  });
+
+  describe('Test Locale ToWords', () => {
+    test('ToWords from locale file works correctly', () => {
+      const tw = new LocaleToWords();
+      expect(tw.convert(1)).toBeDefined();
+      expect(typeof tw.convert(123)).toBe('string');
+    });
   });
 
   const wrongLocaleCode = localeCode + '-wrong';

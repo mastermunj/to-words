@@ -1,7 +1,8 @@
 import { describe, expect, test } from 'vitest';
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
-import fiFi from '../src/locales/fi-FI';
+import fiFi from '../src/locales/fi-FI.js';
+import { ToWords as LocaleToWords } from '../src/locales/fi-FI.js';
 
 const localeCode = 'fi-FI';
 const toWords = new ToWords({
@@ -11,6 +12,14 @@ const toWords = new ToWords({
 describe('Test Locale', () => {
   test(`Locale Class: ${localeCode}`, () => {
     expect(toWords.getLocaleClass()).toBe(fiFi);
+  });
+
+  describe('Test Locale ToWords', () => {
+    test('ToWords from locale file works correctly', () => {
+      const tw = new LocaleToWords();
+      expect(tw.convert(1)).toBeDefined();
+      expect(typeof tw.convert(123)).toBe('string');
+    });
   });
 
   const wrongLocaleCode = localeCode + '-wrong';

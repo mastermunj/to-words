@@ -1,7 +1,8 @@
 import { describe, expect, test } from 'vitest';
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
-import plPl from '../src/locales/pl-PL';
+import plPl from '../src/locales/pl-PL.js';
+import { ToWords as LocaleToWords } from '../src/locales/pl-PL.js';
 
 const localeCode = 'pl-PL';
 const toWords = new ToWords({
@@ -11,6 +12,14 @@ const toWords = new ToWords({
 describe('Test Locale', () => {
   test(`Locale Class: ${localeCode}`, () => {
     expect(toWords.getLocaleClass()).toBe(plPl);
+  });
+
+  describe('Test Locale ToWords', () => {
+    test('ToWords from locale file works correctly', () => {
+      const tw = new LocaleToWords();
+      expect(tw.convert(1)).toBeDefined();
+      expect(typeof tw.convert(123)).toBe('string');
+    });
   });
 
   const wrongLocaleCode = localeCode + '-wrong';

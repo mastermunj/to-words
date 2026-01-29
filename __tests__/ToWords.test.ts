@@ -61,3 +61,87 @@ describe('Test BigInt Inputs', () => {
     expect(toWords.convert(1n, { currency: true })).toBe('One Rupee Only');
   });
 });
+
+describe('Test setLocale method', () => {
+  test('setLocale with en-US locale class', async () => {
+    const { default: EnUsLocale } = await import('../src/locales/en-US');
+    const toWords = new ToWords();
+    toWords.setLocale(EnUsLocale);
+    expect(toWords.convert(1234)).toBe('One Thousand Two Hundred Thirty Four');
+  });
+
+  test('setLocale with en-IN locale class', async () => {
+    const { default: EnInLocale } = await import('../src/locales/en-IN');
+    const toWords = new ToWords();
+    toWords.setLocale(EnInLocale);
+    expect(toWords.convert(1234)).toBe('One Thousand Two Hundred Thirty Four');
+    expect(toWords.convert(1234, { currency: true })).toBe('One Thousand Two Hundred Thirty Four Rupees Only');
+  });
+
+  test('setLocale with fr-FR locale class', async () => {
+    const { default: FrFrLocale } = await import('../src/locales/fr-FR');
+    const toWords = new ToWords();
+    toWords.setLocale(FrFrLocale);
+    expect(toWords.convert(80)).toBe('Quatre-Vingts');
+  });
+
+  test('setLocale returns this for chaining', async () => {
+    const { default: EnInLocale } = await import('../src/locales/en-IN');
+    const toWords = new ToWords();
+    const result = toWords.setLocale(EnInLocale).convert(100);
+    expect(result).toBe('One Hundred');
+  });
+
+  test('setLocale overrides localeCode option', async () => {
+    const { default: FrFrLocale } = await import('../src/locales/fr-FR');
+    const toWords = new ToWords({ localeCode: 'en-IN' });
+    toWords.setLocale(FrFrLocale);
+    // Should use French, not English
+    expect(toWords.convert(21)).toBe('Vingt Et Un');
+  });
+});
+
+describe('Test per-locale entry points', () => {
+  test('en-IN entry point has same API as main ToWords', async () => {
+    const { ToWords: ToWordsEnIn } = await import('../src/locales/en-IN.js');
+    const tw = new ToWordsEnIn();
+    expect(tw.convert(1234)).toBe('One Thousand Two Hundred Thirty Four');
+    expect(tw.convert(1234, { currency: true })).toBe('One Thousand Two Hundred Thirty Four Rupees Only');
+    expect(tw.toOrdinal(42)).toBe('Forty Second');
+  });
+
+  test('fr-FR entry point works correctly', async () => {
+    const { ToWords: ToWordsFrFr } = await import('../src/locales/fr-FR.js');
+    const tw = new ToWordsFrFr();
+    expect(tw.convert(80)).toBe('Quatre-Vingts');
+    expect(tw.convert(21)).toBe('Vingt Et Un');
+  });
+
+  test('de-DE entry point works correctly', async () => {
+    const { ToWords: ToWordsDeDe } = await import('../src/locales/de-DE.js');
+    const tw = new ToWordsDeDe();
+    expect(tw.convert(21)).toBe('Einundzwanzig');
+  });
+
+  test('ar-SA entry point works correctly', async () => {
+    const { ToWords: ToWordsArSa } = await import('../src/locales/ar-SA.js');
+    const tw = new ToWordsArSa();
+    expect(tw.convert(1)).toBe('واحد');
+  });
+
+  test('entry point exports ToWords class', async () => {
+    const entry = await import('../src/locales/en-IN.js');
+    expect(entry.ToWords).toBeDefined();
+  });
+
+  test('multiple entry points can be used independently', async () => {
+    const { ToWords: ToWordsEnIn } = await import('../src/locales/en-IN.js');
+    const { ToWords: ToWordsFrFr } = await import('../src/locales/fr-FR.js');
+
+    const twEn = new ToWordsEnIn();
+    const twFr = new ToWordsFrFr();
+
+    expect(twEn.convert(100)).toBe('One Hundred');
+    expect(twFr.convert(100)).toBe('Cent');
+  });
+});

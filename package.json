@@ -22,14 +22,56 @@
   },
   "license": "MIT",
   "author": "Munjal Dhamecha",
-  "main": "dist/ToWords.js",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/types/ToWords.d.ts",
+      "import": "./dist/esm/ToWords.js",
+      "require": "./dist/cjs/ToWords.js"
+    },
+    "./*": {
+      "types": "./dist/types/locales/*.d.ts",
+      "import": "./dist/esm/locales/*.js",
+      "require": "./dist/cjs/locales/*.js"
+    },
+    "./types": {
+      "types": "./dist/types/types.d.ts",
+      "import": "./dist/esm/types.js",
+      "require": "./dist/cjs/types.js"
+    },
+    "./core": {
+      "types": "./dist/types/ToWordsCore.d.ts",
+      "import": "./dist/esm/ToWordsCore.js",
+      "require": "./dist/cjs/ToWordsCore.js"
+    }
+  },
+  "main": "dist/cjs/ToWords.js",
+  "module": "dist/esm/ToWords.js",
+  "types": "dist/types/ToWords.d.ts",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "dist/types/locales/*"
+      ],
+      "types": [
+        "dist/types/types"
+      ],
+      "core": [
+        "dist/types/ToWordsCore"
+      ]
+    }
+  },
   "files": [
-    "dist/*"
+    "dist/**/*"
   ],
   "scripts": {
     "bench": "vitest bench",
-    "build": "npm run clean && tsc --noEmitOnError",
+    "build": "npm run clean && npm run build:cjs && npm run build:esm && npm run build:pkgjson",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:pkgjson": "echo '{\"type\":\"commonjs\"}' > dist/cjs/package.json",
     "build:watch": "npm run build -- --watch",
+    "bundle-size": "node scripts/check-bundle-size.ts",
     "clean": "rimraf dist coverage",
     "commit": "git-cz",
     "lint": "eslint --max-warnings=0 .",
@@ -55,6 +97,7 @@
     "@typescript-eslint/parser": "^8.52.0",
     "@vitest/coverage-v8": "^4.0.16",
     "cz-conventional-changelog": "^3.3.0",
+    "esbuild": "^0.27.2",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
@@ -71,6 +114,6 @@
     "vitest": "^4.0.16"
   },
   "engines": {
-    "node": ">=12.0.0"
+    "node": ">=20.0.0"
   }
 }

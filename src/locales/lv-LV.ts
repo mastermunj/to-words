@@ -1,4 +1,5 @@
-import { LocaleConfig, LocaleInterface } from '../types';
+import { LocaleConfig, LocaleInterface, ToWordsOptions } from '../types.js';
+import { ToWordsCore } from '../ToWordsCore.js';
 
 export default class Locale implements LocaleInterface {
   public config: LocaleConfig = {
@@ -111,4 +112,20 @@ export default class Locale implements LocaleInterface {
     pluralMark: 'i',
     pluralWords: ['kvadriljon', 'triljon', 'miljard'],
   };
+}
+
+/**
+ * ToWords class pre-configured for this locale.
+ * This is a lightweight version that only bundles this specific locale.
+ *
+ * @example
+ * import { ToWords } from 'to-words/lv-LV';
+ * const tw = new ToWords();
+ * tw.convert(1234);
+ */
+export class ToWords extends ToWordsCore {
+  constructor(options: ToWordsOptions = {}) {
+    super(options);
+    this.setLocale(Locale);
+  }
 }

@@ -1,4 +1,5 @@
-import { LocaleConfig, LocaleInterface } from '../types';
+import { LocaleConfig, LocaleInterface, ToWordsOptions } from '../types.js';
+import { ToWordsCore } from '../ToWordsCore.js';
 
 export default class Locale implements LocaleInterface {
   public config: LocaleConfig = {
@@ -235,4 +236,20 @@ export default class Locale implements LocaleInterface {
       { number: 10000000, value: 'करोडौं' },
     ],
   };
+}
+
+/**
+ * ToWords class pre-configured for this locale.
+ * This is a lightweight version that only bundles this specific locale.
+ *
+ * @example
+ * import { ToWords } from 'to-words/np-NP';
+ * const tw = new ToWords();
+ * tw.convert(1234);
+ */
+export class ToWords extends ToWordsCore {
+  constructor(options: ToWordsOptions = {}) {
+    super(options);
+    this.setLocale(Locale);
+  }
 }
