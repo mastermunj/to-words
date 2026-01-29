@@ -1,8 +1,10 @@
 import { ConstructorOf, LocaleInterface } from '../types';
 
+import afZa from './af-ZA';
 import arAe from './ar-AE';
 import arMa from './ar-MA';
 import arSa from './ar-SA';
+import beBy from './be-BY';
 import bgBg from './bg-BG';
 import bnIn from './bn-IN';
 import caEs from './ca-ES';
@@ -45,10 +47,12 @@ import frMa from './fr-MA';
 import frSa from './fr-SA';
 import guIn from './gu-IN';
 import haNg from './ha-NG';
+import heIl from './he-IL';
 import hiIn from './hi-IN';
 import hrHr from './hr-HR';
 import huHu from './hu-HU';
 import idId from './id-ID';
+import isIs from './is-IS';
 import itIt from './it-IT';
 import knIn from './kn-IN';
 import koKr from './ko-KR';
@@ -67,10 +71,12 @@ import ptPT from './pt-PT';
 import ruRu from './ru-RU';
 import skSk from './sk-SK';
 import slSi from './sl-SI';
+import sqAl from './sq-AL';
 import srRs from './sr-RS';
 import svSe from './sv-SE';
 import taIn from './ta-IN';
 import teIn from './te-IN';
+import thTh from './th-TH';
 import trTr from './tr-TR';
 import ukUa from './uk-UA';
 import urPk from './ur-PK';
@@ -82,9 +88,11 @@ import swKe from './sw-KE';
 import viVn from './vi-VN';
 
 const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
+  'af-ZA': afZa,
   'ar-AE': arAe,
   'ar-MA': arMa,
   'ar-SA': arSa,
+  'be-BY': beBy,
   'bg-BG': bgBg,
   'bn-IN': bnIn,
   'ca-ES': caEs,
@@ -129,10 +137,12 @@ const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
   'fr-SA': frSa,
   'gu-IN': guIn,
   'ha-NG': haNg,
+  'he-IL': heIl,
   'hi-IN': hiIn,
   'hr-HR': hrHr,
   'hu-HU': huHu,
   'id-ID': idId,
+  'is-IS': isIs,
   'it-IT': itIt,
   'kn-IN': knIn,
   'ko-KR': koKr,
@@ -152,11 +162,13 @@ const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
   'ru-RU': ruRu,
   'sk-SK': skSk,
   'sl-SI': slSi,
+  'sq-AL': sqAl,
   'sr-RS': srRs,
   'sv-SE': svSe,
   'sw-KE': swKe,
   'ta-IN': taIn,
   'te-IN': teIn,
+  'th-TH': thTh,
   'tr-TR': trTr,
   'uk-UA': ukUa,
   'ur-PK': urPk,
