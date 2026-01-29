@@ -4,9 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const af_ZA_1 = __importDefault(require("./af-ZA"));
+const am_ET_1 = __importDefault(require("./am-ET"));
 const ar_AE_1 = __importDefault(require("./ar-AE"));
 const ar_MA_1 = __importDefault(require("./ar-MA"));
 const ar_SA_1 = __importDefault(require("./ar-SA"));
+const az_AZ_1 = __importDefault(require("./az-AZ"));
 const be_BY_1 = __importDefault(require("./be-BY"));
 const bg_BG_1 = __importDefault(require("./bg-BG"));
 const bn_IN_1 = __importDefault(require("./bn-IN"));
@@ -50,6 +52,7 @@ const fr_MA_1 = __importDefault(require("./fr-MA"));
 const fr_SA_1 = __importDefault(require("./fr-SA"));
 const gu_IN_1 = __importDefault(require("./gu-IN"));
 const ha_NG_1 = __importDefault(require("./ha-NG"));
+const hbo_IL_1 = __importDefault(require("./hbo-IL"));
 const he_IL_1 = __importDefault(require("./he-IL"));
 const hi_IN_1 = __importDefault(require("./hi-IN"));
 const hr_HR_1 = __importDefault(require("./hr-HR"));
@@ -57,6 +60,8 @@ const hu_HU_1 = __importDefault(require("./hu-HU"));
 const id_ID_1 = __importDefault(require("./id-ID"));
 const is_IS_1 = __importDefault(require("./is-IS"));
 const it_IT_1 = __importDefault(require("./it-IT"));
+const ja_JP_1 = __importDefault(require("./ja-JP"));
+const ka_GE_1 = __importDefault(require("./ka-GE"));
 const kn_IN_1 = __importDefault(require("./kn-IN"));
 const ko_KR_1 = __importDefault(require("./ko-KR"));
 const lt_LT_1 = __importDefault(require("./lt-LT"));
@@ -89,11 +94,15 @@ const fil_PH_1 = __importDefault(require("./fil-PH"));
 const ro_RO_1 = __importDefault(require("./ro-RO"));
 const sw_KE_1 = __importDefault(require("./sw-KE"));
 const vi_VN_1 = __importDefault(require("./vi-VN"));
+const yo_NG_1 = __importDefault(require("./yo-NG"));
+const zh_CN_1 = __importDefault(require("./zh-CN"));
 const LOCALES = {
     'af-ZA': af_ZA_1.default,
+    'am-ET': am_ET_1.default,
     'ar-AE': ar_AE_1.default,
     'ar-MA': ar_MA_1.default,
     'ar-SA': ar_SA_1.default,
+    'az-AZ': az_AZ_1.default,
     'be-BY': be_BY_1.default,
     'bg-BG': bg_BG_1.default,
     'bn-IN': bn_IN_1.default,
@@ -139,6 +148,7 @@ const LOCALES = {
     'fr-SA': fr_SA_1.default,
     'gu-IN': gu_IN_1.default,
     'ha-NG': ha_NG_1.default,
+    'hbo-IL': hbo_IL_1.default,
     'he-IL': he_IL_1.default,
     'hi-IN': hi_IN_1.default,
     'hr-HR': hr_HR_1.default,
@@ -146,6 +156,8 @@ const LOCALES = {
     'id-ID': id_ID_1.default,
     'is-IS': is_IS_1.default,
     'it-IT': it_IT_1.default,
+    'ja-JP': ja_JP_1.default,
+    'ka-GE': ka_GE_1.default,
     'kn-IN': kn_IN_1.default,
     'ko-KR': ko_KR_1.default,
     'lt-LT': lt_LT_1.default,
@@ -175,6 +187,8 @@ const LOCALES = {
     'uk-UA': uk_UA_1.default,
     'ur-PK': ur_PK_1.default,
     'vi-VN': vi_VN_1.default,
+    'yo-NG': yo_NG_1.default,
+    'zh-CN': zh_CN_1.default,
     'es-VE': es_VE_1.default,
 };
 exports.default = LOCALES;

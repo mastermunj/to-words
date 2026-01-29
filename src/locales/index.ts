@@ -1,9 +1,11 @@
 import { ConstructorOf, LocaleInterface } from '../types';
 
 import afZa from './af-ZA';
+import amEt from './am-ET';
 import arAe from './ar-AE';
 import arMa from './ar-MA';
 import arSa from './ar-SA';
+import azAz from './az-AZ';
 import beBy from './be-BY';
 import bgBg from './bg-BG';
 import bnIn from './bn-IN';
@@ -47,6 +49,7 @@ import frMa from './fr-MA';
 import frSa from './fr-SA';
 import guIn from './gu-IN';
 import haNg from './ha-NG';
+import hboIl from './hbo-IL';
 import heIl from './he-IL';
 import hiIn from './hi-IN';
 import hrHr from './hr-HR';
@@ -54,6 +57,8 @@ import huHu from './hu-HU';
 import idId from './id-ID';
 import isIs from './is-IS';
 import itIt from './it-IT';
+import jaJp from './ja-JP';
+import kaGe from './ka-GE';
 import knIn from './kn-IN';
 import koKr from './ko-KR';
 import ltLt from './lt-LT';
@@ -86,12 +91,16 @@ import filPh from './fil-PH';
 import roRo from './ro-RO';
 import swKe from './sw-KE';
 import viVn from './vi-VN';
+import yoNg from './yo-NG';
+import zhCn from './zh-CN';
 
 const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
   'af-ZA': afZa,
+  'am-ET': amEt,
   'ar-AE': arAe,
   'ar-MA': arMa,
   'ar-SA': arSa,
+  'az-AZ': azAz,
   'be-BY': beBy,
   'bg-BG': bgBg,
   'bn-IN': bnIn,
@@ -137,6 +146,7 @@ const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
   'fr-SA': frSa,
   'gu-IN': guIn,
   'ha-NG': haNg,
+  'hbo-IL': hboIl,
   'he-IL': heIl,
   'hi-IN': hiIn,
   'hr-HR': hrHr,
@@ -144,6 +154,8 @@ const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
   'id-ID': idId,
   'is-IS': isIs,
   'it-IT': itIt,
+  'ja-JP': jaJp,
+  'ka-GE': kaGe,
   'kn-IN': knIn,
   'ko-KR': koKr,
   'lt-LT': ltLt,
@@ -173,6 +185,8 @@ const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
   'uk-UA': ukUa,
   'ur-PK': urPk,
   'vi-VN': viVn,
+  'yo-NG': yoNg,
+  'zh-CN': zhCn,
   'es-VE': esVE,
 };
 
