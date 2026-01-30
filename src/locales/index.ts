@@ -3,6 +3,7 @@ import { ConstructorOf, LocaleInterface } from '../types.js';
 import afZa from './af-ZA.js';
 import amEt from './am-ET.js';
 import arAe from './ar-AE.js';
+import arLb from './ar-LB.js';
 import arMa from './ar-MA.js';
 import arSa from './ar-SA.js';
 import azAz from './az-AZ.js';
@@ -98,6 +99,7 @@ const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
   'af-ZA': afZa,
   'am-ET': amEt,
   'ar-AE': arAe,
+  'ar-LB': arLb,
   'ar-MA': arMa,
   'ar-SA': arSa,
   'az-AZ': azAz,

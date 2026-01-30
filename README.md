@@ -44,7 +44,7 @@ Convert numbers to words with comprehensive locale, currency, and ordinal suppor
 
 ## ✨ Features
 
-- **93 Locales** — The most comprehensive locale coverage available
+- **94 Locales** — The most comprehensive locale coverage available
 - **BigInt Support** — Handle numbers up to 10^63 (Vigintillion) and beyond
 - **Multiple Numbering Systems** — Short scale, Long scale, Indian, and East Asian
 - **Currency Formatting** — Locale-specific currency with fractional units
@@ -443,7 +443,7 @@ Converts a number to ordinal words.
 
 | Import Method | Raw | Gzip |
 |--------------|-----|------|
-| Full bundle (all 93 locales) | 538 KB | 54 KB |
+| Full bundle (all 94 locales) | 564 KB | 54 KB |
 | Single locale (en-US) | 11.5 KB | 3.2 KB |
 | Single locale (en-IN) | 9.3 KB | 3.1 KB |
 
@@ -482,13 +482,14 @@ npm run bench
 
 ## 🗺️ Supported Locales
 
-All 93 locales with their features:
+All 94 locales with their features:
 
 | Locale | Language | Country | Currency | Scale | Ordinal |
 |--------|----------|---------|----------|-------|---------|
 | af-ZA | Afrikaans | South Africa | Rand | Short | ✓ |
 | am-ET | Amharic | Ethiopia | ብር | Short | ✓ |
 | ar-AE | Arabic | UAE | درهم | Short | ✓ |
+| ar-LB | Arabic | Lebanon | ليرة | Short | ✓ |
 | ar-MA | Arabic | Morocco | درهم | Short | ✓ |
 | ar-SA | Arabic | Saudi Arabia | ريال | Short | ✓ |
 | az-AZ | Azerbaijani | Azerbaijan | Manat | Short | ✓ |
