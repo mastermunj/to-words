@@ -2,11 +2,11 @@
 
 [![npm version](https://img.shields.io/npm/v/to-words.svg)](https://www.npmjs.com/package/to-words)
 [![npm downloads](https://img.shields.io/npm/dm/to-words.svg)](https://www.npmjs.com/package/to-words)
-[![build](https://img.shields.io/github/actions/workflow/status/mastermunj/to-words/ci.yml?branch=master&label=build)](https://github.com/mastermunj/to-words/actions)
+[![build](https://img.shields.io/github/actions/workflow/status/mastermunj/to-words/ci.yml?branch=main&label=build)](https://github.com/mastermunj/to-words/actions)
 [![coverage](https://img.shields.io/badge/coverage-99%25-brightgreen)](https://github.com/mastermunj/to-words)
 [![minzipped size](https://img.shields.io/bundlephobia/minzip/to-words?label=minzipped)](https://bundlephobia.com/package/to-words)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue)](https://www.typescriptlang.org/)
-[![license](https://img.shields.io/npm/l/to-words)](https://github.com/mastermunj/to-words/blob/master/LICENSE)
+[![license](https://img.shields.io/npm/l/to-words)](https://github.com/mastermunj/to-words/blob/main/LICENSE)
 
 **[🎮 Demo](https://mastermunj.github.io/to-words/)**
 
