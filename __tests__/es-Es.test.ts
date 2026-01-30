@@ -1,8 +1,8 @@
 import { describe, expect, test } from 'vitest';
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
-import esES from '../src/locales/es-Es.js';
-import { ToWords as LocaleToWords } from '../src/locales/es-Es.js';
+import esES from '../src/locales/es-ES.js';
+import { ToWords as LocaleToWords } from '../src/locales/es-ES.js';
 
 const localeCode = 'es-ES';
 const toWords = new ToWords({
