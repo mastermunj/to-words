@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { cloneDeep } from 'lodash';
-import { ToWords } from '../src/ToWords';
+import { ToWords } from '../src/ToWords.js';
 import esES from '../src/locales/es-ES.js';
 import { ToWords as LocaleToWords } from '../src/locales/es-ES.js';
 
