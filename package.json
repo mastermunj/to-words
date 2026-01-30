@@ -80,7 +80,7 @@
     "lint": "eslint --max-warnings=0 .",
     "lint:fix": "npm run lint -- --fix",
     "prepare": "husky",
-    "release": "standard-version",
+    "release": "commit-and-tag-version",
     "release:mock": "npm run release -- --dry-run",
     "test": "vitest",
     "test:watch": "npm run test -- --watch"
@@ -99,6 +99,7 @@
     "@typescript-eslint/eslint-plugin": "^8.54.0",
     "@typescript-eslint/parser": "^8.54.0",
     "@vitest/coverage-v8": "^4.0.18",
+    "commit-and-tag-version": "^12.6.1",
     "cz-conventional-changelog": "^3.3.0",
     "esbuild": "^0.27.2",
     "eslint": "^9.39.2",
@@ -112,7 +113,6 @@
     "rimraf": "^6.1.2",
     "sort-package-json": "^3.6.1",
     "source-map-support": "^0.5.21",
-    "standard-version": "^9.5.0",
     "typescript": "^5.9.3",
     "vitest": "^4.0.18"
   },
