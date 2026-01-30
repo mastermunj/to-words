@@ -1,6 +1,14 @@
 # Changelog
 
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
+
+## [5.0.0](https://github.com/mastermunj/to-words/compare/v4.10.0...v5.0.0) (2026-01-30)
+
+
+### Features
+
+* add bigint support ([#2150](https://github.com/mastermunj/to-words/issues/2150)) ([23e02b4](https://github.com/mastermunj/to-words/commit/23e02b4c61df63a0b5f05c088b6031c4c14ba484))
+* mega update with lot of locale, performance and goodies ([#2153](https://github.com/mastermunj/to-words/issues/2153)) ([a82add8](https://github.com/mastermunj/to-words/commit/a82add8dfd3b8f50c184dc9f30c77ea5e9455b3c))
 
 ## [4.10.0](https://github.com/mastermunj/to-words/compare/v4.9.0...v4.10.0) (2026-01-07)
 
