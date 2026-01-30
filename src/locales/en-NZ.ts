@@ -1,7 +1,7 @@
 import { LocaleConfig, LocaleInterface, ToWordsOptions } from '../types.js';
 import { ToWordsCore } from '../ToWordsCore.js';
 
-export default class LocaleEnNZ implements LocaleInterface {
+export default class Locale implements LocaleInterface {
   public config: LocaleConfig = {
     currency: {
       name: 'New Zealand Dollar',
@@ -142,6 +142,6 @@ export default class LocaleEnNZ implements LocaleInterface {
 export class ToWords extends ToWordsCore {
   constructor(options: ToWordsOptions = {}) {
     super(options);
-    this.setLocale(LocaleEnNZ);
+    this.setLocale(Locale);
   }
 }

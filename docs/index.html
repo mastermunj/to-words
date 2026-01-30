@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>to-words Demo</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      color: white;
+      text-align: center;
+      margin-bottom: 0.5rem;
+      font-size: 2.5rem;
+    }
+    
+    .subtitle {
+      color: rgba(255, 255, 255, 0.8);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+    
+    .input-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+    
+    input[type="text"], select {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      font-size: 1.1rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      transition: border-color 0.2s;
+    }
+    
+    input[type="text"]:focus, select:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    
+    .options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .checkbox-group input {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+    
+    .checkbox-group label {
+      margin-bottom: 0;
+      cursor: pointer;
+    }
+    
+    .result {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 1.25rem;
+      line-height: 1.6;
+    }
+    
+    .result.error {
+      background: linear-gradient(135deg, #f56565 0%, #c53030 100%);
+    }
+    
+    .examples {
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid #e0e0e0;
+    }
+    
+    .examples h3 {
+      color: #333;
+      margin-bottom: 1rem;
+    }
+    
+    .example-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    
+    .example-btn {
+      padding: 0.5rem 1rem;
+      background: #f0f0f0;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+    
+    .example-btn:hover {
+      background: #667eea;
+      color: white;
+    }
+    
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1.5rem;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.9rem;
+    }
+    
+    .stats span {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    footer {
+      text-align: center;
+      margin-top: 2rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    footer a {
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔢 to-words</h1>
+    <p class="subtitle">Convert numbers to words in 93 locales</p>
+    
+    <div class="card">
+      <div class="input-group">
+        <label for="number">Enter a Number</label>
+        <input type="text" id="number" value="12345.67" placeholder="Enter any number...">
+      </div>
+      
+      <div class="options">
+        <div class="input-group">
+          <label for="locale">Locale</label>
+          <select id="locale">
+            <optgroup label="Afrikaans">
+              <option value="af-ZA">Afrikaans (South Africa)</option>
+            </optgroup>
+            <optgroup label="Albanian">
+              <option value="sq-AL">Albanian (Albania)</option>
+            </optgroup>
+            <optgroup label="Amharic">
+              <option value="am-ET">Amharic (Ethiopia)</option>
+            </optgroup>
+            <optgroup label="Arabic">
+              <option value="ar-AE">Arabic (UAE)</option>
+              <option value="ar-MA">Arabic (Morocco)</option>
+              <option value="ar-SA">Arabic (Saudi Arabia)</option>
+            </optgroup>
+            <optgroup label="Azerbaijani">
+              <option value="az-AZ">Azerbaijani (Azerbaijan)</option>
+            </optgroup>
+            <optgroup label="Belarusian">
+              <option value="be-BY">Belarusian (Belarus)</option>
+            </optgroup>
+            <optgroup label="Bengali">
+              <option value="bn-IN">Bengali (India)</option>
+            </optgroup>
+            <optgroup label="Bulgarian">
+              <option value="bg-BG">Bulgarian (Bulgaria)</option>
+            </optgroup>
+            <optgroup label="Catalan">
+              <option value="ca-ES">Catalan (Spain)</option>
+            </optgroup>
+            <optgroup label="Chinese">
+              <option value="zh-CN">Chinese (China)</option>
+            </optgroup>
+            <optgroup label="Croatian">
+              <option value="hr-HR">Croatian (Croatia)</option>
+            </optgroup>
+            <optgroup label="Czech">
+              <option value="cs-CZ">Czech (Czech Republic)</option>
+            </optgroup>
+            <optgroup label="Danish">
+              <option value="da-DK">Danish (Denmark)</option>
+            </optgroup>
+            <optgroup label="Dutch">
+              <option value="nl-NL">Dutch (Netherlands)</option>
+              <option value="nl-SR">Dutch (Suriname)</option>
+            </optgroup>
+            <optgroup label="English">
+              <option value="en-US">English (USA)</option>
+              <option value="en-GB">English (UK)</option>
+              <option value="en-AU">English (Australia)</option>
+              <option value="en-CA">English (Canada)</option>
+              <option value="en-IN" selected>English (India)</option>
+              <option value="en-AE">English (UAE)</option>
+              <option value="en-BD">English (Bangladesh)</option>
+              <option value="en-GH">English (Ghana)</option>
+              <option value="en-IE">English (Ireland)</option>
+              <option value="en-KE">English (Kenya)</option>
+              <option value="en-MA">English (Morocco)</option>
+              <option value="en-MM">English (Myanmar)</option>
+              <option value="en-MU">English (Mauritius)</option>
+              <option value="en-MY">English (Malaysia)</option>
+              <option value="en-NG">English (Nigeria)</option>
+              <option value="en-NP">English (Nepal)</option>
+              <option value="en-NZ">English (New Zealand)</option>
+              <option value="en-OM">English (Oman)</option>
+              <option value="en-PH">English (Philippines)</option>
+              <option value="en-PK">English (Pakistan)</option>
+              <option value="en-SA">English (Saudi Arabia)</option>
+              <option value="en-SG">English (Singapore)</option>
+              <option value="en-ZA">English (South Africa)</option>
+            </optgroup>
+            <optgroup label="Estonian">
+              <option value="ee-EE">Estonian (Estonia)</option>
+            </optgroup>
+            <optgroup label="Filipino">
+              <option value="fil-PH">Filipino (Philippines)</option>
+            </optgroup>
+            <optgroup label="Finnish">
+              <option value="fi-FI">Finnish (Finland)</option>
+            </optgroup>
+            <optgroup label="French">
+              <option value="fr-FR">French (France)</option>
+              <option value="fr-BE">French (Belgium)</option>
+              <option value="fr-MA">French (Morocco)</option>
+              <option value="fr-SA">French (Saudi Arabia)</option>
+            </optgroup>
+            <optgroup label="Georgian">
+              <option value="ka-GE">Georgian (Georgia)</option>
+            </optgroup>
+            <optgroup label="German">
+              <option value="de-DE">German (Germany)</option>
+            </optgroup>
+            <optgroup label="Greek">
+              <option value="el-GR">Greek (Greece)</option>
+            </optgroup>
+            <optgroup label="Gujarati">
+              <option value="gu-IN">Gujarati (India)</option>
+            </optgroup>
+            <optgroup label="Hausa">
+              <option value="ha-NG">Hausa (Nigeria)</option>
+            </optgroup>
+            <optgroup label="Hebrew">
+              <option value="he-IL">Hebrew (Israel)</option>
+              <option value="hbo-IL">Biblical Hebrew (Israel)</option>
+            </optgroup>
+            <optgroup label="Hindi">
+              <option value="hi-IN">Hindi (India)</option>
+            </optgroup>
+            <optgroup label="Hungarian">
+              <option value="hu-HU">Hungarian (Hungary)</option>
+            </optgroup>
+            <optgroup label="Icelandic">
+              <option value="is-IS">Icelandic (Iceland)</option>
+            </optgroup>
+            <optgroup label="Indonesian">
+              <option value="id-ID">Indonesian (Indonesia)</option>
+            </optgroup>
+            <optgroup label="Italian">
+              <option value="it-IT">Italian (Italy)</option>
+            </optgroup>
+            <optgroup label="Japanese">
+              <option value="ja-JP">Japanese (Japan)</option>
+            </optgroup>
+            <optgroup label="Kannada">
+              <option value="kn-IN">Kannada (India)</option>
+            </optgroup>
+            <optgroup label="Korean">
+              <option value="ko-KR">Korean (South Korea)</option>
+            </optgroup>
+            <optgroup label="Latvian">
+              <option value="lv-LV">Latvian (Latvia)</option>
+            </optgroup>
+            <optgroup label="Lithuanian">
+              <option value="lt-LT">Lithuanian (Lithuania)</option>
+            </optgroup>
+            <optgroup label="Malay">
+              <option value="ms-MY">Malay (Malaysia)</option>
+            </optgroup>
+            <optgroup label="Marathi">
+              <option value="mr-IN">Marathi (India)</option>
+            </optgroup>
+            <optgroup label="Nepali">
+              <option value="np-NP">Nepali (Nepal)</option>
+            </optgroup>
+            <optgroup label="Norwegian">
+              <option value="nb-NO">Norwegian Bokmål (Norway)</option>
+            </optgroup>
+            <optgroup label="Persian">
+              <option value="fa-IR">Persian (Iran)</option>
+            </optgroup>
+            <optgroup label="Polish">
+              <option value="pl-PL">Polish (Poland)</option>
+            </optgroup>
+            <optgroup label="Portuguese">
+              <option value="pt-BR">Portuguese (Brazil)</option>
+              <option value="pt-PT">Portuguese (Portugal)</option>
+            </optgroup>
+            <optgroup label="Punjabi">
+              <option value="pa-IN">Punjabi (India)</option>
+            </optgroup>
+            <optgroup label="Romanian">
+              <option value="ro-RO">Romanian (Romania)</option>
+            </optgroup>
+            <optgroup label="Russian">
+              <option value="ru-RU">Russian (Russia)</option>
+            </optgroup>
+            <optgroup label="Serbian">
+              <option value="sr-RS">Serbian (Serbia)</option>
+            </optgroup>
+            <optgroup label="Slovak">
+              <option value="sk-SK">Slovak (Slovakia)</option>
+            </optgroup>
+            <optgroup label="Slovenian">
+              <option value="sl-SI">Slovenian (Slovenia)</option>
+            </optgroup>
+            <optgroup label="Spanish">
+              <option value="es-ES">Spanish (Spain)</option>
+              <option value="es-MX">Spanish (Mexico)</option>
+              <option value="es-AR">Spanish (Argentina)</option>
+              <option value="es-US">Spanish (USA)</option>
+              <option value="es-VE">Spanish (Venezuela)</option>
+            </optgroup>
+            <optgroup label="Swahili">
+              <option value="sw-KE">Swahili (Kenya)</option>
+            </optgroup>
+            <optgroup label="Swedish">
+              <option value="sv-SE">Swedish (Sweden)</option>
+            </optgroup>
+            <optgroup label="Tamil">
+              <option value="ta-IN">Tamil (India)</option>
+            </optgroup>
+            <optgroup label="Telugu">
+              <option value="te-IN">Telugu (India)</option>
+            </optgroup>
+            <optgroup label="Thai">
+              <option value="th-TH">Thai (Thailand)</option>
+            </optgroup>
+            <optgroup label="Turkish">
+              <option value="tr-TR">Turkish (Turkey)</option>
+            </optgroup>
+            <optgroup label="Ukrainian">
+              <option value="uk-UA">Ukrainian (Ukraine)</option>
+            </optgroup>
+            <optgroup label="Urdu">
+              <option value="ur-PK">Urdu (Pakistan)</option>
+            </optgroup>
+            <optgroup label="Vietnamese">
+              <option value="vi-VN">Vietnamese (Vietnam)</option>
+            </optgroup>
+            <optgroup label="Yoruba">
+              <option value="yo-NG">Yoruba (Nigeria)</option>
+            </optgroup>
+          </select>
+        </div>
+        
+        <div class="input-group">
+          <label>Options</label>
+          <div class="checkbox-group">
+            <input type="checkbox" id="currency" checked>
+            <label for="currency">Currency Mode</label>
+          </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="ordinal">
+            <label for="ordinal">Ordinal Mode</label>
+          </div>
+        </div>
+      </div>
+      
+      <div class="result" id="result">
+        Loading...
+      </div>
+      
+      <div class="examples">
+        <h3>Try these examples:</h3>
+        <div class="example-buttons">
+          <button class="example-btn" data-value="42">42</button>
+          <button class="example-btn" data-value="1000000">1 Million</button>
+          <button class="example-btn" data-value="1234567890">1.2 Billion</button>
+          <button class="example-btn" data-value="9007199254740993">Beyond MAX_SAFE</button>
+          <button class="example-btn" data-value="123.45">Decimal</button>
+          <button class="example-btn" data-value="-500">Negative</button>
+          <button class="example-btn" data-value="0.01">Cents only</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="stats">
+      <span>🌍 93 Locales</span>
+      <span>🔢 BigInt Support</span>
+      <span>💰 Currency</span>
+      <span>📦 Zero Dependencies</span>
+    </div>
+    
+    <footer>
+      <p>
+        <a href="https://github.com/mastermunj/to-words" target="_blank">GitHub</a> · 
+        <a href="https://www.npmjs.com/package/to-words" target="_blank">npm</a>
+      </p>
+    </footer>
+  </div>
+
+  <!-- Use CDN for GitHub Pages, local path for development -->
+  <script src="https://cdn.jsdelivr.net/npm/to-words@5/dist/umd/to-words.min.js"></script>
+  <script>
+    let toWords = new ToWords({ localeCode: 'en-US' });
+    
+    const numberInput = document.getElementById('number');
+    const localeSelect = document.getElementById('locale');
+    const currencyCheckbox = document.getElementById('currency');
+    const ordinalCheckbox = document.getElementById('ordinal');
+    const resultDiv = document.getElementById('result');
+    
+    function convert() {
+      const value = numberInput.value.trim();
+      const locale = localeSelect.value;
+      const currency = currencyCheckbox.checked;
+      const ordinal = ordinalCheckbox.checked;
+      
+      try {
+        toWords = new ToWords({ localeCode: locale });
+        
+        let result;
+        if (ordinal) {
+          const num = parseInt(value, 10);
+          if (isNaN(num) || num < 0) {
+            throw new Error('Ordinal requires a non-negative integer');
+          }
+          result = toWords.toOrdinal(num);
+        } else {
+          // Handle large numbers as strings to avoid precision loss
+          const num = value.includes('.') || value.length < 16 
+            ? parseFloat(value) 
+            : value;
+          
+          if (typeof num === 'number' && isNaN(num)) {
+            throw new Error('Invalid number');
+          }
+          
+          result = toWords.convert(num, { currency });
+        }
+        
+        resultDiv.textContent = result;
+        resultDiv.classList.remove('error');
+      } catch (error) {
+        resultDiv.textContent = 'Error: ' + error.message;
+        resultDiv.classList.add('error');
+      }
+    }
+    
+    // Event listeners
+    numberInput.addEventListener('input', convert);
+    localeSelect.addEventListener('change', convert);
+    currencyCheckbox.addEventListener('change', function() {
+      if (currencyCheckbox.checked) ordinalCheckbox.checked = false;
+      convert();
+    });
+    ordinalCheckbox.addEventListener('change', function() {
+      if (ordinalCheckbox.checked) currencyCheckbox.checked = false;
+      convert();
+    });
+    
+    // Example buttons
+    document.querySelectorAll('.example-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        numberInput.value = btn.dataset.value;
+        ordinalCheckbox.checked = false;
+        currencyCheckbox.checked = true;
+        convert();
+      });
+    });
+    
+    // Initial conversion
+    convert();
+  </script>
+</body>
+</html>

@@ -1,5 +1,6 @@
 import { LocaleConfig, LocaleInterface, ToWordsOptions } from '../types.js';
 import { ToWordsCore } from '../ToWordsCore.js';
+
 export default class Locale implements LocaleInterface {
   public config: LocaleConfig = {
     currency: {
