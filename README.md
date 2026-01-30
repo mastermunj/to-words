@@ -2,15 +2,35 @@
 
 [![npm version](https://img.shields.io/npm/v/to-words.svg)](https://www.npmjs.com/package/to-words)
 [![npm downloads](https://img.shields.io/npm/dm/to-words.svg)](https://www.npmjs.com/package/to-words)
-[![build status](https://img.shields.io/github/actions/workflow/status/mastermunj/to-words/ci.yml?branch=master)](https://github.com/mastermunj/to-words/actions)
-[![coverage](https://img.shields.io/badge/coverage-99%25-brightgreen.svg)](https://github.com/mastermunj/to-words)
-[![bundle size](https://img.shields.io/bundlephobia/minzip/to-words)](https://bundlephobia.com/package/to-words)
-[![license](https://img.shields.io/npm/l/to-words.svg)](https://github.com/mastermunj/to-words/blob/master/LICENSE)
-[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
+[![build](https://img.shields.io/github/actions/workflow/status/mastermunj/to-words/ci.yml?branch=master&label=build)](https://github.com/mastermunj/to-words/actions)
+[![coverage](https://img.shields.io/badge/coverage-99%25-brightgreen)](https://github.com/mastermunj/to-words)
+[![minzipped size](https://img.shields.io/bundlephobia/minzip/to-words?label=minzipped)](https://bundlephobia.com/package/to-words)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue)](https://www.typescriptlang.org/)
+[![license](https://img.shields.io/npm/l/to-words)](https://github.com/mastermunj/to-words/blob/master/LICENSE)
 
 **[🎮 Demo](https://mastermunj.github.io/to-words/)**
 
 Convert numbers to words with comprehensive locale, currency, and ordinal support. Ideal for invoicing, e-commerce, financial apps, and educational tools.
+
+## 📑 Table of Contents
+
+- [Use Cases](#-use-cases)
+- [Features](#-features)
+- [Quick Start](#-quick-start)
+- [Installation](#-installation)
+- [Usage](#-usage)
+- [Framework Integration](#%EF%B8%8F-framework-integration)
+- [Numbering Systems](#-numbering-systems)
+- [API Reference](#%EF%B8%8F-api-reference)
+- [Bundle Sizes](#-bundle-sizes)
+- [Performance](#-performance)
+- [Browser Compatibility](#-browser-compatibility)
+- [Supported Locales](#%EF%B8%8F-supported-locales)
+- [Error Handling](#%EF%B8%8F-error-handling)
+- [Contributing](#-contributing)
+- [FAQ](#-faq)
+- [Changelog](#-changelog)
+- [License](#-license)
 
 ## 💼 Use Cases
 
@@ -565,6 +585,52 @@ All 93 locales with their features:
 - **Long** — European long scale (Million, Milliard, Billion, Billiard...)
 - **Indian** — Indian numbering (Lakh, Crore, Arab, Kharab...)
 - **East Asian** — East Asian numbering (万, 億, 兆, 京...)
+
+## ⚠️ Error Handling
+
+The library throws descriptive errors for invalid inputs:
+
+### Invalid Number
+
+```js
+toWords.convert('abc');
+// Error: Invalid Number "abc"
+
+toWords.convert(NaN);
+// Error: Invalid Number "NaN"
+
+toWords.convert(Infinity);
+// Error: Invalid Number "Infinity"
+```
+
+### Unknown Locale
+
+```js
+const toWords = new ToWords({ localeCode: 'xx-XX' });
+toWords.convert(123);
+// Error: Unknown Locale "xx-XX"
+```
+
+### Invalid Ordinal Input
+
+```js
+toWords.toOrdinal(-5);
+// Error: Ordinal numbers must be non-negative integers, got "-5"
+
+toWords.toOrdinal(3.14);
+// Error: Ordinal numbers must be non-negative integers, got "3.14"
+```
+
+### Handling Errors
+
+```js
+try {
+  const words = toWords.convert(userInput);
+  console.log(words);
+} catch (error) {
+  console.error('Conversion failed:', error.message);
+}
+```
 
 ## 🤝 Contributing
 
