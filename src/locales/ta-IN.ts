@@ -22,6 +22,11 @@ export default class Locale implements LocaleInterface {
       point: 'புள்ளி',
     },
     numberWordsMapping: [
+      { number: 100000000000000000n, value: 'சங்கம்' },
+      { number: 1000000000000000n, value: 'பத்மம்' },
+      { number: 10000000000000n, value: 'நீல்' },
+      { number: 100000000000n, value: 'கரப்' },
+      { number: 1000000000n, value: 'அரபு' },
       { number: 10000000, value: 'கோடி' },
       { number: 100000, value: 'லட்சம்' },
       { number: 1000, value: 'ஆயிரம்' },

@@ -52,7 +52,7 @@ const testIntegers = [
   ],
   [
     9_87_65_43_21_01_234,
-    'Nine Hundred Eighty Seven Kharab Sixty Five Arab Forty Three Crore Twenty One Lakh One Thousand Two Hundred Thirty Four',
+    'Nine Neel Eighty Seven Kharab Sixty Five Arab Forty Three Crore Twenty One Lakh One Thousand Two Hundred Thirty Four',
   ],
 ];
 

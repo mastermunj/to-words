@@ -41,7 +41,7 @@ export type NumberWordMap = {
 };
 
 export type OrdinalWordMap = {
-  number: number;
+  number: number | bigint;
   value: string;
 };
 

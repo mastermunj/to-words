@@ -22,6 +22,10 @@ export default class Locale implements LocaleInterface {
       point: 'Komma',
     },
     numberWordsMapping: [
+      { number: 1000000000000000000000000000n, value: 'Quadrilliarde' },
+      { number: 1000000000000000000000000n, value: 'Quadrillion' },
+      { number: 1000000000000000000000n, value: 'Trilliarde' },
+      { number: 1000000000000000000n, value: 'Trillion' },
       { number: 1000000000000000, value: 'Billiarde' },
       { number: 1000000000000, value: 'Billion' },
       { number: 1000000000, value: 'Milliarde' },

@@ -22,6 +22,11 @@ export default class Locale implements LocaleInterface {
       point: 'ਦਸ਼ਮਲਵ',
     },
     numberWordsMapping: [
+      { number: 100000000000000000n, value: 'ਸ਼ੰਖ' },
+      { number: 1000000000000000n, value: 'ਪਦਮ' },
+      { number: 10000000000000n, value: 'ਨੀਲ' },
+      { number: 100000000000n, value: 'ਖਰਬ' },
+      { number: 1000000000n, value: 'ਅਰਬ' },
       { number: 10000000, value: 'ਕਰੋੜ' },
       { number: 100000, value: 'ਲੱਖ' },
       { number: 1000, value: 'ਹਜ਼ਾਰ' },

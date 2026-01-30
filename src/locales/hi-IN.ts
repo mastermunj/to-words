@@ -22,6 +22,11 @@ export default class Locale implements LocaleInterface {
       point: 'दशांश',
     },
     numberWordsMapping: [
+      { number: 100000000000000000n, value: 'शंख' },
+      { number: 1000000000000000n, value: 'पद्म' },
+      { number: 10000000000000n, value: 'नील' },
+      { number: 100000000000n, value: 'खरब' },
+      { number: 1000000000n, value: 'अरब' },
       { number: 10000000, value: 'करोड़' },
       { number: 100000, value: 'लाख' },
       { number: 1000, value: 'हज़ार' },

@@ -22,6 +22,11 @@ export default class Locale implements LocaleInterface {
       point: 'Point',
     },
     numberWordsMapping: [
+      { number: 100000000000000000n, value: 'Shankh' },
+      { number: 1000000000000000n, value: 'Padma' },
+      { number: 10000000000000n, value: 'Neel' },
+      { number: 100000000000n, value: 'Kharab' },
+      { number: 1000000000n, value: 'Arab' },
       { number: 1_00_00_00_00_000, value: 'Kharab' },
       { number: 1_00_00_00_000, value: 'Arab' },
       { number: 1_00_00_000, value: 'Crore' },

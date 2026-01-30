@@ -22,6 +22,11 @@ export default class Locale implements LocaleInterface {
       point: '点',
     },
     numberWordsMapping: [
+      { number: 100000000000000000000n, value: '垓' },
+      { number: 10000000000000000000n, value: '千京' },
+      { number: 1000000000000000000n, value: '百京' },
+      { number: 100000000000000000n, value: '十京' },
+      { number: 10000000000000000n, value: '京' },
       { number: 1000000000000000, value: '千兆' },
       { number: 100000000000000, value: '百兆' },
       { number: 10000000000000, value: '十兆' },

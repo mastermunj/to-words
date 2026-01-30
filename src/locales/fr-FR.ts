@@ -22,6 +22,10 @@ export default class Locale implements LocaleInterface {
       point: 'Virgule',
     },
     numberWordsMapping: [
+      { number: 1000000000000000000000000000n, value: 'Quadrilliard' },
+      { number: 1000000000000000000000000n, value: 'Quadrillion' },
+      { number: 1000000000000000000000n, value: 'Trilliard' },
+      { number: 1000000000000000000n, value: 'Trillion' },
       { number: 1000000000000000, value: 'Billiard' },
       { number: 1000000000000, value: 'Billion' },
       { number: 1000000000, value: 'Milliard' },

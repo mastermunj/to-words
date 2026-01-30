@@ -49,7 +49,7 @@ describe('Test BigInt Inputs', () => {
     // 9007199254740992n is Number.MAX_SAFE_INTEGER + 1
     const result = toWords.convert(9007199254740992n);
     expect(result).toBe(
-      'Ninety Crore Seven Lakh Nineteen Thousand Nine Hundred Twenty Five Crore Forty Seven Lakh Forty Thousand Nine Hundred Ninety Two',
+      'Nine Padma Seventy One Kharab Ninety Nine Arab Twenty Five Crore Forty Seven Lakh Forty Thousand Nine Hundred Ninety Two',
     );
   });
 

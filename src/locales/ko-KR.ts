@@ -34,6 +34,11 @@ export default class Locale implements LocaleInterface {
       { number: 1, value: '첫째' },
     ],
     numberWordsMapping: [
+      { number: 100000000000000000000n, value: '해' },
+      { number: 10000000000000000000n, value: '천경' },
+      { number: 1000000000000000000n, value: '백경' },
+      { number: 100000000000000000n, value: '십경' },
+      { number: 10000000000000000n, value: '경' },
       { number: 1000000000000, value: '조' },
       { number: 100000000, value: '억' },
       { number: 10000, value: '만' },
