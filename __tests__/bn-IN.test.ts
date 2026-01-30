@@ -1,7 +1,8 @@
 import { describe, expect, test } from 'vitest';
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
-import bnIn from '../src/locales/bn-IN';
+import bnIn from '../src/locales/bn-IN.js';
+import { ToWords as LocaleToWords } from '../src/locales/bn-IN.js';
 
 const localeCode = 'bn-IN';
 const toWords = new ToWords({
@@ -11,6 +12,14 @@ const toWords = new ToWords({
 describe('Test Locale', () => {
   test(`Locale Class: ${localeCode}`, () => {
     expect(toWords.getLocaleClass()).toBe(bnIn);
+  });
+
+  describe('Test Locale ToWords', () => {
+    test('ToWords from locale file works correctly', () => {
+      const tw = new LocaleToWords();
+      expect(tw.convert(1)).toBeDefined();
+      expect(typeof tw.convert(123)).toBe('string');
+    });
   });
 
   const wrongLocaleCode = localeCode + '-wrong';
@@ -32,11 +41,11 @@ const testIntegers = [
   [2741034, 'সাতাশ লাখ একচল্লিশ হাজার চৌত্রিশ'],
   [86429753, 'আট কোটি চৌষট্টি লাখ ঊনত্রিশ হাজার সাত শত তিপ্পান্ন'],
   [975310864, 'সাতানব্বই কোটি তিপ্পান্ন লাখ দশ হাজার আট শত চৌষট্টি'],
-  [9876543210, 'নয় শত সাতআশি কোটি পঁয়ষট্টি লাখ তেতাল্লিশ হাজার দুই শত দশ'],
-  [98765432101, 'নয় হাজার আট শত ছিয়াত্তর কোটি চুয়ান্ন লাখ বত্রিশ হাজার এক শত এক'],
-  [987654321012, 'আটানব্বই হাজার সাত শত পঁয়ষট্টি কোটি তেতাল্লিশ লাখ একুশ হাজার বারো'],
-  [9876543210123, 'নয় লাখ সাতআশি হাজার ছয় শত চুয়ান্ন কোটি বত্রিশ লাখ দশ হাজার এক শত তেইশ'],
-  [98765432101234, 'আটানব্বই লাখ ছিয়াত্তর হাজার পাঁচ শত তেতাল্লিশ কোটি একুশ লাখ এক হাজার দুই শত চৌত্রিশ'],
+  [9876543210, 'নয় আরব সাতাশি কোটি পঁয়ষট্টি লাখ তেতাল্লিশ হাজার দুই শত দশ'],
+  [98765432101, 'আটানব্বই আরব ছিয়াত্তর কোটি চুয়ান্ন লাখ বত্রিশ হাজার এক শত এক'],
+  [987654321012, 'নয় খরব সাতাশি আরব পঁয়ষট্টি কোটি তেতাল্লিশ লাখ একুশ হাজার বারো'],
+  [9876543210123, 'আটানব্বই খরব ছিয়াত্তর আরব চুয়ান্ন কোটি বত্রিশ লাখ দশ হাজার এক শত তেইশ'],
+  [98765432101234, 'নয় নীল সাতাশি খরব পঁয়ষট্টি আরব তেতাল্লিশ কোটি একুশ লাখ এক হাজার দুই শত চৌত্রিশ'],
 ];
 
 describe('Test Integers with options = {}', () => {
@@ -203,5 +212,54 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
         ignoreDecimal: true,
       }),
     ).toBe(expected);
+  });
+});
+const testOrdinals: [number, string][] = [
+  [0, 'শূন্যতম'],
+  [1, 'প্রথম'],
+  [2, 'দ্বিতীয়'],
+  [3, 'তৃতীয়'],
+  [4, 'চতুর্থ'],
+  [5, 'পঞ্চম'],
+  [6, 'ষষ্ঠ'],
+  [7, 'সপ্তম'],
+  [8, 'অষ্টম'],
+  [9, 'নবম'],
+  [10, 'দশম'],
+  [11, 'এগারোতম'],
+  [12, 'বারোতম'],
+  [15, 'পনেরোতম'],
+  [20, 'বিশতম'],
+  [21, 'একুশতম'],
+  [23, 'তেইশতম'],
+  [25, 'পঁচিশতম'],
+  [30, 'ত্রিশতম'],
+  [50, 'পঞ্চাশতম'],
+  [99, 'নিরানব্বইতম'],
+  [100, 'শততম'],
+  [101, 'এক শত প্রথম'],
+  [111, 'এক শত এগারোতম'],
+  [123, 'এক শত তেইশতম'],
+  [500, 'পাঁচ শততম'],
+  [1000, 'এক সহস্রতম'],
+  [1001, 'এক হাজার প্রথম'],
+  [1234, 'এক হাজার দুই শত চৌত্রিশতম'],
+  [100000, 'এক লক্ষতম'],
+  [10000000, 'এক কোটিতম'],
+];
+
+describe('Test Ordinals', () => {
+  test.each(testOrdinals)('toOrdinal(%d) => %s', (input, expected) => {
+    expect(toWords.toOrdinal(input)).toBe(expected);
+  });
+});
+
+describe('Test Ordinal Error Cases', () => {
+  test('should throw error for negative numbers', () => {
+    expect(() => toWords.toOrdinal(-1)).toThrow(/must be non-negative/);
+  });
+
+  test('should throw error for decimal numbers', () => {
+    expect(() => toWords.toOrdinal(1.5)).toThrow(/must be non-negative integers/);
   });
 });

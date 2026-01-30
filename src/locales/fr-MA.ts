@@ -1,4 +1,5 @@
-import { LocaleConfig, LocaleInterface } from '../types';
+import { LocaleConfig, LocaleInterface, ToWordsOptions } from '../types.js';
+import { ToWordsCore } from '../ToWordsCore.js';
 
 export default class Locale implements LocaleInterface {
   public config: LocaleConfig = {
@@ -21,6 +22,10 @@ export default class Locale implements LocaleInterface {
       point: 'Virgule',
     },
     numberWordsMapping: [
+      { number: 1000000000000000000000000000n, value: 'Quadrilliard' },
+      { number: 1000000000000000000000000n, value: 'Quadrillion' },
+      { number: 1000000000000000000000n, value: 'Trilliard' },
+      { number: 1000000000000000000n, value: 'Trillion' },
       { number: 1000000000000000, value: 'Billiard' },
       { number: 1000000000000, value: 'Billion' },
       { number: 1000000000, value: 'Milliard' },
@@ -46,7 +51,7 @@ export default class Locale implements LocaleInterface {
       { number: 83, value: 'Quatre-Vingt-Trois' },
       { number: 82, value: 'Quatre-Vingt-Deux' },
       { number: 81, value: 'Quatre-Vingt-Un' },
-      { number: 80, value: 'Quatre-Vingt' },
+      { number: 80, value: ['Quatre-Vingt', 'Quatre-Vingts'] },
       { number: 79, value: 'Soixante-Dix-Neuf' },
       { number: 78, value: 'Soixante-Dix-Huit' },
       { number: 77, value: 'Soixante-Dix-Sept' },
@@ -56,7 +61,7 @@ export default class Locale implements LocaleInterface {
       { number: 73, value: 'Soixante-Treize' },
       { number: 72, value: 'Soixante-Douze' },
       { number: 71, value: 'Soixante Et Onze' },
-      { number: 70, value: 'Soixante-dix' },
+      { number: 70, value: 'Soixante-Dix' },
       { number: 69, value: 'Soixante-Neuf' },
       { number: 68, value: 'Soixante-Huit' },
       { number: 67, value: 'Soixante-Sept' },
@@ -131,5 +136,58 @@ export default class Locale implements LocaleInterface {
     ignoreOneForWords: ['Cent', 'Mille'],
     pluralMark: 's',
     pluralWords: ['Billiard', 'Billion', 'Milliard', 'Million'],
+    pluralWordsOnlyWhenTrailing: ['Cent'],
+    useTrailingForCurrency: true,
+    ordinalWordsMapping: [
+      { number: 1000000000000, value: 'Billionième' },
+      { number: 1000000000, value: 'Milliardième' },
+      { number: 1000000, value: 'Millionième' },
+      { number: 1000, value: 'Millième' },
+      { number: 100, value: 'Centième' },
+      { number: 90, value: 'Quatre-Vingt-Dixième' },
+      { number: 80, value: 'Quatre-Vingtième' },
+      { number: 70, value: 'Soixante-Dixième' },
+      { number: 60, value: 'Soixantième' },
+      { number: 50, value: 'Cinquantième' },
+      { number: 40, value: 'Quarantième' },
+      { number: 30, value: 'Trentième' },
+      { number: 20, value: 'Vingtième' },
+      { number: 19, value: 'Dix-Neuvième' },
+      { number: 18, value: 'Dix-Huitième' },
+      { number: 17, value: 'Dix-Septième' },
+      { number: 16, value: 'Seizième' },
+      { number: 15, value: 'Quinzième' },
+      { number: 14, value: 'Quatorzième' },
+      { number: 13, value: 'Treizième' },
+      { number: 12, value: 'Douzième' },
+      { number: 11, value: 'Onzième' },
+      { number: 10, value: 'Dixième' },
+      { number: 9, value: 'Neuvième' },
+      { number: 8, value: 'Huitième' },
+      { number: 7, value: 'Septième' },
+      { number: 6, value: 'Sixième' },
+      { number: 5, value: 'Cinquième' },
+      { number: 4, value: 'Quatrième' },
+      { number: 3, value: 'Troisième' },
+      { number: 2, value: 'Deuxième' },
+      { number: 1, value: 'Premier' },
+      { number: 0, value: 'Zéroième' },
+    ],
   };
+}
+
+/**
+ * ToWords class pre-configured for this locale.
+ * This is a lightweight version that only bundles this specific locale.
+ *
+ * @example
+ * import { ToWords } from 'to-words/fr-MA';
+ * const tw = new ToWords();
+ * tw.convert(1234);
+ */
+export class ToWords extends ToWordsCore {
+  constructor(options: ToWordsOptions = {}) {
+    super(options);
+    this.setLocale(Locale);
+  }
 }

@@ -1,0 +1,173 @@
+import { LocaleConfig, LocaleInterface, ToWordsOptions } from '../types.js';
+import { ToWordsCore } from '../ToWordsCore.js';
+
+export default class Locale implements LocaleInterface {
+  public config: LocaleConfig = {
+    currency: {
+      name: 'Гривня',
+      plural: 'Гривень',
+      singular: 'Гривня',
+      symbol: '₴',
+      fractionalUnit: {
+        name: 'Копійка',
+        singular: 'Копійка',
+        plural: 'Копійок',
+        symbol: 'коп.',
+      },
+    },
+    texts: {
+      and: 'І',
+      minus: 'Мінус',
+      only: 'Тільки',
+      point: 'Цілих',
+    },
+    numberWordsMapping: [
+      { number: 1000000000000000, value: 'Квадрильйон' },
+      { number: 1000000000000, value: 'Трильйон' },
+      { number: 1000000000, value: 'Мільярд' },
+      { number: 1000000, value: 'Мільйон' },
+      { number: 1000, value: 'Тисяча', singularValue: 'Тисяча' },
+      { number: 900, value: "Дев'ятсот" },
+      { number: 800, value: 'Вісімсот' },
+      { number: 700, value: 'Сімсот' },
+      { number: 600, value: 'Шістсот' },
+      { number: 500, value: "П'ятсот" },
+      { number: 400, value: 'Чотириста' },
+      { number: 300, value: 'Триста' },
+      { number: 200, value: 'Двісті' },
+      { number: 100, value: 'Сто' },
+      { number: 90, value: "Дев'яносто" },
+      { number: 80, value: 'Вісімдесят' },
+      { number: 70, value: 'Сімдесят' },
+      { number: 60, value: 'Шістдесят' },
+      { number: 50, value: "П'ятдесят" },
+      { number: 40, value: 'Сорок' },
+      { number: 30, value: 'Тридцять' },
+      { number: 20, value: 'Двадцять' },
+      { number: 19, value: "Дев'ятнадцять" },
+      { number: 18, value: 'Вісімнадцять' },
+      { number: 17, value: 'Сімнадцять' },
+      { number: 16, value: 'Шістнадцять' },
+      { number: 15, value: "П'ятнадцять" },
+      { number: 14, value: 'Чотирнадцять' },
+      { number: 13, value: 'Тринадцять' },
+      { number: 12, value: 'Дванадцять' },
+      { number: 11, value: 'Одинадцять' },
+      { number: 10, value: 'Десять' },
+      { number: 9, value: "Дев'ять" },
+      { number: 8, value: 'Вісім' },
+      { number: 7, value: 'Сім' },
+      { number: 6, value: 'Шість' },
+      { number: 5, value: "П'ять" },
+      { number: 4, value: 'Чотири' },
+      { number: 3, value: 'Три' },
+      { number: 2, value: 'Два' },
+      { number: 1, value: 'Один' },
+      { number: 0, value: 'Нуль' },
+    ],
+    exactWordsMapping: [{ number: 100, value: 'Сто' }],
+    pluralForms: {
+      1000: {
+        paucal: 'Тисячі',
+        plural: 'Тисяч',
+      },
+      1000000: {
+        paucal: 'Мільйони',
+        plural: 'Мільйонів',
+      },
+      1000000000: {
+        paucal: 'Мільярди',
+        plural: 'Мільярдів',
+      },
+      1000000000000: {
+        paucal: 'Трильйони',
+        plural: 'Трильйонів',
+      },
+      1000000000000000: {
+        paucal: 'Квадрильйони',
+        plural: 'Квадрильйонів',
+      },
+    },
+    paucalConfig: {
+      min: 2,
+      max: 4,
+    },
+    ordinalWordsMapping: [
+      { number: 1000000000000000, value: 'Квадрильйонний' },
+      { number: 1000000000000, value: 'Трильйонний' },
+      { number: 1000000000, value: 'Мільярдний' },
+      { number: 1000000, value: 'Мільйонний' },
+      { number: 1000, value: 'Тисячний' },
+      { number: 900, value: "Дев'ятисотий" },
+      { number: 800, value: 'Восьмисотий' },
+      { number: 700, value: 'Семисотий' },
+      { number: 600, value: 'Шістсотий' },
+      { number: 500, value: "П'ятисотий" },
+      { number: 400, value: 'Чотирьохсотий' },
+      { number: 300, value: 'Трьохсотий' },
+      { number: 200, value: 'Двохсотий' },
+      { number: 100, value: 'Сотий' },
+      { number: 90, value: "Дев'яностий" },
+      { number: 80, value: 'Вісімдесятий' },
+      { number: 70, value: 'Сімдесятий' },
+      { number: 60, value: 'Шістдесятий' },
+      { number: 50, value: "П'ятдесятий" },
+      { number: 40, value: 'Сороковий' },
+      { number: 30, value: 'Тридцятий' },
+      { number: 20, value: 'Двадцятий' },
+      { number: 19, value: "Дев'ятнадцятий" },
+      { number: 18, value: 'Вісімнадцятий' },
+      { number: 17, value: 'Сімнадцятий' },
+      { number: 16, value: 'Шістнадцятий' },
+      { number: 15, value: "П'ятнадцятий" },
+      { number: 14, value: 'Чотирнадцятий' },
+      { number: 13, value: 'Тринадцятий' },
+      { number: 12, value: 'Дванадцятий' },
+      { number: 11, value: 'Одинадцятий' },
+      { number: 10, value: 'Десятий' },
+      { number: 9, value: "Дев'ятий" },
+      { number: 8, value: 'Восьмий' },
+      { number: 7, value: 'Сьомий' },
+      { number: 6, value: 'Шостий' },
+      { number: 5, value: "П'ятий" },
+      { number: 4, value: 'Четвертий' },
+      { number: 3, value: 'Третій' },
+      { number: 2, value: 'Другий' },
+      { number: 1, value: 'Перший' },
+      { number: 0, value: 'Нульовий' },
+    ],
+    ordinalExactWordsMapping: [{ number: 100, value: 'Сотий' }],
+    ignoreOneForWords: [
+      'Сто',
+      'Двісті',
+      'Триста',
+      'Чотириста',
+      "П'ятсот",
+      'Шістсот',
+      'Сімсот',
+      'Вісімсот',
+      "Дев'ятсот",
+      'Тисяча',
+      'Мільйон',
+      'Мільярд',
+      'Трильйон',
+      'Квадрильйон',
+    ],
+  };
+}
+
+/**
+ * ToWords class pre-configured for this locale.
+ * This is a lightweight version that only bundles this specific locale.
+ *
+ * @example
+ * import { ToWords } from 'to-words/uk-UA';
+ * const tw = new ToWords();
+ * tw.convert(1234);
+ */
+export class ToWords extends ToWordsCore {
+  constructor(options: ToWordsOptions = {}) {
+    super(options);
+    this.setLocale(Locale);
+  }
+}

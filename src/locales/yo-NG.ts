@@ -1,0 +1,113 @@
+import { LocaleConfig, LocaleInterface, ToWordsOptions } from '../types.js';
+import { ToWordsCore } from '../ToWordsCore.js';
+
+export default class Locale implements LocaleInterface {
+  public config: LocaleConfig = {
+    currency: {
+      name: 'Naira',
+      plural: 'Naira',
+      singular: 'Naira',
+      symbol: '₦',
+      fractionalUnit: {
+        name: 'Kobo',
+        singular: 'Kobo',
+        plural: 'Kobo',
+        symbol: '',
+      },
+    },
+    texts: {
+      and: 'Ati',
+      minus: 'Òdì',
+      only: 'Nìkan',
+      point: 'Àmì',
+    },
+    numberWordsMapping: [
+      { number: 1000000000000000, value: 'Kuadírílíọ̀nù' },
+      { number: 1000000000000, value: 'Tirílíọ̀nù' },
+      { number: 1000000000, value: 'Bílíọ̀nù' },
+      { number: 1000000, value: 'Mílíọ̀nù' },
+      { number: 1000, value: 'Ẹgbẹ̀rún' },
+      { number: 100, value: 'Ọgọ́rùn' },
+      { number: 90, value: 'Àádọ́rùn' },
+      { number: 80, value: 'Ọgọ́rin' },
+      { number: 70, value: 'Àádọ́rin' },
+      { number: 60, value: 'Ọgọ́ta' },
+      { number: 50, value: 'Àádọ́ta' },
+      { number: 40, value: 'Ogójì' },
+      { number: 30, value: 'Ọgbọ̀n' },
+      { number: 20, value: 'Ogún' },
+      { number: 19, value: 'Mọ́kàndínlógún' },
+      { number: 18, value: 'Méjìdínlógún' },
+      { number: 17, value: 'Mẹ́tàdínlógún' },
+      { number: 16, value: 'Mẹ́rìndínlógún' },
+      { number: 15, value: 'Ẹ̀ẹ́dógún' },
+      { number: 14, value: 'Mẹ́rìnlá' },
+      { number: 13, value: 'Mẹ́tàlá' },
+      { number: 12, value: 'Méjìlá' },
+      { number: 11, value: 'Mọ́kànlá' },
+      { number: 10, value: 'Mẹ́wàá' },
+      { number: 9, value: 'Mẹ́sàn-án' },
+      { number: 8, value: 'Mẹ́jọ' },
+      { number: 7, value: 'Méje' },
+      { number: 6, value: 'Mẹ́fà' },
+      { number: 5, value: 'Márùn-ún' },
+      { number: 4, value: 'Mẹ́rin' },
+      { number: 3, value: 'Mẹ́ta' },
+      { number: 2, value: 'Méjì' },
+      { number: 1, value: 'Ọ̀kan' },
+      { number: 0, value: 'Òdo' },
+    ],
+    ordinalWordsMapping: [
+      { number: 1000000000000000, value: 'Kẹkuadírílíọ̀nù' },
+      { number: 1000000000000, value: 'Kẹtirílíọ̀nù' },
+      { number: 1000000000, value: 'Kẹbílíọ̀nù' },
+      { number: 1000000, value: 'Kẹmílíọ̀nù' },
+      { number: 1000, value: 'Kẹgbẹ̀rún' },
+      { number: 100, value: 'Kẹgọ́rùn' },
+      { number: 90, value: 'Kẹàádọ́rùn' },
+      { number: 80, value: 'Kẹgọ́rin' },
+      { number: 70, value: 'Kẹàádọ́rin' },
+      { number: 60, value: 'Kẹgọ́ta' },
+      { number: 50, value: 'Kẹàádọ́ta' },
+      { number: 40, value: 'Kẹgójì' },
+      { number: 30, value: 'Kẹgbọ̀n' },
+      { number: 20, value: 'Kọgún' },
+      { number: 19, value: 'Kẹ́ọkàndínlógún' },
+      { number: 18, value: 'Kẹ́éjìdínlógún' },
+      { number: 17, value: 'Kẹ́ẹ̀tàdínlógún' },
+      { number: 16, value: 'Kẹ́ẹ̀rìndínlógún' },
+      { number: 15, value: 'Kẹ́ẹ̀dógún' },
+      { number: 14, value: 'Kẹ́ẹ̀rìnlá' },
+      { number: 13, value: 'Kẹ́ẹ̀tàlá' },
+      { number: 12, value: 'Kẹ́éjìlá' },
+      { number: 11, value: 'Kẹ́ọkànlá' },
+      { number: 10, value: 'Kẹ́wàá' },
+      { number: 9, value: 'Kẹ́sàn-án' },
+      { number: 8, value: 'Kẹ́jọ' },
+      { number: 7, value: 'Kẹ́je' },
+      { number: 6, value: 'Kẹ́fà' },
+      { number: 5, value: 'Kẹ́rún-ún' },
+      { number: 4, value: 'Kẹ́rin' },
+      { number: 3, value: 'Kẹ́ta' },
+      { number: 2, value: 'Kẹ́jì' },
+      { number: 1, value: 'Kìíní' },
+      { number: 0, value: 'Òdò' },
+    ],
+  };
+}
+
+/**
+ * ToWords class pre-configured for this locale.
+ * This is a lightweight version that only bundles this specific locale.
+ *
+ * @example
+ * import { ToWords } from 'to-words/yo-NG';
+ * const tw = new ToWords();
+ * tw.convert(1234);
+ */
+export class ToWords extends ToWordsCore {
+  constructor(options: ToWordsOptions = {}) {
+    super(options);
+    this.setLocale(Locale);
+  }
+}

@@ -1,4 +1,5 @@
-import { LocaleConfig, LocaleInterface } from '../types';
+import { LocaleConfig, LocaleInterface, ToWordsOptions } from '../types.js';
+import { ToWordsCore } from '../ToWordsCore.js';
 
 export default class Locale implements LocaleInterface {
   public config: LocaleConfig = {
@@ -129,5 +130,56 @@ export default class Locale implements LocaleInterface {
       { number: 0, value: 'Nul' },
     ],
     exactWordsMapping: [{ number: 100, value: 'Honderd' }],
+    ordinalWordsMapping: [
+      { number: 1000000000000, value: 'Biljoenste' },
+      { number: 1000000000, value: 'Miljardste' },
+      { number: 1000000, value: 'Miljoenste' },
+      { number: 1000, value: 'Duizendste' },
+      { number: 100, value: 'Honderdste' },
+      { number: 90, value: 'Negentigste' },
+      { number: 80, value: 'Tachtigste' },
+      { number: 70, value: 'Zeventigste' },
+      { number: 60, value: 'Zestigste' },
+      { number: 50, value: 'Vijftigste' },
+      { number: 40, value: 'Veertigste' },
+      { number: 30, value: 'Dertigste' },
+      { number: 20, value: 'Twintigste' },
+      { number: 19, value: 'Negentiende' },
+      { number: 18, value: 'Achttiende' },
+      { number: 17, value: 'Zeventiende' },
+      { number: 16, value: 'Zestiende' },
+      { number: 15, value: 'Vijftiende' },
+      { number: 14, value: 'Veertiende' },
+      { number: 13, value: 'Dertiende' },
+      { number: 12, value: 'Twaalfde' },
+      { number: 11, value: 'Elfde' },
+      { number: 10, value: 'Tiende' },
+      { number: 9, value: 'Negende' },
+      { number: 8, value: 'Achtste' },
+      { number: 7, value: 'Zevende' },
+      { number: 6, value: 'Zesde' },
+      { number: 5, value: 'Vijfde' },
+      { number: 4, value: 'Vierde' },
+      { number: 3, value: 'Derde' },
+      { number: 2, value: 'Tweede' },
+      { number: 1, value: 'Eerste' },
+      { number: 0, value: 'Nulde' },
+    ],
   };
+}
+
+/**
+ * ToWords class pre-configured for this locale.
+ * This is a lightweight version that only bundles this specific locale.
+ *
+ * @example
+ * import { ToWords } from 'to-words/nl-SR';
+ * const tw = new ToWords();
+ * tw.convert(1234);
+ */
+export class ToWords extends ToWordsCore {
+  constructor(options: ToWordsOptions = {}) {
+    super(options);
+    this.setLocale(Locale);
+  }
 }

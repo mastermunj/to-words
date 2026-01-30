@@ -1,4 +1,5 @@
-import { LocaleConfig, LocaleInterface } from '../types';
+import { LocaleConfig, LocaleInterface, ToWordsOptions } from '../types.js';
+import { ToWordsCore } from '../ToWordsCore.js';
 
 export default class Locale implements LocaleInterface {
   public config: LocaleConfig = {
@@ -46,7 +47,7 @@ export default class Locale implements LocaleInterface {
       { number: 17, value: 'septiņpadsmit' },
       { number: 16, value: 'sešpadsmit' },
       { number: 15, value: 'piecpadsmit' },
-      { number: 14, value: 'četrdpadsmit' },
+      { number: 14, value: 'četrpadsmit' },
       { number: 13, value: 'trīspadsmit' },
       { number: 12, value: 'divpadsmit' },
       { number: 11, value: 'vienpadsmit' },
@@ -61,6 +62,40 @@ export default class Locale implements LocaleInterface {
       { number: 2, value: 'divi' },
       { number: 1, value: 'viens' },
       { number: 0, value: 'nulle' },
+    ],
+    ordinalWordsMapping: [
+      { number: 1000000000, value: 'miljardais' },
+      { number: 1000000, value: 'miljonais' },
+      { number: 1000, value: 'tūkstošais' },
+      { number: 100, value: 'simtais' },
+      { number: 90, value: 'deviņdesmitais' },
+      { number: 80, value: 'astoņdesmitais' },
+      { number: 70, value: 'septiņdesmitais' },
+      { number: 60, value: 'sešdesmitais' },
+      { number: 50, value: 'piecdesmitais' },
+      { number: 40, value: 'četrdesmitais' },
+      { number: 30, value: 'trīsdesmitais' },
+      { number: 20, value: 'divdesmitais' },
+      { number: 19, value: 'deviņpadsmitais' },
+      { number: 18, value: 'astoņpadsmitais' },
+      { number: 17, value: 'septiņpadsmitais' },
+      { number: 16, value: 'sešpadsmitais' },
+      { number: 15, value: 'piecpadsmitais' },
+      { number: 14, value: 'četrpadsmitais' },
+      { number: 13, value: 'trīspadsmitais' },
+      { number: 12, value: 'divpadsmitais' },
+      { number: 11, value: 'vienpadsmitais' },
+      { number: 10, value: 'desmitais' },
+      { number: 9, value: 'devītais' },
+      { number: 8, value: 'astotais' },
+      { number: 7, value: 'septītais' },
+      { number: 6, value: 'sestais' },
+      { number: 5, value: 'piektais' },
+      { number: 4, value: 'ceturtais' },
+      { number: 3, value: 'trešais' },
+      { number: 2, value: 'otrais' },
+      { number: 1, value: 'pirmais' },
+      { number: 0, value: 'nulltais' },
     ],
     ignoreOneForWords: [
       'simtu',
@@ -77,4 +112,20 @@ export default class Locale implements LocaleInterface {
     pluralMark: 'i',
     pluralWords: ['kvadriljon', 'triljon', 'miljard'],
   };
+}
+
+/**
+ * ToWords class pre-configured for this locale.
+ * This is a lightweight version that only bundles this specific locale.
+ *
+ * @example
+ * import { ToWords } from 'to-words/lv-LV';
+ * const tw = new ToWords();
+ * tw.convert(1234);
+ */
+export class ToWords extends ToWordsCore {
+  constructor(options: ToWordsOptions = {}) {
+    super(options);
+    this.setLocale(Locale);
+  }
 }

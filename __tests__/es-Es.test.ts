@@ -1,7 +1,8 @@
 import { describe, expect, test } from 'vitest';
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
-import esES from '../src/locales/es-ES';
+import esES from '../src/locales/es-ES.js';
+import { ToWords as LocaleToWords } from '../src/locales/es-ES.js';
 
 const localeCode = 'es-ES';
 const toWords = new ToWords({
@@ -11,6 +12,14 @@ const toWords = new ToWords({
 describe('Test Locale', () => {
   test(`Locale Class: ${localeCode}`, () => {
     expect(toWords.getLocaleClass()).toBe(esES);
+  });
+
+  describe('Test Locale ToWords', () => {
+    test('ToWords from locale file works correctly', () => {
+      const tw = new LocaleToWords();
+      expect(tw.convert(1)).toBeDefined();
+      expect(typeof tw.convert(123)).toBe('string');
+    });
   });
 
   const wrongLocaleCode = localeCode + '-wrong';
@@ -176,16 +185,16 @@ describe('Test Floats with options = {}', () => {
 
 const testFloatsWithCurrency: [number, string][] = [
   [0.0, `Cero Euros`],
-  [0.04, `Cero Euros Y Cuatro Centimos`],
-  [0.0468, `Cero Euros Y Cinco Centimos`],
-  [0.4, `Cero Euros Y Cuarenta Centimos`],
-  [0.63, `Cero Euros Y Sesenta Y Tres Centimos`],
-  [0.973, `Cero Euros Y Noventa Y Siete Centimos`],
+  [0.04, `Cero Euros Y Cuatro Céntimos`],
+  [0.0468, `Cero Euros Y Cinco Céntimos`],
+  [0.4, `Cero Euros Y Cuarenta Céntimos`],
+  [0.63, `Cero Euros Y Sesenta Y Tres Céntimos`],
+  [0.973, `Cero Euros Y Noventa Y Siete Céntimos`],
   [0.999, `Un Euro`],
-  [37.06, `Treinta Y Siete Euros Y Seis Centimos`],
-  [37.068, `Treinta Y Siete Euros Y Siete Centimos`],
-  [37.68, `Treinta Y Siete Euros Y Sesenta Y Ocho Centimos`],
-  [37.683, `Treinta Y Siete Euros Y Sesenta Y Ocho Centimos`],
+  [37.06, `Treinta Y Siete Euros Y Seis Céntimos`],
+  [37.068, `Treinta Y Siete Euros Y Siete Céntimos`],
+  [37.68, `Treinta Y Siete Euros Y Sesenta Y Ocho Céntimos`],
+  [37.683, `Treinta Y Siete Euros Y Sesenta Y Ocho Céntimos`],
 ];
 
 describe('Test Floats with options = { currency: true }', () => {
@@ -223,7 +232,7 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
     if (row[0] === 0.999) {
       row[1] = `Cero Euros`;
     } else {
-      row[1] = (row[1] as string).replace(new RegExp(` Euros Y [\\w ]+ Centimos`), ' Euros');
+      row[1] = (row[1] as string).replace(new RegExp(` Euros Y [\\w ]+ Céntimos`), ' Euros');
     }
   });
 
@@ -244,7 +253,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
     if (row[0] > 0 && row[0] < 1) {
       row[1] = '';
     }
-    row[1] = (row[1] as string).replace(new RegExp(` Euros Y [\\w ]+ Centimos`), ' Euros');
+    row[1] = (row[1] as string).replace(new RegExp(` Euros Y [\\w ]+ Céntimos`), ' Euros');
   });
 
   test.concurrent.each(testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals)(
@@ -291,5 +300,100 @@ const dollarCurrencyOptions = {
 describe('Test Floats with options = { currency: true, currencyOptions }', () => {
   test.concurrent.each(testFloatsWithDollarCurrency)('convert %d => %s', (input, expected) => {
     expect(toWords.convert(input as number, { currency: true, currencyOptions: dollarCurrencyOptions })).toBe(expected);
+  });
+});
+
+// Ordinal Tests
+const testOrdinals: [number, string][] = [
+  // Numbers 1-20
+  [1, 'Primero'],
+  [2, 'Segundo'],
+  [3, 'Tercero'],
+  [4, 'Cuarto'],
+  [5, 'Quinto'],
+  [6, 'Sexto'],
+  [7, 'Séptimo'],
+  [8, 'Octavo'],
+  [9, 'Noveno'],
+  [10, 'Décimo'],
+  [11, 'Decimoprimero'],
+  [12, 'Decimosegundo'],
+  [13, 'Decimotercero'],
+  [14, 'Decimocuarto'],
+  [15, 'Decimoquinto'],
+  [16, 'Decimosexto'],
+  [17, 'Decimoséptimo'],
+  [18, 'Decimoctavo'],
+  [19, 'Decimonoveno'],
+  [20, 'Vigésimo'],
+  // Composite numbers (21-29)
+  [21, 'Veintiuno'],
+  [22, 'Veintidós'],
+  [23, 'Veintitrés'],
+  [24, 'Veinticuatro'],
+  [25, 'Veinticinco'],
+  // Tens
+  [30, 'Trigésimo'],
+  [40, 'Cuadragésimo'],
+  [50, 'Quincuagésimo'],
+  [60, 'Sexagésimo'],
+  [70, 'Septuagésimo'],
+  [80, 'Octogésimo'],
+  [90, 'Nonagésimo'],
+  // Round numbers
+  [100, 'Centésimo'],
+  [200, 'Ducentésimo'],
+  [300, 'Tricentésimo'],
+  [400, 'Cuadringentésimo'],
+  [500, 'Quingentésimo'],
+  [600, 'Sexcentésimo'],
+  [700, 'Septingentésimo'],
+  [800, 'Octingentésimo'],
+  [900, 'Noningentésimo'],
+  [1000, 'Milésimo'],
+  [1000000, 'Un Millonésimo'],
+  // Complex numbers
+  [101, 'Ciento Primero'],
+  [110, 'Ciento Décimo'],
+  [111, 'Ciento Decimoprimero'],
+  [123, 'Ciento Veintitrés'],
+  [150, 'Ciento Quincuagésimo'],
+  [199, 'Ciento Noventa Y Noveno'],
+  [256, 'Doscientos Cincuenta Y Sexto'],
+  [1001, 'Mil Primero'],
+  [1010, 'Mil Décimo'],
+  [1100, 'Mil Centésimo'],
+  [1234, 'Mil Doscientos Treinta Y Cuarto'],
+  [2000, 'Dos Milésimo'],
+  [10000, 'Diez Milésimo'],
+  [100000, 'Cien Milésimo'],
+  [1000001, 'Un Millon Primero'],
+];
+
+describe('Test Ordinals', () => {
+  test.concurrent.each(testOrdinals)('toOrdinal %d => %s', (input, expected) => {
+    expect(toWords.toOrdinal(input as number)).toBe(expected);
+  });
+});
+
+describe('Test Ordinal Error Cases', () => {
+  test('should throw error for negative numbers', () => {
+    expect(() => toWords.toOrdinal(-1)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+
+  test('should throw error for negative large numbers', () => {
+    expect(() => toWords.toOrdinal(-100)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+
+  test('should throw error for decimal numbers', () => {
+    expect(() => toWords.toOrdinal(1.5)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+
+  test('should throw error for decimal numbers with small fraction', () => {
+    expect(() => toWords.toOrdinal(10.01)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+
+  test('should throw error for negative decimal numbers', () => {
+    expect(() => toWords.toOrdinal(-3.14)).toThrow('Ordinal numbers must be non-negative integers');
   });
 });

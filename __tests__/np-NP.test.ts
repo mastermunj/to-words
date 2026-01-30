@@ -1,7 +1,8 @@
 import { describe, expect, test } from 'vitest';
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
-import npNp from '../src/locales/np-NP';
+import npNp from '../src/locales/np-NP.js';
+import { ToWords as LocaleToWords } from '../src/locales/np-NP.js';
 
 const localeCode = 'np-NP';
 const toWords = new ToWords({
@@ -11,6 +12,14 @@ const toWords = new ToWords({
 describe('Test Locale', () => {
   test(`Locale Class: ${localeCode}`, () => {
     expect(toWords.getLocaleClass()).toBe(npNp);
+  });
+
+  describe('Test Locale ToWords', () => {
+    test('ToWords from locale file works correctly', () => {
+      const tw = new LocaleToWords();
+      expect(tw.convert(1)).toBeDefined();
+      expect(typeof tw.convert(123)).toBe('string');
+    });
   });
 
   const wrongLocaleCode = localeCode + '-wrong';
@@ -38,7 +47,7 @@ const testIntegers = [
   [98765432101, 'अन्ठानब्बे अर्ब छयहत्तर करोड चवन्न लाख बत्तीस हजार एक सय एक'],
   [9_87_65_43_21_012, 'नौ खर्ब सतासी अर्ब पैंसट्ठी करोड त्रिचालीस लाख एक्काइस हजार बाह्र'],
   [98_76_54_32_10_123, 'अन्ठानब्बे खर्ब छयहत्तर अर्ब चवन्न करोड बत्तीस लाख दश हजार एक सय तेइस'],
-  [9_87_65_43_21_01_234, 'नौ सय सतासी खर्ब पैंसट्ठी अर्ब त्रिचालीस करोड एक्काइस लाख एक हजार दुई सय चौँतीस'],
+  [9_87_65_43_21_01_234, 'नौ नील सतासी खर्ब पैंसट्ठी अर्ब त्रिचालीस करोड एक्काइस लाख एक हजार दुई सय चौँतीस'],
 ];
 
 describe('Test Integers with options = {}', () => {
@@ -221,4 +230,43 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
       ).toBe(expected);
     },
   );
+});
+
+const testOrdinals: [number, string][] = [
+  [1, 'पहिलो'],
+  [2, 'दोस्रो'],
+  [3, 'तेस्रो'],
+  [4, 'चौथो'],
+  [5, 'पाँचौं'],
+  [10, 'दशौं'],
+  [11, 'एघारौं'],
+  [15, 'पन्ध्रौं'],
+  [20, 'बीसौं'],
+  [21, 'एक्काइसौं'],
+  [22, 'बाइसौं'],
+  [25, 'पच्चिसौं'],
+  [30, 'तीसौं'],
+  [35, 'पैंतीसौं'],
+  [40, 'चालीसौं'],
+  [45, 'पैंतालीसौं'],
+  [50, 'पचासौं'],
+  [55, 'पचपन्नौं'],
+  [60, 'साठीौं'],
+  [65, 'पैंसट्ठीौं'],
+  [70, 'सत्तरीौं'],
+  [75, 'पचहत्तरौं'],
+  [80, 'अस्सीौं'],
+  [85, 'पचासीौं'],
+  [90, 'नब्बेौं'],
+  [95, 'पन्चानब्बेौं'],
+  [99, 'उनान्सयौं'],
+  [100, 'सयौं'],
+  [123, 'एक सय तेइसौं'],
+  [1000, 'एक हजारौं'],
+];
+
+describe('Test Ordinals', () => {
+  test.concurrent.each(testOrdinals)('toOrdinal %d => %s', (input, expected) => {
+    expect(toWords.toOrdinal(input as number)).toBe(expected);
+  });
 });

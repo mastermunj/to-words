@@ -1,7 +1,8 @@
 import { describe, expect, test } from 'vitest';
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
-import koKr from '../src/locales/ko-KR';
+import koKr from '../src/locales/ko-KR.js';
+import { ToWords as LocaleToWords } from '../src/locales/ko-KR.js';
 
 const localeCode = 'ko-KR';
 const toWords = new ToWords({
@@ -11,6 +12,14 @@ const toWords = new ToWords({
 describe('Test Locale', () => {
   test(`Locale Class: ${localeCode}`, () => {
     expect(toWords.getLocaleClass()).toBe(koKr);
+  });
+
+  describe('Test Locale ToWords', () => {
+    test('ToWords from locale file works correctly', () => {
+      const tw = new LocaleToWords();
+      expect(tw.convert(1)).toBeDefined();
+      expect(typeof tw.convert(123)).toBe('string');
+    });
   });
 
   const wrongLocaleCode = localeCode + '-wrong';
@@ -252,5 +261,37 @@ const euroCurrencyOptions = {
 describe('Test Floats with options = { currency: true, currencyOptions }', () => {
   test.concurrent.each(testFloatsWithEuroCurrency)('convert %d => %s', (input, expected) => {
     expect(toWords.convert(input as number, { currency: true, currencyOptions: euroCurrencyOptions })).toBe(expected);
+  });
+});
+
+const testOrdinals: [number, string][] = [
+  [0, '영번째'],
+  [1, '첫째'],
+  [2, '둘째'],
+  [3, '셋째'],
+  [4, '넷째'],
+  [5, '다섯째'],
+  [6, '여섯째'],
+  [7, '일곱째'],
+  [8, '여덟째'],
+  [9, '아홉째'],
+  [10, '열째'],
+  [11, '십일번째'],
+  [12, '십이번째'],
+  [19, '십구번째'],
+  [20, '이십번째'],
+  [21, '이십일번째'],
+  [25, '이십오번째'],
+  [30, '삼십번째'],
+  [99, '구십구번째'],
+  [100, '백번째'],
+  [101, '일백일번째'],
+  [1000, '일천번째'],
+  [10000, '일만번째'],
+];
+
+describe('Test Ordinals', () => {
+  test.concurrent.each(testOrdinals)('toOrdinal %d => %s', (input, expected) => {
+    expect(toWords.toOrdinal(input)).toBe(expected);
   });
 });

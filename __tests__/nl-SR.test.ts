@@ -1,7 +1,8 @@
 import { describe, expect, test } from 'vitest';
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
-import nlSr from '../src/locales/nl-SR';
+import nlSr from '../src/locales/nl-SR.js';
+import { ToWords as LocaleToWords } from '../src/locales/nl-SR.js';
 
 const localeCode = 'nl-SR';
 const toWords = new ToWords({
@@ -11,6 +12,14 @@ const toWords = new ToWords({
 describe('Test Locale', () => {
   test(`Locale Class: ${localeCode}`, () => {
     expect(toWords.getLocaleClass()).toBe(nlSr);
+  });
+
+  describe('Test Locale ToWords', () => {
+    test('ToWords from locale file works correctly', () => {
+      const tw = new LocaleToWords();
+      expect(tw.convert(1)).toBeDefined();
+      expect(typeof tw.convert(123)).toBe('string');
+    });
   });
 
   const wrongLocaleCode = localeCode + '-wrong';
@@ -235,4 +244,90 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
       ).toBe(expected);
     },
   );
+});
+
+const testOrdinals: [number, string][] = [
+  // Numbers 1-20
+  [1, 'Eerste'],
+  [2, 'Tweede'],
+  [3, 'Derde'],
+  [4, 'Vierde'],
+  [5, 'Vijfde'],
+  [6, 'Zesde'],
+  [7, 'Zevende'],
+  [8, 'Achtste'],
+  [9, 'Negende'],
+  [10, 'Tiende'],
+  [11, 'Elfde'],
+  [12, 'Twaalfde'],
+  [13, 'Dertiende'],
+  [14, 'Veertiende'],
+  [15, 'Vijftiende'],
+  [16, 'Zestiende'],
+  [17, 'Zeventiende'],
+  [18, 'Achttiende'],
+  [19, 'Negentiende'],
+  [20, 'Twintigste'],
+  // Composite numbers (21, 22, etc.)
+  [21, 'Eenentwintig'],
+  [22, 'Tweeëntwintig'],
+  [23, 'Drieëntwintig'],
+  [24, 'Vierentwintig'],
+  [25, 'Vijfentwintig'],
+  // Tens
+  [30, 'Dertigste'],
+  [40, 'Veertigste'],
+  [50, 'Vijftigste'],
+  [60, 'Zestigste'],
+  [70, 'Zeventigste'],
+  [80, 'Tachtigste'],
+  [90, 'Negentigste'],
+  // Round numbers (100, 200, 1000, etc.)
+  [100, 'Honderdste'],
+  [200, 'Twee Honderdste'],
+  [300, 'Drie Honderdste'],
+  [1000, 'Een Duizendste'],
+  [2000, 'Twee Duizendste'],
+  [1000000, 'Een Miljoenste'],
+  [2000000, 'Twee Miljoenste'],
+  // Complex numbers
+  [101, 'Een Honderd Eerste'],
+  [102, 'Een Honderd Tweede'],
+  [111, 'Een Honderd Elfde'],
+  [123, 'Een Honderd Drieëntwintig'],
+  [150, 'Een Honderd Vijftigste'],
+  [1001, 'Een Duizend Eerste'],
+  [1234, 'Een Duizend Twee Honderd Vierendertig'],
+  [1500, 'Een Duizend Vijf Honderdste'],
+  [10000, 'Tien Duizendste'],
+  [100000, 'Honderd Duizendste'],
+  [1000001, 'Een Miljoen Eerste'],
+];
+
+describe('Test Ordinals with toOrdinal()', () => {
+  test.concurrent.each(testOrdinals)('toOrdinal(%d) => %s', (input, expected) => {
+    expect(toWords.toOrdinal(input as number)).toBe(expected);
+  });
+});
+
+describe('Test Ordinal Error Cases', () => {
+  test('should throw error for negative numbers', () => {
+    expect(() => toWords.toOrdinal(-1)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+
+  test('should throw error for negative large numbers', () => {
+    expect(() => toWords.toOrdinal(-100)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+
+  test('should throw error for decimal numbers', () => {
+    expect(() => toWords.toOrdinal(1.5)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+
+  test('should throw error for small decimal numbers', () => {
+    expect(() => toWords.toOrdinal(0.5)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+
+  test('should throw error for large decimal numbers', () => {
+    expect(() => toWords.toOrdinal(100.25)).toThrow('Ordinal numbers must be non-negative integers');
+  });
 });

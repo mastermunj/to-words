@@ -1,7 +1,8 @@
 import { describe, expect, test } from 'vitest';
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
-import arMa from '../src/locales/ar-MA';
+import arMa from '../src/locales/ar-MA.js';
+import { ToWords as LocaleToWords } from '../src/locales/ar-MA.js';
 
 const localeCode = 'ar-MA';
 const toWords = new ToWords({
@@ -11,6 +12,14 @@ const toWords = new ToWords({
 describe('Test Locale', () => {
   test(`Locale Class: ${localeCode}`, () => {
     expect(toWords.getLocaleClass()).toBe(arMa);
+  });
+
+  describe('Test Locale ToWords', () => {
+    test('ToWords from locale file works correctly', () => {
+      const tw = new LocaleToWords();
+      expect(tw.convert(1)).toBeDefined();
+      expect(typeof tw.convert(123)).toBe('string');
+    });
   });
 
   const wrongLocaleCode = localeCode + '-wrong';
@@ -241,5 +250,62 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
         ignoreDecimal: true,
       }),
     ).toBe(expected);
+  });
+});
+
+describe('Ordinal Tests', () => {
+  const toWordsOrdinal = new ToWords({
+    localeCode: 'ar-MA',
+  });
+
+  const testOrdinals: [number, string][] = [
+    // Numbers 1-10
+    [1, 'الأول'],
+    [2, 'الثاني'],
+    [3, 'الثالث'],
+    [4, 'الرابع'],
+    [5, 'الخامس'],
+    [6, 'السادس'],
+    [7, 'السابع'],
+    [8, 'الثامن'],
+    [9, 'التاسع'],
+    [10, 'العاشر'],
+    // Numbers 11-20
+    [11, 'الحادي عشر'],
+    [12, 'الثاني عشر'],
+    [13, 'الثالث عشر'],
+    [14, 'الرابع عشر'],
+    [15, 'الخامس عشر'],
+    [16, 'السادس عشر'],
+    [17, 'السابع عشر'],
+    [18, 'الثامن عشر'],
+    [19, 'التاسع عشر'],
+    [20, 'العشرون'],
+    // Composite numbers
+    [21, 'واحد و عشرون'],
+    [25, 'خمسة و عشرون'],
+    [30, 'الثلاثون'],
+    [42, 'اثنان و أربعون'],
+    [50, 'الخمسون'],
+    [99, 'تسعة و تسعون'],
+    // Round numbers
+    [100, 'المائة'],
+    [1000, 'الألف'],
+    [1000000, 'المليون'],
+    // Complex numbers
+    [123, 'مائة و ثلاثة و عشرون'],
+    [1001, 'ألف و الأول'],
+  ];
+
+  test.each(testOrdinals)('Number: %d => %s', (input, expected) => {
+    expect(toWordsOrdinal.toOrdinal(input as number)).toBe(expected);
+  });
+
+  test('should throw error for negative numbers', () => {
+    expect(() => toWordsOrdinal.toOrdinal(-1)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+
+  test('should throw error for decimal numbers', () => {
+    expect(() => toWordsOrdinal.toOrdinal(1.5)).toThrow('Ordinal numbers must be non-negative integers');
   });
 });

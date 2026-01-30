@@ -1,7 +1,8 @@
 import { describe, expect, test } from 'vitest';
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
-import guIn from '../src/locales/gu-IN';
+import guIn from '../src/locales/gu-IN.js';
+import { ToWords as LocaleToWords } from '../src/locales/gu-IN.js';
 
 const localeCode = 'gu-IN';
 const toWords = new ToWords({
@@ -11,6 +12,14 @@ const toWords = new ToWords({
 describe('Test Locale', () => {
   test(`Locale Class: ${localeCode}`, () => {
     expect(toWords.getLocaleClass()).toBe(guIn);
+  });
+
+  describe('Test Locale ToWords', () => {
+    test('ToWords from locale file works correctly', () => {
+      const tw = new LocaleToWords();
+      expect(tw.convert(1)).toBeDefined();
+      expect(typeof tw.convert(123)).toBe('string');
+    });
   });
 
   const wrongLocaleCode = localeCode + '-wrong';
@@ -32,11 +41,11 @@ const testIntegers = [
   [2741034, 'સત્તાવીસ લાખ એકતાલીસ હજાર ચોત્રીસ'],
   [86429753, 'આઠ કરોડ ચોસઠ લાખ ઓગણત્રીસ હજાર સાત સો ત્રેપન'],
   [975310864, 'સત્તાણું કરોડ ત્રેપન લાખ દસ હજાર આઠ સો ચોસઠ'],
-  [9876543210, 'નવ સો સિત્યાસી કરોડ પાંસઠ લાખ ત્રેતાલીસ હજાર બે સો દસ'],
-  [98765432101, 'નવ હજાર આઠ સો છોતેર કરોડ ચોપન લાખ બત્રીસ હજાર એક સો એક'],
-  [987654321012, 'અઠ્ઠાણું હજાર સાત સો પાંસઠ કરોડ ત્રેતાલીસ લાખ એકવીસ હજાર બાર'],
-  [9876543210123, 'નવ લાખ સિત્યાસી હજાર છ સો ચોપન કરોડ બત્રીસ લાખ દસ હજાર એક સો તેવીસ'],
-  [98765432101234, 'અઠ્ઠાણું લાખ છોતેર હજાર પાંચ સો ત્રેતાલીસ કરોડ એકવીસ લાખ એક હજાર બે સો ચોત્રીસ'],
+  [9876543210, 'નવ અબજ સિત્યાસી કરોડ પાંસઠ લાખ ત્રેતાલીસ હજાર બે સો દસ'],
+  [98765432101, 'અઠ્ઠાણું અબજ છોતેર કરોડ ચોપન લાખ બત્રીસ હજાર એક સો એક'],
+  [987654321012, 'નવ ખર્વ સિત્યાસી અબજ પાંસઠ કરોડ ત્રેતાલીસ લાખ એકવીસ હજાર બાર'],
+  [9876543210123, 'અઠ્ઠાણું ખર્વ છોતેર અબજ ચોપન કરોડ બત્રીસ લાખ દસ હજાર એક સો તેવીસ'],
+  [98765432101234, 'નવ નીલ સિત્યાસી ખર્વ પાંસઠ અબજ ત્રેતાલીસ કરોડ એકવીસ લાખ એક હજાર બે સો ચોત્રીસ'],
 ];
 
 describe('Test Integers with options = {}', () => {
@@ -199,5 +208,64 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
         ignoreDecimal: true,
       }),
     ).toBe(expected);
+  });
+});
+
+const testOrdinals: [number, string][] = [
+  [0, 'શૂન્યમું'],
+  [1, 'પહેલું'],
+  [2, 'બીજું'],
+  [3, 'ત્રીજું'],
+  [4, 'ચોથું'],
+  [5, 'પાંચમું'],
+  [6, 'છઠ્ઠું'],
+  [7, 'સાતમું'],
+  [8, 'આઠમું'],
+  [9, 'નવમું'],
+  [10, 'દસમું'],
+  [11, 'અગિયારમું'],
+  [12, 'બારમું'],
+  [15, 'પંદરમું'],
+  [20, 'વીસમું'],
+  [21, 'એકવીસમું'],
+  [22, 'બાવીસમું'],
+  [23, 'તેવીસમું'],
+  [25, 'પચ્ચીસમું'],
+  [30, 'ત્રીસમું'],
+  [40, 'ચાલીસમું'],
+  [50, 'પચાસમું'],
+  [60, 'સાઈઠમું'],
+  [70, 'સિત્તેરમું'],
+  [80, 'એંસીમું'],
+  [90, 'નેવુંમું'],
+  [99, 'નવ્વાણુંમું'],
+  [100, 'સોમું'],
+  [101, 'એક સો પહેલું'],
+  [111, 'એક સો અગિયારમું'],
+  [123, 'એક સો તેવીસમું'],
+  [200, 'બે સોમું'],
+  [500, 'પાંચ સોમું'],
+  [1000, 'એક હજારમું'],
+  [1001, 'એક હજાર પહેલું'],
+  [1234, 'એક હજાર બે સો ચોત્રીસમું'],
+  [10000, 'દસ હજારમું'],
+  [100000, 'એક લાખમું'],
+  [1000000, 'દસ લાખમું'],
+  [10000000, 'એક કરોડમું'],
+];
+
+describe('Test Ordinals', () => {
+  test.each(testOrdinals)('toOrdinal(%d) => %s', (input, expected) => {
+    expect(toWords.toOrdinal(input)).toBe(expected);
+  });
+});
+
+describe('Test Ordinal Error Cases', () => {
+  test('should throw error for negative numbers', () => {
+    expect(() => toWords.toOrdinal(-1)).toThrow(/must be non-negative/);
+  });
+
+  test('should throw error for decimal numbers', () => {
+    expect(() => toWords.toOrdinal(1.5)).toThrow(/must be non-negative integers/);
   });
 });

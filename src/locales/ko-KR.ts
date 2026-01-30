@@ -1,4 +1,5 @@
-import { LocaleConfig, LocaleInterface } from '../types';
+import { LocaleConfig, LocaleInterface, ToWordsOptions } from '../types.js';
+import { ToWordsCore } from '../ToWordsCore.js';
 
 export default class Locale implements LocaleInterface {
   public config: LocaleConfig = {
@@ -18,8 +19,26 @@ export default class Locale implements LocaleInterface {
       only: '',
       point: '점',
     },
+    ordinalSuffix: '번째',
     trim: true,
+    ordinalExactWordsMapping: [
+      { number: 10, value: '열째' },
+      { number: 9, value: '아홉째' },
+      { number: 8, value: '여덟째' },
+      { number: 7, value: '일곱째' },
+      { number: 6, value: '여섯째' },
+      { number: 5, value: '다섯째' },
+      { number: 4, value: '넷째' },
+      { number: 3, value: '셋째' },
+      { number: 2, value: '둘째' },
+      { number: 1, value: '첫째' },
+    ],
     numberWordsMapping: [
+      { number: 100000000000000000000n, value: '해' },
+      { number: 10000000000000000000n, value: '천경' },
+      { number: 1000000000000000000n, value: '백경' },
+      { number: 100000000000000000n, value: '십경' },
+      { number: 10000000000000000n, value: '경' },
       { number: 1000000000000, value: '조' },
       { number: 100000000, value: '억' },
       { number: 10000, value: '만' },
@@ -55,4 +74,20 @@ export default class Locale implements LocaleInterface {
       { number: 0, value: '영' },
     ],
   };
+}
+
+/**
+ * ToWords class pre-configured for this locale.
+ * This is a lightweight version that only bundles this specific locale.
+ *
+ * @example
+ * import { ToWords } from 'to-words/ko-KR';
+ * const tw = new ToWords();
+ * tw.convert(1234);
+ */
+export class ToWords extends ToWordsCore {
+  constructor(options: ToWordsOptions = {}) {
+    super(options);
+    this.setLocale(Locale);
+  }
 }

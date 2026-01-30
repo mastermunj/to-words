@@ -1,15 +1,16 @@
-import { LocaleConfig, LocaleInterface } from '../types';
+import { LocaleConfig, LocaleInterface, ToWordsOptions } from '../types.js';
+import { ToWordsCore } from '../ToWordsCore.js';
 export default class Locale implements LocaleInterface {
   public config: LocaleConfig = {
     currency: {
-      name: 'Bolivar',
-      plural: 'Bolivares',
-      singular: 'Bolivar',
-      symbol: '',
+      name: 'Bolívar',
+      plural: 'Bolívares',
+      singular: 'Bolívar',
+      symbol: 'Bs.',
       fractionalUnit: {
-        name: 'Centimo',
-        plural: 'Centimos',
-        singular: 'Centimo',
+        name: 'Céntimo',
+        plural: 'Céntimos',
+        singular: 'Céntimo',
         symbol: '',
       },
     },
@@ -43,17 +44,17 @@ export default class Locale implements LocaleInterface {
       { number: 29, value: 'Veintinueve' },
       { number: 28, value: 'Veintiocho' },
       { number: 27, value: 'Veintisiete' },
-      { number: 26, value: 'Veintiseis' },
+      { number: 26, value: 'Veintiséis' },
       { number: 25, value: 'Veinticinco' },
       { number: 24, value: 'Veinticuatro' },
       { number: 23, value: 'Veintitrés' },
-      { number: 22, value: 'Veintidos' },
+      { number: 22, value: 'Veintidós' },
       { number: 21, value: 'Veintiuno' },
       { number: 20, value: 'Veinte' },
       { number: 19, value: 'Diecinueve' },
       { number: 18, value: 'Dieciocho' },
-      { number: 17, value: 'Dieciciete' },
-      { number: 16, value: 'Dieciseis' },
+      { number: 17, value: 'Diecisiete' },
+      { number: 16, value: 'Dieciséis' },
       { number: 15, value: 'Quince' },
       { number: 14, value: 'Catorce' },
       { number: 13, value: 'Trece' },
@@ -97,5 +98,63 @@ export default class Locale implements LocaleInterface {
       { number: 30, value: 'Treinta' },
       { number: 1, value: ['Un', 'Uno'] },
     ],
+    ordinalWordsMapping: [
+      { number: 1000000000000, value: 'Billonésimo' },
+      { number: 1000000, value: 'Millonésimo' },
+      { number: 1000, value: 'Milésimo' },
+      { number: 900, value: 'Noningentésimo' },
+      { number: 800, value: 'Octingentésimo' },
+      { number: 700, value: 'Septingentésimo' },
+      { number: 600, value: 'Sexcentésimo' },
+      { number: 500, value: 'Quingentésimo' },
+      { number: 400, value: 'Cuadringentésimo' },
+      { number: 300, value: 'Tricentésimo' },
+      { number: 200, value: 'Ducentésimo' },
+      { number: 100, value: 'Centésimo' },
+      { number: 90, value: 'Nonagésimo' },
+      { number: 80, value: 'Octogésimo' },
+      { number: 70, value: 'Septuagésimo' },
+      { number: 60, value: 'Sexagésimo' },
+      { number: 50, value: 'Quincuagésimo' },
+      { number: 40, value: 'Cuadragésimo' },
+      { number: 30, value: 'Trigésimo' },
+      { number: 20, value: 'Vigésimo' },
+      { number: 19, value: 'Decimonoveno' },
+      { number: 18, value: 'Decimoctavo' },
+      { number: 17, value: 'Decimoséptimo' },
+      { number: 16, value: 'Decimosexto' },
+      { number: 15, value: 'Decimoquinto' },
+      { number: 14, value: 'Decimocuarto' },
+      { number: 13, value: 'Decimotercero' },
+      { number: 12, value: 'Decimosegundo' },
+      { number: 11, value: 'Decimoprimero' },
+      { number: 10, value: 'Décimo' },
+      { number: 9, value: 'Noveno' },
+      { number: 8, value: 'Octavo' },
+      { number: 7, value: 'Séptimo' },
+      { number: 6, value: 'Sexto' },
+      { number: 5, value: 'Quinto' },
+      { number: 4, value: 'Cuarto' },
+      { number: 3, value: 'Tercero' },
+      { number: 2, value: 'Segundo' },
+      { number: 1, value: 'Primero' },
+      { number: 0, value: 'Cero' },
+    ],
   };
+}
+
+/**
+ * ToWords class pre-configured for this locale.
+ * This is a lightweight version that only bundles this specific locale.
+ *
+ * @example
+ * import { ToWords } from 'to-words/es-VE';
+ * const tw = new ToWords();
+ * tw.convert(1234);
+ */
+export class ToWords extends ToWordsCore {
+  constructor(options: ToWordsOptions = {}) {
+    super(options);
+    this.setLocale(Locale);
+  }
 }

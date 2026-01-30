@@ -1,7 +1,8 @@
 import { describe, expect, test } from 'vitest';
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
-import urPk from '../src/locales/ur-PK';
+import urPk from '../src/locales/ur-PK.js';
+import { ToWords as LocaleToWords } from '../src/locales/ur-PK.js';
 
 const localeCode = 'ur-PK';
 const toWords = new ToWords({ localeCode });
@@ -9,6 +10,14 @@ const toWords = new ToWords({ localeCode });
 describe('Test Locale', () => {
   test(`Locale Class: ${localeCode}`, () => {
     expect(toWords.getLocaleClass()).toBe(urPk);
+  });
+
+  describe('Test Locale ToWords', () => {
+    test('ToWords from locale file works correctly', () => {
+      const tw = new LocaleToWords();
+      expect(tw.convert(1)).toBeDefined();
+      expect(typeof tw.convert(123)).toBe('string');
+    });
   });
 
   const wrongLocaleCode = localeCode + '-wrong';
@@ -206,4 +215,50 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
       ).toBe(expected);
     },
   );
+});
+
+const testOrdinals: [number, string][] = [
+  [1, 'پہلا'],
+  [2, 'دوسرا'],
+  [3, 'تیسرا'],
+  [4, 'چوتھا'],
+  [5, 'پانچواں'],
+  [6, 'چھٹا'],
+  [7, 'ساتواں'],
+  [8, 'آٹھواں'],
+  [9, 'نواں'],
+  [10, 'دسواں'],
+  [11, 'گیارہواں'],
+  [12, 'بارہواں'],
+  [13, 'تیرہواں'],
+  [14, 'چودہواں'],
+  [15, 'پندرہواں'],
+  [16, 'سولہواں'],
+  [17, 'سترہواں'],
+  [18, 'اٹھارہواں'],
+  [19, 'انیسواں'],
+  [20, 'بیسواں'],
+  [21, 'اکیسواں'],
+  [22, 'بائیسواں'],
+  [23, 'تئیسواں'],
+  [24, 'چوبیسواں'],
+  [25, 'پچیسواں'],
+  [30, 'تیسواں'],
+  [40, 'چالیسواں'],
+  [50, 'پچاسواں'],
+  [63, 'تریسٹھواں'],
+  [75, 'پچھترواں'],
+  [88, 'اٹھاسیواں'],
+  [99, 'نناویواں'],
+  [100, 'سَوواں'],
+  [123, 'ایک سو تئیسواں'],
+  [1000, 'ایک ہزارواں'],
+  [100000, 'ایک لاکھواں'],
+  [10000000, 'ایک کروڑواں'],
+];
+
+describe('Test Ordinals', () => {
+  test.concurrent.each(testOrdinals)('toOrdinal %d => %s', (input, expected) => {
+    expect(toWords.toOrdinal(input as number)).toBe(expected);
+  });
 });

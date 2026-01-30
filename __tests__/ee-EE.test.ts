@@ -1,7 +1,8 @@
 import { describe, expect, test } from 'vitest';
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
-import eeEe from '../src/locales/ee-EE';
+import eeEe from '../src/locales/ee-EE.js';
+import { ToWords as LocaleToWords } from '../src/locales/ee-EE.js';
 
 const localeCode = 'ee-EE';
 const toWords = new ToWords({
@@ -11,6 +12,14 @@ const toWords = new ToWords({
 describe('Test Locale', () => {
   test(`Locale Class: ${localeCode}`, () => {
     expect(toWords.getLocaleClass()).toBe(eeEe);
+  });
+
+  describe('Test Locale ToWords', () => {
+    test('ToWords from locale file works correctly', () => {
+      const tw = new LocaleToWords();
+      expect(tw.convert(1)).toBeDefined();
+      expect(typeof tw.convert(123)).toBe('string');
+    });
   });
 
   const wrongLocaleCode = localeCode + '-wrong';
@@ -249,5 +258,46 @@ const dollarCurrencyOption = {
 describe('Test Floats with options = { currency: true, currencyOptions }', () => {
   test.concurrent.each(testFloatsWithDollarCurrency)('convert %d => %s', (input, expected) => {
     expect(toWords.convert(input as number, { currency: true, currencyOptions: dollarCurrencyOption })).toBe(expected);
+  });
+});
+
+const testOrdinals: [number, string][] = [
+  [1, 'Esimene'],
+  [2, 'Teine'],
+  [3, 'Kolmas'],
+  [4, 'Neljas'],
+  [5, 'Viies'],
+  [6, 'Kuues'],
+  [7, 'Seitsmes'],
+  [8, 'Kaheksas'],
+  [9, 'Üheksas'],
+  [10, 'Kümnes'],
+  [11, 'Üheteistkümnes'],
+  [12, 'Kaheteistkümnes'],
+  [13, 'Kolmeteistkümnes'],
+  [14, 'Neljateistkümnes'],
+  [15, 'Viieteistkümnes'],
+  [16, 'Kuueteistkümnes'],
+  [17, 'Seitsmeteistkümnes'],
+  [18, 'Kaheksateistkümnes'],
+  [19, 'Üheksateistkümnes'],
+  [20, 'Kahekümnes'],
+  [21, 'Kakskümmend Esimene'],
+  [30, 'Kolmekümnes'],
+  [40, 'Neljakümnes'],
+  [50, 'Viiekümnes'],
+  [60, 'Kuuekümnes'],
+  [70, 'Seitsmekümnes'],
+  [80, 'Kaheksakümnes'],
+  [90, 'Üheksakümnes'],
+  [100, 'Sajas'],
+  [123, 'Sada Kakskümmend Kolmas'],
+  [1000, 'Üks Tuhandes'],
+  [1001, 'Üks Tuhat Esimene'],
+];
+
+describe('Test Ordinals', () => {
+  test.concurrent.each(testOrdinals)('toOrdinal %d => %s', (input, expected) => {
+    expect(toWords.toOrdinal(input)).toBe(expected);
   });
 });

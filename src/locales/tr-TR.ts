@@ -1,4 +1,5 @@
-import { LocaleConfig, LocaleInterface } from '../types';
+import { LocaleConfig, LocaleInterface, ToWordsOptions } from '../types.js';
+import { ToWordsCore } from '../ToWordsCore.js';
 
 export default class Locale implements LocaleInterface {
   public config: LocaleConfig = {
@@ -76,5 +77,56 @@ export default class Locale implements LocaleInterface {
       7: 'milyonuncu',
       8: 'yüz milyonuncu',
     },
+    ordinalWordsMapping: [
+      { number: 1000000000000, value: 'Trilyonuncu' },
+      { number: 1000000000, value: 'Milyarıncı' },
+      { number: 1000000, value: 'Milyonuncu' },
+      { number: 1000, value: 'Bininci' },
+      { number: 100, value: 'Yüzüncü' },
+      { number: 90, value: 'Doksanıncı' },
+      { number: 80, value: 'Sekseninci' },
+      { number: 70, value: 'Yetmişinci' },
+      { number: 60, value: 'Altmışıncı' },
+      { number: 50, value: 'Ellinci' },
+      { number: 40, value: 'Kırkıncı' },
+      { number: 30, value: 'Otuzuncu' },
+      { number: 20, value: 'Yirminci' },
+      { number: 19, value: 'On Dokuzuncu' },
+      { number: 18, value: 'On Sekizinci' },
+      { number: 17, value: 'On Yedinci' },
+      { number: 16, value: 'On Altıncı' },
+      { number: 15, value: 'On Beşinci' },
+      { number: 14, value: 'On Dördüncü' },
+      { number: 13, value: 'On Üçüncü' },
+      { number: 12, value: 'On İkinci' },
+      { number: 11, value: 'On Birinci' },
+      { number: 10, value: 'Onuncu' },
+      { number: 9, value: 'Dokuzuncu' },
+      { number: 8, value: 'Sekizinci' },
+      { number: 7, value: 'Yedinci' },
+      { number: 6, value: 'Altıncı' },
+      { number: 5, value: 'Beşinci' },
+      { number: 4, value: 'Dördüncü' },
+      { number: 3, value: 'Üçüncü' },
+      { number: 2, value: 'İkinci' },
+      { number: 1, value: 'Birinci' },
+      { number: 0, value: 'Sıfırıncı' },
+    ],
   };
+}
+
+/**
+ * ToWords class pre-configured for this locale.
+ * This is a lightweight version that only bundles this specific locale.
+ *
+ * @example
+ * import { ToWords } from 'to-words/tr-TR';
+ * const tw = new ToWords();
+ * tw.convert(1234);
+ */
+export class ToWords extends ToWordsCore {
+  constructor(options: ToWordsOptions = {}) {
+    super(options);
+    this.setLocale(Locale);
+  }
 }

@@ -1,7 +1,8 @@
 import { describe, expect, test } from 'vitest';
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
-import trTr from '../src/locales/tr-TR';
+import trTr from '../src/locales/tr-TR.js';
+import { ToWords as LocaleToWords } from '../src/locales/tr-TR.js';
 
 const localeCode = 'tr-TR';
 const toWords = new ToWords({
@@ -11,6 +12,14 @@ const toWords = new ToWords({
 describe('Test Locale', () => {
   test(`Locale Class: ${localeCode}`, () => {
     expect(toWords.getLocaleClass()).toBe(trTr);
+  });
+
+  describe('Test Locale ToWords', () => {
+    test('ToWords from locale file works correctly', () => {
+      const tw = new LocaleToWords();
+      expect(tw.convert(1)).toBeDefined();
+      expect(typeof tw.convert(123)).toBe('string');
+    });
   });
 
   const wrongLocaleCode = localeCode + '-wrong';
@@ -198,5 +207,65 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
         ignoreDecimal: true,
       }),
     ).toBe(expected);
+  });
+});
+
+const testOrdinals: [number, string][] = [
+  // Numbers 1-20
+  [1, 'Birinci'],
+  [2, 'İkinci'],
+  [3, 'Üçüncü'],
+  [4, 'Dördüncü'],
+  [5, 'Beşinci'],
+  [6, 'Altıncı'],
+  [7, 'Yedinci'],
+  [8, 'Sekizinci'],
+  [9, 'Dokuzuncu'],
+  [10, 'Onuncu'],
+  [11, 'On Birinci'],
+  [12, 'On İkinci'],
+  [13, 'On Üçüncü'],
+  [14, 'On Dördüncü'],
+  [15, 'On Beşinci'],
+  [16, 'On Altıncı'],
+  [17, 'On Yedinci'],
+  [18, 'On Sekizinci'],
+  [19, 'On Dokuzuncu'],
+  [20, 'Yirminci'],
+  // Composite numbers (21, 22, etc.)
+  [21, 'yirmi Birinci'],
+  [22, 'yirmi İkinci'],
+  // Decade numbers (30, 40, 50, etc.)
+  [30, 'Otuzuncu'],
+  [40, 'Kırkıncı'],
+  [50, 'Ellinci'],
+  [60, 'Altmışıncı'],
+  [70, 'Yetmişinci'],
+  [80, 'Sekseninci'],
+  [90, 'Doksanıncı'],
+  // Round numbers (100, 200, 1000, etc.)
+  [100, 'Yüzüncü'],
+  [200, 'iki yüz'],
+  [1000, 'bir Bininci'],
+  [1000000, 'bir Milyonuncu'],
+  // Complex numbers
+  [101, 'yüz Birinci'],
+  [123, 'yüz yirmi Üçüncü'],
+  [1234, 'bir bin iki yüz otuz Dördüncü'],
+];
+
+describe('Test Ordinals', () => {
+  test.each(testOrdinals)('toOrdinal(%d) => %s', (input, expected) => {
+    expect(toWords.toOrdinal(input)).toBe(expected);
+  });
+});
+
+describe('Test Ordinal Error Cases', () => {
+  test('should throw error for negative numbers', () => {
+    expect(() => toWords.toOrdinal(-1)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+
+  test('should throw error for decimal numbers', () => {
+    expect(() => toWords.toOrdinal(1.5)).toThrow('Ordinal numbers must be non-negative integers');
   });
 });

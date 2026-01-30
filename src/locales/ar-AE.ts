@@ -1,4 +1,5 @@
-import { LocaleConfig, LocaleInterface } from '../types';
+import { LocaleConfig, LocaleInterface, ToWordsOptions } from '../types.js';
+import { ToWordsCore } from '../ToWordsCore.js';
 
 export default class Locale implements LocaleInterface {
   public config: LocaleConfig = {
@@ -189,5 +190,57 @@ export default class Locale implements LocaleInterface {
     ignoreOneForWords: ['ألف', 'مائة', 'مليون', 'مليار', 'تريليون', 'كوادريليون'],
     namedLessThan1000: true,
     splitWord: 'و',
+    ordinalWordsMapping: [
+      { number: 1000000000000000, value: 'الكوادريليون' },
+      { number: 1000000000000, value: 'التريليون' },
+      { number: 1000000000, value: 'المليار' },
+      { number: 1000000, value: 'المليون' },
+      { number: 1000, value: 'الألف' },
+      { number: 100, value: 'المائة' },
+      { number: 90, value: 'التسعون' },
+      { number: 80, value: 'الثمانون' },
+      { number: 70, value: 'السبعون' },
+      { number: 60, value: 'الستون' },
+      { number: 50, value: 'الخمسون' },
+      { number: 40, value: 'الأربعون' },
+      { number: 30, value: 'الثلاثون' },
+      { number: 20, value: 'العشرون' },
+      { number: 19, value: 'التاسع عشر' },
+      { number: 18, value: 'الثامن عشر' },
+      { number: 17, value: 'السابع عشر' },
+      { number: 16, value: 'السادس عشر' },
+      { number: 15, value: 'الخامس عشر' },
+      { number: 14, value: 'الرابع عشر' },
+      { number: 13, value: 'الثالث عشر' },
+      { number: 12, value: 'الثاني عشر' },
+      { number: 11, value: 'الحادي عشر' },
+      { number: 10, value: 'العاشر' },
+      { number: 9, value: 'التاسع' },
+      { number: 8, value: 'الثامن' },
+      { number: 7, value: 'السابع' },
+      { number: 6, value: 'السادس' },
+      { number: 5, value: 'الخامس' },
+      { number: 4, value: 'الرابع' },
+      { number: 3, value: 'الثالث' },
+      { number: 2, value: 'الثاني' },
+      { number: 1, value: 'الأول' },
+      { number: 0, value: 'الصفر' },
+    ],
   };
+}
+
+/**
+ * ToWords class pre-configured for this locale.
+ * This is a lightweight version that only bundles this specific locale.
+ *
+ * @example
+ * import { ToWords } from 'to-words/ar-AE';
+ * const tw = new ToWords();
+ * tw.convert(1234);
+ */
+export class ToWords extends ToWordsCore {
+  constructor(options: ToWordsOptions = {}) {
+    super(options);
+    this.setLocale(Locale);
+  }
 }

@@ -1,4 +1,5 @@
-import { LocaleConfig, LocaleInterface } from '../types';
+import { LocaleConfig, LocaleInterface, ToWordsOptions } from '../types.js';
+import { ToWordsCore } from '../ToWordsCore.js';
 
 export default class Locale implements LocaleInterface {
   public config: LocaleConfig = {
@@ -45,7 +46,7 @@ export default class Locale implements LocaleInterface {
       { number: 82, value: 'بیاسی' },
       { number: 81, value: 'اکیاسی' },
       { number: 80, value: 'اسی' },
-      { number: 79, value: 'انہتر' },
+      { number: 79, value: 'اناسی' },
       { number: 78, value: 'اٹھہتر' },
       { number: 77, value: 'ستتر' },
       { number: 76, value: 'چھہتر' },
@@ -126,6 +127,127 @@ export default class Locale implements LocaleInterface {
       { number: 1, value: 'ایک' },
       { number: 0, value: 'صفر' },
     ],
+    ordinalWordsMapping: [
+      { number: 10000000, value: 'کروڑواں' },
+      { number: 100000, value: 'لاکھواں' },
+      { number: 1000, value: 'ہزارواں' },
+      { number: 100, value: 'سَوواں' },
+      { number: 99, value: 'نناویواں' },
+      { number: 98, value: 'اٹھانویواں' },
+      { number: 97, value: 'ستانویواں' },
+      { number: 96, value: 'چھیانویواں' },
+      { number: 95, value: 'پچانویواں' },
+      { number: 94, value: 'چورانویواں' },
+      { number: 93, value: 'ترانویواں' },
+      { number: 92, value: 'بانویواں' },
+      { number: 91, value: 'اکانویواں' },
+      { number: 90, value: 'نوّےواں' },
+      { number: 89, value: 'نواسیواں' },
+      { number: 88, value: 'اٹھاسیواں' },
+      { number: 87, value: 'ستاسیواں' },
+      { number: 86, value: 'چھیاسیواں' },
+      { number: 85, value: 'پچاسیواں' },
+      { number: 84, value: 'چوراسیواں' },
+      { number: 83, value: 'تراسیواں' },
+      { number: 82, value: 'بیاسیواں' },
+      { number: 81, value: 'اکیاسیواں' },
+      { number: 80, value: 'اسّیواں' },
+      { number: 79, value: 'اناسیواں' },
+      { number: 78, value: 'اٹھہترواں' },
+      { number: 77, value: 'ستترواں' },
+      { number: 76, value: 'چھہترواں' },
+      { number: 75, value: 'پچھترواں' },
+      { number: 74, value: 'چوہترواں' },
+      { number: 73, value: 'تہترواں' },
+      { number: 72, value: 'بہترواں' },
+      { number: 71, value: 'اکہترواں' },
+      { number: 70, value: 'ستّرواں' },
+      { number: 69, value: 'انہترواں' },
+      { number: 68, value: 'اڑسٹھواں' },
+      { number: 67, value: 'سڑسٹھواں' },
+      { number: 66, value: 'چھیاسٹھواں' },
+      { number: 65, value: 'پینسٹھواں' },
+      { number: 64, value: 'چونسٹھواں' },
+      { number: 63, value: 'تریسٹھواں' },
+      { number: 62, value: 'باسٹھواں' },
+      { number: 61, value: 'اکسٹھواں' },
+      { number: 60, value: 'ساٹھواں' },
+      { number: 59, value: 'انسٹھواں' },
+      { number: 58, value: 'اٹھاونواں' },
+      { number: 57, value: 'ستاونواں' },
+      { number: 56, value: 'چھپنواں' },
+      { number: 55, value: 'پچپنواں' },
+      { number: 54, value: 'چونواں' },
+      { number: 53, value: 'ترپنواں' },
+      { number: 52, value: 'باونواں' },
+      { number: 51, value: 'اکیاونواں' },
+      { number: 50, value: 'پچاسواں' },
+      { number: 49, value: 'انچاسواں' },
+      { number: 48, value: 'اڑتالیسواں' },
+      { number: 47, value: 'سینتالیسواں' },
+      { number: 46, value: 'چھیالیسواں' },
+      { number: 45, value: 'پینتالیسواں' },
+      { number: 44, value: 'چوالیسواں' },
+      { number: 43, value: 'تینتالیسواں' },
+      { number: 42, value: 'بیالیسواں' },
+      { number: 41, value: 'اکتالیسواں' },
+      { number: 40, value: 'چالیسواں' },
+      { number: 39, value: 'انتالیسواں' },
+      { number: 38, value: 'اڑتیسواں' },
+      { number: 37, value: 'سینتیسواں' },
+      { number: 36, value: 'چھتیسواں' },
+      { number: 35, value: 'پینتیسواں' },
+      { number: 34, value: 'چونتیسواں' },
+      { number: 33, value: 'تینتیسواں' },
+      { number: 32, value: 'بتیسواں' },
+      { number: 31, value: 'اکتیسواں' },
+      { number: 30, value: 'تیسواں' },
+      { number: 29, value: 'انتیسواں' },
+      { number: 28, value: 'اٹھائیسواں' },
+      { number: 27, value: 'ستائیسواں' },
+      { number: 26, value: 'چھبیسواں' },
+      { number: 25, value: 'پچیسواں' },
+      { number: 24, value: 'چوبیسواں' },
+      { number: 23, value: 'تئیسواں' },
+      { number: 22, value: 'بائیسواں' },
+      { number: 21, value: 'اکیسواں' },
+      { number: 20, value: 'بیسواں' },
+      { number: 19, value: 'انیسواں' },
+      { number: 18, value: 'اٹھارہواں' },
+      { number: 17, value: 'سترہواں' },
+      { number: 16, value: 'سولہواں' },
+      { number: 15, value: 'پندرہواں' },
+      { number: 14, value: 'چودہواں' },
+      { number: 13, value: 'تیرہواں' },
+      { number: 12, value: 'بارہواں' },
+      { number: 11, value: 'گیارہواں' },
+      { number: 10, value: 'دسواں' },
+      { number: 9, value: 'نواں' },
+      { number: 8, value: 'آٹھواں' },
+      { number: 7, value: 'ساتواں' },
+      { number: 6, value: 'چھٹا' },
+      { number: 5, value: 'پانچواں' },
+      { number: 4, value: 'چوتھا' },
+      { number: 3, value: 'تیسرا' },
+      { number: 2, value: 'دوسرا' },
+      { number: 1, value: 'پہلا' },
+    ],
     exactWordsMapping: [{ number: 100, value: 'ایک سو' }],
   };
+}
+
+/**
+ * ToWords class pre-configured for this locale.
+ * This is a lightweight version that only bundles this specific locale.
+ *
+ * @example
+ * import { ToWords } from 'to-words/ur-PK';
+ * const tw = new ToWords();
+ * tw.convert(1234);
+ */
+export class ToWords extends ToWordsCore {
+  constructor(options: ToWordsOptions = {}) {
+    super(options);
+    this.setLocale(Locale);
+  }
 }

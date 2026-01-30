@@ -21,6 +21,10 @@ export type ConverterOptions = {
   currencyOptions?: CurrencyOptions; // applicable only when currency = true, overwrites options from locales
 };
 
+export type OrdinalOptions = {
+  gender?: 'masculine' | 'feminine';
+};
+
 export type ToWordsOptions = {
   localeCode?: string;
   converterOptions?: ConverterOptions;
@@ -34,6 +38,11 @@ export type NumberWordMap = {
   number: number | bigint;
   value: string | [string, string];
   singularValue?: string;
+};
+
+export type OrdinalWordMap = {
+  number: number | bigint;
+  value: string;
 };
 
 export type NumberInput = number | bigint | string;
@@ -61,6 +70,9 @@ export type LocaleConfig = {
   };
   numberWordsMapping: NumberWordMap[];
   exactWordsMapping?: NumberWordMap[];
+  ordinalWordsMapping?: OrdinalWordMap[];
+  ordinalSuffix?: string;
+  ordinalExactWordsMapping?: OrdinalWordMap[];
   namedLessThan1000?: boolean;
   splitWord?: string;
   ignoreZeroInDecimals?: boolean;
@@ -68,11 +80,13 @@ export type LocaleConfig = {
   ignoreOneForWords?: string[];
   pluralMark?: string;
   pluralWords?: string[];
+  pluralWordsOnlyWhenTrailing?: string[]; // Words that only get pluralMark when not followed by another number
   pluralForms?: PluralFormsMapping;
   paucalConfig?: PaucalConfig;
   noSplitWordAfter?: string[];
   onlyInFront?: boolean;
   trim?: boolean;
+  useTrailingForCurrency?: boolean; // If true, use trailing=true in currency mode (for French-style plurals)
 };
 
 export interface LocaleInterface {

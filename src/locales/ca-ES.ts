@@ -1,0 +1,156 @@
+import { LocaleConfig, LocaleInterface, ToWordsOptions } from '../types.js';
+import { ToWordsCore } from '../ToWordsCore.js';
+
+export default class Locale implements LocaleInterface {
+  public config: LocaleConfig = {
+    currency: {
+      name: 'Euro',
+      plural: 'Euros',
+      singular: 'Euro',
+      symbol: '€',
+      fractionalUnit: {
+        name: 'Cèntim',
+        plural: 'Cèntims',
+        singular: 'Cèntim',
+        symbol: '¢',
+      },
+    },
+    texts: {
+      and: 'I',
+      minus: 'Menys',
+      only: '',
+      point: 'Coma',
+    },
+    numberWordsMapping: [
+      { number: 1000000000000000, value: 'Bilió' },
+      { number: 1000000000000, value: 'Bilió' },
+      { number: 1000000000, value: 'Mil Milions' },
+      { number: 1000000, value: 'Milió' },
+      { number: 1000, value: 'Mil' },
+      { number: 900, value: 'Nou-Cents' },
+      { number: 800, value: 'Vuit-Cents' },
+      { number: 700, value: 'Set-Cents' },
+      { number: 600, value: 'Sis-Cents' },
+      { number: 500, value: 'Cinc-Cents' },
+      { number: 400, value: 'Quatre-Cents' },
+      { number: 300, value: 'Tres-Cents' },
+      { number: 200, value: 'Dos-Cents' },
+      { number: 100, value: 'Cent' },
+      { number: 90, value: 'Noranta' },
+      { number: 80, value: 'Vuitanta' },
+      { number: 70, value: 'Setanta' },
+      { number: 60, value: 'Seixanta' },
+      { number: 50, value: 'Cinquanta' },
+      { number: 40, value: 'Quaranta' },
+      { number: 30, value: 'Trenta' },
+      { number: 29, value: 'Vint-I-Nou' },
+      { number: 28, value: 'Vint-I-Vuit' },
+      { number: 27, value: 'Vint-I-Set' },
+      { number: 26, value: 'Vint-I-Sis' },
+      { number: 25, value: 'Vint-I-Cinc' },
+      { number: 24, value: 'Vint-I-Quatre' },
+      { number: 23, value: 'Vint-I-Tres' },
+      { number: 22, value: 'Vint-I-Dos' },
+      { number: 21, value: 'Vint-I-Un' },
+      { number: 20, value: 'Vint' },
+      { number: 19, value: 'Dinou' },
+      { number: 18, value: 'Divuit' },
+      { number: 17, value: 'Disset' },
+      { number: 16, value: 'Setze' },
+      { number: 15, value: 'Quinze' },
+      { number: 14, value: 'Catorze' },
+      { number: 13, value: 'Tretze' },
+      { number: 12, value: 'Dotze' },
+      { number: 11, value: 'Onze' },
+      { number: 10, value: 'Deu' },
+      { number: 9, value: 'Nou' },
+      { number: 8, value: 'Vuit' },
+      { number: 7, value: 'Set' },
+      { number: 6, value: 'Sis' },
+      { number: 5, value: 'Cinc' },
+      { number: 4, value: 'Quatre' },
+      { number: 3, value: 'Tres' },
+      { number: 2, value: 'Dos' },
+      { number: 1, value: 'Un' },
+      { number: 0, value: 'Zero' },
+    ],
+    ignoreOneForWords: [
+      'Cent',
+      'Dos-Cents',
+      'Tres-Cents',
+      'Quatre-Cents',
+      'Cinc-Cents',
+      'Sis-Cents',
+      'Set-Cents',
+      'Vuit-Cents',
+      'Nou-Cents',
+      'Mil',
+      'Mil Milions',
+    ],
+    pluralMark: 'ns',
+    pluralWords: ['Milió', 'Bilió'],
+    exactWordsMapping: [
+      { number: 100, value: 'Cent' },
+      { number: 1000000, value: 'Un Milió' },
+      { number: 1000000000000, value: 'Un Bilió' },
+    ],
+    ordinalWordsMapping: [
+      { number: 1000000000000, value: 'Bilionèsim' },
+      { number: 1000000, value: 'Milionèsim' },
+      { number: 1000, value: 'Mil·lèsim' },
+      { number: 900, value: 'Nou-Centèsim' },
+      { number: 800, value: 'Vuit-Centèsim' },
+      { number: 700, value: 'Set-Centèsim' },
+      { number: 600, value: 'Sis-Centèsim' },
+      { number: 500, value: 'Cinc-Centèsim' },
+      { number: 400, value: 'Quatre-Centèsim' },
+      { number: 300, value: 'Tres-Centèsim' },
+      { number: 200, value: 'Dos-Centèsim' },
+      { number: 100, value: 'Centèsim' },
+      { number: 90, value: 'Norantè' },
+      { number: 80, value: 'Vuitantè' },
+      { number: 70, value: 'Setantè' },
+      { number: 60, value: 'Seixantè' },
+      { number: 50, value: 'Cinquantè' },
+      { number: 40, value: 'Quarantè' },
+      { number: 30, value: 'Trentè' },
+      { number: 20, value: 'Vintè' },
+      { number: 19, value: 'Dinovè' },
+      { number: 18, value: 'Divuitè' },
+      { number: 17, value: 'Dissetè' },
+      { number: 16, value: 'Setzè' },
+      { number: 15, value: 'Quinzè' },
+      { number: 14, value: 'Catorzè' },
+      { number: 13, value: 'Tretzè' },
+      { number: 12, value: 'Dotzè' },
+      { number: 11, value: 'Onzè' },
+      { number: 10, value: 'Desè' },
+      { number: 9, value: 'Novè' },
+      { number: 8, value: 'Vuitè' },
+      { number: 7, value: 'Setè' },
+      { number: 6, value: 'Sisè' },
+      { number: 5, value: 'Cinquè' },
+      { number: 4, value: 'Quart' },
+      { number: 3, value: 'Tercer' },
+      { number: 2, value: 'Segon' },
+      { number: 1, value: 'Primer' },
+      { number: 0, value: 'Zero' },
+    ],
+  };
+}
+
+/**
+ * ToWords class pre-configured for this locale.
+ * This is a lightweight version that only bundles this specific locale.
+ *
+ * @example
+ * import { ToWords } from 'to-words/ca-ES';
+ * const tw = new ToWords();
+ * tw.convert(1234);
+ */
+export class ToWords extends ToWordsCore {
+  constructor(options: ToWordsOptions = {}) {
+    super(options);
+    this.setLocale(Locale);
+  }
+}

@@ -1,7 +1,8 @@
 import { describe, expect, test } from 'vitest';
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
-import esAR from '../src/locales/es-AR';
+import esAR from '../src/locales/es-AR.js';
+import { ToWords as LocaleToWords } from '../src/locales/es-AR.js';
 
 const localeCode = 'es-AR';
 const toWords = new ToWords({
@@ -11,6 +12,14 @@ const toWords = new ToWords({
 describe('Test Locale', () => {
   test(`Locale Class: ${localeCode}`, () => {
     expect(toWords.getLocaleClass()).toBe(esAR);
+  });
+
+  describe('Test Locale ToWords', () => {
+    test('ToWords from locale file works correctly', () => {
+      const tw = new LocaleToWords();
+      expect(tw.convert(1)).toBeDefined();
+      expect(typeof tw.convert(123)).toBe('string');
+    });
   });
 
   const wrongLocaleCode = localeCode + '-wrong';
@@ -290,5 +299,100 @@ const dollarCurrencyOptions = {
 describe('Test Floats with options = { currency: true, currencyOptions }', () => {
   test.concurrent.each(testFloatsWithDollarCurrency)('convert %d => %s', (input, expected) => {
     expect(toWords.convert(input as number, { currency: true, currencyOptions: dollarCurrencyOptions })).toBe(expected);
+  });
+});
+
+// Ordinal Tests
+const testOrdinals: [number, string][] = [
+  // Numbers 1-20
+  [1, 'Primero'],
+  [2, 'Segundo'],
+  [3, 'Tercero'],
+  [4, 'Cuarto'],
+  [5, 'Quinto'],
+  [6, 'Sexto'],
+  [7, 'Séptimo'],
+  [8, 'Octavo'],
+  [9, 'Noveno'],
+  [10, 'Décimo'],
+  [11, 'Decimoprimero'],
+  [12, 'Decimosegundo'],
+  [13, 'Decimotercero'],
+  [14, 'Decimocuarto'],
+  [15, 'Decimoquinto'],
+  [16, 'Decimosexto'],
+  [17, 'Decimoséptimo'],
+  [18, 'Decimoctavo'],
+  [19, 'Decimonoveno'],
+  [20, 'Vigésimo'],
+  // Composite numbers (21-29)
+  [21, 'Veintiuno'],
+  [22, 'Veintidós'],
+  [23, 'Veintitrés'],
+  [24, 'Veinticuatro'],
+  [25, 'Veinticinco'],
+  // Tens
+  [30, 'Trigésimo'],
+  [40, 'Cuadragésimo'],
+  [50, 'Quincuagésimo'],
+  [60, 'Sexagésimo'],
+  [70, 'Septuagésimo'],
+  [80, 'Octogésimo'],
+  [90, 'Nonagésimo'],
+  // Round numbers
+  [100, 'Centésimo'],
+  [200, 'Ducentésimo'],
+  [300, 'Tricentésimo'],
+  [400, 'Cuadringentésimo'],
+  [500, 'Quingentésimo'],
+  [600, 'Sexcentésimo'],
+  [700, 'Septingentésimo'],
+  [800, 'Octingentésimo'],
+  [900, 'Noningentésimo'],
+  [1000, 'Milésimo'],
+  [1000000, 'Un Millonésimo'],
+  // Complex numbers
+  [101, 'Ciento Primero'],
+  [110, 'Ciento Décimo'],
+  [111, 'Ciento Decimoprimero'],
+  [123, 'Ciento Veintitrés'],
+  [150, 'Ciento Quincuagésimo'],
+  [199, 'Ciento Noventa Y Noveno'],
+  [256, 'Doscientos Cincuenta Y Sexto'],
+  [1001, 'Mil Primero'],
+  [1010, 'Mil Décimo'],
+  [1100, 'Mil Centésimo'],
+  [1234, 'Mil Doscientos Treinta Y Cuarto'],
+  [2000, 'Dos Milésimo'],
+  [10000, 'Diez Milésimo'],
+  [100000, 'Cien Milésimo'],
+  [1000001, 'Un Millon Primero'],
+];
+
+describe('Test Ordinals', () => {
+  test.concurrent.each(testOrdinals)('toOrdinal %d => %s', (input, expected) => {
+    expect(toWords.toOrdinal(input as number)).toBe(expected);
+  });
+});
+
+describe('Test Ordinal Error Cases', () => {
+  test('should throw error for negative numbers', () => {
+    expect(() => toWords.toOrdinal(-1)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+
+  test('should throw error for negative large numbers', () => {
+    expect(() => toWords.toOrdinal(-100)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+
+  test('should throw error for decimal numbers', () => {
+    expect(() => toWords.toOrdinal(1.5)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+
+  test('should throw error for decimal numbers with small fraction', () => {
+    expect(() => toWords.toOrdinal(10.01)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+
+  test('should throw error for negative decimal numbers', () => {
+    expect(() => toWords.toOrdinal(-3.14)).toThrow('Ordinal numbers must be non-negative integers');
   });
 });

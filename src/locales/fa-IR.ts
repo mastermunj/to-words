@@ -1,4 +1,5 @@
-import { LocaleConfig, LocaleInterface } from '../types';
+import { LocaleConfig, LocaleInterface, ToWordsOptions } from '../types.js';
+import { ToWordsCore } from '../ToWordsCore.js';
 
 export default class Locale implements LocaleInterface {
   public config: LocaleConfig = {
@@ -64,6 +65,48 @@ export default class Locale implements LocaleInterface {
       { number: 1, value: 'یک' },
       { number: 0, value: 'صفر' },
     ],
+    ordinalWordsMapping: [
+      { number: 1000000000, value: 'میلیاردم' },
+      { number: 1000000, value: 'میلیونم' },
+      { number: 1000, value: 'هزارم' },
+      { number: 900, value: 'نهصدم' },
+      { number: 800, value: 'هشتصدم' },
+      { number: 700, value: 'هفتصدم' },
+      { number: 600, value: 'ششصدم' },
+      { number: 500, value: 'پانصدم' },
+      { number: 400, value: 'چهارصدم' },
+      { number: 300, value: 'سیصدم' },
+      { number: 200, value: 'دویستم' },
+      { number: 100, value: 'صدم' },
+      { number: 90, value: 'نودم' },
+      { number: 80, value: 'هشتادم' },
+      { number: 70, value: 'هفتادم' },
+      { number: 60, value: 'شصتم' },
+      { number: 50, value: 'پنجاهم' },
+      { number: 40, value: 'چهلم' },
+      { number: 30, value: 'سی‌ام' },
+      { number: 20, value: 'بیستم' },
+      { number: 19, value: 'نوزدهم' },
+      { number: 18, value: 'هجدهم' },
+      { number: 17, value: 'هفدهم' },
+      { number: 16, value: 'شانزدهم' },
+      { number: 15, value: 'پانزدهم' },
+      { number: 14, value: 'چهاردهم' },
+      { number: 13, value: 'سیزدهم' },
+      { number: 12, value: 'دوازدهم' },
+      { number: 11, value: 'یازدهم' },
+      { number: 10, value: 'دهم' },
+      { number: 9, value: 'نهم' },
+      { number: 8, value: 'هشتم' },
+      { number: 7, value: 'هفتم' },
+      { number: 6, value: 'ششم' },
+      { number: 5, value: 'پنجم' },
+      { number: 4, value: 'چهارم' },
+      { number: 3, value: 'سوم' },
+      { number: 2, value: 'دوم' },
+      { number: 1, value: 'اول' },
+      { number: 0, value: 'صفرم' },
+    ],
     namedLessThan1000: true,
     splitWord: 'و',
     ignoreZeroInDecimals: true,
@@ -79,4 +122,20 @@ export default class Locale implements LocaleInterface {
       9: 'میلیاردیوم',
     },
   };
+}
+
+/**
+ * ToWords class pre-configured for this locale.
+ * This is a lightweight version that only bundles this specific locale.
+ *
+ * @example
+ * import { ToWords } from 'to-words/fa-IR';
+ * const tw = new ToWords();
+ * tw.convert(1234);
+ */
+export class ToWords extends ToWordsCore {
+  constructor(options: ToWordsOptions = {}) {
+    super(options);
+    this.setLocale(Locale);
+  }
 }

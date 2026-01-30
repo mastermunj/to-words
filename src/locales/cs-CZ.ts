@@ -1,0 +1,173 @@
+import { LocaleConfig, LocaleInterface, ToWordsOptions } from '../types.js';
+import { ToWordsCore } from '../ToWordsCore.js';
+
+export default class Locale implements LocaleInterface {
+  public config: LocaleConfig = {
+    currency: {
+      name: 'Koruna',
+      plural: 'Korun',
+      singular: 'Koruna',
+      symbol: 'Kč',
+      fractionalUnit: {
+        name: 'Haléř',
+        singular: 'Haléř',
+        plural: 'Haléřů',
+        symbol: 'h',
+      },
+    },
+    texts: {
+      and: 'A',
+      minus: 'Mínus',
+      only: 'Pouze',
+      point: 'Celá',
+    },
+    numberWordsMapping: [
+      { number: 1000000000000000, value: 'Biliarda' },
+      { number: 1000000000000, value: 'Bilion' },
+      { number: 1000000000, value: 'Miliarda' },
+      { number: 1000000, value: 'Milion' },
+      { number: 1000, value: 'Tisíc', singularValue: 'Tisíc' },
+      { number: 900, value: 'Devět Set' },
+      { number: 800, value: 'Osm Set' },
+      { number: 700, value: 'Sedm Set' },
+      { number: 600, value: 'Šest Set' },
+      { number: 500, value: 'Pět Set' },
+      { number: 400, value: 'Čtyři Sta' },
+      { number: 300, value: 'Tři Sta' },
+      { number: 200, value: 'Dvě Stě' },
+      { number: 100, value: 'Sto' },
+      { number: 90, value: 'Devadesát' },
+      { number: 80, value: 'Osmdesát' },
+      { number: 70, value: 'Sedmdesát' },
+      { number: 60, value: 'Šedesát' },
+      { number: 50, value: 'Padesát' },
+      { number: 40, value: 'Čtyřicet' },
+      { number: 30, value: 'Třicet' },
+      { number: 20, value: 'Dvacet' },
+      { number: 19, value: 'Devatenáct' },
+      { number: 18, value: 'Osmnáct' },
+      { number: 17, value: 'Sedmnáct' },
+      { number: 16, value: 'Šestnáct' },
+      { number: 15, value: 'Patnáct' },
+      { number: 14, value: 'Čtrnáct' },
+      { number: 13, value: 'Třináct' },
+      { number: 12, value: 'Dvanáct' },
+      { number: 11, value: 'Jedenáct' },
+      { number: 10, value: 'Deset' },
+      { number: 9, value: 'Devět' },
+      { number: 8, value: 'Osm' },
+      { number: 7, value: 'Sedm' },
+      { number: 6, value: 'Šest' },
+      { number: 5, value: 'Pět' },
+      { number: 4, value: 'Čtyři' },
+      { number: 3, value: 'Tři' },
+      { number: 2, value: 'Dva' },
+      { number: 1, value: 'Jeden' },
+      { number: 0, value: 'Nula' },
+    ],
+    exactWordsMapping: [{ number: 100, value: 'Sto' }],
+    pluralForms: {
+      1000: {
+        paucal: 'Tisíce',
+        plural: 'Tisíc',
+      },
+      1000000: {
+        paucal: 'Miliony',
+        plural: 'Milionů',
+      },
+      1000000000: {
+        paucal: 'Miliardy',
+        plural: 'Miliard',
+      },
+      1000000000000: {
+        paucal: 'Biliony',
+        plural: 'Bilionů',
+      },
+      1000000000000000: {
+        paucal: 'Biliardy',
+        plural: 'Biliard',
+      },
+    },
+    paucalConfig: {
+      min: 2,
+      max: 4,
+    },
+    ignoreOneForWords: [
+      'Sto',
+      'Dvě Stě',
+      'Tři Sta',
+      'Čtyři Sta',
+      'Pět Set',
+      'Šest Set',
+      'Sedm Set',
+      'Osm Set',
+      'Devět Set',
+      'Tisíc',
+      'Milion',
+      'Miliarda',
+      'Bilion',
+      'Biliarda',
+    ],
+    ordinalWordsMapping: [
+      { number: 1000000000000000, value: 'Biliardtý' },
+      { number: 1000000000000, value: 'Biliontý' },
+      { number: 1000000000, value: 'Miliardtý' },
+      { number: 1000000, value: 'Miliontý' },
+      { number: 1000, value: 'Tisící' },
+      { number: 900, value: 'Devítistý' },
+      { number: 800, value: 'Osmistý' },
+      { number: 700, value: 'Sedmistý' },
+      { number: 600, value: 'Šestistý' },
+      { number: 500, value: 'Pětistý' },
+      { number: 400, value: 'Čtyřstý' },
+      { number: 300, value: 'Třístý' },
+      { number: 200, value: 'Dvoustý' },
+      { number: 100, value: 'Stý' },
+      { number: 90, value: 'Devadesátý' },
+      { number: 80, value: 'Osmdesátý' },
+      { number: 70, value: 'Sedmdesátý' },
+      { number: 60, value: 'Šedesátý' },
+      { number: 50, value: 'Padesátý' },
+      { number: 40, value: 'Čtyřicátý' },
+      { number: 30, value: 'Třicátý' },
+      { number: 20, value: 'Dvacátý' },
+      { number: 19, value: 'Devatenáctý' },
+      { number: 18, value: 'Osmnáctý' },
+      { number: 17, value: 'Sedmnáctý' },
+      { number: 16, value: 'Šestnáctý' },
+      { number: 15, value: 'Patnáctý' },
+      { number: 14, value: 'Čtrnáctý' },
+      { number: 13, value: 'Třináctý' },
+      { number: 12, value: 'Dvanáctý' },
+      { number: 11, value: 'Jedenáctý' },
+      { number: 10, value: 'Desátý' },
+      { number: 9, value: 'Devátý' },
+      { number: 8, value: 'Osmý' },
+      { number: 7, value: 'Sedmý' },
+      { number: 6, value: 'Šestý' },
+      { number: 5, value: 'Pátý' },
+      { number: 4, value: 'Čtvrtý' },
+      { number: 3, value: 'Třetí' },
+      { number: 2, value: 'Druhý' },
+      { number: 1, value: 'První' },
+      { number: 0, value: 'Nultý' },
+    ],
+    ordinalExactWordsMapping: [{ number: 100, value: 'Stý' }],
+  };
+}
+
+/**
+ * ToWords class pre-configured for this locale.
+ * This is a lightweight version that only bundles this specific locale.
+ *
+ * @example
+ * import { ToWords } from 'to-words/cs-CZ';
+ * const tw = new ToWords();
+ * tw.convert(1234);
+ */
+export class ToWords extends ToWordsCore {
+  constructor(options: ToWordsOptions = {}) {
+    super(options);
+    this.setLocale(Locale);
+  }
+}

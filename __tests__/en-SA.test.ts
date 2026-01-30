@@ -1,7 +1,8 @@
 import { describe, expect, test } from 'vitest';
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
-import enSa from '../src/locales/en-SA';
+import enSa from '../src/locales/en-SA.js';
+import { ToWords as LocaleToWords } from '../src/locales/en-SA.js';
 
 const localeCode = 'en-SA';
 const toWords = new ToWords({
@@ -11,6 +12,14 @@ const toWords = new ToWords({
 describe('Test Locale', () => {
   test(`Locale Class: ${localeCode}`, () => {
     expect(toWords.getLocaleClass()).toBe(enSa);
+  });
+
+  describe('Test Locale ToWords', () => {
+    test('ToWords from locale file works correctly', () => {
+      const tw = new LocaleToWords();
+      expect(tw.convert(1)).toBeDefined();
+      expect(typeof tw.convert(123)).toBe('string');
+    });
   });
 
   const wrongLocaleCode = localeCode + '-wrong';
@@ -163,18 +172,18 @@ describe('Test Floats with options = {}', () => {
 
 const testFloatsWithCurrency: [number, string][] = [
   [0.0, `Zero Riyals Only`],
-  [0.01, `Zero Riyals And One Halalah Only`],
-  [0.04, `Zero Riyals And Four Halalahs Only`],
-  [0.0468, `Zero Riyals And Five Halalahs Only`],
-  [0.4, `Zero Riyals And Forty Halalahs Only`],
-  [0.63, `Zero Riyals And Sixty Three Halalahs Only`],
-  [0.973, `Zero Riyals And Ninety Seven Halalahs Only`],
+  [0.01, `Zero Riyals And One Halala Only`],
+  [0.04, `Zero Riyals And Four Halalas Only`],
+  [0.0468, `Zero Riyals And Five Halalas Only`],
+  [0.4, `Zero Riyals And Forty Halalas Only`],
+  [0.63, `Zero Riyals And Sixty Three Halalas Only`],
+  [0.973, `Zero Riyals And Ninety Seven Halalas Only`],
   [0.999, `One Riyal Only`],
   [1, `One Riyal Only`],
-  [37.06, `Thirty Seven Riyals And Six Halalahs Only`],
-  [37.068, `Thirty Seven Riyals And Seven Halalahs Only`],
-  [37.68, `Thirty Seven Riyals And Sixty Eight Halalahs Only`],
-  [37.683, `Thirty Seven Riyals And Sixty Eight Halalahs Only`],
+  [37.06, `Thirty Seven Riyals And Six Halalas Only`],
+  [37.068, `Thirty Seven Riyals And Seven Halalas Only`],
+  [37.68, `Thirty Seven Riyals And Sixty Eight Halalas Only`],
+  [37.683, `Thirty Seven Riyals And Sixty Eight Halalas Only`],
   [100, `One Hundred Riyals Only`],
 ];
 
@@ -215,7 +224,7 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
     } else if (row[0] === 1) {
       row[1] = `One Riyal Only`;
     } else {
-      row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ (Halalahs|Halalah)`), '');
+      row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ (Halalas|Halala)`), '');
     }
   });
 
@@ -238,7 +247,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
     } else if (row[0] === 1) {
       row[1] = `One Riyal Only`;
     } else {
-      row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ (Halalahs|Halalah)`), '');
+      row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ (Halalas|Halala)`), '');
     }
   });
 
@@ -254,4 +263,104 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
       ).toBe(expected);
     },
   );
+});
+
+// Comprehensive Ordinal Tests
+const testOrdinalNumbers: [number, string][] = [
+  // Numbers 1-20 (special ordinal forms)
+  [1, 'First'],
+  [2, 'Second'],
+  [3, 'Third'],
+  [4, 'Fourth'],
+  [5, 'Fifth'],
+  [6, 'Sixth'],
+  [7, 'Seventh'],
+  [8, 'Eighth'],
+  [9, 'Ninth'],
+  [10, 'Tenth'],
+  [11, 'Eleventh'],
+  [12, 'Twelfth'],
+  [13, 'Thirteenth'],
+  [14, 'Fourteenth'],
+  [15, 'Fifteenth'],
+  [16, 'Sixteenth'],
+  [17, 'Seventeenth'],
+  [18, 'Eighteenth'],
+  [19, 'Nineteenth'],
+  [20, 'Twentieth'],
+
+  // Composite numbers (21-29, 30, 40, 50, etc.)
+  [21, 'Twenty First'],
+  [22, 'Twenty Second'],
+  [23, 'Twenty Third'],
+  [30, 'Thirtieth'],
+  [40, 'Fortieth'],
+  [50, 'Fiftieth'],
+  [60, 'Sixtieth'],
+  [70, 'Seventieth'],
+  [80, 'Eightieth'],
+  [90, 'Ninetieth'],
+
+  // Numbers ending in 1, 2, 3 (various decades)
+  [31, 'Thirty First'],
+  [32, 'Thirty Second'],
+  [33, 'Thirty Third'],
+  [41, 'Forty First'],
+  [42, 'Forty Second'],
+  [43, 'Forty Third'],
+  [51, 'Fifty First'],
+  [52, 'Fifty Second'],
+  [53, 'Fifty Third'],
+
+  // Round numbers (100, 200, 1000, etc.)
+  [100, 'One Hundredth'],
+  [200, 'Two Hundredth'],
+  [1000, 'One Thousandth'],
+  [10000, 'Ten Thousandth'],
+  [100000, 'One Hundred Thousandth'],
+  [1000000, 'One Millionth'],
+  [10000000, 'Ten Millionth'],
+
+  // Numbers in the hundreds with endings
+  [101, 'One Hundred First'],
+  [102, 'One Hundred Second'],
+  [103, 'One Hundred Third'],
+  [111, 'One Hundred Eleventh'],
+  [112, 'One Hundred Twelfth'],
+  [113, 'One Hundred Thirteenth'],
+  [123, 'One Hundred Twenty Third'],
+
+  // Complex numbers
+  [1001, 'One Thousand First'],
+  [1111, 'One Thousand One Hundred Eleventh'],
+  [1234, 'One Thousand Two Hundred Thirty Fourth'],
+  [12345, 'Twelve Thousand Three Hundred Forty Fifth'],
+];
+
+describe('Test Ordinal Numbers', () => {
+  test.concurrent.each(testOrdinalNumbers)('toOrdinal %d => %s', (input, expected) => {
+    expect(toWords.toOrdinal(input as number)).toBe(expected);
+  });
+});
+
+describe('Test Ordinal Error Cases', () => {
+  test('should throw error for negative numbers', () => {
+    expect(() => toWords.toOrdinal(-1)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+
+  test('should throw error for negative large numbers', () => {
+    expect(() => toWords.toOrdinal(-100)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+
+  test('should throw error for decimal numbers', () => {
+    expect(() => toWords.toOrdinal(1.5)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+
+  test('should throw error for decimal numbers with small fraction', () => {
+    expect(() => toWords.toOrdinal(10.01)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+
+  test('should throw error for decimal numbers with large fraction', () => {
+    expect(() => toWords.toOrdinal(99.99)).toThrow('Ordinal numbers must be non-negative integers');
+  });
 });
