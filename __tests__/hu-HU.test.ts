@@ -337,3 +337,110 @@ describe('Test Hungarian-specific numbers', () => {
     expect(toWords.convert(1000000000)).toBe('Egy Milliárd');
   });
 });
+
+// Powers of Ten Tests
+const testPowersOfTen: [number, string][] = [
+  [10, 'Tíz'],
+  [100, 'Száz'],
+  [1000, 'Ezer'],
+  [10000, 'Tíz Ezer'],
+  [100000, 'Száz Ezer'],
+  [1000000, 'Egy Millió'],
+];
+
+describe('Test Powers of Ten', () => {
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number)).toBe(expected);
+  });
+});
+
+// BigInt Tests
+const testBigInts: [bigint, string][] = [
+  [0n, 'Nulla'],
+  [1n, 'Egy'],
+  [100n, 'Száz'],
+  [1000n, 'Ezer'],
+];
+
+describe('Test BigInt', () => {
+  test.concurrent.each(testBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as bigint)).toBe(expected);
+  });
+});
+
+// Negative BigInt Tests
+const testNegativeBigInts: [bigint, string][] = [
+  [-1n, 'Mínusz Egy'],
+  [-100n, 'Mínusz Száz'],
+  [-1000n, 'Mínusz Ezer'],
+];
+
+describe('Test Negative BigInt', () => {
+  test.concurrent.each(testNegativeBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as bigint)).toBe(expected);
+  });
+});
+
+// String Input Tests
+const testStringInputs: [string, string][] = [
+  ['0', 'Nulla'],
+  ['1', 'Egy'],
+  ['100', 'Száz'],
+  ['-100', 'Mínusz Száz'],
+];
+
+describe('Test String Inputs', () => {
+  test.concurrent.each(testStringInputs)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input as string)).toBe(expected);
+  });
+});
+
+// Zero Variants Tests
+describe('Test Zero Variants', () => {
+  test('convert 0 => Nulla', () => {
+    expect(toWords.convert(0)).toBe('Nulla');
+  });
+
+  test('convert -0 => Nulla', () => {
+    expect(toWords.convert(-0)).toBe('Nulla');
+  });
+
+  test('convert 0.0 => Nulla', () => {
+    expect(toWords.convert(0.0)).toBe('Nulla');
+  });
+
+  test('convert 0n => Nulla', () => {
+    expect(toWords.convert(0n)).toBe('Nulla');
+  });
+
+  test('convert "0" => Nulla', () => {
+    expect(toWords.convert('0')).toBe('Nulla');
+  });
+
+  test('convert 0 with currency => Nulla Forint', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('Nulla Forint');
+  });
+});
+
+// Invalid Input Tests
+describe('Test Invalid Inputs', () => {
+  test('should throw error for NaN', () => {
+    expect(() => toWords.convert(NaN)).toThrow('Invalid Number "NaN"');
+  });
+
+  test('should throw error for Infinity', () => {
+    expect(() => toWords.convert(Infinity)).toThrow('Invalid Number "Infinity"');
+  });
+
+  test('should throw error for -Infinity', () => {
+    expect(() => toWords.convert(-Infinity)).toThrow('Invalid Number "-Infinity"');
+  });
+
+  test('should throw error for empty string', () => {
+    expect(() => toWords.convert('')).toThrow('Invalid Number ""');
+  });
+
+  test('should throw error for non-numeric string', () => {
+    expect(() => toWords.convert('abc')).toThrow('Invalid Number "abc"');
+  });
+});

@@ -289,3 +289,146 @@ describe('Ordinal Tests', () => {
     expect(() => toWordsOrdinal.toOrdinal(1.5)).toThrow('Ordinal numbers must be non-negative integers');
   });
 });
+
+// Powers of Ten (Arabic)
+const testPowersOfTen: [number, string][] = [
+  [10, 'عشرة'],
+  [100, 'مائة'],
+  [1000, 'ألف'],
+  [10000, 'عشرة آلاف'],
+  [100000, 'مائة ألف'],
+  [1000000, 'مليون'],
+  [10000000, 'عشرة ملايين'],
+  [100000000, 'مائة مليون'],
+  [1000000000, 'مليار'],
+  [10000000000, 'عشرة مليارات'],
+  [100000000000, 'مائة مليار'],
+  [1000000000000, 'تريليون'],
+];
+
+describe('Test Powers of Ten (Arabic System)', () => {
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// BigInt Tests
+const testBigInts: [bigint, string][] = [
+  [0n, 'صفر'],
+  [1n, 'واحد'],
+  [100n, 'مائة'],
+  [1000n, 'ألف'],
+  [1000000n, 'مليون'],
+  [1000000000n, 'مليار'],
+  [1000000000000n, 'تريليون'],
+];
+
+describe('Test BigInt Values', () => {
+  test.concurrent.each(testBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Negative BigInt Tests
+const testNegativeBigInts: [bigint, string][] = [
+  [-1n, 'سالب واحد'],
+  [-100n, 'سالب مائة'],
+  [-1000n, 'سالب ألف'],
+  [-1000000n, 'سالب مليون'],
+  [-1000000000n, 'سالب مليار'],
+];
+
+describe('Test Negative BigInt Values', () => {
+  test.concurrent.each(testNegativeBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// BigInt with Currency
+const testBigIntsWithCurrency: [bigint, string][] = [
+  [0n, 'صفر ليرات فقط لا غير'],
+  [1n, 'ليرة واحدة فقط لا غير'],
+  [2n, 'ليرتان فقط لا غير'],
+  [100n, 'مائة ليرات فقط لا غير'],
+  [1000n, 'ألف ليرات فقط لا غير'],
+  [1000000n, 'مليون ليرات فقط لا غير'],
+];
+
+describe('Test BigInt with Currency', () => {
+  test.concurrent.each(testBigIntsWithCurrency)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input, { currency: true })).toBe(expected);
+  });
+});
+
+// String Input Tests
+const testStringInputs: [string, string][] = [
+  ['0', 'صفر'],
+  ['1', 'واحد'],
+  ['100', 'مائة'],
+  ['1000', 'ألف'],
+  ['-100', 'سالب مائة'],
+  ['3.14', 'ثلاثة فاصلة أربعة عشر'],
+  ['-3.14', 'سالب ثلاثة فاصلة أربعة عشر'],
+  ['  100  ', 'مائة'],
+  ['1000000', 'مليون'],
+];
+
+describe('Test String Number Inputs', () => {
+  test.concurrent.each(testStringInputs)('convert "%s" => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Zero Variants
+describe('Test Zero Variants', () => {
+  test('converts 0 correctly', () => {
+    expect(toWords.convert(0)).toBe('صفر');
+  });
+
+  test('converts -0 as صفر', () => {
+    expect(toWords.convert(-0)).toBe('صفر');
+  });
+
+  test('converts 0.0 as صفر', () => {
+    expect(toWords.convert(0.0)).toBe('صفر');
+  });
+
+  test('converts 0n as صفر', () => {
+    expect(toWords.convert(0n)).toBe('صفر');
+  });
+
+  test('converts "0" as صفر', () => {
+    expect(toWords.convert('0')).toBe('صفر');
+  });
+
+  test('converts 0 with currency', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('صفر ليرات فقط لا غير');
+  });
+
+  test('converts 0 with currency and ignoreZeroCurrency', () => {
+    expect(toWords.convert(0, { currency: true, ignoreZeroCurrency: true })).toBe('');
+  });
+});
+
+// Invalid Input Tests
+describe('Test Invalid Inputs for ar-LB', () => {
+  test('throws for NaN', () => {
+    expect(() => toWords.convert(NaN)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for Infinity', () => {
+    expect(() => toWords.convert(Infinity)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for -Infinity', () => {
+    expect(() => toWords.convert(-Infinity)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for empty string', () => {
+    expect(() => toWords.convert('')).toThrow(/Invalid Number/);
+  });
+
+  test('throws for invalid string', () => {
+    expect(() => toWords.convert('abc')).toThrow(/Invalid Number/);
+  });
+});

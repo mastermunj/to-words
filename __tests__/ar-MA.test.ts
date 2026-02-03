@@ -309,3 +309,97 @@ describe('Ordinal Tests', () => {
     expect(() => toWordsOrdinal.toOrdinal(1.5)).toThrow('Ordinal numbers must be non-negative integers');
   });
 });
+
+describe('Powers of Ten', () => {
+  const powersOfTen: [number, string][] = [
+    [10, 'عشرة'],
+    [100, 'مائة'],
+    [1000, 'ألف'],
+    [10000, 'عشرة آلاف'],
+    [100000, 'مائة ألف'],
+    [1000000, 'مليون'],
+  ];
+
+  test.concurrent.each(powersOfTen)('convert %d => %s', async (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+describe('BigInt Tests', () => {
+  const bigIntTests: [bigint, string][] = [
+    [0n, 'صفر'],
+    [1n, 'واحد'],
+    [100n, 'مائة'],
+    [1000n, 'ألف'],
+    [1000000n, 'مليون'],
+  ];
+
+  test.concurrent.each(bigIntTests)('convert %d => %s', async (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+describe('Negative BigInt Tests', () => {
+  const negativeBigIntTests: [bigint, string][] = [
+    [-1n, 'سالب واحد'],
+    [-100n, 'سالب مائة'],
+    [-1000n, 'سالب ألف'],
+  ];
+
+  test.concurrent.each(negativeBigIntTests)('convert %d => %s', async (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+describe('String Input Tests', () => {
+  const stringInputTests: [string, string][] = [
+    ['0', 'صفر'],
+    ['1', 'واحد'],
+    ['100', 'مائة'],
+    ['-100', 'سالب مائة'],
+  ];
+
+  test.concurrent.each(stringInputTests)('convert %s => %s', async (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+describe('Zero Variants', () => {
+  test('converts 0', () => {
+    expect(toWords.convert(0)).toBe('صفر');
+  });
+
+  test('converts -0', () => {
+    expect(toWords.convert(-0)).toBe('صفر');
+  });
+
+  test('converts 0.0', () => {
+    expect(toWords.convert(0.0)).toBe('صفر');
+  });
+
+  test('converts 0n', () => {
+    expect(toWords.convert(0n)).toBe('صفر');
+  });
+
+  test('converts "0"', () => {
+    expect(toWords.convert('0')).toBe('صفر');
+  });
+
+  test('converts 0 with currency', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('صفر درهم فقط لا غير');
+  });
+});
+
+describe('Invalid Input Tests', () => {
+  const invalidInputTests: [unknown, string][] = [
+    [NaN, 'Invalid Number "NaN"'],
+    [Infinity, 'Invalid Number "Infinity"'],
+    [-Infinity, 'Invalid Number "-Infinity"'],
+    ['', 'Invalid Number ""'],
+    ['abc', 'Invalid Number "abc"'],
+  ];
+
+  test.concurrent.each(invalidInputTests)('convert %s throws error', async (input, expectedError) => {
+    expect(() => toWords.convert(input as number)).toThrow(expectedError);
+  });
+});

@@ -336,3 +336,96 @@ describe('Test Norwegian-specific numbers', () => {
     expect(toWords.convert(2000000000)).toBe('To Milliard');
   });
 });
+
+const testPowersOfTen: [number, string][] = [
+  [10, 'Ti'],
+  [100, 'Hundre'],
+  [1000, 'Tusen'],
+  [10000, 'Ti Tusen'],
+  [100000, 'Hundre Tusen'],
+  [1000000, 'En Million'],
+];
+
+describe('Test Powers of Ten', () => {
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number)).toBe(expected);
+  });
+});
+
+const testBigInt: [bigint, string][] = [
+  [0n, 'Null'],
+  [1n, 'En'],
+  [100n, 'Hundre'],
+  [1000n, 'Tusen'],
+];
+
+describe('Test BigInt', () => {
+  test.concurrent.each(testBigInt)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as bigint)).toBe(expected);
+  });
+});
+
+const testNegativeBigInt: [bigint, string][] = [
+  [-1n, 'Minus En'],
+  [-100n, 'Minus Hundre'],
+  [-1000n, 'Minus Tusen'],
+];
+
+describe('Test Negative BigInt', () => {
+  test.concurrent.each(testNegativeBigInt)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as bigint)).toBe(expected);
+  });
+});
+
+const testStringInput: [string, string][] = [
+  ['0', 'Null'],
+  ['1', 'En'],
+  ['100', 'Hundre'],
+  ['-100', 'Minus Hundre'],
+];
+
+describe('Test String Input', () => {
+  test.concurrent.each(testStringInput)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input as string)).toBe(expected);
+  });
+});
+
+describe('Test Zero Variants', () => {
+  test('Zero as number', () => {
+    expect(toWords.convert(0)).toBe('Null');
+  });
+
+  test('Negative zero', () => {
+    expect(toWords.convert(-0)).toBe('Null');
+  });
+
+  test('Zero as float', () => {
+    expect(toWords.convert(0.0)).toBe('Null');
+  });
+
+  test('Zero as BigInt', () => {
+    expect(toWords.convert(0n)).toBe('Null');
+  });
+
+  test('Zero as string', () => {
+    expect(toWords.convert('0')).toBe('Null');
+  });
+
+  test('Zero with currency', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('Null Kroner');
+  });
+});
+
+const testInvalidInputs: [unknown, string][] = [
+  [NaN, 'Invalid Number "NaN"'],
+  [Infinity, 'Invalid Number "Infinity"'],
+  [-Infinity, 'Invalid Number "-Infinity"'],
+  ['', 'Invalid Number ""'],
+  ['abc', 'Invalid Number "abc"'],
+];
+
+describe('Test Invalid Inputs', () => {
+  test.concurrent.each(testInvalidInputs)('convert %s => throws %s', (input, expectedError) => {
+    expect(() => toWords.convert(input as number)).toThrow(expectedError);
+  });
+});

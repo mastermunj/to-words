@@ -336,3 +336,132 @@ describe('Test Swedish-specific numbers', () => {
     expect(toWords.convert(2000000000)).toBe('Två Miljard');
   });
 });
+
+// ============================================================
+// COMPREHENSIVE TEST ADDITIONS FOR sv-SE
+// ============================================================
+
+// Powers of Ten (Swedish)
+const testPowersOfTen: [number, string][] = [
+  [10, 'Tio'],
+  [100, 'Hundra'],
+  [1000, 'Tusen'],
+  [10000, 'Tio Tusen'],
+  [100000, 'Hundra Tusen'],
+  [1000000, 'Ett Miljon'],
+  [10000000, 'Tio Miljon'],
+  [100000000, 'Hundra Miljon'],
+  [1000000000, 'Ett Miljard'],
+  [10000000000, 'Tio Miljard'],
+  [100000000000, 'Hundra Miljard'],
+  [1000000000000, 'Ett Biljon'],
+];
+
+describe('Test Powers of Ten (Swedish System)', () => {
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// BigInt Tests
+const testBigInts: [bigint, string][] = [
+  [0n, 'Noll'],
+  [1n, 'Ett'],
+  [100n, 'Hundra'],
+  [1000n, 'Tusen'],
+  [1000000n, 'Ett Miljon'],
+  [1000000000n, 'Ett Miljard'],
+  [1000000000000n, 'Ett Biljon'],
+];
+
+describe('Test BigInt Values', () => {
+  test.concurrent.each(testBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Negative BigInt Tests
+const testNegativeBigInts: [bigint, string][] = [
+  [-1n, 'Minus Ett'],
+  [-100n, 'Minus Hundra'],
+  [-1000n, 'Minus Tusen'],
+  [-1000000n, 'Minus Ett Miljon'],
+  [-1000000000n, 'Minus Ett Miljard'],
+];
+
+describe('Test Negative BigInt Values', () => {
+  test.concurrent.each(testNegativeBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// String Input Tests
+const testStringInputs: [string, string][] = [
+  ['0', 'Noll'],
+  ['1', 'Ett'],
+  ['100', 'Hundra'],
+  ['1000', 'Tusen'],
+  ['-100', 'Minus Hundra'],
+  ['  100  ', 'Hundra'],
+  ['1000000', 'Ett Miljon'],
+];
+
+describe('Test String Number Inputs', () => {
+  test.concurrent.each(testStringInputs)('convert "%s" => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Zero Variants
+describe('Test Zero Variants', () => {
+  test('converts 0 correctly', () => {
+    expect(toWords.convert(0)).toBe('Noll');
+  });
+
+  test('converts -0 as Noll', () => {
+    expect(toWords.convert(-0)).toBe('Noll');
+  });
+
+  test('converts 0.0 as Noll', () => {
+    expect(toWords.convert(0.0)).toBe('Noll');
+  });
+
+  test('converts 0n as Noll', () => {
+    expect(toWords.convert(0n)).toBe('Noll');
+  });
+
+  test('converts "0" as Noll', () => {
+    expect(toWords.convert('0')).toBe('Noll');
+  });
+
+  test('converts 0 with currency', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('Noll Kronor');
+  });
+
+  test('converts 0 with currency and ignoreZeroCurrency', () => {
+    expect(toWords.convert(0, { currency: true, ignoreZeroCurrency: true })).toBe('');
+  });
+});
+
+// Invalid Input Tests
+describe('Test Invalid Inputs for sv-SE', () => {
+  test('throws for NaN', () => {
+    expect(() => toWords.convert(NaN)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for Infinity', () => {
+    expect(() => toWords.convert(Infinity)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for -Infinity', () => {
+    expect(() => toWords.convert(-Infinity)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for empty string', () => {
+    expect(() => toWords.convert('')).toThrow(/Invalid Number/);
+  });
+
+  test('throws for invalid string', () => {
+    expect(() => toWords.convert('abc')).toThrow(/Invalid Number/);
+  });
+});

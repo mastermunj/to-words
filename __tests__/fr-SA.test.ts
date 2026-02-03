@@ -347,3 +347,104 @@ describe('Test Ordinal Error Cases', () => {
     expect(() => toWords.toOrdinal(-3.14)).toThrow('Ordinal numbers must be non-negative integers');
   });
 });
+
+describe('Powers of Ten', () => {
+  const testPowersOfTen: [number, string][] = [
+    [10, 'Dix'],
+    [100, 'Cent'],
+    [1000, 'Mille'],
+    [10000, 'Dix Mille'],
+    [100000, 'Cent Mille'],
+    [1000000, 'Un Million'],
+  ];
+
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+describe('BigInt Tests', () => {
+  const testBigInts: [bigint, string][] = [
+    [0n, 'Zéro'],
+    [1n, 'Un'],
+    [100n, 'Cent'],
+    [1000n, 'Mille'],
+  ];
+
+  test.concurrent.each(testBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+describe('Negative BigInt Tests', () => {
+  const testNegativeBigInts: [bigint, string][] = [
+    [-1n, 'Moins Un'],
+    [-100n, 'Moins Cent'],
+    [-1000n, 'Moins Mille'],
+  ];
+
+  test.concurrent.each(testNegativeBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+describe('String Input Tests', () => {
+  const testStringInputs: [string, string][] = [
+    ['0', 'Zéro'],
+    ['1', 'Un'],
+    ['100', 'Cent'],
+    ['-100', 'Moins Cent'],
+  ];
+
+  test.concurrent.each(testStringInputs)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+describe('Zero Variants', () => {
+  test('convert 0 => Zéro', () => {
+    expect(toWords.convert(0)).toBe('Zéro');
+  });
+
+  test('convert -0 => Zéro', () => {
+    expect(toWords.convert(-0)).toBe('Zéro');
+  });
+
+  test('convert 0.0 => Zéro', () => {
+    expect(toWords.convert(0.0)).toBe('Zéro');
+  });
+
+  test('convert 0n => Zéro', () => {
+    expect(toWords.convert(0n)).toBe('Zéro');
+  });
+
+  test('convert "0" => Zéro', () => {
+    expect(toWords.convert('0')).toBe('Zéro');
+  });
+
+  test('convert 0 with currency => Zéro Riyals', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('Zéro Riyals');
+  });
+});
+
+describe('Invalid Input Tests', () => {
+  test('convert NaN throws error', () => {
+    expect(() => toWords.convert(NaN)).toThrow();
+  });
+
+  test('convert Infinity throws error', () => {
+    expect(() => toWords.convert(Infinity)).toThrow();
+  });
+
+  test('convert -Infinity throws error', () => {
+    expect(() => toWords.convert(-Infinity)).toThrow();
+  });
+
+  test('convert empty string throws error', () => {
+    expect(() => toWords.convert('')).toThrow();
+  });
+
+  test('convert "abc" throws error', () => {
+    expect(() => toWords.convert('abc')).toThrow();
+  });
+});

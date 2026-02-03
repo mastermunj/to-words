@@ -228,3 +228,104 @@ describe('Test Ordinal Error Cases', () => {
     expect(() => toWords.toOrdinal(1.5)).toThrow('Ordinal numbers must be non-negative integers');
   });
 });
+
+const testPowersOfTen: [number, string][] = [
+  [10, 'Δέκα'],
+  [100, 'Εκατό'],
+  [1000, 'Χίλια'],
+  [10000, 'Δέκα Χιλιάδες'],
+  [100000, 'Εκατό Χιλιάδες'],
+  [1000000, 'Ένα Εκατομμύριο'],
+];
+
+describe('Test Powers of Ten', () => {
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number)).toBe(expected);
+  });
+});
+
+const testBigInts: [bigint, string][] = [
+  [0n, 'Μηδέν'],
+  [1n, 'Ένα'],
+  [100n, 'Εκατό'],
+  [1000n, 'Χίλια'],
+];
+
+describe('Test BigInt', () => {
+  test.concurrent.each(testBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as bigint)).toBe(expected);
+  });
+});
+
+const testNegativeBigInts: [bigint, string][] = [
+  [-1n, 'Μείον Ένα'],
+  [-100n, 'Μείον Εκατό'],
+  [-1000n, 'Μείον Χίλια'],
+];
+
+describe('Test Negative BigInt', () => {
+  test.concurrent.each(testNegativeBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as bigint)).toBe(expected);
+  });
+});
+
+const testStringInputs: [string, string][] = [
+  ['0', 'Μηδέν'],
+  ['1', 'Ένα'],
+  ['100', 'Εκατό'],
+  ['-100', 'Μείον Εκατό'],
+];
+
+describe('Test String Input', () => {
+  test.concurrent.each(testStringInputs)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input as string)).toBe(expected);
+  });
+});
+
+describe('Test Zero Variants', () => {
+  test('convert 0 => Μηδέν', () => {
+    expect(toWords.convert(0)).toBe('Μηδέν');
+  });
+
+  test('convert -0 => Μηδέν', () => {
+    expect(toWords.convert(-0)).toBe('Μηδέν');
+  });
+
+  test('convert 0.0 => Μηδέν', () => {
+    expect(toWords.convert(0.0)).toBe('Μηδέν');
+  });
+
+  test('convert 0n => Μηδέν', () => {
+    expect(toWords.convert(0n)).toBe('Μηδέν');
+  });
+
+  test('convert "0" => Μηδέν', () => {
+    expect(toWords.convert('0')).toBe('Μηδέν');
+  });
+
+  test('convert 0 with currency => Μηδέν Ευρώ Μόνο', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('Μηδέν Ευρώ Μόνο');
+  });
+});
+
+describe('Test Invalid Input', () => {
+  test('should throw error for NaN', () => {
+    expect(() => toWords.convert(NaN)).toThrow('Invalid Number "NaN"');
+  });
+
+  test('should throw error for Infinity', () => {
+    expect(() => toWords.convert(Infinity)).toThrow('Invalid Number "Infinity"');
+  });
+
+  test('should throw error for -Infinity', () => {
+    expect(() => toWords.convert(-Infinity)).toThrow('Invalid Number "-Infinity"');
+  });
+
+  test('should throw error for empty string', () => {
+    expect(() => toWords.convert('')).toThrow('Invalid Number ""');
+  });
+
+  test('should throw error for non-numeric string', () => {
+    expect(() => toWords.convert('abc')).toThrow('Invalid Number "abc"');
+  });
+});

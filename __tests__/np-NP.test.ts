@@ -270,3 +270,105 @@ describe('Test Ordinals', () => {
     expect(toWords.toOrdinal(input as number)).toBe(expected);
   });
 });
+
+const testPowersOfTen: [number, string][] = [
+  [10, 'दश'],
+  [100, 'एक सय'],
+  [1000, 'एक हजार'],
+  [10000, 'दश हजार'],
+  [100000, 'एक लाख'],
+  [1000000, 'दश लाख'],
+  [10000000, 'एक करोड'],
+];
+
+describe('Test Powers of Ten', () => {
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+const testBigInts: [bigint, string][] = [
+  [0n, 'शून्य'],
+  [1n, 'एक'],
+  [100n, 'एक सय'],
+  [1000n, 'एक हजार'],
+];
+
+describe('Test BigInt', () => {
+  test.concurrent.each(testBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+const testNegativeBigInts: [bigint, string][] = [
+  [-1n, 'माइनस एक'],
+  [-100n, 'माइनस एक सय'],
+  [-1000n, 'माइनस एक हजार'],
+];
+
+describe('Test Negative BigInt', () => {
+  test.concurrent.each(testNegativeBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+const testStringInputs: [string, string][] = [
+  ['0', 'शून्य'],
+  ['1', 'एक'],
+  ['100', 'एक सय'],
+  ['-100', 'माइनस एक सय'],
+];
+
+describe('Test String Inputs', () => {
+  test.concurrent.each(testStringInputs)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+describe('Test Zero Variants', () => {
+  test('convert 0 => शून्य', () => {
+    expect(toWords.convert(0)).toBe('शून्य');
+  });
+
+  test('convert -0 => शून्य', () => {
+    expect(toWords.convert(-0)).toBe('शून्य');
+  });
+
+  test('convert 0.0 => शून्य', () => {
+    expect(toWords.convert(0.0)).toBe('शून्य');
+  });
+
+  test('convert 0n => शून्य', () => {
+    expect(toWords.convert(0n)).toBe('शून्य');
+  });
+
+  test('convert "0" => शून्य', () => {
+    expect(toWords.convert('0')).toBe('शून्य');
+  });
+
+  test('convert 0 with currency => शून्य रुपैयाँ मात्र', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('शून्य रुपैयाँ मात्र');
+  });
+});
+
+describe('Test Invalid Inputs', () => {
+  test('convert NaN throws error', () => {
+    expect(() => toWords.convert(NaN)).toThrow('Invalid Number "NaN"');
+  });
+
+  test('convert Infinity throws error', () => {
+    expect(() => toWords.convert(Infinity)).toThrow('Invalid Number "Infinity"');
+  });
+
+  test('convert -Infinity throws error', () => {
+    expect(() => toWords.convert(-Infinity)).toThrow('Invalid Number "-Infinity"');
+  });
+
+  test('convert empty string throws error', () => {
+    expect(() => toWords.convert('')).toThrow('Invalid Number ""');
+  });
+
+  test('convert "abc" throws error', () => {
+    expect(() => toWords.convert('abc')).toThrow('Invalid Number "abc"');
+  });
+});

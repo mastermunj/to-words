@@ -354,3 +354,96 @@ describe('Test Invalid Inputs', () => {
     expect(() => toWords.convert(-Infinity)).toThrow();
   });
 });
+
+describe('Test Powers of Ten', () => {
+  const powersOfTen: [number, string][] = [
+    [10, 'ათი'],
+    [100, 'ასი'],
+    [1000, 'ერთი ათასი'],
+    [10000, 'ათი ათასი'],
+    [100000, 'ასი ათასი'],
+    [1000000, 'ერთი მილიონი'],
+  ];
+
+  test.concurrent.each(powersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number)).toBe(expected);
+  });
+});
+
+describe('Test BigInt', () => {
+  const bigIntCases: [bigint, string][] = [
+    [0n, 'ნული'],
+    [1n, 'ერთი'],
+    [100n, 'ასი'],
+    [1000n, 'ერთი ათასი'],
+  ];
+
+  test.concurrent.each(bigIntCases)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+describe('Test Negative BigInt', () => {
+  const negativeBigIntCases: [bigint, string][] = [
+    [-1n, 'მინუს ერთი'],
+    [-100n, 'მინუს ასი'],
+    [-1000n, 'მინუს ერთი ათასი'],
+  ];
+
+  test.concurrent.each(negativeBigIntCases)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+describe('Test String Input', () => {
+  const stringInputCases: [string, string][] = [
+    ['0', 'ნული'],
+    ['1', 'ერთი'],
+    ['100', 'ასი'],
+    ['-100', 'მინუს ასი'],
+  ];
+
+  test.concurrent.each(stringInputCases)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+describe('Test Zero Variants', () => {
+  test('convert 0 => ნული', () => {
+    expect(toWords.convert(0)).toBe('ნული');
+  });
+
+  test('convert -0 => ნული', () => {
+    expect(toWords.convert(-0)).toBe('ნული');
+  });
+
+  test('convert 0.0 => ნული', () => {
+    expect(toWords.convert(0.0)).toBe('ნული');
+  });
+
+  test('convert 0n => ნული', () => {
+    expect(toWords.convert(0n)).toBe('ნული');
+  });
+
+  test('convert "0" => ნული', () => {
+    expect(toWords.convert('0')).toBe('ნული');
+  });
+
+  test('convert 0 with currency => ნული ლარი', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('ნული ლარი');
+  });
+});
+
+describe('Test Invalid Input Errors', () => {
+  const invalidInputCases: [unknown, string][] = [
+    [NaN, 'NaN'],
+    [Infinity, 'Infinity'],
+    [-Infinity, '-Infinity'],
+    ['', 'empty string'],
+    ['abc', 'non-numeric string'],
+  ];
+
+  test.concurrent.each(invalidInputCases)('convert %s throws error', (input) => {
+    expect(() => toWords.convert(input as number)).toThrow();
+  });
+});

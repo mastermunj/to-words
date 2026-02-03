@@ -263,3 +263,105 @@ describe('Test Ordinal Error Cases', () => {
     expect(() => toWords.toOrdinal(1.5)).toThrow(/must be non-negative integers/);
   });
 });
+
+const testPowersOfTen: [number, string][] = [
+  [10, 'দশ'],
+  [100, 'শত'],
+  [1000, 'এক হাজার'],
+  [10000, 'দশ হাজার'],
+  [100000, 'এক লাখ'],
+  [1000000, 'দশ লাখ'],
+  [10000000, 'এক কোটি'],
+];
+
+describe('Test Powers of Ten', () => {
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number)).toBe(expected);
+  });
+});
+
+const testBigInt: [bigint, string][] = [
+  [0n, 'শূন্য'],
+  [1n, 'এক'],
+  [100n, 'শত'],
+  [1000n, 'এক হাজার'],
+];
+
+describe('Test BigInt', () => {
+  test.concurrent.each(testBigInt)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as bigint)).toBe(expected);
+  });
+});
+
+const testNegativeBigInt: [bigint, string][] = [
+  [-1n, 'ঋণ এক'],
+  [-100n, 'ঋণ শত'],
+  [-1000n, 'ঋণ এক হাজার'],
+];
+
+describe('Test Negative BigInt', () => {
+  test.concurrent.each(testNegativeBigInt)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as bigint)).toBe(expected);
+  });
+});
+
+const testStringInput: [string, string][] = [
+  ['0', 'শূন্য'],
+  ['1', 'এক'],
+  ['100', 'শত'],
+  ['-100', 'ঋণ শত'],
+];
+
+describe('Test String Input', () => {
+  test.concurrent.each(testStringInput)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input as string)).toBe(expected);
+  });
+});
+
+describe('Test Zero Variants', () => {
+  test('convert 0 => শূন্য', () => {
+    expect(toWords.convert(0)).toBe('শূন্য');
+  });
+
+  test('convert -0 => শূন্য', () => {
+    expect(toWords.convert(-0)).toBe('শূন্য');
+  });
+
+  test('convert 0.0 => শূন্য', () => {
+    expect(toWords.convert(0.0)).toBe('শূন্য');
+  });
+
+  test('convert 0n => শূন্য', () => {
+    expect(toWords.convert(0n)).toBe('শূন্য');
+  });
+
+  test('convert "0" => শূন্য', () => {
+    expect(toWords.convert('0')).toBe('শূন্য');
+  });
+
+  test('convert 0 with currency => শূন্য টাকা', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('শূন্য টাকা');
+  });
+});
+
+describe('Test Invalid Input', () => {
+  test('should throw error for NaN', () => {
+    expect(() => toWords.convert(NaN)).toThrow(/Invalid Number "NaN"/);
+  });
+
+  test('should throw error for Infinity', () => {
+    expect(() => toWords.convert(Infinity)).toThrow(/Invalid Number "Infinity"/);
+  });
+
+  test('should throw error for -Infinity', () => {
+    expect(() => toWords.convert(-Infinity)).toThrow(/Invalid Number "-Infinity"/);
+  });
+
+  test('should throw error for empty string', () => {
+    expect(() => toWords.convert('' as unknown as number)).toThrow(/Invalid Number ""/);
+  });
+
+  test('should throw error for non-numeric string', () => {
+    expect(() => toWords.convert('abc' as unknown as number)).toThrow(/Invalid Number "abc"/);
+  });
+});

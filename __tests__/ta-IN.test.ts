@@ -278,3 +278,96 @@ describe('Test Ordinal Error Cases', () => {
     expect(() => toWords.toOrdinal(1.5)).toThrow(/must be non-negative integers/);
   });
 });
+
+const testPowersOfTen: [number, string][] = [
+  [10, 'பத்து'],
+  [100, 'நூறு'],
+  [1000, 'ஒன்று ஆயிரம்'],
+  [10000, 'பத்து ஆயிரம்'],
+  [100000, 'ஒன்று லட்சம்'],
+  [1000000, 'பத்து லட்சம்'],
+  [10000000, 'ஒன்று கோடி'],
+];
+
+describe('Test Powers of Ten', () => {
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+const testBigInts: [bigint, string][] = [
+  [0n, 'பூஜ்ஜியம்'],
+  [1n, 'ஒன்று'],
+  [100n, 'நூறு'],
+  [1000n, 'ஒன்று ஆயிரம்'],
+];
+
+describe('Test BigInt', () => {
+  test.concurrent.each(testBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+const testNegativeBigInts: [bigint, string][] = [
+  [-1n, 'கழித்தல் ஒன்று'],
+  [-100n, 'கழித்தல் நூறு'],
+  [-1000n, 'கழித்தல் ஒன்று ஆயிரம்'],
+];
+
+describe('Test Negative BigInt', () => {
+  test.concurrent.each(testNegativeBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+const testStringInputs: [string, string][] = [
+  ['0', 'பூஜ்ஜியம்'],
+  ['1', 'ஒன்று'],
+  ['100', 'நூறு'],
+  ['-100', 'கழித்தல் நூறு'],
+];
+
+describe('Test String Input', () => {
+  test.concurrent.each(testStringInputs)('convert "%s" => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+describe('Test Zero Variants', () => {
+  test.concurrent.each([
+    [0, 'பூஜ்ஜியம்'],
+    [-0, 'பூஜ்ஜியம்'],
+    [0.0, 'பூஜ்ஜியம்'],
+  ] as [number, string][])('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+
+  test('convert 0n => பூஜ்ஜியம்', () => {
+    expect(toWords.convert(0n)).toBe('பூஜ்ஜியம்');
+  });
+
+  test('convert "0" => பூஜ்ஜியம்', () => {
+    expect(toWords.convert('0')).toBe('பூஜ்ஜியம்');
+  });
+
+  test('convert 0 with currency => பூஜ்ஜியம் ரூபாய்', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('பூஜ்ஜியம் ரூபாய்');
+  });
+});
+
+describe('Test Invalid Input', () => {
+  test.concurrent.each([
+    [NaN, 'Invalid Number "NaN"'],
+    [Infinity, 'Invalid Number "Infinity"'],
+    [-Infinity, 'Invalid Number "-Infinity"'],
+  ] as [number, string][])('convert %s throws error', (input, expectedMessage) => {
+    expect(() => toWords.convert(input)).toThrow(expectedMessage);
+  });
+
+  test.concurrent.each([
+    ['', 'Invalid Number ""'],
+    ['abc', 'Invalid Number "abc"'],
+  ] as [string, string][])('convert "%s" throws error', (input, expectedMessage) => {
+    expect(() => toWords.convert(input)).toThrow(expectedMessage);
+  });
+});

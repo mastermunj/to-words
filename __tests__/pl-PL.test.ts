@@ -338,3 +338,132 @@ describe('Test Ordinal Error Cases', () => {
     expect(() => toWords.toOrdinal(99.99)).toThrow('Ordinal numbers must be non-negative integers');
   });
 });
+
+// ============================================================
+// COMPREHENSIVE TEST ADDITIONS FOR pl-PL
+// ============================================================
+
+// Powers of Ten (Polish)
+const testPowersOfTen: [number, string][] = [
+  [10, 'Dziesięć'],
+  [100, 'Sto'],
+  [1000, 'Tysiąc'],
+  [10000, 'Dziesięć Tysiąc'],
+  [100000, 'Sto Tysięcy'],
+  [1000000, 'Milion'],
+  [10000000, 'Dziesięć Milion'],
+  [100000000, 'Sto Milionów'],
+  [1000000000, 'Miliard'],
+  [10000000000, 'Dziesięć Miliard'],
+  [100000000000, 'Sto Miliardów'],
+  [1000000000000, 'Bilion'],
+];
+
+describe('Test Powers of Ten (Polish System)', () => {
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// BigInt Tests
+const testBigInts: [bigint, string][] = [
+  [0n, 'Zero'],
+  [1n, 'Jeden'],
+  [100n, 'Sto'],
+  [1000n, 'Tysiąc'],
+  [1000000n, 'Milion'],
+  [1000000000n, 'Miliard'],
+  [1000000000000n, 'Bilion'],
+];
+
+describe('Test BigInt Values', () => {
+  test.concurrent.each(testBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Negative BigInt Tests
+const testNegativeBigInts: [bigint, string][] = [
+  [-1n, 'Minus Jeden'],
+  [-100n, 'Minus Sto'],
+  [-1000n, 'Minus Tysiąc'],
+  [-1000000n, 'Minus Milion'],
+  [-1000000000n, 'Minus Miliard'],
+];
+
+describe('Test Negative BigInt Values', () => {
+  test.concurrent.each(testNegativeBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// String Input Tests
+const testStringInputs: [string, string][] = [
+  ['0', 'Zero'],
+  ['1', 'Jeden'],
+  ['100', 'Sto'],
+  ['1000', 'Tysiąc'],
+  ['-100', 'Minus Sto'],
+  ['  100  ', 'Sto'],
+  ['1000000', 'Milion'],
+];
+
+describe('Test String Number Inputs', () => {
+  test.concurrent.each(testStringInputs)('convert "%s" => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Zero Variants
+describe('Test Zero Variants', () => {
+  test('converts 0 correctly', () => {
+    expect(toWords.convert(0)).toBe('Zero');
+  });
+
+  test('converts -0 as Zero', () => {
+    expect(toWords.convert(-0)).toBe('Zero');
+  });
+
+  test('converts 0.0 as Zero', () => {
+    expect(toWords.convert(0.0)).toBe('Zero');
+  });
+
+  test('converts 0n as Zero', () => {
+    expect(toWords.convert(0n)).toBe('Zero');
+  });
+
+  test('converts "0" as Zero', () => {
+    expect(toWords.convert('0')).toBe('Zero');
+  });
+
+  test('converts 0 with currency', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('Zero Złotych Tylko');
+  });
+
+  test('converts 0 with currency and ignoreZeroCurrency', () => {
+    expect(toWords.convert(0, { currency: true, ignoreZeroCurrency: true })).toBe('');
+  });
+});
+
+// Invalid Input Tests
+describe('Test Invalid Inputs for pl-PL', () => {
+  test('throws for NaN', () => {
+    expect(() => toWords.convert(NaN)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for Infinity', () => {
+    expect(() => toWords.convert(Infinity)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for -Infinity', () => {
+    expect(() => toWords.convert(-Infinity)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for empty string', () => {
+    expect(() => toWords.convert('')).toThrow(/Invalid Number/);
+  });
+
+  test('throws for invalid string', () => {
+    expect(() => toWords.convert('abc')).toThrow(/Invalid Number/);
+  });
+});

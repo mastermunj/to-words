@@ -53,7 +53,7 @@ Convert numbers to words with comprehensive locale, currency, and ordinal suppor
 - **TypeScript Native** — Full type definitions included
 - **Multiple Formats** — ESM, CommonJS, and UMD browser bundles
 - **Zero Dependencies** — Lightweight and self-contained
-- **High Performance** — 1M+ conversions per second
+- **High Performance** — 4M+ conversions per second
 - **Wide Browser Support** — All modern browsers + IE11
 
 ## 🚀 Quick Start
@@ -455,11 +455,11 @@ Benchmarked on Apple M2 (Node.js 23):
 
 | Operation | Throughput |
 |-----------|------------|
-| Small integers (42) | ~1.4M ops/sec |
-| Medium integers (12,345) | ~800K ops/sec |
-| Large integers (15 digits) | ~300K ops/sec |
-| Currency conversion | ~500K ops/sec |
-| BigInt (30+ digits) | ~130K ops/sec |
+| Small integers (42) | ~4.7M ops/sec |
+| Medium integers (12,345) | ~2.2M ops/sec |
+| Large integers (15 digits) | ~700K ops/sec |
+| Currency conversion | ~1M ops/sec |
+| BigInt (30+ digits) | ~225K ops/sec |
 
 Run benchmarks locally:
 

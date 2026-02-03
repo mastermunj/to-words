@@ -338,3 +338,96 @@ describe('Test Ordinal Error Cases', () => {
     expect(() => toWords.toOrdinal(99.99)).toThrow('Ordinal numbers must be non-negative integers');
   });
 });
+
+describe('Test Powers of Ten', () => {
+  const testPowersOfTen: [number, string][] = [
+    [10, 'Dešimt'],
+    [100, 'Šimtas'],
+    [1000, 'Tūkstantis'],
+    [10000, 'Dešimt Tūkstantis'],
+    [100000, 'Šimtas Tūkstančių'],
+    [1000000, 'Milijonas'],
+  ];
+
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number)).toBe(expected);
+  });
+});
+
+describe('Test BigInt', () => {
+  const testBigInts: [bigint, string][] = [
+    [0n, 'Nulis'],
+    [1n, 'Vienas'],
+    [100n, 'Šimtas'],
+    [1000n, 'Tūkstantis'],
+  ];
+
+  test.concurrent.each(testBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as bigint)).toBe(expected);
+  });
+});
+
+describe('Test Negative BigInt', () => {
+  const testNegativeBigInts: [bigint, string][] = [
+    [-1n, 'Minus Vienas'],
+    [-100n, 'Minus Šimtas'],
+    [-1000n, 'Minus Tūkstantis'],
+  ];
+
+  test.concurrent.each(testNegativeBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as bigint)).toBe(expected);
+  });
+});
+
+describe('Test String Input', () => {
+  const testStringInputs: [string, string][] = [
+    ['0', 'Nulis'],
+    ['1', 'Vienas'],
+    ['100', 'Šimtas'],
+    ['-100', 'Minus Šimtas'],
+  ];
+
+  test.concurrent.each(testStringInputs)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input as string)).toBe(expected);
+  });
+});
+
+describe('Test Zero Variants', () => {
+  test('convert 0 => Nulis', () => {
+    expect(toWords.convert(0)).toBe('Nulis');
+  });
+
+  test('convert -0 => Nulis', () => {
+    expect(toWords.convert(-0)).toBe('Nulis');
+  });
+
+  test('convert 0.0 => Nulis', () => {
+    expect(toWords.convert(0.0)).toBe('Nulis');
+  });
+
+  test('convert 0n => Nulis', () => {
+    expect(toWords.convert(0n)).toBe('Nulis');
+  });
+
+  test('convert "0" => Nulis', () => {
+    expect(toWords.convert('0')).toBe('Nulis');
+  });
+
+  test('convert 0 with currency => Nulis Eurų Tik', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('Nulis Eurų Tik');
+  });
+});
+
+describe('Test Invalid Input', () => {
+  const testInvalidInputs: [unknown, string][] = [
+    [NaN, 'Invalid Number "NaN"'],
+    [Infinity, 'Invalid Number "Infinity"'],
+    [-Infinity, 'Invalid Number "-Infinity"'],
+    ['', 'Invalid Number ""'],
+    ['abc', 'Invalid Number "abc"'],
+  ];
+
+  test.concurrent.each(testInvalidInputs)('convert %s => throws %s', (input, expectedError) => {
+    expect(() => toWords.convert(input as number)).toThrow(expectedError);
+  });
+});

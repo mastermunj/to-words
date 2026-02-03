@@ -283,3 +283,91 @@ describe('Test Ordinal Error Cases', () => {
     expect(() => toWords.toOrdinal(1.5)).toThrow(/must be non-negative integers/);
   });
 });
+
+const testPowersOfTen: [number, string][] = [
+  [10, 'ਦਸ'],
+  [100, 'ਸੌ'],
+  [1000, 'ਇੱਕ ਹਜ਼ਾਰ'],
+  [10000, 'ਦਸ ਹਜ਼ਾਰ'],
+  [100000, 'ਇੱਕ ਲੱਖ'],
+  [1000000, 'ਦਸ ਲੱਖ'],
+  [10000000, 'ਇੱਕ ਕਰੋੜ'],
+];
+
+describe('Test Powers of Ten', () => {
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+const testBigInt: [bigint, string][] = [
+  [0n, 'ਸਿਫ਼ਰ'],
+  [1n, 'ਇੱਕ'],
+  [100n, 'ਸੌ'],
+  [1000n, 'ਇੱਕ ਹਜ਼ਾਰ'],
+];
+
+describe('Test BigInt', () => {
+  test.concurrent.each(testBigInt)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+const testNegativeBigInt: [bigint, string][] = [
+  [-1n, 'ਰਿਣ ਇੱਕ'],
+  [-100n, 'ਰਿਣ ਸੌ'],
+  [-1000n, 'ਰਿਣ ਇੱਕ ਹਜ਼ਾਰ'],
+];
+
+describe('Test Negative BigInt', () => {
+  test.concurrent.each(testNegativeBigInt)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+const testStringInput: [string, string][] = [
+  ['0', 'ਸਿਫ਼ਰ'],
+  ['1', 'ਇੱਕ'],
+  ['100', 'ਸੌ'],
+  ['-100', 'ਰਿਣ ਸੌ'],
+];
+
+describe('Test String Input', () => {
+  test.concurrent.each(testStringInput)('convert "%s" => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+describe('Test Zero Variants', () => {
+  test.concurrent.each([
+    [0, 'ਸਿਫ਼ਰ'],
+    [-0, 'ਸਿਫ਼ਰ'],
+    [0.0, 'ਸਿਫ਼ਰ'],
+  ] as [number, string][])('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+
+  test('convert 0n => ਸਿਫ਼ਰ', () => {
+    expect(toWords.convert(0n)).toBe('ਸਿਫ਼ਰ');
+  });
+
+  test('convert "0" => ਸਿਫ਼ਰ', () => {
+    expect(toWords.convert('0')).toBe('ਸਿਫ਼ਰ');
+  });
+
+  test('convert 0 with currency => ਸਿਫ਼ਰ ਰੁਪਏ', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('ਸਿਫ਼ਰ ਰੁਪਏ');
+  });
+});
+
+describe('Test Invalid Input', () => {
+  test.concurrent.each([
+    [NaN, /Invalid Number/],
+    [Infinity, /Invalid Number/],
+    [-Infinity, /Invalid Number/],
+    ['', /Invalid Number/],
+    ['abc', /Invalid Number/],
+  ] as [number | string, RegExp][])('convert %s throws error', (input, expectedError) => {
+    expect(() => toWords.convert(input as number)).toThrow(expectedError);
+  });
+});

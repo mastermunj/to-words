@@ -361,3 +361,122 @@ describe('Test Invalid Inputs', () => {
     expect(() => toWords.convert(input as number)).toThrow(message);
   });
 });
+
+// ============================================================
+// COMPREHENSIVE TEST ADDITIONS FOR ja-JP
+// ============================================================
+
+// Powers of Ten (Japanese system: 万, 億, 兆)
+const testPowersOfTen: [number, string][] = [
+  [10, '十'],
+  [100, '百'],
+  [1000, '千'],
+  [10000, '万'],
+  [100000, '十万'],
+  [1000000, '百万'],
+  [10000000, '千万'],
+  [100000000, '億'],
+  [1000000000, '十億'],
+  [10000000000, '百億'],
+  [100000000000, '千億'],
+  [1000000000000, '兆'],
+];
+
+describe('Test Powers of Ten (Japanese System)', () => {
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// BigInt Tests
+const testBigInts: [bigint, string][] = [
+  [0n, '零'],
+  [1n, '一'],
+  [100n, '百'],
+  [1000n, '千'],
+  [10000n, '万'],
+  [100000000n, '億'],
+  [1000000000000n, '兆'],
+];
+
+describe('Test BigInt Values', () => {
+  test.concurrent.each(testBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Negative BigInt Tests
+const testNegativeBigInts: [bigint, string][] = [
+  [-1n, 'マイナス 一'],
+  [-100n, 'マイナス 百'],
+  [-1000n, 'マイナス 千'],
+  [-10000n, 'マイナス 万'],
+  [-100000000n, 'マイナス 億'],
+];
+
+describe('Test Negative BigInt Values', () => {
+  test.concurrent.each(testNegativeBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// String Input Tests
+const testStringInputs: [string, string][] = [
+  ['0', '零'],
+  ['1', '一'],
+  ['100', '百'],
+  ['1000', '千'],
+  ['-100', 'マイナス 百'],
+  ['  100  ', '百'],
+  ['10000', '万'],
+];
+
+describe('Test String Number Inputs', () => {
+  test.concurrent.each(testStringInputs)('convert "%s" => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Zero Variants
+describe('Test Zero Variants', () => {
+  test('converts 0 correctly', () => {
+    expect(toWords.convert(0)).toBe('零');
+  });
+
+  test('converts -0 as 零', () => {
+    expect(toWords.convert(-0)).toBe('零');
+  });
+
+  test('converts 0.0 as 零', () => {
+    expect(toWords.convert(0.0)).toBe('零');
+  });
+
+  test('converts 0n as 零', () => {
+    expect(toWords.convert(0n)).toBe('零');
+  });
+
+  test('converts "0" as 零', () => {
+    expect(toWords.convert('0')).toBe('零');
+  });
+
+  test('converts 0 with currency', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('零 円');
+  });
+
+  test('converts 0 with currency and ignoreZeroCurrency', () => {
+    expect(toWords.convert(0, { currency: true, ignoreZeroCurrency: true })).toBe('');
+  });
+});
+
+// All Options Combinations
+describe('Test All Currency Options Combinations', () => {
+  const testValue = 1234;
+
+  test('currency only', () => {
+    expect(toWords.convert(testValue, { currency: true })).toBe('千 二 百 三十 四 円');
+  });
+
+  test('currency + doNotAddOnly', () => {
+    expect(toWords.convert(testValue, { currency: true, doNotAddOnly: true })).toBe('千 二 百 三十 四 円');
+  });
+});

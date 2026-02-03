@@ -387,3 +387,102 @@ describe('Test Ordinal Error Cases', () => {
     expect(() => toWords.toOrdinal(99.99)).toThrow('Ordinal numbers must be non-negative integers');
   });
 });
+
+// Powers of Ten Tests
+const powersOfTen: [number, string][] = [
+  [10, 'Ten'],
+  [100, 'One Hundred'],
+  [1000, 'One Thousand'],
+  [10000, 'Ten Thousand'],
+  [100000, 'One Hundred Thousand'],
+  [1000000, 'One Million'],
+];
+
+describe('Test Powers of Ten', () => {
+  test.concurrent.each(powersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// BigInt Tests
+const bigIntTests: [bigint, string][] = [
+  [0n, 'Zero'],
+  [1n, 'One'],
+  [100n, 'One Hundred'],
+  [1000n, 'One Thousand'],
+];
+
+describe('Test BigInt Inputs', () => {
+  test.concurrent.each(bigIntTests)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Negative BigInt Tests
+const negativeBigIntTests: [bigint, string][] = [
+  [-1n, 'Minus One'],
+  [-100n, 'Minus One Hundred'],
+  [-1000n, 'Minus One Thousand'],
+];
+
+describe('Test Negative BigInt Inputs', () => {
+  test.concurrent.each(negativeBigIntTests)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// String Input Tests
+const stringInputTests: [string, string][] = [
+  ['0', 'Zero'],
+  ['1', 'One'],
+  ['100', 'One Hundred'],
+  ['-100', 'Minus One Hundred'],
+];
+
+describe('Test String Inputs', () => {
+  test.concurrent.each(stringInputTests)('convert "%s" => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Zero Variants Tests
+describe('Test Zero Variants', () => {
+  test('convert 0 => Zero', () => {
+    expect(toWords.convert(0)).toBe('Zero');
+  });
+
+  test('convert -0 => Zero', () => {
+    expect(toWords.convert(-0)).toBe('Zero');
+  });
+
+  test('convert 0.0 => Zero', () => {
+    expect(toWords.convert(0.0)).toBe('Zero');
+  });
+
+  test('convert 0n => Zero', () => {
+    expect(toWords.convert(0n)).toBe('Zero');
+  });
+
+  test('convert "0" => Zero', () => {
+    expect(toWords.convert('0')).toBe('Zero');
+  });
+
+  test('convert 0 with currency => Zero Rand Only', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('Zero Rand Only');
+  });
+});
+
+// Invalid Input Tests
+const invalidInputTests: [unknown, string][] = [
+  [NaN, 'Invalid Number "NaN"'],
+  [Infinity, 'Invalid Number "Infinity"'],
+  [-Infinity, 'Invalid Number "-Infinity"'],
+  ['', 'Invalid Number ""'],
+  ['abc', 'Invalid Number "abc"'],
+];
+
+describe('Test Invalid Inputs', () => {
+  test.concurrent.each(invalidInputTests)('convert %s => throws error', (input, errorMessage) => {
+    expect(() => toWords.convert(input as number)).toThrow(errorMessage);
+  });
+});

@@ -295,3 +295,132 @@ describe('Test Ordinals', () => {
     expect(toWords.toOrdinal(input)).toBe(expected);
   });
 });
+
+// ============================================================
+// COMPREHENSIVE TEST ADDITIONS FOR ko-KR
+// ============================================================
+
+// Powers of Ten (Korean system: 만, 억, 조)
+const testPowersOfTen: [number, string][] = [
+  [10, '십'],
+  [100, '백'],
+  [1000, '일천'],
+  [10000, '일만'],
+  [100000, '십만'],
+  [1000000, '백만'],
+  [10000000, '일천만'],
+  [100000000, '일억'],
+  [1000000000, '십억'],
+  [10000000000, '백억'],
+  [100000000000, '일천억'],
+  [1000000000000, '일조'],
+];
+
+describe('Test Powers of Ten (Korean System)', () => {
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// BigInt Tests
+const testBigInts: [bigint, string][] = [
+  [0n, '영'],
+  [1n, '일'],
+  [100n, '백'],
+  [1000n, '일천'],
+  [10000n, '일만'],
+  [100000000n, '일억'],
+  [1000000000000n, '일조'],
+];
+
+describe('Test BigInt Values', () => {
+  test.concurrent.each(testBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Negative BigInt Tests
+const testNegativeBigInts: [bigint, string][] = [
+  [-1n, '마이너스일'],
+  [-100n, '마이너스백'],
+  [-1000n, '마이너스일천'],
+  [-10000n, '마이너스일만'],
+  [-100000000n, '마이너스일억'],
+];
+
+describe('Test Negative BigInt Values', () => {
+  test.concurrent.each(testNegativeBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// String Input Tests
+const testStringInputs: [string, string][] = [
+  ['0', '영'],
+  ['1', '일'],
+  ['100', '백'],
+  ['1000', '일천'],
+  ['-100', '마이너스백'],
+  ['  100  ', '백'],
+  ['10000', '일만'],
+];
+
+describe('Test String Number Inputs', () => {
+  test.concurrent.each(testStringInputs)('convert "%s" => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Zero Variants
+describe('Test Zero Variants', () => {
+  test('converts 0 correctly', () => {
+    expect(toWords.convert(0)).toBe('영');
+  });
+
+  test('converts -0 as 영', () => {
+    expect(toWords.convert(-0)).toBe('영');
+  });
+
+  test('converts 0.0 as 영', () => {
+    expect(toWords.convert(0.0)).toBe('영');
+  });
+
+  test('converts 0n as 영', () => {
+    expect(toWords.convert(0n)).toBe('영');
+  });
+
+  test('converts "0" as 영', () => {
+    expect(toWords.convert('0')).toBe('영');
+  });
+
+  test('converts 0 with currency', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('영원');
+  });
+
+  test('converts 0 with currency and ignoreZeroCurrency', () => {
+    expect(toWords.convert(0, { currency: true, ignoreZeroCurrency: true })).toBe('');
+  });
+});
+
+// Invalid Input Tests
+describe('Test Invalid Inputs for ko-KR', () => {
+  test('throws for NaN', () => {
+    expect(() => toWords.convert(NaN)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for Infinity', () => {
+    expect(() => toWords.convert(Infinity)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for -Infinity', () => {
+    expect(() => toWords.convert(-Infinity)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for empty string', () => {
+    expect(() => toWords.convert('')).toThrow(/Invalid Number/);
+  });
+
+  test('throws for invalid string', () => {
+    expect(() => toWords.convert('abc')).toThrow(/Invalid Number/);
+  });
+});

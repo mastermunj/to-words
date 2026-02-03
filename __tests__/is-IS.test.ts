@@ -307,3 +307,104 @@ describe('Test Ordinal Error Cases', () => {
     expect(() => toWords.toOrdinal(100.25)).toThrow('Ordinal numbers must be non-negative integers');
   });
 });
+
+const testPowersOfTen: [number, string][] = [
+  [10, 'Tíu'],
+  [100, 'Hundrað'],
+  [1000, 'Þúsund'],
+  [10000, 'Tíu Þúsund'],
+  [100000, 'Hundrað Þúsund'],
+  [1000000, 'Einn Milljón'],
+];
+
+describe('Test Powers of Ten', () => {
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number)).toBe(expected);
+  });
+});
+
+const testBigIntegers: [bigint, string][] = [
+  [0n, 'Núll'],
+  [1n, 'Einn'],
+  [100n, 'Hundrað'],
+  [1000n, 'Þúsund'],
+];
+
+describe('Test BigInt', () => {
+  test.concurrent.each(testBigIntegers)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as bigint)).toBe(expected);
+  });
+});
+
+const testNegativeBigIntegers: [bigint, string][] = [
+  [-1n, 'Mínus Einn'],
+  [-100n, 'Mínus Hundrað'],
+  [-1000n, 'Mínus Þúsund'],
+];
+
+describe('Test Negative BigInt', () => {
+  test.concurrent.each(testNegativeBigIntegers)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as bigint)).toBe(expected);
+  });
+});
+
+const testStringInputs: [string, string][] = [
+  ['0', 'Núll'],
+  ['1', 'Einn'],
+  ['100', 'Hundrað'],
+  ['-100', 'Mínus Hundrað'],
+];
+
+describe('Test String Inputs', () => {
+  test.concurrent.each(testStringInputs)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input as string)).toBe(expected);
+  });
+});
+
+describe('Test Zero Variants', () => {
+  test('convert 0 => Núll', () => {
+    expect(toWords.convert(0)).toBe('Núll');
+  });
+
+  test('convert -0 => Núll', () => {
+    expect(toWords.convert(-0)).toBe('Núll');
+  });
+
+  test('convert 0.0 => Núll', () => {
+    expect(toWords.convert(0.0)).toBe('Núll');
+  });
+
+  test('convert 0n => Núll', () => {
+    expect(toWords.convert(0n)).toBe('Núll');
+  });
+
+  test('convert "0" => Núll', () => {
+    expect(toWords.convert('0')).toBe('Núll');
+  });
+
+  test('convert 0 with currency => Núll Krónur', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('Núll Krónur');
+  });
+});
+
+describe('Test Invalid Inputs', () => {
+  test('convert NaN throws error', () => {
+    expect(() => toWords.convert(NaN)).toThrow('Invalid Number "NaN"');
+  });
+
+  test('convert Infinity throws error', () => {
+    expect(() => toWords.convert(Infinity)).toThrow('Invalid Number "Infinity"');
+  });
+
+  test('convert -Infinity throws error', () => {
+    expect(() => toWords.convert(-Infinity)).toThrow('Invalid Number "-Infinity"');
+  });
+
+  test('convert empty string throws error', () => {
+    expect(() => toWords.convert('')).toThrow('Invalid Number ""');
+  });
+
+  test('convert "abc" throws error', () => {
+    expect(() => toWords.convert('abc')).toThrow('Invalid Number "abc"');
+  });
+});

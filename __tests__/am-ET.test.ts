@@ -350,3 +350,124 @@ describe('Test Invalid Inputs', () => {
     expect(() => toWords.convert(input as number)).toThrow(message);
   });
 });
+
+// Powers of Ten
+const testPowersOfTen: [number, string][] = [
+  [10, 'አስር'],
+  [100, 'መቶ'],
+  [1000, 'አንድ ሺ'],
+  [10000, 'አስር ሺ'],
+  [100000, 'መቶ ሺ'],
+  [1000000, 'አንድ ሚሊዮን'],
+  [10000000, 'አስር ሚሊዮን'],
+  [100000000, 'መቶ ሚሊዮን'],
+  [1000000000, 'አንድ ቢሊዮን'],
+  [10000000000, 'አስር ቢሊዮን'],
+  [100000000000, 'መቶ ቢሊዮን'],
+];
+
+describe('Test Powers of Ten', () => {
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// BigInt Tests
+const testBigInts: [bigint, string][] = [
+  [0n, 'ዜሮ'],
+  [1n, 'አንድ'],
+  [100n, 'መቶ'],
+  [1000n, 'አንድ ሺ'],
+  [1000000n, 'አንድ ሚሊዮን'],
+  [1000000000n, 'አንድ ቢሊዮን'],
+];
+
+describe('Test BigInt Values', () => {
+  test.concurrent.each(testBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Negative BigInt Tests
+const testNegativeBigInts: [bigint, string][] = [
+  [-1n, 'አሉታዊ አንድ'],
+  [-100n, 'አሉታዊ መቶ'],
+  [-1000n, 'አሉታዊ አንድ ሺ'],
+  [-10000000n, 'አሉታዊ አስር ሚሊዮን'],
+];
+
+describe('Test Negative BigInt Values', () => {
+  test.concurrent.each(testNegativeBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// String Input Tests
+const testStringInputs: [string, string][] = [
+  ['0', 'ዜሮ'],
+  ['1', 'አንድ'],
+  ['100', 'መቶ'],
+  ['-100', 'አሉታዊ መቶ'],
+  ['  100  ', 'መቶ'],
+  ['1000', 'አንድ ሺ'],
+];
+
+describe('Test String Number Inputs', () => {
+  test.concurrent.each(testStringInputs)('convert "%s" => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Zero Variants
+describe('Test Zero Variants', () => {
+  test('converts 0 correctly', () => {
+    expect(toWords.convert(0)).toBe('ዜሮ');
+  });
+
+  test('converts -0 as ዜሮ', () => {
+    expect(toWords.convert(-0)).toBe('ዜሮ');
+  });
+
+  test('converts 0.0 as ዜሮ', () => {
+    expect(toWords.convert(0.0)).toBe('ዜሮ');
+  });
+
+  test('converts 0n as ዜሮ', () => {
+    expect(toWords.convert(0n)).toBe('ዜሮ');
+  });
+
+  test('converts "0" as ዜሮ', () => {
+    expect(toWords.convert('0')).toBe('ዜሮ');
+  });
+
+  test('converts 0 with currency', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('ዜሮ ብር ብቻ');
+  });
+
+  test('converts 0 with currency and ignoreZeroCurrency', () => {
+    expect(toWords.convert(0, { currency: true, ignoreZeroCurrency: true })).toBe('');
+  });
+});
+
+// Invalid Input Tests for am-ET
+describe('Test Invalid Inputs for am-ET', () => {
+  test('throws for NaN', () => {
+    expect(() => toWords.convert(NaN)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for Infinity', () => {
+    expect(() => toWords.convert(Infinity)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for -Infinity', () => {
+    expect(() => toWords.convert(-Infinity)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for empty string', () => {
+    expect(() => toWords.convert('')).toThrow(/Invalid Number/);
+  });
+
+  test('throws for invalid string', () => {
+    expect(() => toWords.convert('abc')).toThrow(/Invalid Number/);
+  });
+});

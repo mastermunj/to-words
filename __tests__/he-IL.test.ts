@@ -282,3 +282,88 @@ describe('Test Ordinals', () => {
     expect(toWords.toOrdinal(input)).toBe(expected);
   });
 });
+
+const testPowersOfTen: [number, string][] = [
+  [10, 'עשר'],
+  [100, 'מאה'],
+  [1000, 'אלף'],
+  [10000, 'עשר אלף'],
+  [100000, 'מאה אלף'],
+  [1000000, 'מיליון'],
+];
+
+describe('Test Powers of Ten', () => {
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+const testBigInts: [bigint, string][] = [
+  [0n, 'אפס'],
+  [1n, 'אחת'],
+  [100n, 'מאה'],
+  [1000n, 'אלף'],
+];
+
+describe('Test BigInt', () => {
+  test.concurrent.each(testBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+const testNegativeBigInts: [bigint, string][] = [
+  [-1n, 'מינוס אחת'],
+  [-100n, 'מינוס מאה'],
+  [-1000n, 'מינוס אלף'],
+];
+
+describe('Test Negative BigInt', () => {
+  test.concurrent.each(testNegativeBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+const testStringInputs: [string, string][] = [
+  ['0', 'אפס'],
+  ['1', 'אחת'],
+  ['100', 'מאה'],
+  ['-100', 'מינוס מאה'],
+];
+
+describe('Test String Inputs', () => {
+  test.concurrent.each(testStringInputs)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+describe('Test Zero Variants', () => {
+  const testZeroVariants: [number | bigint | string, string][] = [
+    [0, 'אפס'],
+    [-0, 'אפס'],
+    [0.0, 'אפס'],
+    [0n, 'אפס'],
+    ['0', 'אפס'],
+  ];
+
+  test.concurrent.each(testZeroVariants)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+
+  test('convert 0 with currency => אפס שקלים בלבד', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('אפס שקלים בלבד');
+  });
+});
+
+describe('Test Invalid Inputs', () => {
+  const testInvalidInputs: [number | string, string][] = [
+    [NaN, 'Invalid Number "NaN"'],
+    [Infinity, 'Invalid Number "Infinity"'],
+    [-Infinity, 'Invalid Number "-Infinity"'],
+    ['', 'Invalid Number ""'],
+    ['abc', 'Invalid Number "abc"'],
+  ];
+
+  test.concurrent.each(testInvalidInputs)('convert %s throws error', (input, expectedMessage) => {
+    expect(() => toWords.convert(input)).toThrow(expectedMessage);
+  });
+});

@@ -339,3 +339,96 @@ describe('Test Finnish-specific numbers', () => {
     expect(toWords.convert(2000000000)).toBe('Kaksi Miljardi');
   });
 });
+
+describe('Powers of Ten', () => {
+  const powersOfTen: [number, string][] = [
+    [10, 'Kymmenen'],
+    [100, 'Sata'],
+    [1000, 'Tuhat'],
+    [10000, 'Kymmenen Tuhat'],
+    [100000, 'Sata Tuhat'],
+    [1000000, 'Yksi Miljoona'],
+  ];
+
+  test.concurrent.each(powersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number)).toBe(expected);
+  });
+});
+
+describe('BigInt Tests', () => {
+  const bigIntTests: [bigint, string][] = [
+    [0n, 'Nolla'],
+    [1n, 'Yksi'],
+    [100n, 'Sata'],
+    [1000n, 'Tuhat'],
+  ];
+
+  test.concurrent.each(bigIntTests)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as bigint)).toBe(expected);
+  });
+});
+
+describe('Negative BigInt Tests', () => {
+  const negativeBigIntTests: [bigint, string][] = [
+    [-1n, 'Miinus Yksi'],
+    [-100n, 'Miinus Sata'],
+    [-1000n, 'Miinus Tuhat'],
+  ];
+
+  test.concurrent.each(negativeBigIntTests)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as bigint)).toBe(expected);
+  });
+});
+
+describe('String Input Tests', () => {
+  const stringInputTests: [string, string][] = [
+    ['0', 'Nolla'],
+    ['1', 'Yksi'],
+    ['100', 'Sata'],
+    ['-100', 'Miinus Sata'],
+  ];
+
+  test.concurrent.each(stringInputTests)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input as string)).toBe(expected);
+  });
+});
+
+describe('Zero Variants', () => {
+  test('zero as number', () => {
+    expect(toWords.convert(0)).toBe('Nolla');
+  });
+
+  test('negative zero', () => {
+    expect(toWords.convert(-0)).toBe('Nolla');
+  });
+
+  test('zero as float', () => {
+    expect(toWords.convert(0.0)).toBe('Nolla');
+  });
+
+  test('zero as BigInt', () => {
+    expect(toWords.convert(0n)).toBe('Nolla');
+  });
+
+  test('zero as string', () => {
+    expect(toWords.convert('0')).toBe('Nolla');
+  });
+
+  test('zero with currency', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('Nolla Euroa');
+  });
+});
+
+describe('Invalid Input Tests', () => {
+  const invalidInputTests: [unknown, string][] = [
+    [NaN, 'Invalid Number "NaN"'],
+    [Infinity, 'Invalid Number "Infinity"'],
+    [-Infinity, 'Invalid Number "-Infinity"'],
+    ['', 'Invalid Number ""'],
+    ['abc', 'Invalid Number "abc"'],
+  ];
+
+  test.concurrent.each(invalidInputTests)('convert %s throws error', (input, expectedError) => {
+    expect(() => toWords.convert(input as number)).toThrow(expectedError);
+  });
+});

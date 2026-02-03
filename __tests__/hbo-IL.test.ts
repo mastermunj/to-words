@@ -367,3 +367,104 @@ describe('Test Invalid Inputs', () => {
     expect(() => toWords.convert('abc' as unknown as number)).toThrow();
   });
 });
+
+describe('Test Powers of Ten', () => {
+  const testPowersOfTen: [number, string][] = [
+    [10, 'עשר'],
+    [100, 'מאה'],
+    [1000, 'אלף'],
+    [10000, 'עשר אלף'],
+    [100000, 'מאה אלף'],
+    [1000000, 'מיליון'],
+  ];
+
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number)).toBe(expected);
+  });
+});
+
+describe('Test BigInt Inputs', () => {
+  const testBigInts: [bigint, string][] = [
+    [0n, 'אפס'],
+    [1n, 'אחת'],
+    [100n, 'מאה'],
+    [1000n, 'אלף'],
+  ];
+
+  test.concurrent.each(testBigInts)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input as bigint)).toBe(expected);
+  });
+});
+
+describe('Test Negative BigInt Inputs', () => {
+  const testNegativeBigInts: [bigint, string][] = [
+    [-1n, 'מינוס אחת'],
+    [-100n, 'מינוס מאה'],
+    [-1000n, 'מינוס אלף'],
+  ];
+
+  test.concurrent.each(testNegativeBigInts)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input as bigint)).toBe(expected);
+  });
+});
+
+describe('Test String Inputs', () => {
+  const testStringInputs: [string, string][] = [
+    ['0', 'אפס'],
+    ['1', 'אחת'],
+    ['100', 'מאה'],
+    ['-100', 'מינוס מאה'],
+  ];
+
+  test.concurrent.each(testStringInputs)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input as string)).toBe(expected);
+  });
+});
+
+describe('Test Zero Variants', () => {
+  test('convert 0 => אפס', () => {
+    expect(toWords.convert(0)).toBe('אפס');
+  });
+
+  test('convert -0 => אפס', () => {
+    expect(toWords.convert(-0)).toBe('אפס');
+  });
+
+  test('convert 0.0 => אפס', () => {
+    expect(toWords.convert(0.0)).toBe('אפס');
+  });
+
+  test('convert 0n => אפס', () => {
+    expect(toWords.convert(0n)).toBe('אפס');
+  });
+
+  test('convert "0" => אפס', () => {
+    expect(toWords.convert('0')).toBe('אפס');
+  });
+
+  test('convert 0 with currency => אפס שקלים', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('אפס שקלים');
+  });
+});
+
+describe('Test Invalid Inputs - Extended', () => {
+  test('should throw error for NaN', () => {
+    expect(() => toWords.convert(NaN)).toThrow();
+  });
+
+  test('should throw error for Infinity', () => {
+    expect(() => toWords.convert(Infinity)).toThrow();
+  });
+
+  test('should throw error for -Infinity', () => {
+    expect(() => toWords.convert(-Infinity)).toThrow();
+  });
+
+  test('should throw error for empty string', () => {
+    expect(() => toWords.convert('' as unknown as number)).toThrow();
+  });
+
+  test('should throw error for non-numeric string', () => {
+    expect(() => toWords.convert('abc' as unknown as number)).toThrow();
+  });
+});

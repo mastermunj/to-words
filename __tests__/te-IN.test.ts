@@ -278,3 +278,105 @@ describe('Test Ordinal Error Cases', () => {
     expect(() => toWords.toOrdinal(1.5)).toThrow(/must be non-negative integers/);
   });
 });
+
+const testPowersOfTen: [number, string][] = [
+  [10, 'పది'],
+  [100, 'వంద'],
+  [1000, 'ఒకటి వెయ్యి'],
+  [10000, 'పది వెయ్యి'],
+  [100000, 'ఒకటి లక్ష'],
+  [1000000, 'పది లక్ష'],
+  [10000000, 'ఒకటి కోటి'],
+];
+
+describe('Test Powers of Ten', () => {
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+const testBigInt: [bigint, string][] = [
+  [0n, 'సున్నా'],
+  [1n, 'ఒకటి'],
+  [100n, 'వంద'],
+  [1000n, 'ఒకటి వెయ్యి'],
+];
+
+describe('Test BigInt', () => {
+  test.concurrent.each(testBigInt)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+const testNegativeBigInt: [bigint, string][] = [
+  [-1n, 'తీసివేత ఒకటి'],
+  [-100n, 'తీసివేత వంద'],
+  [-1000n, 'తీసివేత ఒకటి వెయ్యి'],
+];
+
+describe('Test Negative BigInt', () => {
+  test.concurrent.each(testNegativeBigInt)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+const testStringInput: [string, string][] = [
+  ['0', 'సున్నా'],
+  ['1', 'ఒకటి'],
+  ['100', 'వంద'],
+  ['-100', 'తీసివేత వంద'],
+];
+
+describe('Test String Input', () => {
+  test.concurrent.each(testStringInput)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+describe('Test Zero Variants', () => {
+  test('convert 0 => సున్నా', () => {
+    expect(toWords.convert(0)).toBe('సున్నా');
+  });
+
+  test('convert -0 => సున్నా', () => {
+    expect(toWords.convert(-0)).toBe('సున్నా');
+  });
+
+  test('convert 0.0 => సున్నా', () => {
+    expect(toWords.convert(0.0)).toBe('సున్నా');
+  });
+
+  test('convert 0n => సున్నా', () => {
+    expect(toWords.convert(0n)).toBe('సున్నా');
+  });
+
+  test('convert "0" => సున్నా', () => {
+    expect(toWords.convert('0')).toBe('సున్నా');
+  });
+
+  test('convert 0 with currency => సున్నా రూపాయలు', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('సున్నా రూపాయలు');
+  });
+});
+
+describe('Test Invalid Input', () => {
+  test('convert NaN throws error', () => {
+    expect(() => toWords.convert(NaN)).toThrow();
+  });
+
+  test('convert Infinity throws error', () => {
+    expect(() => toWords.convert(Infinity)).toThrow();
+  });
+
+  test('convert -Infinity throws error', () => {
+    expect(() => toWords.convert(-Infinity)).toThrow();
+  });
+
+  test('convert "" throws error', () => {
+    expect(() => toWords.convert('')).toThrow();
+  });
+
+  test('convert "abc" throws error', () => {
+    expect(() => toWords.convert('abc')).toThrow();
+  });
+});

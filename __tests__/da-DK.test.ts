@@ -354,3 +354,104 @@ describe('Test Danish-specific numbers', () => {
     expect(toWords.convert(2000000000)).toBe('To Milliard');
   });
 });
+
+describe('Test Powers of Ten', () => {
+  const powersOfTen: [number, string][] = [
+    [10, 'Ti'],
+    [100, 'Hundrede'],
+    [1000, 'Tusind'],
+    [10000, 'Ti Tusind'],
+    [100000, 'Hundrede Tusind'],
+    [1000000, 'En Million'],
+  ];
+
+  test.concurrent.each(powersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+describe('Test BigInt', () => {
+  const bigIntValues: [bigint, string][] = [
+    [0n, 'Nul'],
+    [1n, 'En'],
+    [100n, 'Hundrede'],
+    [1000n, 'Tusind'],
+  ];
+
+  test.concurrent.each(bigIntValues)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+describe('Test Negative BigInt', () => {
+  const negativeBigIntValues: [bigint, string][] = [
+    [-1n, 'Minus En'],
+    [-100n, 'Minus Hundrede'],
+    [-1000n, 'Minus Tusind'],
+  ];
+
+  test.concurrent.each(negativeBigIntValues)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+describe('Test String Input', () => {
+  const stringInputs: [string, string][] = [
+    ['0', 'Nul'],
+    ['1', 'En'],
+    ['100', 'Hundrede'],
+    ['-100', 'Minus Hundrede'],
+  ];
+
+  test.concurrent.each(stringInputs)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+describe('Test Zero Variants', () => {
+  test('Zero as number', () => {
+    expect(toWords.convert(0)).toBe('Nul');
+  });
+
+  test('Negative zero', () => {
+    expect(toWords.convert(-0)).toBe('Nul');
+  });
+
+  test('Zero as float', () => {
+    expect(toWords.convert(0.0)).toBe('Nul');
+  });
+
+  test('Zero as BigInt', () => {
+    expect(toWords.convert(0n)).toBe('Nul');
+  });
+
+  test('Zero as string', () => {
+    expect(toWords.convert('0')).toBe('Nul');
+  });
+
+  test('Zero with currency', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('Nul Kroner');
+  });
+});
+
+describe('Test Invalid Inputs', () => {
+  test('NaN throws error', () => {
+    expect(() => toWords.convert(NaN)).toThrow('Invalid Number "NaN"');
+  });
+
+  test('Infinity throws error', () => {
+    expect(() => toWords.convert(Infinity)).toThrow('Invalid Number "Infinity"');
+  });
+
+  test('Negative Infinity throws error', () => {
+    expect(() => toWords.convert(-Infinity)).toThrow('Invalid Number "-Infinity"');
+  });
+
+  test('Empty string throws error', () => {
+    expect(() => toWords.convert('')).toThrow('Invalid Number ""');
+  });
+
+  test('Non-numeric string throws error', () => {
+    expect(() => toWords.convert('abc')).toThrow('Invalid Number "abc"');
+  });
+});

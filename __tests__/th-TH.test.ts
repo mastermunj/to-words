@@ -271,3 +271,129 @@ describe('Test Ordinals', () => {
     expect(toWords.toOrdinal(input)).toBe(expected);
   });
 });
+
+// ============================================================
+// COMPREHENSIVE TEST ADDITIONS FOR th-TH
+// ============================================================
+
+// Powers of Ten (Thai)
+const testPowersOfTen: [number, string][] = [
+  [10, 'สิบ'],
+  [100, 'หนึ่งร้อย'],
+  [1000, 'หนึ่งพัน'],
+  [10000, 'หนึ่งหมื่น'],
+  [100000, 'หนึ่งแสน'],
+  [1000000, 'หนึ่งล้าน'],
+  [10000000, 'สิบล้าน'],
+  [100000000, 'หนึ่งร้อยล้าน'],
+  [1000000000, 'หนึ่งพันล้าน'],
+];
+
+describe('Test Powers of Ten (Thai System)', () => {
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// BigInt Tests
+const testBigInts: [bigint, string][] = [
+  [0n, 'ศูนย์'],
+  [1n, 'หนึ่ง'],
+  [100n, 'หนึ่งร้อย'],
+  [1000n, 'หนึ่งพัน'],
+  [10000n, 'หนึ่งหมื่น'],
+  [100000n, 'หนึ่งแสน'],
+  [1000000n, 'หนึ่งล้าน'],
+];
+
+describe('Test BigInt Values', () => {
+  test.concurrent.each(testBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Negative BigInt Tests
+const testNegativeBigInts: [bigint, string][] = [
+  [-1n, 'ลบหนึ่ง'],
+  [-100n, 'ลบหนึ่งร้อย'],
+  [-1000n, 'ลบหนึ่งพัน'],
+  [-10000n, 'ลบหนึ่งหมื่น'],
+  [-1000000n, 'ลบหนึ่งล้าน'],
+];
+
+describe('Test Negative BigInt Values', () => {
+  test.concurrent.each(testNegativeBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// String Input Tests
+const testStringInputs: [string, string][] = [
+  ['0', 'ศูนย์'],
+  ['1', 'หนึ่ง'],
+  ['100', 'หนึ่งร้อย'],
+  ['1000', 'หนึ่งพัน'],
+  ['-100', 'ลบหนึ่งร้อย'],
+  ['  100  ', 'หนึ่งร้อย'],
+  ['1000000', 'หนึ่งล้าน'],
+];
+
+describe('Test String Number Inputs', () => {
+  test.concurrent.each(testStringInputs)('convert "%s" => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Zero Variants
+describe('Test Zero Variants', () => {
+  test('converts 0 correctly', () => {
+    expect(toWords.convert(0)).toBe('ศูนย์');
+  });
+
+  test('converts -0 as ศูนย์', () => {
+    expect(toWords.convert(-0)).toBe('ศูนย์');
+  });
+
+  test('converts 0.0 as ศูนย์', () => {
+    expect(toWords.convert(0.0)).toBe('ศูนย์');
+  });
+
+  test('converts 0n as ศูนย์', () => {
+    expect(toWords.convert(0n)).toBe('ศูนย์');
+  });
+
+  test('converts "0" as ศูนย์', () => {
+    expect(toWords.convert('0')).toBe('ศูนย์');
+  });
+
+  test('converts 0 with currency', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('ศูนย์บาทถ้วน');
+  });
+
+  test('converts 0 with currency and ignoreZeroCurrency', () => {
+    expect(toWords.convert(0, { currency: true, ignoreZeroCurrency: true })).toBe('');
+  });
+});
+
+// Invalid Input Tests
+describe('Test Invalid Inputs for th-TH', () => {
+  test('throws for NaN', () => {
+    expect(() => toWords.convert(NaN)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for Infinity', () => {
+    expect(() => toWords.convert(Infinity)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for -Infinity', () => {
+    expect(() => toWords.convert(-Infinity)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for empty string', () => {
+    expect(() => toWords.convert('')).toThrow(/Invalid Number/);
+  });
+
+  test('throws for invalid string', () => {
+    expect(() => toWords.convert('abc')).toThrow(/Invalid Number/);
+  });
+});

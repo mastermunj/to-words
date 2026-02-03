@@ -283,3 +283,131 @@ describe('Test Ordinal Error Cases', () => {
     expect(() => toWords.toOrdinal(1.5)).toThrow(/must be non-negative integers/);
   });
 });
+
+// ============================================================
+// COMPREHENSIVE TEST ADDITIONS FOR hi-IN
+// ============================================================
+
+// Powers of Ten (Indian System: लाख, करोड़, अरब, खरब)
+const testPowersOfTen: [number, string][] = [
+  [10, 'दस'],
+  [100, 'सौ'],
+  [1000, 'एक हज़ार'],
+  [10000, 'दस हज़ार'],
+  [100000, 'एक लाख'],
+  [1000000, 'दस लाख'],
+  [10000000, 'एक करोड़'],
+  [100000000, 'दस करोड़'],
+  [1000000000, 'एक अरब'],
+  [10000000000, 'दस अरब'],
+  [100000000000, 'एक खरब'],
+];
+
+describe('Test Powers of Ten (Indian System)', () => {
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// BigInt Tests
+const testBigInts: [bigint, string][] = [
+  [0n, 'शून्य'],
+  [1n, 'एक'],
+  [100n, 'सौ'],
+  [1000n, 'एक हज़ार'],
+  [100000n, 'एक लाख'],
+  [10000000n, 'एक करोड़'],
+  [1000000000n, 'एक अरब'],
+];
+
+describe('Test BigInt Values', () => {
+  test.concurrent.each(testBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Negative BigInt Tests
+const testNegativeBigInts: [bigint, string][] = [
+  [-1n, 'ऋण एक'],
+  [-100n, 'ऋण सौ'],
+  [-1000n, 'ऋण एक हज़ार'],
+  [-100000n, 'ऋण एक लाख'],
+  [-10000000n, 'ऋण एक करोड़'],
+];
+
+describe('Test Negative BigInt Values', () => {
+  test.concurrent.each(testNegativeBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// String Input Tests
+const testStringInputs: [string, string][] = [
+  ['0', 'शून्य'],
+  ['1', 'एक'],
+  ['100', 'सौ'],
+  ['1000', 'एक हज़ार'],
+  ['-100', 'ऋण सौ'],
+  ['  100  ', 'सौ'],
+  ['100000', 'एक लाख'],
+];
+
+describe('Test String Number Inputs', () => {
+  test.concurrent.each(testStringInputs)('convert "%s" => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Zero Variants
+describe('Test Zero Variants', () => {
+  test('converts 0 correctly', () => {
+    expect(toWords.convert(0)).toBe('शून्य');
+  });
+
+  test('converts -0 as शून्य', () => {
+    expect(toWords.convert(-0)).toBe('शून्य');
+  });
+
+  test('converts 0.0 as शून्य', () => {
+    expect(toWords.convert(0.0)).toBe('शून्य');
+  });
+
+  test('converts 0n as शून्य', () => {
+    expect(toWords.convert(0n)).toBe('शून्य');
+  });
+
+  test('converts "0" as शून्य', () => {
+    expect(toWords.convert('0')).toBe('शून्य');
+  });
+
+  test('converts 0 with currency', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('शून्य रुपये');
+  });
+
+  test('converts 0 with currency and ignoreZeroCurrency', () => {
+    expect(toWords.convert(0, { currency: true, ignoreZeroCurrency: true })).toBe('');
+  });
+});
+
+// Invalid Input Tests
+describe('Test Invalid Inputs for hi-IN', () => {
+  test('throws for NaN', () => {
+    expect(() => toWords.convert(NaN)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for Infinity', () => {
+    expect(() => toWords.convert(Infinity)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for -Infinity', () => {
+    expect(() => toWords.convert(-Infinity)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for empty string', () => {
+    expect(() => toWords.convert('')).toThrow(/Invalid Number/);
+  });
+
+  test('throws for invalid string', () => {
+    expect(() => toWords.convert('abc')).toThrow(/Invalid Number/);
+  });
+});

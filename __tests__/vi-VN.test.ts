@@ -226,3 +226,88 @@ describe('Test Ordinal Error Cases', () => {
     expect(() => toWords.toOrdinal(1.5)).toThrow('Ordinal numbers must be non-negative integers');
   });
 });
+
+const testPowersOfTen: [number, string][] = [
+  [10, 'Mười'],
+  [100, 'Một Trăm'],
+  [1000, 'Một Nghìn'],
+  [10000, 'Mười Nghìn'],
+  [100000, 'Một Trăm Nghìn'],
+  [1000000, 'Một Triệu'],
+];
+
+describe('Test Powers of Ten', () => {
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number)).toBe(expected);
+  });
+});
+
+const testBigInts: [bigint, string][] = [
+  [0n, 'Không'],
+  [1n, 'Một'],
+  [100n, 'Một Trăm'],
+  [1000n, 'Một Nghìn'],
+];
+
+describe('Test BigInt', () => {
+  test.concurrent.each(testBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as bigint)).toBe(expected);
+  });
+});
+
+const testNegativeBigInts: [bigint, string][] = [
+  [-1n, 'Âm Một'],
+  [-100n, 'Âm Một Trăm'],
+  [-1000n, 'Âm Một Nghìn'],
+];
+
+describe('Test Negative BigInt', () => {
+  test.concurrent.each(testNegativeBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as bigint)).toBe(expected);
+  });
+});
+
+const testStringInputs: [string, string][] = [
+  ['0', 'Không'],
+  ['1', 'Một'],
+  ['100', 'Một Trăm'],
+  ['-100', 'Âm Một Trăm'],
+];
+
+describe('Test String Input', () => {
+  test.concurrent.each(testStringInputs)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input as string)).toBe(expected);
+  });
+});
+
+describe('Test Zero Variants', () => {
+  const testZeroVariants: [number | bigint | string, string][] = [
+    [0, 'Không'],
+    [-0, 'Không'],
+    [0.0, 'Không'],
+    [0n, 'Không'],
+    ['0', 'Không'],
+  ];
+
+  test.concurrent.each(testZeroVariants)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input as number)).toBe(expected);
+  });
+
+  test('zero with currency', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('Không Đồng');
+  });
+});
+
+describe('Test Invalid Inputs', () => {
+  const testInvalidInputs: [unknown, string][] = [
+    [NaN, 'Invalid Number "NaN"'],
+    [Infinity, 'Invalid Number "Infinity"'],
+    [-Infinity, 'Invalid Number "-Infinity"'],
+    ['', 'Invalid Number ""'],
+    ['abc', 'Invalid Number "abc"'],
+  ];
+
+  test.concurrent.each(testInvalidInputs)('convert %s => throws %s', (input, expectedError) => {
+    expect(() => toWords.convert(input as number)).toThrow(expectedError);
+  });
+});

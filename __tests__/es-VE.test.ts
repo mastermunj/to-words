@@ -397,3 +397,96 @@ describe('Test Ordinal Error Cases', () => {
     expect(() => toWords.toOrdinal(-3.14)).toThrow('Ordinal numbers must be non-negative integers');
   });
 });
+
+describe('Test Powers of Ten', () => {
+  const testPowersOfTen: [number, string][] = [
+    [10, 'Diez'],
+    [100, 'Cien'],
+    [1000, 'Mil'],
+    [10000, 'Diez Mil'],
+    [100000, 'Cien Mil'],
+    [1000000, 'Un Millon'],
+  ];
+
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number)).toBe(expected);
+  });
+});
+
+describe('Test BigInt', () => {
+  const testBigInts: [bigint, string][] = [
+    [0n, 'Cero'],
+    [1n, 'Uno'],
+    [100n, 'Cien'],
+    [1000n, 'Mil'],
+  ];
+
+  test.concurrent.each(testBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+describe('Test Negative BigInt', () => {
+  const testNegativeBigInts: [bigint, string][] = [
+    [-1n, 'Menos Uno'],
+    [-100n, 'Menos Cien'],
+    [-1000n, 'Menos Mil'],
+  ];
+
+  test.concurrent.each(testNegativeBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+describe('Test String Input', () => {
+  const testStringInputs: [string, string][] = [
+    ['0', 'Cero'],
+    ['1', 'Uno'],
+    ['100', 'Cien'],
+    ['-100', 'Menos Cien'],
+  ];
+
+  test.concurrent.each(testStringInputs)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+describe('Test Zero Variants', () => {
+  test('convert 0 => Cero', () => {
+    expect(toWords.convert(0)).toBe('Cero');
+  });
+
+  test('convert -0 => Cero', () => {
+    expect(toWords.convert(-0)).toBe('Cero');
+  });
+
+  test('convert 0.0 => Cero', () => {
+    expect(toWords.convert(0.0)).toBe('Cero');
+  });
+
+  test('convert 0n => Cero', () => {
+    expect(toWords.convert(0n)).toBe('Cero');
+  });
+
+  test('convert "0" => Cero', () => {
+    expect(toWords.convert('0')).toBe('Cero');
+  });
+
+  test('convert 0 with currency => Cero Bolívares', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('Cero Bolívares');
+  });
+});
+
+describe('Test Invalid Input', () => {
+  const testInvalidInputs: [unknown, string][] = [
+    [NaN, 'Invalid Number "NaN"'],
+    [Infinity, 'Invalid Number "Infinity"'],
+    [-Infinity, 'Invalid Number "-Infinity"'],
+    ['', 'Invalid Number ""'],
+    ['abc', 'Invalid Number "abc"'],
+  ];
+
+  test.concurrent.each(testInvalidInputs)('convert %s => throws %s', (input, expectedError) => {
+    expect(() => toWords.convert(input as number)).toThrow(expectedError);
+  });
+});

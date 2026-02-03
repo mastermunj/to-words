@@ -344,3 +344,286 @@ describe('Test Ordinal Error Cases', () => {
     expect(() => toWords.toOrdinal(99.99)).toThrow('Ordinal numbers must be non-negative integers');
   });
 });
+
+// ============================================================
+// COMPREHENSIVE TEST ADDITIONS FOR en-GB
+// ============================================================
+
+// Powers of Ten (International System)
+const testPowersOfTen: [number, string][] = [
+  [10, 'Ten'],
+  [100, 'One Hundred'],
+  [1000, 'One Thousand'],
+  [10000, 'Ten Thousand'],
+  [100000, 'One Hundred Thousand'],
+  [1000000, 'One Million'],
+  [10000000, 'Ten Million'],
+  [100000000, 'One Hundred Million'],
+  [1000000000, 'One Billion'],
+  [10000000000, 'Ten Billion'],
+  [100000000000, 'One Hundred Billion'],
+  [1000000000000, 'One Trillion'],
+];
+
+describe('Test Powers of Ten (International System)', () => {
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Boundary Values
+const testBoundaries: [number, string][] = [
+  [99, 'Ninety Nine'],
+  [100, 'One Hundred'],
+  [101, 'One Hundred One'],
+  [999, 'Nine Hundred Ninety Nine'],
+  [1000, 'One Thousand'],
+  [1001, 'One Thousand One'],
+  [9999, 'Nine Thousand Nine Hundred Ninety Nine'],
+  [10000, 'Ten Thousand'],
+  [10001, 'Ten Thousand One'],
+  [99999, 'Ninety Nine Thousand Nine Hundred Ninety Nine'],
+  [100000, 'One Hundred Thousand'],
+  [100001, 'One Hundred Thousand One'],
+  [999999, 'Nine Hundred Ninety Nine Thousand Nine Hundred Ninety Nine'],
+  [1000000, 'One Million'],
+  [1000001, 'One Million One'],
+  [9999999, 'Nine Million Nine Hundred Ninety Nine Thousand Nine Hundred Ninety Nine'],
+  [10000000, 'Ten Million'],
+  [10000001, 'Ten Million One'],
+];
+
+describe('Test Boundary Values', () => {
+  test.concurrent.each(testBoundaries)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Negative Floats
+const testNegativeFloats: [number, string][] = [
+  [-0.5, 'Minus Zero Point Five'],
+  [-0.25, 'Minus Zero Point Twenty Five'],
+  [-0.99, 'Minus Zero Point Ninety Nine'],
+  [-1.5, 'Minus One Point Five'],
+  [-3.14, 'Minus Three Point Fourteen'],
+  [-99.99, 'Minus Ninety Nine Point Ninety Nine'],
+  [-100.01, 'Minus One Hundred Point Zero One'],
+  [-1000.999, 'Minus One Thousand Point Nine Hundred Ninety Nine'],
+];
+
+describe('Test Negative Floats', () => {
+  test.concurrent.each(testNegativeFloats)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Negative Floats with Currency
+const testNegativeFloatsWithCurrency: [number, string][] = [
+  [-0.5, 'Minus Zero Pounds And Fifty Pence Only'],
+  [-0.99, 'Minus Zero Pounds And Ninety Nine Pence Only'],
+  [-1.5, 'Minus One Pound And Fifty Pence Only'],
+  [-1.01, 'Minus One Pound And One Penny Only'],
+  [-100.5, 'Minus One Hundred Pounds And Fifty Pence Only'],
+  [-1000.99, 'Minus One Thousand Pounds And Ninety Nine Pence Only'],
+];
+
+describe('Test Negative Floats with Currency', () => {
+  test.concurrent.each(testNegativeFloatsWithCurrency)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input, { currency: true })).toBe(expected);
+  });
+});
+
+// BigInt Tests
+const testBigInts: [bigint, string][] = [
+  [0n, 'Zero'],
+  [1n, 'One'],
+  [100n, 'One Hundred'],
+  [1000n, 'One Thousand'],
+  [1000000n, 'One Million'],
+  [1000000000n, 'One Billion'],
+  [1000000000000n, 'One Trillion'],
+  [1000000000000000n, 'One Quadrillion'],
+  [
+    1234567890123n,
+    'One Trillion Two Hundred Thirty Four Billion Five Hundred Sixty Seven Million Eight Hundred Ninety Thousand One Hundred Twenty Three',
+  ],
+];
+
+describe('Test BigInt Values', () => {
+  test.concurrent.each(testBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Negative BigInt Tests
+const testNegativeBigInts: [bigint, string][] = [
+  [-1n, 'Minus One'],
+  [-100n, 'Minus One Hundred'],
+  [-1000n, 'Minus One Thousand'],
+  [-1000000n, 'Minus One Million'],
+  [-1000000000n, 'Minus One Billion'],
+];
+
+describe('Test Negative BigInt Values', () => {
+  test.concurrent.each(testNegativeBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// BigInt with Currency
+const testBigIntsWithCurrency: [bigint, string][] = [
+  [0n, 'Zero Pounds Only'],
+  [1n, 'One Pound Only'],
+  [2n, 'Two Pounds Only'],
+  [100n, 'One Hundred Pounds Only'],
+  [1000n, 'One Thousand Pounds Only'],
+  [1000000n, 'One Million Pounds Only'],
+  [1000000000n, 'One Billion Pounds Only'],
+];
+
+describe('Test BigInt with Currency', () => {
+  test.concurrent.each(testBigIntsWithCurrency)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input, { currency: true })).toBe(expected);
+  });
+});
+
+// String Input Tests
+const testStringInputs: [string, string][] = [
+  ['0', 'Zero'],
+  ['1', 'One'],
+  ['100', 'One Hundred'],
+  ['1000', 'One Thousand'],
+  ['-100', 'Minus One Hundred'],
+  ['3.14', 'Three Point Fourteen'],
+  ['-3.14', 'Minus Three Point Fourteen'],
+  ['  100  ', 'One Hundred'],
+  ['1000000', 'One Million'],
+  ['1000000000', 'One Billion'],
+];
+
+describe('Test String Number Inputs', () => {
+  test.concurrent.each(testStringInputs)('convert "%s" => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// String with Currency
+const testStringInputsWithCurrency: [string, string][] = [
+  ['0', 'Zero Pounds Only'],
+  ['1', 'One Pound Only'],
+  ['100', 'One Hundred Pounds Only'],
+  ['100.50', 'One Hundred Pounds And Fifty Pence Only'],
+  ['-100', 'Minus One Hundred Pounds Only'],
+];
+
+describe('Test String Number Inputs with Currency', () => {
+  test.concurrent.each(testStringInputsWithCurrency)('convert "%s" => %s', (input, expected) => {
+    expect(toWords.convert(input, { currency: true })).toBe(expected);
+  });
+});
+
+// Zero Variants
+describe('Test Zero Variants', () => {
+  test('converts 0 correctly', () => {
+    expect(toWords.convert(0)).toBe('Zero');
+  });
+
+  test('converts -0 as Zero', () => {
+    expect(toWords.convert(-0)).toBe('Zero');
+  });
+
+  test('converts 0.0 as Zero', () => {
+    expect(toWords.convert(0.0)).toBe('Zero');
+  });
+
+  test('converts 0n as Zero', () => {
+    expect(toWords.convert(0n)).toBe('Zero');
+  });
+
+  test('converts "0" as Zero', () => {
+    expect(toWords.convert('0')).toBe('Zero');
+  });
+
+  test('converts 0 with currency', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('Zero Pounds Only');
+  });
+
+  test('converts 0 with currency and ignoreZeroCurrency', () => {
+    expect(toWords.convert(0, { currency: true, ignoreZeroCurrency: true })).toBe('');
+  });
+});
+
+// Currency Singular/Plural Tests
+describe('Test Currency Singular/Plural', () => {
+  test('1 Pound (singular)', () => {
+    expect(toWords.convert(1, { currency: true })).toBe('One Pound Only');
+  });
+
+  test('2 Pounds (plural)', () => {
+    expect(toWords.convert(2, { currency: true })).toBe('Two Pounds Only');
+  });
+
+  test('0.01 Penny (singular)', () => {
+    expect(toWords.convert(0.01, { currency: true })).toBe('Zero Pounds And One Penny Only');
+  });
+
+  test('0.02 Pence (plural)', () => {
+    expect(toWords.convert(0.02, { currency: true })).toBe('Zero Pounds And Two Pence Only');
+  });
+
+  test('1.01 (singular + singular)', () => {
+    expect(toWords.convert(1.01, { currency: true })).toBe('One Pound And One Penny Only');
+  });
+
+  test('2.02 (plural + plural)', () => {
+    expect(toWords.convert(2.02, { currency: true })).toBe('Two Pounds And Two Pence Only');
+  });
+});
+
+// All Options Combinations
+describe('Test All Currency Options Combinations', () => {
+  const testValue = 100.5;
+
+  test('currency only', () => {
+    expect(toWords.convert(testValue, { currency: true })).toBe('One Hundred Pounds And Fifty Pence Only');
+  });
+
+  test('currency + doNotAddOnly', () => {
+    expect(toWords.convert(testValue, { currency: true, doNotAddOnly: true })).toBe(
+      'One Hundred Pounds And Fifty Pence',
+    );
+  });
+
+  test('currency + ignoreDecimal', () => {
+    expect(toWords.convert(testValue, { currency: true, ignoreDecimal: true })).toBe('One Hundred Pounds Only');
+  });
+
+  test('currency + doNotAddOnly + ignoreDecimal', () => {
+    expect(toWords.convert(testValue, { currency: true, doNotAddOnly: true, ignoreDecimal: true })).toBe(
+      'One Hundred Pounds',
+    );
+  });
+});
+
+// Invalid Input Tests
+describe('Test Invalid Inputs for en-GB', () => {
+  test('throws for NaN', () => {
+    expect(() => toWords.convert(NaN)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for Infinity', () => {
+    expect(() => toWords.convert(Infinity)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for -Infinity', () => {
+    expect(() => toWords.convert(-Infinity)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for empty string', () => {
+    expect(() => toWords.convert('')).toThrow(/Invalid Number/);
+  });
+
+  test('throws for invalid string', () => {
+    expect(() => toWords.convert('abc')).toThrow(/Invalid Number/);
+  });
+});

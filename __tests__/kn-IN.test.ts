@@ -245,3 +245,85 @@ describe('Test Ordinals', () => {
     expect(toWords.toOrdinal(input)).toBe(expected);
   });
 });
+
+const powersOfTen: [number, string][] = [
+  [10, 'ಹತ್ತು'],
+  [100, 'ನೂರು'],
+  [1000, 'ಒಂದು ಸಾವಿರ'],
+  [10000, 'ಹತ್ತು ಸಾವಿರ'],
+  [100000, 'ಒಂದು ಲಕ್ಷ'],
+  [1000000, 'ಹತ್ತು ಲಕ್ಷ'],
+  [10000000, 'ಒಂದು ಕೋಟಿ'],
+];
+
+describe('Powers of Ten', () => {
+  test.concurrent.each(powersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+const bigIntTests: [bigint, string][] = [
+  [0n, 'ಶೂನ್ಯ'],
+  [1n, 'ಒಂದು'],
+  [100n, 'ನೂರು'],
+  [1000n, 'ಒಂದು ಸಾವಿರ'],
+];
+
+describe('BigInt Tests', () => {
+  test.concurrent.each(bigIntTests)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+const negativeBigIntTests: [bigint, string][] = [
+  [-1n, 'ಋಣ ಒಂದು'],
+  [-100n, 'ಋಣ ನೂರು'],
+  [-1000n, 'ಋಣ ಒಂದು ಸಾವಿರ'],
+];
+
+describe('Negative BigInt Tests', () => {
+  test.concurrent.each(negativeBigIntTests)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+const stringInputTests: [string, string][] = [
+  ['0', 'ಶೂನ್ಯ'],
+  ['1', 'ಒಂದು'],
+  ['100', 'ನೂರು'],
+  ['-100', 'ಋಣ ನೂರು'],
+];
+
+describe('String Input Tests', () => {
+  test.concurrent.each(stringInputTests)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+describe('Zero Variants', () => {
+  test.concurrent.each([
+    [0, 'ಶೂನ್ಯ'],
+    [-0, 'ಶೂನ್ಯ'],
+    [0.0, 'ಶೂನ್ಯ'],
+    [0n, 'ಶೂನ್ಯ'],
+    ['0', 'ಶೂನ್ಯ'],
+  ] as [number | bigint | string, string][])('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+
+  test('zero with currency', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('ಶೂನ್ಯ ರೂಪಾಯಿಗಳು');
+  });
+});
+
+describe('Invalid Input Tests', () => {
+  test.concurrent.each([
+    [NaN, 'Invalid Number "NaN"'],
+    [Infinity, 'Invalid Number "Infinity"'],
+    [-Infinity, 'Invalid Number "-Infinity"'],
+    ['', 'Invalid Number ""'],
+    ['abc', 'Invalid Number "abc"'],
+  ] as [number | string, string][])('convert %s throws error', (input, expectedMessage) => {
+    expect(() => toWords.convert(input as number)).toThrow(expectedMessage);
+  });
+});

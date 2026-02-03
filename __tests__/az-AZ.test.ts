@@ -361,3 +361,120 @@ describe('Test Invalid Inputs', () => {
     expect(() => toWords.convert(input as number)).toThrow(message);
   });
 });
+
+describe('Test Powers of Ten', () => {
+  const testPowersOfTen: [number, string][] = [
+    [10, 'On'],
+    [100, 'Yüz'],
+    [1000, 'Min'],
+    [10000, 'On Min'],
+    [100000, 'Yüz Min'],
+    [1000000, 'Bir Milyon'],
+    [10000000, 'On Milyon'],
+    [100000000, 'Yüz Milyon'],
+    [1000000000, 'Bir Milyard'],
+    [10000000000, 'On Milyard'],
+    [100000000000, 'Yüz Milyard'],
+    [1000000000000, 'Bir Trilyon'],
+  ];
+
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number)).toBe(expected);
+  });
+});
+
+describe('Test BigInt Inputs', () => {
+  const testBigInts: [bigint, string][] = [
+    [0n, 'Sıfır'],
+    [1n, 'Bir'],
+    [100n, 'Yüz'],
+    [1000n, 'Min'],
+    [1000000n, 'Bir Milyon'],
+  ];
+
+  test.concurrent.each(testBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as bigint)).toBe(expected);
+  });
+});
+
+describe('Test Negative BigInt Inputs', () => {
+  const testNegativeBigInts: [bigint, string][] = [
+    [-1n, 'Mənfi Bir'],
+    [-100n, 'Mənfi Yüz'],
+    [-1000n, 'Mənfi Min'],
+  ];
+
+  test.concurrent.each(testNegativeBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as bigint)).toBe(expected);
+  });
+});
+
+describe('Test String Inputs', () => {
+  const testStringInputs: [string, string][] = [
+    ['0', 'Sıfır'],
+    ['1', 'Bir'],
+    ['100', 'Yüz'],
+    ['-100', 'Mənfi Yüz'],
+    ['  100  ', 'Yüz'],
+  ];
+
+  test.concurrent.each(testStringInputs)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input as string)).toBe(expected);
+  });
+});
+
+describe('Test Zero Variants', () => {
+  test('convert 0 => Sıfır', () => {
+    expect(toWords.convert(0)).toBe('Sıfır');
+  });
+
+  test('convert -0 => Sıfır', () => {
+    expect(toWords.convert(-0)).toBe('Sıfır');
+  });
+
+  test('convert 0.0 => Sıfır', () => {
+    expect(toWords.convert(0.0)).toBe('Sıfır');
+  });
+
+  test('convert 0n => Sıfır', () => {
+    expect(toWords.convert(0n)).toBe('Sıfır');
+  });
+
+  test('convert "0" => Sıfır', () => {
+    expect(toWords.convert('0')).toBe('Sıfır');
+  });
+
+  test('convert 0 with currency => Sıfır Manat', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('Sıfır Manat');
+  });
+
+  test('convert 0n with currency => Sıfır Manat', () => {
+    expect(toWords.convert(0n, { currency: true })).toBe('Sıfır Manat');
+  });
+
+  test('convert "0" with currency => Sıfır Manat', () => {
+    expect(toWords.convert('0', { currency: true })).toBe('Sıfır Manat');
+  });
+});
+
+describe('Test Invalid Input Errors', () => {
+  test('should throw error for NaN', () => {
+    expect(() => toWords.convert(NaN)).toThrow('Invalid Number');
+  });
+
+  test('should throw error for Infinity', () => {
+    expect(() => toWords.convert(Infinity)).toThrow('Invalid Number');
+  });
+
+  test('should throw error for -Infinity', () => {
+    expect(() => toWords.convert(-Infinity)).toThrow('Invalid Number');
+  });
+
+  test('should throw error for empty string', () => {
+    expect(() => toWords.convert('')).toThrow('Invalid Number');
+  });
+
+  test('should throw error for non-numeric string', () => {
+    expect(() => toWords.convert('abc')).toThrow('Invalid Number');
+  });
+});

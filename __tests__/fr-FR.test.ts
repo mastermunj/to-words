@@ -334,3 +334,301 @@ describe('Test Ordinal Error Cases', () => {
     expect(() => toWords.toOrdinal(-3.14)).toThrow('Ordinal numbers must be non-negative integers');
   });
 });
+
+// ============================================================
+// COMPREHENSIVE TEST ADDITIONS FOR fr-FR
+// ============================================================
+
+// Extended Integer Tests (1-100 covering French complexities)
+const testIntegersExtended: [number, string][] = [
+  [1, 'Un'],
+  [2, 'Deux'],
+  [3, 'Trois'],
+  [4, 'Quatre'],
+  [5, 'Cinq'],
+  [6, 'Six'],
+  [7, 'Sept'],
+  [8, 'Huit'],
+  [9, 'Neuf'],
+  [10, 'Dix'],
+  [11, 'Onze'],
+  [12, 'Douze'],
+  [13, 'Treize'],
+  [14, 'Quatorze'],
+  [15, 'Quinze'],
+  [16, 'Seize'],
+  [17, 'Dix-Sept'],
+  [18, 'Dix-Huit'],
+  [19, 'Dix-Neuf'],
+  [20, 'Vingt'],
+  [21, 'Vingt Et Un'],
+  [22, 'Vingt-Deux'],
+  [30, 'Trente'],
+  [31, 'Trente Et Un'],
+  [40, 'Quarante'],
+  [50, 'Cinquante'],
+  [60, 'Soixante'],
+  [70, 'Soixante-Dix'],
+  [71, 'Soixante Et Onze'],
+  [72, 'Soixante-Douze'],
+  [79, 'Soixante-Dix-Neuf'],
+  [80, 'Quatre-Vingts'],
+  [81, 'Quatre-Vingt-Un'],
+  [90, 'Quatre-Vingt-Dix'],
+  [91, 'Quatre-Vingt-Onze'],
+  [99, 'Quatre-Vingt-Dix-Neuf'],
+  [100, 'Cent'],
+];
+
+describe('Test Extended Integers (1-100)', () => {
+  test.concurrent.each(testIntegersExtended)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Powers of Ten (International System - French)
+const testPowersOfTen: [number, string][] = [
+  [10, 'Dix'],
+  [100, 'Cent'],
+  [1000, 'Mille'],
+  [10000, 'Dix Mille'],
+  [100000, 'Cent Mille'],
+  [1000000, 'Un Million'],
+  [10000000, 'Dix Millions'],
+  [100000000, 'Cent Millions'],
+  [1000000000, 'Un Milliard'],
+  [10000000000, 'Dix Milliards'],
+  [100000000000, 'Cent Milliards'],
+  [1000000000000, 'Un Billion'],
+];
+
+describe('Test Powers of Ten (International System)', () => {
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Boundary Values
+const testBoundaries: [number, string][] = [
+  [99, 'Quatre-Vingt-Dix-Neuf'],
+  [100, 'Cent'],
+  [101, 'Cent Un'],
+  [999, 'Neuf Cent Quatre-Vingt-Dix-Neuf'],
+  [1000, 'Mille'],
+  [1001, 'Mille Un'],
+  [9999, 'Neuf Mille Neuf Cent Quatre-Vingt-Dix-Neuf'],
+  [10000, 'Dix Mille'],
+  [10001, 'Dix Mille Un'],
+  [99999, 'Quatre-Vingt-Dix-Neuf Mille Neuf Cent Quatre-Vingt-Dix-Neuf'],
+  [100000, 'Cent Mille'],
+  [999999, 'Neuf Cent Quatre-Vingt-Dix-Neuf Mille Neuf Cent Quatre-Vingt-Dix-Neuf'],
+  [1000000, 'Un Million'],
+  [1000001, 'Un Million Un'],
+];
+
+describe('Test Boundary Values', () => {
+  test.concurrent.each(testBoundaries)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Negative Floats
+const testNegativeFloats: [number, string][] = [
+  [-0.5, 'Moins Zéro Virgule Cinq'],
+  [-0.25, 'Moins Zéro Virgule Vingt-Cinq'],
+  [-0.99, 'Moins Zéro Virgule Quatre-Vingt-Dix-Neuf'],
+  [-1.5, 'Moins Un Virgule Cinq'],
+  [-3.14, 'Moins Trois Virgule Quatorze'],
+  [-99.99, 'Moins Quatre-Vingt-Dix-Neuf Virgule Quatre-Vingt-Dix-Neuf'],
+  [-100.01, 'Moins Cent Virgule Zéro Un'],
+];
+
+describe('Test Negative Floats', () => {
+  test.concurrent.each(testNegativeFloats)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Negative Floats with Currency
+const testNegativeFloatsWithCurrency: [number, string][] = [
+  [-0.5, 'Moins Zéro Euros Et Cinquante Centimes'],
+  [-0.99, 'Moins Zéro Euros Et Quatre-Vingt-Dix-Neuf Centimes'],
+  [-1.5, 'Moins Un Euro Et Cinquante Centimes'],
+  [-1.01, 'Moins Un Euro Et Un Centime'],
+  [-100.5, 'Moins Cent Euros Et Cinquante Centimes'],
+];
+
+describe('Test Negative Floats with Currency', () => {
+  test.concurrent.each(testNegativeFloatsWithCurrency)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input, { currency: true })).toBe(expected);
+  });
+});
+
+// BigInt Tests
+const testBigInts: [bigint, string][] = [
+  [0n, 'Zéro'],
+  [1n, 'Un'],
+  [100n, 'Cent'],
+  [1000n, 'Mille'],
+  [1000000n, 'Un Million'],
+  [1000000000n, 'Un Milliard'],
+  [1000000000000n, 'Un Billion'],
+];
+
+describe('Test BigInt Values', () => {
+  test.concurrent.each(testBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Negative BigInt Tests
+const testNegativeBigInts: [bigint, string][] = [
+  [-1n, 'Moins Un'],
+  [-100n, 'Moins Cent'],
+  [-1000n, 'Moins Mille'],
+  [-1000000n, 'Moins Un Million'],
+  [-1000000000n, 'Moins Un Milliard'],
+];
+
+describe('Test Negative BigInt Values', () => {
+  test.concurrent.each(testNegativeBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// BigInt with Currency
+const testBigIntsWithCurrency: [bigint, string][] = [
+  [0n, 'Zéro Euros'],
+  [1n, 'Un Euro'],
+  [2n, 'Deux Euros'],
+  [100n, 'Cent Euros'],
+  [1000n, 'Mille Euros'],
+  [1000000n, 'Un Million Euros'],
+];
+
+describe('Test BigInt with Currency', () => {
+  test.concurrent.each(testBigIntsWithCurrency)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input, { currency: true })).toBe(expected);
+  });
+});
+
+// String Input Tests
+const testStringInputs: [string, string][] = [
+  ['0', 'Zéro'],
+  ['1', 'Un'],
+  ['100', 'Cent'],
+  ['1000', 'Mille'],
+  ['-100', 'Moins Cent'],
+  ['3.14', 'Trois Virgule Quatorze'],
+  ['-3.14', 'Moins Trois Virgule Quatorze'],
+  ['  100  ', 'Cent'],
+  ['1000000', 'Un Million'],
+];
+
+describe('Test String Number Inputs', () => {
+  test.concurrent.each(testStringInputs)('convert "%s" => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Zero Variants
+describe('Test Zero Variants', () => {
+  test('converts 0 correctly', () => {
+    expect(toWords.convert(0)).toBe('Zéro');
+  });
+
+  test('converts -0 as Zéro', () => {
+    expect(toWords.convert(-0)).toBe('Zéro');
+  });
+
+  test('converts 0.0 as Zéro', () => {
+    expect(toWords.convert(0.0)).toBe('Zéro');
+  });
+
+  test('converts 0n as Zéro', () => {
+    expect(toWords.convert(0n)).toBe('Zéro');
+  });
+
+  test('converts "0" as Zéro', () => {
+    expect(toWords.convert('0')).toBe('Zéro');
+  });
+
+  test('converts 0 with currency', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('Zéro Euros');
+  });
+
+  test('converts 0 with currency and ignoreZeroCurrency', () => {
+    expect(toWords.convert(0, { currency: true, ignoreZeroCurrency: true })).toBe('');
+  });
+});
+
+// Currency Singular/Plural Tests
+describe('Test Currency Singular/Plural', () => {
+  test('1 Euro (singular)', () => {
+    expect(toWords.convert(1, { currency: true })).toBe('Un Euro');
+  });
+
+  test('2 Euros (plural)', () => {
+    expect(toWords.convert(2, { currency: true })).toBe('Deux Euros');
+  });
+
+  test('0.01 Centime (singular)', () => {
+    expect(toWords.convert(0.01, { currency: true })).toBe('Zéro Euros Et Un Centime');
+  });
+
+  test('0.02 Centimes (plural)', () => {
+    expect(toWords.convert(0.02, { currency: true })).toBe('Zéro Euros Et Deux Centimes');
+  });
+
+  test('1.01 (singular + singular)', () => {
+    expect(toWords.convert(1.01, { currency: true })).toBe('Un Euro Et Un Centime');
+  });
+
+  test('2.02 (plural + plural)', () => {
+    expect(toWords.convert(2.02, { currency: true })).toBe('Deux Euros Et Deux Centimes');
+  });
+});
+
+// All Options Combinations
+describe('Test All Currency Options Combinations', () => {
+  const testValue = 100.5;
+
+  test('currency only', () => {
+    expect(toWords.convert(testValue, { currency: true })).toBe('Cent Euros Et Cinquante Centimes');
+  });
+
+  test('currency + doNotAddOnly', () => {
+    expect(toWords.convert(testValue, { currency: true, doNotAddOnly: true })).toBe('Cent Euros Et Cinquante Centimes');
+  });
+
+  test('currency + ignoreDecimal', () => {
+    expect(toWords.convert(testValue, { currency: true, ignoreDecimal: true })).toBe('Cent Euros');
+  });
+
+  test('currency + doNotAddOnly + ignoreDecimal', () => {
+    expect(toWords.convert(testValue, { currency: true, doNotAddOnly: true, ignoreDecimal: true })).toBe('Cent Euros');
+  });
+});
+
+// Invalid Input Tests
+describe('Test Invalid Inputs for fr-FR', () => {
+  test('throws for NaN', () => {
+    expect(() => toWords.convert(NaN)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for Infinity', () => {
+    expect(() => toWords.convert(Infinity)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for -Infinity', () => {
+    expect(() => toWords.convert(-Infinity)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for empty string', () => {
+    expect(() => toWords.convert('')).toThrow(/Invalid Number/);
+  });
+
+  test('throws for invalid string', () => {
+    expect(() => toWords.convert('abc')).toThrow(/Invalid Number/);
+  });
+});

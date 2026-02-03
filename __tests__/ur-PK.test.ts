@@ -262,3 +262,97 @@ describe('Test Ordinals', () => {
     expect(toWords.toOrdinal(input as number)).toBe(expected);
   });
 });
+
+const testPowersOfTen: [number, string][] = [
+  [10, 'دس'],
+  [100, 'ایک سو'],
+  [1000, 'ایک ہزار'],
+  [10000, 'دس ہزار'],
+  [100000, 'ایک لاکھ'],
+  [1000000, 'دس لاکھ'],
+  [10000000, 'ایک کروڑ'],
+];
+
+describe('Test Powers of Ten', () => {
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+const testBigInt: [bigint, string][] = [
+  [0n, 'صفر'],
+  [1n, 'ایک'],
+  [100n, 'ایک سو'],
+  [1000n, 'ایک ہزار'],
+];
+
+describe('Test BigInt', () => {
+  test.concurrent.each(testBigInt)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+const testNegativeBigInt: [bigint, string][] = [
+  [-1n, 'منفی ایک'],
+  [-100n, 'منفی ایک سو'],
+  [-1000n, 'منفی ایک ہزار'],
+];
+
+describe('Test Negative BigInt', () => {
+  test.concurrent.each(testNegativeBigInt)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+const testStringInput: [string, string][] = [
+  ['0', 'صفر'],
+  ['1', 'ایک'],
+  ['100', 'ایک سو'],
+  ['-100', 'منفی ایک سو'],
+];
+
+describe('Test String Input', () => {
+  test.concurrent.each(testStringInput)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+const testZeroVariants: [number | bigint | string, string][] = [
+  [0, 'صفر'],
+  [-0, 'صفر'],
+  [0.0, 'صفر'],
+  [0n, 'صفر'],
+  ['0', 'صفر'],
+];
+
+describe('Test Zero Variants', () => {
+  test.concurrent.each(testZeroVariants)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+
+  test('Zero with currency', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('صفر روپے صرف');
+  });
+});
+
+describe('Test Invalid Input', () => {
+  test('NaN throws error', () => {
+    expect(() => toWords.convert(NaN)).toThrow('Invalid Number "NaN"');
+  });
+
+  test('Infinity throws error', () => {
+    expect(() => toWords.convert(Infinity)).toThrow('Invalid Number "Infinity"');
+  });
+
+  test('-Infinity throws error', () => {
+    expect(() => toWords.convert(-Infinity)).toThrow('Invalid Number "-Infinity"');
+  });
+
+  test('Empty string throws error', () => {
+    expect(() => toWords.convert('')).toThrow('Invalid Number ""');
+  });
+
+  test('Non-numeric string throws error', () => {
+    expect(() => toWords.convert('abc')).toThrow('Invalid Number "abc"');
+  });
+});

@@ -378,3 +378,104 @@ describe('Test Ordinal Error Cases', () => {
     expect(() => toWords.toOrdinal(10.5)).toThrow();
   });
 });
+
+const testPowersOfTen: [number, string][] = [
+  [10, 'Sampu'],
+  [100, 'Isang Daan'],
+  [1000, 'Isang Libo'],
+  [10000, 'Sampu Libo'],
+  [100000, 'Isang Daan Libo'],
+  [1000000, 'Isang Milyon'],
+];
+
+describe('Test Powers of Ten', () => {
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number)).toBe(expected);
+  });
+});
+
+const testBigInt: [bigint, string][] = [
+  [0n, 'Sero'],
+  [1n, 'Isa'],
+  [100n, 'Isang Daan'],
+  [1000n, 'Isang Libo'],
+];
+
+describe('Test BigInt', () => {
+  test.concurrent.each(testBigInt)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as bigint)).toBe(expected);
+  });
+});
+
+const testNegativeBigInt: [bigint, string][] = [
+  [-1n, 'Minus Isa'],
+  [-100n, 'Minus Isang Daan'],
+  [-1000n, 'Minus Isang Libo'],
+];
+
+describe('Test Negative BigInt', () => {
+  test.concurrent.each(testNegativeBigInt)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as bigint)).toBe(expected);
+  });
+});
+
+const testStringInput: [string, string][] = [
+  ['0', 'Sero'],
+  ['1', 'Isa'],
+  ['100', 'Isang Daan'],
+  ['-100', 'Minus Isang Daan'],
+];
+
+describe('Test String Input', () => {
+  test.concurrent.each(testStringInput)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input as string)).toBe(expected);
+  });
+});
+
+describe('Test Zero Variants', () => {
+  test.concurrent('convert 0 => Sero', () => {
+    expect(toWords.convert(0)).toBe('Sero');
+  });
+
+  test.concurrent('convert -0 => Sero', () => {
+    expect(toWords.convert(-0)).toBe('Sero');
+  });
+
+  test.concurrent('convert 0.0 => Sero', () => {
+    expect(toWords.convert(0.0)).toBe('Sero');
+  });
+
+  test.concurrent('convert 0n => Sero', () => {
+    expect(toWords.convert(0n)).toBe('Sero');
+  });
+
+  test.concurrent('convert "0" => Sero', () => {
+    expect(toWords.convert('0')).toBe('Sero');
+  });
+
+  test.concurrent('convert 0 with currency => Sero Piso Lamang', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('Sero Piso Lamang');
+  });
+});
+
+describe('Test Invalid Input', () => {
+  test.concurrent('should throw error for NaN', () => {
+    expect(() => toWords.convert(NaN)).toThrow('Invalid Number "NaN"');
+  });
+
+  test.concurrent('should throw error for Infinity', () => {
+    expect(() => toWords.convert(Infinity)).toThrow('Invalid Number "Infinity"');
+  });
+
+  test.concurrent('should throw error for -Infinity', () => {
+    expect(() => toWords.convert(-Infinity)).toThrow('Invalid Number "-Infinity"');
+  });
+
+  test.concurrent('should throw error for empty string', () => {
+    expect(() => toWords.convert('')).toThrow('Invalid Number ""');
+  });
+
+  test.concurrent('should throw error for non-numeric string', () => {
+    expect(() => toWords.convert('abc')).toThrow('Invalid Number "abc"');
+  });
+});

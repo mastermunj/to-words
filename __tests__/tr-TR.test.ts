@@ -269,3 +269,132 @@ describe('Test Ordinal Error Cases', () => {
     expect(() => toWords.toOrdinal(1.5)).toThrow('Ordinal numbers must be non-negative integers');
   });
 });
+
+// ============================================================
+// COMPREHENSIVE TEST ADDITIONS FOR tr-TR
+// ============================================================
+
+// Powers of Ten (Turkish)
+const testPowersOfTen: [number, string][] = [
+  [10, 'on'],
+  [100, 'yüz'],
+  [1000, 'bir bin'],
+  [10000, 'on bin'],
+  [100000, 'yüz bin'],
+  [1000000, 'bir milyon'],
+  [10000000, 'on milyon'],
+  [100000000, 'yüz milyon'],
+  [1000000000, 'bir milyar'],
+  [10000000000, 'on milyar'],
+  [100000000000, 'yüz milyar'],
+  [1000000000000, 'bir trilyon'],
+];
+
+describe('Test Powers of Ten (Turkish System)', () => {
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// BigInt Tests
+const testBigInts: [bigint, string][] = [
+  [0n, 'sıfır'],
+  [1n, 'bir'],
+  [100n, 'yüz'],
+  [1000n, 'bir bin'],
+  [1000000n, 'bir milyon'],
+  [1000000000n, 'bir milyar'],
+  [1000000000000n, 'bir trilyon'],
+];
+
+describe('Test BigInt Values', () => {
+  test.concurrent.each(testBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Negative BigInt Tests
+const testNegativeBigInts: [bigint, string][] = [
+  [-1n, 'eksi bir'],
+  [-100n, 'eksi yüz'],
+  [-1000n, 'eksi bir bin'],
+  [-1000000n, 'eksi bir milyon'],
+  [-1000000000n, 'eksi bir milyar'],
+];
+
+describe('Test Negative BigInt Values', () => {
+  test.concurrent.each(testNegativeBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// String Input Tests
+const testStringInputs: [string, string][] = [
+  ['0', 'sıfır'],
+  ['1', 'bir'],
+  ['100', 'yüz'],
+  ['1000', 'bir bin'],
+  ['-100', 'eksi yüz'],
+  ['  100  ', 'yüz'],
+  ['1000000', 'bir milyon'],
+];
+
+describe('Test String Number Inputs', () => {
+  test.concurrent.each(testStringInputs)('convert "%s" => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Zero Variants
+describe('Test Zero Variants', () => {
+  test('converts 0 correctly', () => {
+    expect(toWords.convert(0)).toBe('sıfır');
+  });
+
+  test('converts -0 as sıfır', () => {
+    expect(toWords.convert(-0)).toBe('sıfır');
+  });
+
+  test('converts 0.0 as sıfır', () => {
+    expect(toWords.convert(0.0)).toBe('sıfır');
+  });
+
+  test('converts 0n as sıfır', () => {
+    expect(toWords.convert(0n)).toBe('sıfır');
+  });
+
+  test('converts "0" as sıfır', () => {
+    expect(toWords.convert('0')).toBe('sıfır');
+  });
+
+  test('converts 0 with currency', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('sıfır lira');
+  });
+
+  test('converts 0 with currency and ignoreZeroCurrency', () => {
+    expect(toWords.convert(0, { currency: true, ignoreZeroCurrency: true })).toBe('');
+  });
+});
+
+// Invalid Input Tests
+describe('Test Invalid Inputs for tr-TR', () => {
+  test('throws for NaN', () => {
+    expect(() => toWords.convert(NaN)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for Infinity', () => {
+    expect(() => toWords.convert(Infinity)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for -Infinity', () => {
+    expect(() => toWords.convert(-Infinity)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for empty string', () => {
+    expect(() => toWords.convert('')).toThrow(/Invalid Number/);
+  });
+
+  test('throws for invalid string', () => {
+    expect(() => toWords.convert('abc')).toThrow(/Invalid Number/);
+  });
+});

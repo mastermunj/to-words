@@ -338,3 +338,109 @@ describe('Test Ordinal Error Cases', () => {
     expect(() => toWords.toOrdinal(99.99)).toThrow('Ordinal numbers must be non-negative integers');
   });
 });
+
+// ============================================================
+// COMPREHENSIVE TEST ADDITIONS FOR ru-RU
+// ============================================================
+
+// BigInt Tests
+const testBigInts: [bigint, string][] = [
+  [0n, 'Ноль'],
+  [1n, 'Один'],
+  [100n, 'Сто'],
+  [1000n, 'Тысяча'],
+  [1000000n, 'Миллион'],
+  [1000000000n, 'Миллиард'],
+];
+
+describe('Test BigInt Values', () => {
+  test.concurrent.each(testBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Negative BigInt Tests
+const testNegativeBigInts: [bigint, string][] = [
+  [-1n, 'Минус Один'],
+  [-100n, 'Минус Сто'],
+  [-1000n, 'Минус Тысяча'],
+  [-1000000n, 'Минус Миллион'],
+  [-1000000000n, 'Минус Миллиард'],
+];
+
+describe('Test Negative BigInt Values', () => {
+  test.concurrent.each(testNegativeBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// String Input Tests
+const testStringInputs: [string, string][] = [
+  ['0', 'Ноль'],
+  ['1', 'Один'],
+  ['100', 'Сто'],
+  ['1000', 'Тысяча'],
+  ['-100', 'Минус Сто'],
+  ['  100  ', 'Сто'],
+  ['1000000', 'Миллион'],
+];
+
+describe('Test String Number Inputs', () => {
+  test.concurrent.each(testStringInputs)('convert "%s" => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Zero Variants
+describe('Test Zero Variants', () => {
+  test('converts 0 correctly', () => {
+    expect(toWords.convert(0)).toBe('Ноль');
+  });
+
+  test('converts -0 as Ноль', () => {
+    expect(toWords.convert(-0)).toBe('Ноль');
+  });
+
+  test('converts 0.0 as Ноль', () => {
+    expect(toWords.convert(0.0)).toBe('Ноль');
+  });
+
+  test('converts 0n as Ноль', () => {
+    expect(toWords.convert(0n)).toBe('Ноль');
+  });
+
+  test('converts "0" as Ноль', () => {
+    expect(toWords.convert('0')).toBe('Ноль');
+  });
+
+  test('converts 0 with currency', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('Ноль Рублей Только');
+  });
+
+  test('converts 0 with currency and ignoreZeroCurrency', () => {
+    expect(toWords.convert(0, { currency: true, ignoreZeroCurrency: true })).toBe('');
+  });
+});
+
+// Invalid Input Tests
+describe('Test Invalid Inputs for ru-RU', () => {
+  test('throws for NaN', () => {
+    expect(() => toWords.convert(NaN)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for Infinity', () => {
+    expect(() => toWords.convert(Infinity)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for -Infinity', () => {
+    expect(() => toWords.convert(-Infinity)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for empty string', () => {
+    expect(() => toWords.convert('')).toThrow(/Invalid Number/);
+  });
+
+  test('throws for invalid string', () => {
+    expect(() => toWords.convert('abc')).toThrow(/Invalid Number/);
+  });
+});

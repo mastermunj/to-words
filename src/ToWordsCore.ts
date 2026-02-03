@@ -49,10 +49,28 @@ interface LocaleCache {
   numberWordsMappingBigInt: CachedNumberWordMap[];
   exactWordsMap: Map<bigint, CachedNumberWordMap>; // O(1) lookup for exact matches
   smallNumbersMap: Map<bigint, CachedNumberWordMap>; // Direct lookup for 0-100
+  // Pre-computed unit thresholds for faster iteration
+  unitMappings: CachedNumberWordMap[]; // Numbers >= 100, sorted descending
+  smallNumbersBoundary: bigint; // The largest "small number" that has an atomic word
+  // O(1) lookup sets for plural/ignore words
+  pluralWordsSet: Set<string>;
+  pluralWordsOnlyWhenTrailingSet: Set<string>;
+  ignoreOneForWordsSet: Set<string>;
+  noSplitWordAfterSet: Set<string>;
 }
 
 // Global cache for all locales (computed once per locale)
 const localeCache = new WeakMap<InstanceType<ConstructorOf<LocaleInterface>>, LocaleCache>();
+
+// Pre-computed BigInt constants to avoid repeated creation
+const BIGINT_0 = 0n;
+const BIGINT_1 = 1n;
+const BIGINT_2 = 2n;
+const BIGINT_10 = 10n;
+const BIGINT_11 = 11n;
+const BIGINT_100 = 100n;
+const BIGINT_1000 = 1000n;
+const BIGINT_MAX_SAFE = BigInt(Number.MAX_SAFE_INTEGER);
 
 export class ToWordsCore {
   protected options: ToWordsOptions = {};
@@ -124,16 +142,35 @@ export class ToWordsCore {
 
     // Create direct lookup map for small numbers (0-100) for O(1) access
     const smallNumbersMap = new Map<bigint, CachedNumberWordMap>();
+    let smallNumbersBoundary = BIGINT_0;
     for (const elem of numberWordsMappingBigInt) {
-      if (elem.numberBigInt <= 100n) {
+      if (elem.numberBigInt <= BIGINT_100) {
         smallNumbersMap.set(elem.numberBigInt, elem);
+        if (elem.numberBigInt > smallNumbersBoundary) {
+          smallNumbersBoundary = elem.numberBigInt;
+        }
       }
     }
+
+    // Pre-compute unit mappings (>= 100) for faster iteration - already sorted descending
+    const unitMappings = numberWordsMappingBigInt.filter((m) => m.numberBigInt >= BIGINT_100);
+
+    // Create Sets for O(1) lookup instead of array.includes()
+    const pluralWordsSet = new Set<string>(config.pluralWords ?? []);
+    const pluralWordsOnlyWhenTrailingSet = new Set<string>(config.pluralWordsOnlyWhenTrailing ?? []);
+    const ignoreOneForWordsSet = new Set<string>(config.ignoreOneForWords ?? []);
+    const noSplitWordAfterSet = new Set<string>(config.noSplitWordAfter ?? []);
 
     localeCache.set(locale, {
       numberWordsMappingBigInt,
       exactWordsMap,
       smallNumbersMap,
+      unitMappings,
+      smallNumbersBoundary,
+      pluralWordsSet,
+      pluralWordsOnlyWhenTrailingSet,
+      ignoreOneForWordsSet,
+      noSplitWordAfterSet,
     });
   }
 
@@ -147,7 +184,18 @@ export class ToWordsCore {
   }
 
   public convert(number: NumberInput, options: ConverterOptions = {}): string {
-    options = Object.assign({}, this.options.converterOptions, options);
+    // Fast path: merge options only when needed (avoid Object.assign in hot path)
+    const baseOptions = this.options.converterOptions;
+    const mergedOptions: ConverterOptions =
+      Object.keys(options).length === 0
+        ? (baseOptions ?? {})
+        : {
+            currency: options.currency ?? baseOptions?.currency ?? false,
+            ignoreDecimal: options.ignoreDecimal ?? baseOptions?.ignoreDecimal ?? false,
+            ignoreZeroCurrency: options.ignoreZeroCurrency ?? baseOptions?.ignoreZeroCurrency ?? false,
+            doNotAddOnly: options.doNotAddOnly ?? baseOptions?.doNotAddOnly ?? false,
+            currencyOptions: options.currencyOptions ?? baseOptions?.currencyOptions,
+          };
 
     if (!this.isValidNumber(number)) {
       throw new Error(`Invalid Number "${number}"`);
@@ -156,13 +204,13 @@ export class ToWordsCore {
     const isBigInt = typeof number === 'bigint';
     let numericValue: number | bigint = isBigInt ? number : Number(number);
 
-    if (options.ignoreDecimal && !isBigInt) {
-      numericValue = Number.parseInt(numericValue.toString());
+    if (mergedOptions.ignoreDecimal && !isBigInt) {
+      numericValue = Math.trunc(numericValue as number);
     }
 
     let words: string[] = [];
-    if (options.currency) {
-      words = this.convertCurrency(numericValue, options);
+    if (mergedOptions.currency) {
+      words = this.convertCurrency(numericValue, mergedOptions);
     } else {
       words = this.convertNumber(numericValue);
     }
@@ -471,16 +519,19 @@ export class ToWordsCore {
   protected convertInternal(
     number: bigint,
     trailing: boolean = false,
-    overrides: Record<number, string> = {},
+    overrides: Record<number, string> | undefined = undefined,
     localeInstance?: InstanceType<ConstructorOf<LocaleInterface>>,
   ): string[] {
     const locale = localeInstance ?? this.getLocale();
     const localeConfig = locale.config;
     const cache = this.getLocaleCache(locale);
 
-    const numberAsNum = number <= BigInt(Number.MAX_SAFE_INTEGER) ? Number(number) : -1;
-    if (numberAsNum !== -1 && overrides[numberAsNum]) {
-      return [overrides[numberAsNum]];
+    // Check overrides - avoid Object.keys() when overrides is undefined/empty
+    if (overrides) {
+      const numberAsNum = number <= BIGINT_MAX_SAFE ? Number(number) : -1;
+      if (numberAsNum !== -1 && overrides[numberAsNum]) {
+        return [overrides[numberAsNum]];
+      }
     }
 
     // Check exactWordsMapping using O(1) Map lookup
@@ -491,7 +542,7 @@ export class ToWordsCore {
 
     // Fast path: Use O(1) Map lookup for small numbers (0-100)
     let match: CachedNumberWordMap;
-    if (number <= 100n) {
+    if (number <= BIGINT_100) {
       const directMatch = cache.smallNumbersMap.get(number);
       if (directMatch) {
         return [trailing && Array.isArray(directMatch.value) ? directMatch.value[1] : directMatch.resolvedValue];
@@ -505,14 +556,18 @@ export class ToWordsCore {
 
     const matchNumber = match.numberBigInt;
     const words: string[] = [];
-    if (number <= 100n || (number < 1000n && localeConfig.namedLessThan1000)) {
+
+    if (number <= BIGINT_100 || (number < BIGINT_1000 && localeConfig.namedLessThan1000)) {
       words.push(match.resolvedValue);
-      number -= matchNumber;
-      if (number > 0n) {
+      const remainder = number - matchNumber;
+      if (remainder > BIGINT_0) {
         if (localeConfig.splitWord) {
           words.push(localeConfig.splitWord);
         }
-        words.push(...this.convertInternal(number, trailing, overrides, locale));
+        const remainderWords = this.convertInternal(remainder, trailing, overrides, locale);
+        for (let i = 0; i < remainderWords.length; i++) {
+          words.push(remainderWords[i]);
+        }
       }
       return words;
     }
@@ -523,64 +578,73 @@ export class ToWordsCore {
     const originalMatchValue = match.resolvedValue;
 
     const matchNumberNum = Number(matchNumber);
-    const pluralForms = localeConfig?.pluralForms?.[matchNumberNum];
+    const pluralForms = localeConfig.pluralForms?.[matchNumberNum];
     let usedPluralForm = false;
 
-    // Check if this word uses ignoreOneForWords
-    const usesIgnoreOne = localeConfig?.ignoreOneForWords?.includes(originalMatchValue);
+    // Check if this word uses ignoreOneForWords - use O(1) Set lookup
+    const usesIgnoreOne = cache.ignoreOneForWordsSet.has(originalMatchValue);
 
     if (pluralForms) {
-      const lastTwoDigits = Number(quotient % 100n);
-      const useLastDigits = quotient >= 11n && lastTwoDigits >= 3 && lastTwoDigits <= 10;
+      const lastTwoDigits = Number(quotient % BIGINT_100);
+      const useLastDigits = quotient >= BIGINT_11 && lastTwoDigits >= 3 && lastTwoDigits <= 10;
 
-      if (quotient === 2n && pluralForms.dual) {
+      if (quotient === BIGINT_2 && pluralForms.dual) {
         matchValue = pluralForms.dual;
         usedPluralForm = true;
       } else if (
-        (quotient >= BigInt(localeConfig?.paucalConfig?.min ?? 3) &&
-          quotient <= BigInt(localeConfig?.paucalConfig?.max ?? 10)) ||
+        (quotient >= BigInt(localeConfig.paucalConfig?.min ?? 3) &&
+          quotient <= BigInt(localeConfig.paucalConfig?.max ?? 10)) ||
         useLastDigits
       ) {
         if (pluralForms.paucal) {
           matchValue = pluralForms.paucal;
         }
-      } else if (quotient >= 11n && pluralForms.plural) {
+      } else if (quotient >= BIGINT_11 && pluralForms.plural) {
         matchValue = pluralForms.plural;
       }
     } else {
-      // Check if this word should get plural mark
-      const isInPluralWords = localeConfig?.pluralWords?.includes(match.value as string);
-      const isInTrailingOnlyPluralWords = localeConfig?.pluralWordsOnlyWhenTrailing?.includes(match.value as string);
+      // Check if this word should get plural mark - use O(1) Set lookup
+      const matchValueStr = match.value as string;
+      const isInPluralWords = cache.pluralWordsSet.has(matchValueStr);
+      const isInTrailingOnlyPluralWords = cache.pluralWordsOnlyWhenTrailingSet.has(matchValueStr);
 
       if (
-        quotient > 1n &&
-        localeConfig?.pluralMark &&
-        (isInPluralWords || (isInTrailingOnlyPluralWords && remainder === 0n))
+        quotient > BIGINT_1 &&
+        localeConfig.pluralMark &&
+        (isInPluralWords || (isInTrailingOnlyPluralWords && remainder === BIGINT_0))
       ) {
         matchValue += localeConfig.pluralMark;
       }
       // Apply singularValue only when quotient ends in 1 AND this word doesn't use ignoreOneForWords
       // For ignoreOneForWords words, singularValue is handled separately below
-      if (quotient % 10n === 1n && !usesIgnoreOne) {
+      if (quotient % BIGINT_10 === BIGINT_1 && !usesIgnoreOne) {
         matchValue = match.singularValue || (Array.isArray(matchValue) ? matchValue[0] : matchValue);
       }
     }
 
-    if ((quotient === 1n && usesIgnoreOne) || usedPluralForm) {
+    if ((quotient === BIGINT_1 && usesIgnoreOne) || usedPluralForm) {
       // When ignoring "one" and quotient is exactly 1, use singularValue if available
-      const valueToUse = quotient === 1n && match.singularValue ? match.singularValue : matchValue;
+      const valueToUse = quotient === BIGINT_1 && match.singularValue ? match.singularValue : matchValue;
       words.push(valueToUse);
     } else {
-      words.push(...this.convertInternal(quotient, false, overrides, locale), matchValue);
+      const quotientWords = this.convertInternal(quotient, false, overrides, locale);
+      for (let i = 0; i < quotientWords.length; i++) {
+        words.push(quotientWords[i]);
+      }
+      words.push(matchValue);
     }
 
-    if (remainder > 0n) {
+    if (remainder > BIGINT_0) {
       if (localeConfig.splitWord) {
-        if (!localeConfig.noSplitWordAfter?.includes(match.resolvedValue)) {
+        // Use O(1) Set lookup instead of array.includes()
+        if (!cache.noSplitWordAfterSet.has(match.resolvedValue)) {
           words.push(localeConfig.splitWord);
         }
       }
-      words.push(...this.convertInternal(remainder, trailing, overrides, locale));
+      const remainderWords = this.convertInternal(remainder, trailing, overrides, locale);
+      for (let i = 0; i < remainderWords.length; i++) {
+        words.push(remainderWords[i]);
+      }
     }
     return words;
   }
@@ -592,10 +656,10 @@ export class ToWordsCore {
   private binarySearchDescending(arr: CachedNumberWordMap[], target: bigint): CachedNumberWordMap {
     let left = 0;
     let right = arr.length - 1;
-    let result = arr[arr.length - 1]; // Default to smallest (last element)
+    let result = arr[right]; // Default to smallest (last element)
 
     while (left <= right) {
-      const mid = Math.floor((left + right) / 2);
+      const mid = (left + right) >> 1; // Faster than Math.floor
       if (arr[mid].numberBigInt <= target) {
         result = arr[mid];
         right = mid - 1; // Look for larger match in left half
@@ -616,15 +680,27 @@ export class ToWordsCore {
   }
 
   public isValidNumber(number: NumberInput): boolean {
-    if (typeof number === 'bigint') {
+    // Fast path for common types
+    const type = typeof number;
+    if (type === 'bigint') {
       return true;
     }
-    return !isNaN(parseFloat(number as string)) && isFinite(number as number);
+    if (type === 'number') {
+      return !Number.isNaN(number) && Number.isFinite(number as number);
+    }
+    // String case - reject empty/whitespace strings, then check if valid number
+    // Empty string converts to 0 via Number() but should be invalid
+    const str = number as string;
+    if (str.trim() === '') {
+      return false;
+    }
+    const converted = Number(str);
+    return !Number.isNaN(converted) && Number.isFinite(converted);
   }
 
   public isNumberZero(number: number | bigint): boolean {
     if (typeof number === 'bigint') {
-      return number === 0n;
+      return number === BIGINT_0;
     }
     return number >= 0 && number < 1;
   }

@@ -307,3 +307,168 @@ describe('Test Ordinal Error Cases', () => {
     expect(() => toWords.toOrdinal(100.25)).toThrow('Ordinal numbers must be non-negative integers');
   });
 });
+
+// Powers of Ten (International System)
+const testPowersOfTen: [number, string][] = [
+  [10, 'Tien'],
+  [100, 'Honderd'],
+  [1000, 'Een Duisend'],
+  [10000, 'Tien Duisend'],
+  [100000, 'Honderd Duisend'],
+  [1000000, 'Een Miljoen'],
+  [10000000, 'Tien Miljoen'],
+  [100000000, 'Honderd Miljoen'],
+  [1000000000, 'Een Miljard'],
+  [10000000000, 'Tien Miljard'],
+  [100000000000, 'Honderd Miljard'],
+  [1000000000000, 'Een Biljoen'],
+];
+
+describe('Test Powers of Ten (International System)', () => {
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// BigInt Tests
+const testBigInts: [bigint, string][] = [
+  [0n, 'Nul'],
+  [1n, 'Een'],
+  [100n, 'Honderd'],
+  [1000n, 'Een Duisend'],
+  [1000000n, 'Een Miljoen'],
+  [1000000000n, 'Een Miljard'],
+  [1000000000000n, 'Een Biljoen'],
+  [1000000000000000n, 'Een Biljard'],
+  [
+    1234567890123n,
+    'Een Biljoen Twee Honderd Vier En Dertig Miljard Vyf Honderd Sewe En Sestig Miljoen Agt Honderd Negentig Duisend Een Honderd Drie En Twintig',
+  ],
+];
+
+describe('Test BigInt Values', () => {
+  test.concurrent.each(testBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Negative BigInt Tests
+const testNegativeBigInts: [bigint, string][] = [
+  [-1n, 'Negatief Een'],
+  [-100n, 'Negatief Honderd'],
+  [-1000n, 'Negatief Een Duisend'],
+  [-1000000n, 'Negatief Een Miljoen'],
+  [-1000000000n, 'Negatief Een Miljard'],
+];
+
+describe('Test Negative BigInt Values', () => {
+  test.concurrent.each(testNegativeBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// BigInt with Currency
+const testBigIntsWithCurrency: [bigint, string][] = [
+  [0n, 'Nul Rand'],
+  [1n, 'Een Rand'],
+  [2n, 'Twee Rand'],
+  [100n, 'Honderd Rand'],
+  [1000n, 'Een Duisend Rand'],
+  [1000000n, 'Een Miljoen Rand'],
+  [1000000000n, 'Een Miljard Rand'],
+];
+
+describe('Test BigInt with Currency', () => {
+  test.concurrent.each(testBigIntsWithCurrency)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input, { currency: true })).toBe(expected);
+  });
+});
+
+// String Input Tests
+const testStringInputs: [string, string][] = [
+  ['0', 'Nul'],
+  ['1', 'Een'],
+  ['100', 'Honderd'],
+  ['1000', 'Een Duisend'],
+  ['-100', 'Negatief Honderd'],
+  ['3.14', 'Drie Punt Veertien'],
+  ['-3.14', 'Negatief Drie Punt Veertien'],
+  ['  100  ', 'Honderd'],
+  ['1000000', 'Een Miljoen'],
+  ['1000000000', 'Een Miljard'],
+];
+
+describe('Test String Number Inputs', () => {
+  test.concurrent.each(testStringInputs)('convert "%s" => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// String with Currency
+const testStringInputsWithCurrency: [string, string][] = [
+  ['0', 'Nul Rand'],
+  ['1', 'Een Rand'],
+  ['100', 'Honderd Rand'],
+  ['100.50', 'Honderd Rand En Vyftig Sente'],
+  ['-100', 'Negatief Honderd Rand'],
+];
+
+describe('Test String Number Inputs with Currency', () => {
+  test.concurrent.each(testStringInputsWithCurrency)('convert "%s" => %s', (input, expected) => {
+    expect(toWords.convert(input, { currency: true })).toBe(expected);
+  });
+});
+
+// Zero Variants
+describe('Test Zero Variants', () => {
+  test('converts 0 correctly', () => {
+    expect(toWords.convert(0)).toBe('Nul');
+  });
+
+  test('converts -0 as Nul', () => {
+    expect(toWords.convert(-0)).toBe('Nul');
+  });
+
+  test('converts 0.0 as Nul', () => {
+    expect(toWords.convert(0.0)).toBe('Nul');
+  });
+
+  test('converts 0n as Nul', () => {
+    expect(toWords.convert(0n)).toBe('Nul');
+  });
+
+  test('converts "0" as Nul', () => {
+    expect(toWords.convert('0')).toBe('Nul');
+  });
+
+  test('converts 0 with currency', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('Nul Rand');
+  });
+
+  test('converts 0 with currency and ignoreZeroCurrency', () => {
+    expect(toWords.convert(0, { currency: true, ignoreZeroCurrency: true })).toBe('');
+  });
+});
+
+// Invalid Input Tests
+describe('Test Invalid Inputs for af-ZA', () => {
+  test('throws for NaN', () => {
+    expect(() => toWords.convert(NaN)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for Infinity', () => {
+    expect(() => toWords.convert(Infinity)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for -Infinity', () => {
+    expect(() => toWords.convert(-Infinity)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for empty string', () => {
+    expect(() => toWords.convert('')).toThrow(/Invalid Number/);
+  });
+
+  test('throws for invalid string', () => {
+    expect(() => toWords.convert('abc')).toThrow(/Invalid Number/);
+  });
+});

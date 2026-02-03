@@ -304,3 +304,110 @@ describe('Test Ordinal Error Cases', () => {
     expect(() => toWords.toOrdinal(99.99)).toThrow('Ordinal numbers must be non-negative integers');
   });
 });
+
+// Powers of Ten Tests
+const testPowersOfTen: [number, string][] = [
+  [10, 'Goma'],
+  [100, 'Ɗari Ɗaya'],
+  [1000, 'Ɗaya Dubu'],
+  [10000, 'Goma Dubu'],
+  [100000, 'Ɗari Ɗaya Dubu'],
+  [1000000, 'Ɗaya Miliyan'],
+];
+
+describe('Test Powers of Ten', () => {
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number)).toBe(expected);
+  });
+});
+
+// BigInt Tests
+const testBigInts: [bigint, string][] = [
+  [0n, 'Sifili'],
+  [1n, 'Ɗaya'],
+  [100n, 'Ɗari Ɗaya'],
+  [1000n, 'Ɗaya Dubu'],
+];
+
+describe('Test BigInt with options = {}', () => {
+  test.concurrent.each(testBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as bigint)).toBe(expected);
+  });
+});
+
+// Negative BigInt Tests
+const testNegativeBigInts: [bigint, string][] = [
+  [-1n, 'Ragi Ɗaya'],
+  [-100n, 'Ragi Ɗari Ɗaya'],
+  [-1000n, 'Ragi Ɗaya Dubu'],
+];
+
+describe('Test Negative BigInt with options = {}', () => {
+  test.concurrent.each(testNegativeBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as bigint)).toBe(expected);
+  });
+});
+
+// String Input Tests
+const testStringInputs: [string, string][] = [
+  ['0', 'Sifili'],
+  ['1', 'Ɗaya'],
+  ['100', 'Ɗari Ɗaya'],
+  ['-100', 'Ragi Ɗari Ɗaya'],
+];
+
+describe('Test String Inputs with options = {}', () => {
+  test.concurrent.each(testStringInputs)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input as string)).toBe(expected);
+  });
+});
+
+// Zero Variants Tests
+describe('Test Zero Variants', () => {
+  test('convert 0 => Sifili', () => {
+    expect(toWords.convert(0)).toBe('Sifili');
+  });
+
+  test('convert -0 => Sifili', () => {
+    expect(toWords.convert(-0)).toBe('Sifili');
+  });
+
+  test('convert 0.0 => Sifili', () => {
+    expect(toWords.convert(0.0)).toBe('Sifili');
+  });
+
+  test('convert 0n => Sifili', () => {
+    expect(toWords.convert(0n)).toBe('Sifili');
+  });
+
+  test('convert "0" => Sifili', () => {
+    expect(toWords.convert('0')).toBe('Sifili');
+  });
+
+  test('convert 0 with currency => Sifili Naira Kawai', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('Sifili Naira Kawai');
+  });
+});
+
+// Invalid Input Tests
+describe('Test Invalid Inputs', () => {
+  test('convert NaN throws error', () => {
+    expect(() => toWords.convert(NaN)).toThrow('Invalid Number "NaN"');
+  });
+
+  test('convert Infinity throws error', () => {
+    expect(() => toWords.convert(Infinity)).toThrow('Invalid Number "Infinity"');
+  });
+
+  test('convert -Infinity throws error', () => {
+    expect(() => toWords.convert(-Infinity)).toThrow('Invalid Number "-Infinity"');
+  });
+
+  test('convert empty string throws error', () => {
+    expect(() => toWords.convert('')).toThrow('Invalid Number ""');
+  });
+
+  test('convert "abc" throws error', () => {
+    expect(() => toWords.convert('abc')).toThrow('Invalid Number "abc"');
+  });
+});

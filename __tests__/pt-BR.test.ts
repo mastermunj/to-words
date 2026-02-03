@@ -337,3 +337,262 @@ describe('Test Ordinal Error Cases', () => {
     expect(() => toWords.toOrdinal(-2.5)).toThrow('Ordinal numbers must be non-negative integers');
   });
 });
+
+// Powers of Ten (International System - Brazilian Portuguese)
+const testPowersOfTen: [number, string][] = [
+  [10, 'Dez'],
+  [100, 'Cem'],
+  [1000, 'Mil'],
+  [10000, 'Dez Mil'],
+  [100000, 'Cem Mil'],
+  [1000000, 'Um Milhão'],
+  [10000000, 'Dez Milhões'],
+  [100000000, 'Cem Milhões'],
+  [1000000000, 'Um Bilhão'],
+  [10000000000, 'Dez Bilhões'],
+  [100000000000, 'Cem Bilhões'],
+  [1000000000000, 'Um Trilhão'],
+];
+
+describe('Test Powers of Ten (International System)', () => {
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Boundary Values
+const testBoundaries: [number, string][] = [
+  [99, 'Noventa E Nove'],
+  [100, 'Cem'],
+  [101, 'Cento E Um'],
+  [999, 'Novecentos E Noventa E Nove'],
+  [1000, 'Mil'],
+  [1001, 'Mil Um'],
+  [9999, 'Nove Mil Novecentos E Noventa E Nove'],
+  [10000, 'Dez Mil'],
+  [10001, 'Dez Mil Um'],
+  [99999, 'Noventa E Nove Mil Novecentos E Noventa E Nove'],
+  [100000, 'Cem Mil'],
+  [999999, 'Novecentos E Noventa E Nove Mil Novecentos E Noventa E Nove'],
+  [1000000, 'Um Milhão'],
+  [1000001, 'Um Milhões Um'],
+];
+
+describe('Test Boundary Values', () => {
+  test.concurrent.each(testBoundaries)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Negative Floats
+const testNegativeFloats: [number, string][] = [
+  [-0.5, 'Menos Zero Vírgula Cinco'],
+  [-0.25, 'Menos Zero Vírgula Vinte E Cinco'],
+  [-0.99, 'Menos Zero Vírgula Noventa E Nove'],
+  [-1.5, 'Menos Um Vírgula Cinco'],
+  [-3.14, 'Menos Três Vírgula Quatorze'],
+  [-99.99, 'Menos Noventa E Nove Vírgula Noventa E Nove'],
+  [-100.01, 'Menos Cem Vírgula Zero Um'],
+];
+
+describe('Test Negative Floats', () => {
+  test.concurrent.each(testNegativeFloats)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Negative Floats with Currency
+const testNegativeFloatsWithCurrency: [number, string][] = [
+  [-0.5, 'Menos Zero Reais E Cinquenta Centavos'],
+  [-0.99, 'Menos Zero Reais E Noventa E Nove Centavos'],
+  [-1.5, 'Menos Um Real E Cinquenta Centavos'],
+  [-1.01, 'Menos Um Real E Um Centavo'],
+  [-100.5, 'Menos Cem Reais E Cinquenta Centavos'],
+];
+
+describe('Test Negative Floats with Currency', () => {
+  test.concurrent.each(testNegativeFloatsWithCurrency)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input, { currency: true })).toBe(expected);
+  });
+});
+
+// BigInt Tests
+const testBigInts: [bigint, string][] = [
+  [0n, 'Zero'],
+  [1n, 'Um'],
+  [100n, 'Cem'],
+  [1000n, 'Mil'],
+  [1000000n, 'Um Milhão'],
+  [1000000000n, 'Um Bilhão'],
+  [1000000000000n, 'Um Trilhão'],
+];
+
+describe('Test BigInt Values', () => {
+  test.concurrent.each(testBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Negative BigInt Tests
+const testNegativeBigInts: [bigint, string][] = [
+  [-1n, 'Menos Um'],
+  [-100n, 'Menos Cem'],
+  [-1000n, 'Menos Mil'],
+  [-1000000n, 'Menos Um Milhão'],
+  [-1000000000n, 'Menos Um Bilhão'],
+];
+
+describe('Test Negative BigInt Values', () => {
+  test.concurrent.each(testNegativeBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// BigInt with Currency
+const testBigIntsWithCurrency: [bigint, string][] = [
+  [0n, 'Zero Reais'],
+  [1n, 'Um Real'],
+  [2n, 'Dois Reais'],
+  [100n, 'Cem Reais'],
+  [1000n, 'Mil Reais'],
+  [1000000n, 'Um Milhão Reais'],
+];
+
+describe('Test BigInt with Currency', () => {
+  test.concurrent.each(testBigIntsWithCurrency)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input, { currency: true })).toBe(expected);
+  });
+});
+
+// String Input Tests
+const testStringInputs: [string, string][] = [
+  ['0', 'Zero'],
+  ['1', 'Um'],
+  ['100', 'Cem'],
+  ['1000', 'Mil'],
+  ['-100', 'Menos Cem'],
+  ['3.14', 'Três Vírgula Quatorze'],
+  ['-3.14', 'Menos Três Vírgula Quatorze'],
+  ['  100  ', 'Cem'],
+  ['1000000', 'Um Milhão'],
+];
+
+describe('Test String Number Inputs', () => {
+  test.concurrent.each(testStringInputs)('convert "%s" => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Zero Variants
+describe('Test Zero Variants', () => {
+  test('converts 0 correctly', () => {
+    expect(toWords.convert(0)).toBe('Zero');
+  });
+
+  test('converts -0 as Zero', () => {
+    expect(toWords.convert(-0)).toBe('Zero');
+  });
+
+  test('converts 0.0 as Zero', () => {
+    expect(toWords.convert(0.0)).toBe('Zero');
+  });
+
+  test('converts 0n as Zero', () => {
+    expect(toWords.convert(0n)).toBe('Zero');
+  });
+
+  test('converts "0" as Zero', () => {
+    expect(toWords.convert('0')).toBe('Zero');
+  });
+
+  test('converts 0 with currency', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('Zero Reais');
+  });
+
+  test('converts 0 with currency and ignoreZeroCurrency', () => {
+    expect(toWords.convert(0, { currency: true, ignoreZeroCurrency: true })).toBe('');
+  });
+});
+
+// Currency Singular/Plural Tests
+describe('Test Currency Singular/Plural', () => {
+  test('1 Real (singular)', () => {
+    expect(toWords.convert(1, { currency: true })).toBe('Um Real');
+  });
+
+  test('2 Reais (plural)', () => {
+    expect(toWords.convert(2, { currency: true })).toBe('Dois Reais');
+  });
+
+  test('0.01 Centavo (singular)', () => {
+    expect(toWords.convert(0.01, { currency: true })).toBe('Zero Reais E Um Centavo');
+  });
+
+  test('0.02 Centavos (plural)', () => {
+    expect(toWords.convert(0.02, { currency: true })).toBe('Zero Reais E Dois Centavos');
+  });
+
+  test('1.01 (singular + singular)', () => {
+    expect(toWords.convert(1.01, { currency: true })).toBe('Um Real E Um Centavo');
+  });
+
+  test('2.02 (plural + plural)', () => {
+    expect(toWords.convert(2.02, { currency: true })).toBe('Dois Reais E Dois Centavos');
+  });
+});
+
+// All Currency Options Combinations
+describe('Test All Currency Options Combinations', () => {
+  const testValue = 100.5;
+
+  test('currency only', () => {
+    expect(toWords.convert(testValue, { currency: true })).toBe('Cem Reais E Cinquenta Centavos');
+  });
+
+  test('currency + doNotAddOnly', () => {
+    expect(toWords.convert(testValue, { currency: true, doNotAddOnly: true })).toBe('Cem Reais E Cinquenta Centavos');
+  });
+
+  test('currency + ignoreDecimal', () => {
+    expect(toWords.convert(testValue, { currency: true, ignoreDecimal: true })).toBe('Cem Reais');
+  });
+
+  test('currency + doNotAddOnly + ignoreDecimal', () => {
+    expect(toWords.convert(testValue, { currency: true, doNotAddOnly: true, ignoreDecimal: true })).toBe('Cem Reais');
+  });
+
+  test('currency + ignoreZeroCurrency (with non-zero value)', () => {
+    expect(toWords.convert(testValue, { currency: true, ignoreZeroCurrency: true })).toBe(
+      'Cem Reais E Cinquenta Centavos',
+    );
+  });
+
+  test('currency + ignoreZeroCurrency + ignoreDecimal', () => {
+    expect(toWords.convert(testValue, { currency: true, ignoreZeroCurrency: true, ignoreDecimal: true })).toBe(
+      'Cem Reais',
+    );
+  });
+});
+
+// Invalid Input Tests
+describe('Test Invalid Inputs for pt-BR', () => {
+  test('throws for NaN', () => {
+    expect(() => toWords.convert(NaN)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for Infinity', () => {
+    expect(() => toWords.convert(Infinity)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for -Infinity', () => {
+    expect(() => toWords.convert(-Infinity)).toThrow(/Invalid Number/);
+  });
+
+  test('throws for empty string', () => {
+    expect(() => toWords.convert('')).toThrow(/Invalid Number/);
+  });
+
+  test('throws for invalid string', () => {
+    expect(() => toWords.convert('abc')).toThrow(/Invalid Number/);
+  });
+});

@@ -352,3 +352,96 @@ describe('Test Invalid Inputs', () => {
     expect(() => toWords.convert(input as number)).toThrow(message);
   });
 });
+
+describe('Test Powers of Ten', () => {
+  const testPowersOfTen: [number, string][] = [
+    [10, 'Mẹ́wàá'],
+    [100, 'Ọgọ́rùn'],
+    [1000, 'Ọ̀kan Ẹgbẹ̀rún'],
+    [10000, 'Mẹ́wàá Ẹgbẹ̀rún'],
+    [100000, 'Ọgọ́rùn Ẹgbẹ̀rún'],
+    [1000000, 'Ọ̀kan Mílíọ̀nù'],
+  ];
+
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+describe('Test BigInt', () => {
+  const testBigInts: [bigint, string][] = [
+    [0n, 'Òdo'],
+    [1n, 'Ọ̀kan'],
+    [100n, 'Ọgọ́rùn'],
+    [1000n, 'Ọ̀kan Ẹgbẹ̀rún'],
+  ];
+
+  test.concurrent.each(testBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+describe('Test Negative BigInt', () => {
+  const testNegativeBigInts: [bigint, string][] = [
+    [-1n, 'Òdì Ọ̀kan'],
+    [-100n, 'Òdì Ọgọ́rùn'],
+    [-1000n, 'Òdì Ọ̀kan Ẹgbẹ̀rún'],
+  ];
+
+  test.concurrent.each(testNegativeBigInts)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+describe('Test String Input', () => {
+  const testStringInputs: [string, string][] = [
+    ['0', 'Òdo'],
+    ['1', 'Ọ̀kan'],
+    ['100', 'Ọgọ́rùn'],
+    ['-100', 'Òdì Ọgọ́rùn'],
+  ];
+
+  test.concurrent.each(testStringInputs)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+describe('Test Zero Variants', () => {
+  test('convert 0 => Òdo', () => {
+    expect(toWords.convert(0)).toBe('Òdo');
+  });
+
+  test('convert -0 => Òdo', () => {
+    expect(toWords.convert(-0)).toBe('Òdo');
+  });
+
+  test('convert 0.0 => Òdo', () => {
+    expect(toWords.convert(0.0)).toBe('Òdo');
+  });
+
+  test('convert 0n => Òdo', () => {
+    expect(toWords.convert(0n)).toBe('Òdo');
+  });
+
+  test('convert "0" => Òdo', () => {
+    expect(toWords.convert('0')).toBe('Òdo');
+  });
+
+  test('convert 0 with currency => Òdo Naira Nìkan', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('Òdo Naira Nìkan');
+  });
+});
+
+describe('Test Invalid Input Errors', () => {
+  const testInvalidInputs: [unknown, string][] = [
+    [NaN, 'Invalid Number'],
+    [Infinity, 'Invalid Number'],
+    [-Infinity, 'Invalid Number'],
+    ['', 'Invalid Number'],
+    ['abc', 'Invalid Number'],
+  ];
+
+  test.concurrent.each(testInvalidInputs)('should throw error for %s', (input, message) => {
+    expect(() => toWords.convert(input as number)).toThrow(message);
+  });
+});
