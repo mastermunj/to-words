@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.1.0](https://github.com/mastermunj/to-words/compare/v5.0.0...v5.1.0) (2026-02-03)
+
+
+### Features
+
+* update demo with more features ([740a0e0](https://github.com/mastermunj/to-words/commit/740a0e03e3d73c7bc2c25ebdf5f5a2260fcad0aa))
+
 ## [5.0.0](https://github.com/mastermunj/to-words/compare/v4.10.0...v5.0.0) (2026-01-30)
 
 
