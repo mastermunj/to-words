@@ -20,7 +20,7 @@ describe('Test Wrong Inputs', () => {
     '123,456',
     '--2',
     'NaN',
-    NaN,
+    Number.NaN,
     Number.POSITIVE_INFINITY,
     Number.NEGATIVE_INFINITY,
   ];
@@ -253,7 +253,7 @@ describe('Comprehensive Input Validation', () => {
 
   describe('Invalid Number Values', () => {
     test('should throw error for NaN', () => {
-      expect(() => toWords.convert(NaN)).toThrow(/Invalid Number/);
+      expect(() => toWords.convert(Number.NaN)).toThrow(/Invalid Number/);
     });
 
     test('should throw error for Positive Infinity', () => {
@@ -696,7 +696,7 @@ describe('Ordinal Number Tests', () => {
     });
 
     test('throws for NaN', () => {
-      expect(() => toWords.toOrdinal(NaN)).toThrow(/Invalid Number/);
+      expect(() => toWords.toOrdinal(Number.NaN)).toThrow(/Invalid Number/);
     });
 
     test('throws for Infinity', () => {
@@ -807,7 +807,7 @@ describe('isValidNumber Method Tests', () => {
 
   describe('Invalid Numbers', () => {
     test('returns false for NaN', () => {
-      expect(toWords.isValidNumber(NaN)).toBe(false);
+      expect(toWords.isValidNumber(Number.NaN)).toBe(false);
     });
 
     test('returns false for Infinity', () => {

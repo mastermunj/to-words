@@ -163,7 +163,7 @@ describe('ToWordsCore - convert', () => {
     const core = new ToWordsCore();
     core.setLocale(EnInLocale);
 
-    expect(() => core.convert(NaN)).toThrow('Invalid Number');
+    expect(() => core.convert(Number.NaN)).toThrow('Invalid Number');
     expect(() => core.convert('' as unknown as number)).toThrow('Invalid Number');
   });
 
@@ -211,7 +211,7 @@ describe('ToWordsCore - toOrdinal', () => {
     const core = new ToWordsCore();
     core.setLocale(EnInLocale);
 
-    expect(() => core.toOrdinal(NaN)).toThrow('Invalid Number');
+    expect(() => core.toOrdinal(Number.NaN)).toThrow('Invalid Number');
   });
 });
 
@@ -250,7 +250,7 @@ describe('ToWordsCore - utility methods', () => {
     expect(core.isValidNumber(3.14)).toBe(true);
     expect(core.isValidNumber('123')).toBe(true);
     expect(core.isValidNumber(123n)).toBe(true);
-    expect(core.isValidNumber(NaN)).toBe(false);
+    expect(core.isValidNumber(Number.NaN)).toBe(false);
     expect(core.isValidNumber(Infinity)).toBe(false);
     expect(core.isValidNumber(-Infinity)).toBe(false);
     expect(core.isValidNumber('')).toBe(false);

@@ -353,7 +353,7 @@ describe('Test Invalid Inputs', () => {
   const testInvalidInputs: [unknown, string][] = [
     ['abc', 'Invalid Number'],
     ['', 'Invalid Number'],
-    [NaN, 'Invalid Number'],
+    [Number.NaN, 'Invalid Number'],
     [Infinity, 'Invalid Number'],
   ];
 

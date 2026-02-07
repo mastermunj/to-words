@@ -1,4 +1,4 @@
-import { ConstructorOf, LocaleInterface } from '../types.js';
+import { type ConstructorOf, type LocaleInterface } from '../types.js';
 
 import afZa from './af-ZA.js';
 import amEt from './am-ET.js';

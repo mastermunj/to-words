@@ -357,7 +357,7 @@ describe('Test Zero Variants', () => {
 
 describe('Test Invalid Input', () => {
   test.concurrent.each([
-    [NaN, 'Invalid Number "NaN"'],
+    [Number.NaN, 'Invalid Number "NaN"'],
     [Infinity, 'Invalid Number "Infinity"'],
     [-Infinity, 'Invalid Number "-Infinity"'],
   ] as [number, string][])('convert %s throws error', (input, expectedMessage) => {

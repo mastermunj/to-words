@@ -353,7 +353,7 @@ describe('Test Invalid Inputs', () => {
   const testInvalids: [unknown, string][] = [
     ['abc', 'Invalid Number'],
     ['', 'Invalid Number'],
-    [NaN, 'Invalid Number'],
+    [Number.NaN, 'Invalid Number'],
     [Infinity, 'Invalid Number'],
   ];
 
@@ -459,7 +459,7 @@ describe('Test Zero Variants', () => {
 
 describe('Test Invalid Input Errors', () => {
   test('should throw error for NaN', () => {
-    expect(() => toWords.convert(NaN)).toThrow('Invalid Number');
+    expect(() => toWords.convert(Number.NaN)).toThrow('Invalid Number');
   });
 
   test('should throw error for Infinity', () => {

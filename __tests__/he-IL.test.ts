@@ -356,7 +356,7 @@ describe('Test Zero Variants', () => {
 
 describe('Test Invalid Inputs', () => {
   const testInvalidInputs: [number | string, string][] = [
-    [NaN, 'Invalid Number "NaN"'],
+    [Number.NaN, 'Invalid Number "NaN"'],
     [Infinity, 'Invalid Number "Infinity"'],
     [-Infinity, 'Invalid Number "-Infinity"'],
     ['', 'Invalid Number ""'],

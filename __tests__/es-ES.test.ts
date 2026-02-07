@@ -676,7 +676,7 @@ describe('Test All Currency Options Combinations', () => {
 // Invalid Input Tests
 describe('Test Invalid Inputs for es-ES', () => {
   test('throws for NaN', () => {
-    expect(() => toWords.convert(NaN)).toThrow(/Invalid Number/);
+    expect(() => toWords.convert(Number.NaN)).toThrow(/Invalid Number/);
   });
 
   test('throws for Infinity', () => {

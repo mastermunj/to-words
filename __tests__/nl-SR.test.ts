@@ -413,7 +413,7 @@ describe('Test Zero Variants', () => {
 
 describe('Test Invalid Input', () => {
   test('should throw error for NaN', () => {
-    expect(() => toWords.convert(NaN)).toThrow();
+    expect(() => toWords.convert(Number.NaN)).toThrow();
   });
 
   test('should throw error for Infinity', () => {

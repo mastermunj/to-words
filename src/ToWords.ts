@@ -17,7 +17,7 @@
  * const tw = new ToWords();
  */
 
-import { ConstructorOf, LocaleInterface } from './types.js';
+import { type ConstructorOf, type LocaleInterface } from './types.js';
 import { ToWordsCore, DefaultConverterOptions, DefaultToWordsOptions } from './ToWordsCore.js';
 import LOCALES from './locales/index.js';
 

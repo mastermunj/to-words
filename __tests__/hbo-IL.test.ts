@@ -352,7 +352,7 @@ describe('Test Ordinal Error Cases', () => {
 
 describe('Test Invalid Inputs', () => {
   test('should throw error for NaN', () => {
-    expect(() => toWords.convert(NaN)).toThrow();
+    expect(() => toWords.convert(Number.NaN)).toThrow();
   });
 
   test('should throw error for Infinity', () => {
@@ -449,7 +449,7 @@ describe('Test Zero Variants', () => {
 
 describe('Test Invalid Inputs - Extended', () => {
   test('should throw error for NaN', () => {
-    expect(() => toWords.convert(NaN)).toThrow();
+    expect(() => toWords.convert(Number.NaN)).toThrow();
   });
 
   test('should throw error for Infinity', () => {

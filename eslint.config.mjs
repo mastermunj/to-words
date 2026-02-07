@@ -1,46 +1,23 @@
-import typescriptEslint from '@typescript-eslint/eslint-plugin';
-import globals from 'globals';
-import tsParser from '@typescript-eslint/parser';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import js from '@eslint/js';
-import { FlatCompat } from '@eslint/eslintrc';
+import { configPkg } from '@mastermunj/eslint-config';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all,
-});
-
-export default [
-  ...compat.extends(
-    'eslint:recommended',
-    'plugin:@typescript-eslint/eslint-recommended',
-    'plugin:@typescript-eslint/recommended',
-    'prettier',
-    'plugin:prettier/recommended',
-  ),
-  {
-    plugins: {
-      '@typescript-eslint': typescriptEslint,
-    },
-
-    languageOptions: {
-      globals: {
-        ...globals.node,
-        ...globals.commonjs,
-        ...Object.fromEntries(Object.entries(globals.browser).map(([key]) => [key, 'off'])),
+export default configPkg({
+  rules: {
+    // Allow kebab-case for locale files like en-US.ts
+    '@unicorn/filename-case': 'off',
+    // Allow __filename and __dirname variables (ESM compatibility)
+    '@typescript-eslint/naming-convention': [
+      'error',
+      {
+        selector: 'variable',
+        format: ['camelCase', 'UPPER_CASE', 'PascalCase'],
+        filter: {
+          regex: '^__filename$|^__dirname$',
+          match: false,
+        },
       },
-
-      parser: tsParser,
-      ecmaVersion: 2018,
-      sourceType: 'module',
-    },
-    files: ['**/*.ts'],
+      { selector: 'typeLike', format: ['PascalCase'] },
+      { selector: 'class', format: ['PascalCase'] },
+      { selector: 'interface', format: ['PascalCase'], custom: { regex: '^I[A-Z]', match: false } },
+    ],
   },
-  {
-    ignores: ['node_modules', 'dist', 'coverage', '**/*.d.ts', '**/*.js', '**/*.cjs'],
-  },
-];
+});

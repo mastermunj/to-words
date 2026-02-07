@@ -18,13 +18,13 @@
  */
 
 import {
-  ConstructorOf,
-  ConverterOptions,
-  LocaleInterface,
-  NumberInput,
-  NumberWordMap,
-  OrdinalOptions,
-  ToWordsOptions,
+  type ConstructorOf,
+  type ConverterOptions,
+  type LocaleInterface,
+  type NumberInput,
+  type NumberWordMap,
+  type OrdinalOptions,
+  type ToWordsOptions,
 } from './types.js';
 
 export const DefaultConverterOptions: ConverterOptions = {
@@ -565,8 +565,8 @@ export class ToWordsCore {
           words.push(localeConfig.splitWord);
         }
         const remainderWords = this.convertInternal(remainder, trailing, overrides, locale);
-        for (let i = 0; i < remainderWords.length; i++) {
-          words.push(remainderWords[i]);
+        for (const remainderWord of remainderWords) {
+          words.push(remainderWord);
         }
       }
       return words;
@@ -628,8 +628,8 @@ export class ToWordsCore {
       words.push(valueToUse);
     } else {
       const quotientWords = this.convertInternal(quotient, false, overrides, locale);
-      for (let i = 0; i < quotientWords.length; i++) {
-        words.push(quotientWords[i]);
+      for (const quotientWord of quotientWords) {
+        words.push(quotientWord);
       }
       words.push(matchValue);
     }
@@ -642,8 +642,8 @@ export class ToWordsCore {
         }
       }
       const remainderWords = this.convertInternal(remainder, trailing, overrides, locale);
-      for (let i = 0; i < remainderWords.length; i++) {
-        words.push(remainderWords[i]);
+      for (const remainderWord of remainderWords) {
+        words.push(remainderWord);
       }
     }
     return words;

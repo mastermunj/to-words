@@ -342,7 +342,7 @@ describe('Test Zero Variants', () => {
 
 describe('Test Invalid Inputs', () => {
   test.concurrent.each([
-    [NaN, /Invalid Number/],
+    [Number.NaN, /Invalid Number/],
     [Infinity, /Invalid Number/],
     [-Infinity, /Invalid Number/],
     ['', /Invalid Number/],

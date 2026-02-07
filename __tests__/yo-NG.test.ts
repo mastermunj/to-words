@@ -344,7 +344,7 @@ describe('Test Invalid Inputs', () => {
   const testInvalids: [unknown, string][] = [
     ['abc', 'Invalid Number'],
     ['', 'Invalid Number'],
-    [NaN, 'Invalid Number'],
+    [Number.NaN, 'Invalid Number'],
     [Infinity, 'Invalid Number'],
   ];
 
@@ -434,7 +434,7 @@ describe('Test Zero Variants', () => {
 
 describe('Test Invalid Input Errors', () => {
   const testInvalidInputs: [unknown, string][] = [
-    [NaN, 'Invalid Number'],
+    [Number.NaN, 'Invalid Number'],
     [Infinity, 'Invalid Number'],
     [-Infinity, 'Invalid Number'],
     ['', 'Invalid Number'],

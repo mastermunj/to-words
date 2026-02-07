@@ -1,4 +1,4 @@
-import { LocaleConfig, LocaleInterface, ToWordsOptions } from '../types.js';
+import { type LocaleConfig, type LocaleInterface, type ToWordsOptions } from '../types.js';
 import { ToWordsCore } from '../ToWordsCore.js';
 
 export default class Locale implements LocaleInterface {
