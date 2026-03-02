@@ -1112,6 +1112,42 @@ Yes! Use the UMD bundles via CDN:
 </details>
 
 <details>
+<summary><strong>Can I inject a custom locale (crypto, internal units, custom currency)?</strong></summary>
+
+Yes. `ToWordsCore` exposes a `setLocale()` method that accepts any class implementing `LocaleInterface` (`{ config: LocaleConfig }`). No need to fork the package or submit a PR — your custom locale stays in your own codebase.
+
+```ts
+import { ToWordsCore } from 'to-words';
+import type { LocaleInterface, LocaleConfig } from 'to-words';
+
+class BitcoinLocale implements LocaleInterface {
+  config: LocaleConfig = {
+    currency: {
+      name: 'Bitcoin',
+      plural: 'Bitcoins',
+      symbol: '₿',
+      fractionalUnit: { name: 'Satoshi', plural: 'Satoshis', symbol: 'sat' },
+    },
+    texts: { and: 'And', minus: 'Minus', only: 'Only', point: 'Point' },
+    numberWordsMapping: [
+      { number: 1, value: 'One' },
+      { number: 2, value: 'Two' },
+      // ... rest of the mapping, same structure as any built-in locale
+    ],
+  };
+}
+
+const tw = new ToWordsCore();
+tw.setLocale(BitcoinLocale);
+console.log(tw.convert(2.1, { currency: true }));
+// "Two Bitcoins And Ten Satoshis Only"
+```
+
+The easiest starting point is to copy the nearest built-in locale from [`src/locales/`](src/locales/) and change only what differs.
+
+</details>
+
+<details>
 <summary><strong>How do I add support for a new locale?</strong></summary>
 
 See the [Contributing](#-contributing) section above. You'll need to create a locale file implementing the `LocaleInterface` and add tests.
