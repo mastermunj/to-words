@@ -1171,3 +1171,25 @@ describe('Locale-level toWords() from to-words/fr-FR', () => {
     expect(frToWords(1000)).toBe(tw.convert(1000));
   });
 });
+
+// ---------------------------------------------------------------------------
+// readRawLocale() — line 67: return '' when both navigator and Intl are absent
+// ---------------------------------------------------------------------------
+
+describe('readRawLocale() fallback path', () => {
+  afterEach(() => {
+    setLocaleDetectorFn(null);
+    vi.restoreAllMocks();
+  });
+
+  test('returns fallback locale when Intl.DateTimeFormat throws and navigator is absent', () => {
+    // In Node.js, globalThis.navigator is undefined so the navigator branch is a no-op.
+    // Mock Intl.DateTimeFormat to throw, simulating an environment where Intl is absent.
+    // This forces readRawLocale() to fall through to `return ''` (line 67), and
+    // detectLocale() then returns the default fallback.
+    vi.spyOn(Intl, 'DateTimeFormat').mockImplementation(() => {
+      throw new Error('Intl unavailable');
+    });
+    expect(detectLocaleFn()).toBe('en-IN');
+  });
+});

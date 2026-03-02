@@ -498,3 +498,161 @@ describe('ToWordsCore - Edge Cases for Coverage', () => {
     expect(result).toContain('th');
   });
 });
+
+// ---------------------------------------------------------------------------
+// Internal implementation coverage — protected methods via subclass
+// Covers: lines 180-181 (getLocaleCache cache-miss), 328-329
+// (getLastNumberComponent fallback), 538-540 (convertInternal overrides)
+// ---------------------------------------------------------------------------
+
+describe('ToWordsCore - internal coverage via subclass', () => {
+  // Exposes the two protected methods we need to reach.
+  class TestableCore extends ToWordsCore {
+    callConvertInternal(
+      number: bigint,
+      trailing: boolean,
+      overrides: Record<number, string> | undefined,
+      localeInstance: InstanceType<any>,
+    ): string[] {
+      return this.convertInternal(number, trailing, overrides, localeInstance);
+    }
+
+    // Calls convertInternal without an explicit localeInstance so the
+    // `?? this.getLocale()` fallback on line 532 is exercised.
+    callConvertInternalNoInst(number: bigint, trailing: boolean): string[] {
+      return this.convertInternal(number, trailing);
+    }
+
+    callGetLastNumberComponent(number: number, localeConfig: any, localeInstance?: InstanceType<any>): number {
+      return this.getLastNumberComponent(number, localeConfig, localeInstance);
+    }
+  }
+
+  test('getLocaleCache initialises cache on first access for a fresh locale instance (lines 180-181)', async () => {
+    // getLocale() calls initLocaleCache, so every normal code path has the cache
+    // pre-populated before getLocaleCache runs.  Passing a brand-new locale
+    // instance directly to convertInternal — bypassing getLocale() — is the
+    // only way to reach the if (!cache) branch on lines 180-181.
+    const { default: EnInLocale } = await import('../src/locales/en-IN');
+    const core = new TestableCore();
+    const freshLocale = new EnInLocale(); // not yet in the WeakMap
+    const result = core.callConvertInternal(1n, false, undefined, freshLocale);
+    expect(result).toEqual(['One']);
+  });
+
+  test('convertInternal falls back to getLocale() when localeInstance is not provided (line 532 ?? branch)', async () => {
+    // All production callers always pass an explicit locale; this test exercises
+    // the rarely-hit `?? this.getLocale()` right-hand side of line 532.
+    const { default: EnInLocale } = await import('../src/locales/en-IN');
+    const core = new TestableCore();
+    core.setLocale(EnInLocale);
+    const result = core.callConvertInternalNoInst(1n, false);
+    expect(result).toEqual(['One']);
+  });
+
+  test('getLastNumberComponent uses filter+sort fallback when localeInstance is omitted (lines 328-329)', async () => {
+    // convertOrdinal always passes localeInstance, so the ternary else-branch
+    // (lines 328-329) can only be reached by calling getLastNumberComponent
+    // directly without the optional third argument.
+    const { default: EnInLocale } = await import('../src/locales/en-IN');
+    const core = new TestableCore();
+    const locale = new EnInLocale();
+    const result = core.callGetLastNumberComponent(1000, locale.config);
+    expect(result).toBe(1000);
+  });
+
+  test('convertInternal applies overrides when the number matches (lines 538-540)', async () => {
+    // All public entry-points pass undefined for overrides; this subclass call
+    // is the only path that exercises the if (overrides) guard (line 538) and
+    // the inner return (lines 539-541).
+    const { default: EnInLocale } = await import('../src/locales/en-IN');
+    const core = new TestableCore();
+    const localeInstance = new EnInLocale();
+    const result = core.callConvertInternal(1n, false, { 1: 'Custom One' }, localeInstance);
+    expect(result).toEqual(['Custom One']);
+  });
+
+  test('convertInternal skips overrides when number exceeds MAX_SAFE_INTEGER (lines 538-539 ternary branch)', async () => {
+    // When number > Number.MAX_SAFE_INTEGER the ternary evaluates to -1 and the
+    // override is not applied (exercises the false branch of the ternary on line 538).
+    const { default: EnInLocale } = await import('../src/locales/en-IN');
+    const core = new TestableCore();
+    const localeInstance = new EnInLocale();
+    const bigNum = BigInt(Number.MAX_SAFE_INTEGER) + 1n;
+    const result = core.callConvertInternal(bigNum, false, { 1: 'Override' }, localeInstance);
+    expect(typeof result[0]).toBe('string'); // overrides not applied, normal conversion used
+  });
+
+  test('convertInternal skips overrides when number has no matching override entry (line 539 && short-circuit)', async () => {
+    // overrides is truthy but does not have a key for the number being converted.
+    const { default: EnInLocale } = await import('../src/locales/en-IN');
+    const core = new TestableCore();
+    const localeInstance = new EnInLocale();
+    const result = core.callConvertInternal(2n, false, { 1: 'Override' }, localeInstance);
+    expect(result).toEqual(['Two']); // override for 1 doesn't affect 2
+  });
+
+  test('convertCurrency handles negative BigInt (line 429 BigInt branch)', async () => {
+    // Line 429: `number = typeof number === 'bigint' ? -number : Math.abs(number)`
+    // The BigInt branch is only hit when a negative BigInt is converted with currency: true.
+    const { default: EnInLocale } = await import('../src/locales/en-IN');
+    const core = new ToWordsCore();
+    core.setLocale(EnInLocale);
+    const result = core.convert(-1n, { currency: true });
+    expect(result).toContain('Minus');
+    expect(result).toContain('Rupee');
+  });
+
+  test('convertCurrency handles amount exceeding MAX_SAFE_INTEGER (line 452 ternary -1 branch)', async () => {
+    // Line 452: `mainAmount <= BigInt(Number.MAX_SAFE_INTEGER) ? Number(mainAmount) : -1`
+    // The `: -1` branch is only reached when the integer part of the currency
+    // amount exceeds Number.MAX_SAFE_INTEGER.
+    const { default: EnInLocale } = await import('../src/locales/en-IN');
+    const core = new ToWordsCore();
+    core.setLocale(EnInLocale);
+    const bigAmount = BigInt(Number.MAX_SAFE_INTEGER) + 1n;
+    // Should still produce a valid string (not throw), just without number-specific forms
+    const result = core.convert(bigAmount, { currency: true });
+    expect(typeof result).toBe('string');
+    expect(result.length).toBeGreaterThan(0);
+  });
+
+  test('toOrdinal accepts BigInt input', async () => {
+    // The toOrdinal method accepts NumberInput which includes bigint.
+    const { default: EnInLocale } = await import('../src/locales/en-IN');
+    const core = new ToWordsCore();
+    core.setLocale(EnInLocale);
+    expect(core.toOrdinal(1n as unknown as number)).toBe('First');
+    expect(core.toOrdinal(21n as unknown as number)).toBe('Twenty First');
+  });
+
+  test('convert merges constructor converterOptions with per-call options (lines 191-196)', async () => {
+    // Exercises the baseOptions?.xxx branches of the ?? chains on lines 191-196.
+    // When a field is absent from per-call options but present in constructor options,
+    // the constructor value is used (the right-hand side of the first ?? fires).
+    const { default: EnInLocale } = await import('../src/locales/en-IN');
+    const core = new ToWordsCore({
+      converterOptions: {
+        doNotAddOnly: true,
+        currency: true,
+        ignoreDecimal: false,
+        ignoreZeroCurrency: true,
+      },
+    });
+    core.setLocale(EnInLocale);
+
+    // Per-call options only sets ignoreDecimal; all other fields come from constructor options.
+    const result = core.convert(100, { ignoreDecimal: false });
+    // currency:true comes from constructor -> Rupees Only appended
+    expect(result).toContain('Hundred');
+    expect(result).toContain('Rupees');
+  });
+
+  test('convert uses false fallback for fields absent from both call options and constructor options (lines 193-196)', async () => {
+    const { default: EnInLocale } = await import('../src/locales/en-IN');
+    const core = new ToWordsCore({ converterOptions: {} as any });
+    core.setLocale(EnInLocale);
+    const result = core.convert(100, { currency: false });
+    expect(result).toBe('One Hundred');
+  });
+});

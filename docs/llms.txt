@@ -1,0 +1,228 @@
+# to-words
+
+> Convert numbers and currency amounts into words across 111 locales.
+> Production-ready with BigInt, ordinal, TypeScript, ESM/CJS/UMD, and zero dependencies.
+
+- npm: https://www.npmjs.com/package/to-words
+- GitHub: https://github.com/mastermunj/to-words
+- Demo: https://mastermunj.github.io/to-words/
+- License: MIT
+
+## Installation
+
+```bash
+npm install to-words
+```
+
+## Quick Start
+
+```js
+// Class API
+import { ToWords } from 'to-words';
+const toWords = new ToWords({ localeCode: 'en-US' });
+toWords.convert(12345);           // "Twelve Thousand Three Hundred Forty Five"
+toWords.convert(1234.56, { currency: true });
+// "One Thousand Two Hundred Thirty Four Dollars And Fifty Six Cents Only"
+toWords.toOrdinal(21);            // "Twenty First"
+
+// Functional API (full bundle — all 111 locales, ~58 KB gzip)
+import { toWords, toOrdinal, toCurrency, toOrdinalSuffix } from 'to-words';
+toWords(12345, { localeCode: 'en-US' });
+toOrdinal(21, { localeCode: 'en-US' });
+toCurrency(1234.56, { localeCode: 'en-IN' });
+toOrdinalSuffix(3, { localeCode: 'en-US' }); // "3rd"
+
+// Functional API — auto-detects runtime locale (navigator.language / Intl)
+toWords(12345);
+toCurrency(1234.56, { doNotAddOnly: true });
+
+// Per-locale import — tree-shakeable, locale baked in (~3.5 KB gzip)
+import { toWords, toOrdinal, toCurrency } from 'to-words/en-US';
+toWords(12345);         // "Twelve Thousand Three Hundred Forty Five"
+toOrdinal(21);          // "Twenty First"
+toCurrency(1234.56);    // "One Thousand Two Hundred Thirty Four Dollars And Fifty Six Cents Only"
+```
+
+## Constructor Options
+
+```typescript
+new ToWords({
+  localeCode?: string;           // BCP 47 locale code. Default: 'en-IN'
+  converterOptions?: {
+    currency?: boolean;          // Default: false
+    ignoreDecimal?: boolean;     // Default: false
+    ignoreZeroCurrency?: boolean;// Default: false — skip zero main unit
+    doNotAddOnly?: boolean;      // Default: false — omit "Only" suffix
+    currencyOptions?: {          // Override locale's default currency
+      name: string;
+      plural: string;
+      symbol: string;
+      fractionalUnit: { name: string; plural: string; symbol: string; };
+    };
+  };
+})
+```
+
+## Class Methods
+
+| Method | Signature | Description |
+|--------|-----------|-------------|
+| `convert` | `(number: number \| bigint \| string, options?: ConverterOptions) => string` | Convert number to words |
+| `toOrdinal` | `(number: number) => string` | Convert to ordinal words ("First", "Twenty Third") |
+| `setLocale` | `(localeClass: ConstructorOf<LocaleInterface>) => this` | Inject a custom locale class |
+
+## Functional Exports (full bundle: `import { … } from 'to-words'`)
+
+| Export | Signature | Notes |
+|--------|-----------|-------|
+| `toWords` | `(n, opts?) => string` | `opts` accepts `localeCode`; omit to auto-detect |
+| `toOrdinal` | `(n, opts?) => string` | `opts` accepts `localeCode` and `gender` |
+| `toCurrency` | `(n, opts?) => string` | Shorthand for `convert(n, { currency: true })` |
+| `toOrdinalSuffix` | `(n, opts?) => string` | Returns suffix only: "1st", "2nd", "3rd" |
+| `detectLocale` | `(fallback?: string) => string` | Auto-detect locale from environment |
+| `setLocaleDetector` | `(fn: (() => string) \| null) => void` | Override locale detection (server use) |
+| `LOCALES` | `Record<string, ConstructorOf<LocaleInterface>>` | All bundled locale classes |
+
+## Input Types
+
+- `number` — standard JS number (safe up to `Number.MAX_SAFE_INTEGER`)
+- `bigint` — for numbers beyond MAX_SAFE_INTEGER
+- `string` — numeric string, parsed internally (avoids float precision issues for large numbers)
+
+## Converter Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `currency` | boolean | false | Use currency format with locale units |
+| `ignoreDecimal` | boolean | false | Ignore fractional part |
+| `ignoreZeroCurrency` | boolean | false | Skip zero main currency |
+| `doNotAddOnly` | boolean | false | Omit "Only" suffix in currency mode |
+| `currencyOptions` | object | — | Override locale currency name/symbol |
+
+## Custom Locale Injection
+
+Any class implementing `LocaleInterface` (`{ config: LocaleConfig }`) can be passed to `setLocale()`. Copy the nearest built-in locale from `src/locales/` as a starting point.
+
+```ts
+import { ToWordsCore } from 'to-words';
+import type { LocaleInterface, LocaleConfig } from 'to-words';
+
+class BitcoinLocale implements LocaleInterface {
+  config: LocaleConfig = {
+    currency: {
+      name: 'Bitcoin', plural: 'Bitcoins', symbol: '₿',
+      fractionalUnit: { name: 'Satoshi', plural: 'Satoshis', symbol: 'sat' },
+    },
+    texts: { and: 'And', minus: 'Minus', only: 'Only', point: 'Point' },
+    numberWordsMapping: [ /* same structure as any built-in locale */ ],
+  };
+}
+
+const tw = new ToWordsCore();
+tw.setLocale(BitcoinLocale);
+tw.convert(2.1, { currency: true }); // "Two Bitcoins And Ten Satoshis Only"
+```
+
+## Auto Locale Detection
+
+```js
+import { detectLocale, setLocaleDetector } from 'to-words';
+
+detectLocale();        // reads navigator.language (browser) or Intl (Node/Deno/Bun)
+detectLocale('en-GB'); // custom fallback when detection fails
+
+// Server: derive from request header
+setLocaleDetector(() => req.headers['accept-language']?.split(',')[0] ?? 'en-US');
+setLocaleDetector(null); // restore built-in detection
+```
+
+## CLI
+
+```bash
+npx to-words 12345
+npx to-words 12345 --locale en-US
+npx to-words 1234.56 --locale en-IN --currency
+npx to-words 21 --locale en-US --ordinal
+```
+
+## Bundle Sizes
+
+| Import | Raw | Gzip |
+|--------|-----|------|
+| Full bundle (all 111 locales) | 628 KB | 58 KB |
+| Single locale (e.g. `to-words/en-US`) | 12 KB | 3.5 KB |
+
+## Performance (Apple M2, Node.js 23)
+
+| Operation | Throughput |
+|-----------|------------|
+| Small integers (42) | ~4.7M ops/sec |
+| Medium integers (12,345) | ~2.2M ops/sec |
+| Large integers (15 digits) | ~700K ops/sec |
+| Currency conversion | ~1M ops/sec |
+| BigInt (30+ digits) | ~225K ops/sec |
+
+## Runtime Compatibility
+
+Node.js 20+, Deno, Bun, Cloudflare Workers, all modern browsers (ESM + UMD).
+
+## Supported Locales (111)
+
+af-ZA, am-ET, ar-AE, ar-LB, ar-MA, ar-SA, az-AZ, be-BY, bg-BG, bn-IN,
+ca-ES, cs-CZ, da-DK, de-AT, de-CH, de-DE, ee-EE, el-GR,
+en-AE, en-AU, en-BD, en-CA, en-GB, en-GH, en-HK, en-IE, en-IN, en-JM,
+en-KE, en-LK, en-MA, en-MM, en-MU, en-MY, en-NG, en-NP, en-NZ, en-OM,
+en-PH, en-PK, en-SA, en-SG, en-TT, en-TZ, en-UG, en-US, en-ZA, en-ZW,
+es-AR, es-CL, es-CO, es-ES, es-MX, es-US, es-VE,
+fa-IR, fi-FI, fil-PH,
+fr-BE, fr-CA, fr-FR, fr-MA, fr-SA,
+gu-IN, ha-NG, hbo-IL, he-IL, hi-IN, hr-HR, hu-HU,
+id-ID, is-IS, it-IT, ja-JP, ka-GE, kn-IN, ko-KR,
+lt-LT, lv-LV, mr-IN, ms-MY, ms-SG, nb-NO, nl-NL, nl-SR, np-NP,
+pa-IN, pl-PL, pt-AO, pt-BR, pt-MZ, pt-PT,
+ro-RO, ru-RU, sk-SK, sl-SI, sq-AL, sr-RS, sv-SE,
+sw-KE, sw-TZ, ta-IN, te-IN, th-TH, tr-TR,
+uk-UA, ur-PK, vi-VN, yo-NG, zh-CN, zh-TW
+
+## Common Examples
+
+```js
+// Basic
+toWords(0, { localeCode: 'en-US' });           // "Zero"
+toWords(-42, { localeCode: 'en-US' });          // "Minus Forty Two"
+toWords(1000000, { localeCode: 'en-IN' });      // "Ten Lakh"
+toWords(1000000, { localeCode: 'en-US' });      // "One Million"
+
+// Currency
+toCurrency(0.50, { localeCode: 'en-US' });
+// "Zero Dollars And Fifty Cents Only"
+
+toCurrency(1234.56, { localeCode: 'en-IN' });
+// "One Thousand Two Hundred Thirty Four Rupees And Fifty Six Paise Only"
+
+// Big numbers (use string input to avoid float precision issues)
+toWords('123456789012345', { localeCode: 'en-US' });
+// "One Hundred Twenty Three Trillion Four Hundred Fifty Six Billion..."
+
+// Ordinals
+toOrdinal(1, { localeCode: 'en-US' });  // "First"
+toOrdinal(21, { localeCode: 'en-US' }); // "Twenty First"
+
+// Indian numbering system
+toWords(100000, { localeCode: 'en-IN' });   // "One Lakh"
+toWords(10000000, { localeCode: 'en-IN' }); // "One Crore"
+```
+
+## Error Handling
+
+```js
+// Unknown locale throws
+new ToWords({ localeCode: 'xx-XX' }); // Error: Unknown Locale "xx-XX"
+
+// Non-finite numbers throw
+toWords(Infinity);  // Error: Invalid Number
+toWords(NaN);       // Error: Invalid Number
+
+// Ordinal requires non-negative integer
+toOrdinal(1.5);  // Error: Invalid Number. Number must be a non-negative integer
+```

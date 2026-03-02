@@ -263,18 +263,21 @@ export class ToWords extends ToWordsCore {
   }
 }
 
+// Module-level singleton — reused across calls to avoid per-call instance creation
+const instance = new ToWords();
+
 /**
  * Convert a number to words for this locale (functional style).
  */
 export function toWords(number: NumberInput, options?: ConverterOptions): string {
-  return new ToWords().convert(number, options);
+  return instance.convert(number, options);
 }
 
 /**
  * Convert a number to ordinal words for this locale (functional style).
  */
 export function toOrdinal(number: NumberInput, options?: OrdinalOptions): string {
-  return new ToWords().toOrdinal(number, options);
+  return instance.toOrdinal(number, options);
 }
 
 /**
@@ -282,5 +285,5 @@ export function toOrdinal(number: NumberInput, options?: OrdinalOptions): string
  * Shorthand for toWords(number, { currency: true, ...options }).
  */
 export function toCurrency(number: NumberInput, options?: ConverterOptions): string {
-  return new ToWords().convert(number, { ...options, currency: true });
+  return instance.convert(number, { ...options, currency: true });
 }
