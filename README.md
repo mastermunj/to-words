@@ -13,7 +13,7 @@
 [![Deno](https://github.com/mastermunj/to-words/actions/workflows/deno.yml/badge.svg?branch=main)](https://github.com/mastermunj/to-words/actions/workflows/deno.yml)
 [![CF Workers](https://img.shields.io/badge/CF_Workers-compatible-F38020)](https://workers.cloudflare.com)
 
-Convert numbers and currency amounts into words across 100 locales with production-ready BigInt, ordinal, and TypeScript support.
+Convert numbers and currency amounts into words across 111 locales with production-ready BigInt, ordinal, and TypeScript support.
 
 ## 🎮 Live Demo
 
@@ -23,7 +23,7 @@ Test locale behavior, currency conversion, ordinals, and large number inputs in 
 
 ## 🏆 Why to-words
 
-- **100 locale implementations** with region-specific numbering and currency conventions
+- **111 locale implementations** with region-specific numbering and currency conventions
 - **Built for real financial flows**: amount in words, decimals, currency units, and negatives
 - **Large number safe** with `BigInt` and string input support
 - **Run anywhere**: Node.js, Deno, Bun, Cloudflare Workers, and all modern browsers
@@ -69,7 +69,7 @@ Test locale behavior, currency conversion, ordinals, and large number inputs in 
 
 ## ✨ Features
 
-- **100 Locales** — The most comprehensive locale coverage available
+- **111 Locales** — The most comprehensive locale coverage available
 - **BigInt Support** — Handle numbers up to 10^63 (Vigintillion) and beyond
 - **Multiple Numbering Systems** — Short scale, Long scale, Indian, and East Asian
 - **Currency Formatting** — Locale-specific currency with fractional units
@@ -99,7 +99,7 @@ tw.convert(100, { currency: true }); // "One Hundred Dollars Only"
 tw.toOrdinal(3);                 // "Third"
 ```
 
-**2. Functional (full bundle)** — one-liners with a `localeCode` option, all 100 locales available:
+**2. Functional (full bundle)** — one-liners with a `localeCode` option, all 111 locales available:
 
 ```js
 import { toWords, toOrdinal, toCurrency } from 'to-words';
@@ -353,7 +353,7 @@ toOrdinal(3);        // "Third"
 toCurrency(100);     // "One Hundred Dollars Only"
 ```
 
-> Individual imports are ~3.5 KB gzip vs ~55 KB for the full bundle.
+> Individual imports are ~3.5 KB gzip vs ~58 KB for the full bundle.
 
 ### Browser Usage (UMD)
 
@@ -367,7 +367,7 @@ toCurrency(100);     // "One Hundred Dollars Only"
   // "Twelve Thousand Three Hundred Forty Five"
 </script>
 
-<!-- Full bundle with all locales (~55 KB gzip) -->
+<!-- Full bundle with all locales (~58 KB gzip) -->
 <script src="https://cdn.jsdelivr.net/npm/to-words/dist/umd/to-words.min.js"></script>
 <script>
   // Specify locale when using full bundle
@@ -829,7 +829,7 @@ toWords.convert(1234.56, {
 
 | Import Method | Raw | Gzip |
 |--------------|-----|------|
-| Full bundle (all locales) | 578 KB | 55 KB |
+| Full bundle (all locales) | 628 KB | 58 KB |
 | Single locale (en-US) | 12 KB | 3.5 KB |
 | Single locale (en-IN) | 10 KB | 3.4 KB |
 
@@ -878,7 +878,7 @@ The library uses only standard ECMAScript features (BigInt, Intl, Map) with zero
 
 ## 🗺️ Supported Locales
 
-All 100 locales with their features:
+All 111 locales with their features:
 
 | Locale | Language | Country | Currency | Scale | Ordinal |
 |--------|----------|---------|----------|-------|---------|
