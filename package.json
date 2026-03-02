@@ -1,21 +1,40 @@
 {
   "name": "to-words",
   "version": "5.1.0",
-  "description": "Converts numbers (including decimal points) into words & currency.",
+  "description": "Convert numbers to words in 100 locales with currency, ordinal, and BigInt support (TypeScript, ESM/CJS/UMD).",
   "keywords": [
     "to words",
     "number to words",
     "number-to-words",
+    "numbers to words",
+    "numbers-to-words",
+    "num2words",
+    "number to text",
+    "amount in words",
+    "currency to words",
+    "currency amount to words",
+    "invoice amount in words",
+    "cheque amount in words",
     "number to words currency",
     "international number to words",
     "international number to words currency",
     "convert-numbers",
     "i18n",
+    "internationalization",
+    "localization",
+    "multilingual",
+    "bigint",
+    "ordinal",
+    "typescript",
     "converter",
     "number",
     "word",
     "currency"
   ],
+  "homepage": "https://github.com/mastermunj/to-words#readme",
+  "bugs": {
+    "url": "https://github.com/mastermunj/to-words/issues"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/mastermunj/to-words.git"

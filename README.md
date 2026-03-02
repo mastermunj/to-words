@@ -7,10 +7,23 @@
 [![minzipped size](https://img.shields.io/bundlephobia/minzip/to-words?label=minzipped)](https://bundlephobia.com/package/to-words)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue)](https://www.typescriptlang.org/)
 [![license](https://img.shields.io/npm/l/to-words)](https://github.com/mastermunj/to-words/blob/main/LICENSE)
+[![node](https://img.shields.io/node/v/to-words)](https://www.npmjs.com/package/to-words)
 
-**[🎮 Demo](https://mastermunj.github.io/to-words/)**
+Convert numbers and currency amounts into words across 100 locales with production-ready BigInt, ordinal, and TypeScript support.
 
-Convert numbers to words with comprehensive locale, currency, and ordinal support. Ideal for invoicing, e-commerce, financial apps, and educational tools.
+## 🎮 Live Demo
+
+**Try it now:** **[Open Interactive Demo](https://mastermunj.github.io/to-words/)**
+
+Test locale behavior, currency conversion, ordinals, and large number inputs in the browser.
+
+## 🏆 Why to-words
+
+- **100 locale implementations** with region-specific numbering and currency conventions
+- **Built for real financial flows**: amount in words, decimals, currency units, and negatives
+- **Large number safe** with `BigInt` and string input support
+- **Strong developer ergonomics**: TypeScript types, ESM/CJS/UMD, and per-locale imports
+- **Performance focused** for high-volume conversion workloads
 
 ## 📑 Table of Contents
 
@@ -19,6 +32,7 @@ Convert numbers to words with comprehensive locale, currency, and ordinal suppor
 - [Quick Start](#-quick-start)
 - [Installation](#-installation)
 - [Usage](#-usage)
+- [Migration Guide](#-migration-guide)
 - [Framework Integration](#%EF%B8%8F-framework-integration)
 - [Numbering Systems](#-numbering-systems)
 - [API Reference](#%EF%B8%8F-api-reference)
@@ -44,7 +58,7 @@ Convert numbers to words with comprehensive locale, currency, and ordinal suppor
 
 ## ✨ Features
 
-- **94 Locales** — The most comprehensive locale coverage available
+- **100 Locales** — The most comprehensive locale coverage available
 - **BigInt Support** — Handle numbers up to 10^63 (Vigintillion) and beyond
 - **Multiple Numbering Systems** — Short scale, Long scale, Indian, and East Asian
 - **Currency Formatting** — Locale-specific currency with fractional units
@@ -53,20 +67,26 @@ Convert numbers to words with comprehensive locale, currency, and ordinal suppor
 - **TypeScript Native** — Full type definitions included
 - **Multiple Formats** — ESM, CommonJS, and UMD browser bundles
 - **Zero Dependencies** — Lightweight and self-contained
-- **High Performance** — 4M+ conversions per second
-- **Wide Browser Support** — All modern browsers + IE11
+- **High Performance** — Up to 4.7M ops/sec (small integers; see benchmark section for full breakdown)
+- **Wide Browser Support** — All modern browsers (Chrome 67+, Firefox 68+, Safari 14+, Edge 79+)
 
 ## 🚀 Quick Start
 
 ```js
 import { ToWords } from 'to-words';
 
-const toWords = new ToWords();
+const toWords = new ToWords({ localeCode: 'en-US' });
 toWords.convert(12345);
 // "Twelve Thousand Three Hundred Forty Five"
 ```
 
+> **Note:** If you do not provide `localeCode`, the default locale is `en-IN`.
+
 ## 📦 Installation
+
+> **Runtime requirement:** Node.js `>= 20`.
+>
+> Moving from another library? See [`MIGRATION.md`](MIGRATION.md).
 
 ### npm / yarn / pnpm
 
@@ -133,7 +153,8 @@ toWords.convert(1000000000000000000000000000000000000000000000000000000000000000
 
 // Using string for precision
 toWords.convert('9007199254740993');
-// "Nine Quadrillion Seven Trillion..."
+// "Nine Quadrillion Seven Trillion One Hundred Ninety Nine Billion
+//  Two Hundred Fifty Four Million Seven Hundred Forty Thousand Nine Hundred Ninety Three"
 ```
 
 ### Currency Conversion
@@ -233,11 +254,20 @@ toWords.convert(12345);
 </script>
 ```
 
+
+## 🔄 Migration Guide
+
+Migrating from `number-to-words`, `written-number`, `num-words`, or `n2words`?
+
+- See [`MIGRATION.md`](MIGRATION.md) for side-by-side API mapping and migration recipes.
+- Includes package comparison, behavior notes, and a regression checklist.
+
 ## ⚛️ Framework Integration
 
 ### React
 
 ```tsx
+// Change the locale import to match your users' region (e.g. 'to-words/en-GB' for UK)
 import { ToWords } from 'to-words/en-US';
 
 const toWords = new ToWords();
@@ -439,11 +469,24 @@ Converts a number to ordinal words.
 | `doNotAddOnly` | boolean | false | Omit "Only" suffix in currency mode |
 | `currencyOptions` | object | undefined | Override locale's default currency settings |
 
+### Common Options Example
+
+```js
+const toWords = new ToWords({ localeCode: 'en-US' });
+
+toWords.convert(1234.56, {
+  currency: true,
+  ignoreDecimal: false,
+  doNotAddOnly: true,
+});
+// "One Thousand Two Hundred Thirty Four Dollars And Fifty Six Cents"
+```
+
 ## 📏 Bundle Sizes
 
 | Import Method | Raw | Gzip |
 |--------------|-----|------|
-| Full bundle (all 94 locales) | 564 KB | 54 KB |
+| Full bundle (all locales) | 564 KB | 54 KB |
 | Single locale (en-US) | 11.5 KB | 3.2 KB |
 | Single locale (en-IN) | 9.3 KB | 3.1 KB |
 
@@ -471,18 +514,17 @@ npm run bench
 
 | Browser | Version |
 |---------|--------|
-| Chrome | 49+ |
-| Firefox | 52+ |
-| Safari | 10+ |
-| Edge | 14+ |
-| Opera | 36+ |
-| IE | 11 (with polyfills) |
+| Chrome | 67+ |
+| Firefox | 68+ |
+| Safari | 14+ |
+| Edge | 79+ |
+| Opera | 54+ |
 
-**BigInt Support:** Chrome 67+, Firefox 68+, Safari 14+, Edge 79+. For older browsers, pass large numbers as strings.
+**BigInt Support:** BigInt is required for full functionality. Internet Explorer is not supported.
 
 ## 🗺️ Supported Locales
 
-All 94 locales with their features:
+All 100 locales with their features:
 
 | Locale | Language | Country | Currency | Scale | Ordinal |
 |--------|----------|---------|----------|-------|---------|
@@ -508,9 +550,12 @@ All 94 locales with their features:
 | en-CA | English | Canada | Dollar | Short | ✓ |
 | en-GB | English | United Kingdom | Pound | Short | ✓ |
 | en-GH | English | Ghana | Cedi | Short | ✓ |
+| en-HK | English | Hong Kong | Dollar | Short | ✓ |
 | en-IE | English | Ireland | Euro | Short | ✓ |
 | en-IN | English | India | Rupee | Indian | ✓ |
+| en-JM | English | Jamaica | Dollar | Short | ✓ |
 | en-KE | English | Kenya | Shilling | Short | ✓ |
+| en-LK | English | Sri Lanka | Rupee | Short | ✓ |
 | en-MA | English | Morocco | Dirham | Short | ✓ |
 | en-MM | English | Myanmar | Kyat | Short | ✓ |
 | en-MU | English | Mauritius | Rupee | Indian | ✓ |
@@ -523,9 +568,12 @@ All 94 locales with their features:
 | en-PK | English | Pakistan | Rupee | Indian | ✓ |
 | en-SA | English | Saudi Arabia | Riyal | Short | ✓ |
 | en-SG | English | Singapore | Dollar | Short | ✓ |
+| en-TT | English | Trinidad and Tobago | Dollar | Short | ✓ |
 | en-US | English | USA | Dollar | Short | ✓ |
 | en-ZA | English | South Africa | Rand | Short | ✓ |
 | es-AR | Spanish | Argentina | Peso | Short | ✓ |
+| es-CL | Spanish | Chile | Peso | Short | ✓ |
+| es-CO | Spanish | Colombia | Peso | Short | ✓ |
 | es-ES | Spanish | Spain | Euro | Short | ✓ |
 | es-MX | Spanish | Mexico | Peso | Short | ✓ |
 | es-US | Spanish | USA | Dólar | Short | ✓ |
