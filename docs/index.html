@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>to-words | Convert Numbers to Words in 94 Languages</title>
-  <meta name="description" content="Convert numbers to words with support for 94 locales, BigInt, currencies, and ordinals. Try the interactive demo.">
+  <title>to-words | Convert Numbers and Currency Amounts in 100 Locales</title>
+  <meta name="description" content="Convert numbers and currency amounts into words across 100 locales with BigInt and ordinal support. Try the interactive demo.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔢</text></svg>">
   <style>
     :root {
@@ -831,8 +831,9 @@
   <div class="container">
     <header>
       <h1>🔢 to-words</h1>
-      <p class="tagline">Convert numbers to words in 94 languages</p>
+      <p class="tagline">Convert numbers and currency amounts into words across 100 locales</p>
       <div class="badges">
+        <span class="badge">🌍 100 Locales</span>
         <span class="badge">✨ BigInt Support</span>
         <span class="badge">💰 Currencies</span>
         <span class="badge">🔢 Ordinals</span>
@@ -929,7 +930,7 @@
     </div>
     
     <div class="stats-bar">
-      <div class="stat"><span class="stat-icon">🌍</span> 94 Locales</div>
+      <div class="stat"><span class="stat-icon">🌍</span> 100 Locales</div>
       <div class="stat"><span class="stat-icon">⚡</span> 1M+ ops/sec</div>
       <div class="stat"><span class="stat-icon">📦</span> ~3KB gzip</div>
       <div class="stat"><span class="stat-icon">🔷</span> TypeScript</div>
@@ -952,7 +953,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/to-words@5/dist/umd/to-words.min.js"></script>
   <script>
-    // All 94 locales with language, country, and locale code
+    // All 100 locales with language, country, and locale code
     var LOCALES = [
       { code: 'af-ZA', language: 'Afrikaans', country: 'South Africa', flag: '🇿🇦' },
       { code: 'am-ET', language: 'Amharic', country: 'Ethiopia', flag: '🇪🇹' },
@@ -976,9 +977,12 @@
       { code: 'en-CA', language: 'English', country: 'Canada', flag: '🇨🇦' },
       { code: 'en-GB', language: 'English', country: 'United Kingdom', flag: '🇬🇧' },
       { code: 'en-GH', language: 'English', country: 'Ghana', flag: '🇬🇭' },
+      { code: 'en-HK', language: 'English', country: 'Hong Kong', flag: '🇭🇰' },
       { code: 'en-IE', language: 'English', country: 'Ireland', flag: '🇮🇪' },
       { code: 'en-IN', language: 'English', country: 'India', flag: '🇮🇳' },
+      { code: 'en-JM', language: 'English', country: 'Jamaica', flag: '🇯🇲' },
       { code: 'en-KE', language: 'English', country: 'Kenya', flag: '🇰🇪' },
+      { code: 'en-LK', language: 'English', country: 'Sri Lanka', flag: '🇱🇰' },
       { code: 'en-MA', language: 'English', country: 'Morocco', flag: '🇲🇦' },
       { code: 'en-MM', language: 'English', country: 'Myanmar', flag: '🇲🇲' },
       { code: 'en-MU', language: 'English', country: 'Mauritius', flag: '🇲🇺' },
@@ -991,9 +995,12 @@
       { code: 'en-PK', language: 'English', country: 'Pakistan', flag: '🇵🇰' },
       { code: 'en-SA', language: 'English', country: 'Saudi Arabia', flag: '🇸🇦' },
       { code: 'en-SG', language: 'English', country: 'Singapore', flag: '🇸🇬' },
+      { code: 'en-TT', language: 'English', country: 'Trinidad and Tobago', flag: '🇹🇹' },
       { code: 'en-US', language: 'English', country: 'USA', flag: '🇺🇸' },
       { code: 'en-ZA', language: 'English', country: 'South Africa', flag: '🇿🇦' },
       { code: 'es-AR', language: 'Spanish', country: 'Argentina', flag: '🇦🇷' },
+      { code: 'es-CL', language: 'Spanish', country: 'Chile', flag: '🇨🇱' },
+      { code: 'es-CO', language: 'Spanish', country: 'Colombia', flag: '🇨🇴' },
       { code: 'es-ES', language: 'Spanish', country: 'Spain', flag: '🇪🇸' },
       { code: 'es-MX', language: 'Spanish', country: 'Mexico', flag: '🇲🇽' },
       { code: 'es-US', language: 'Spanish', country: 'USA', flag: '🇺🇸' },

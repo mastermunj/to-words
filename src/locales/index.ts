@@ -21,9 +21,12 @@ import enBd from './en-BD.js';
 import enCa from './en-CA.js';
 import enGb from './en-GB.js';
 import enGh from './en-GH.js';
+import enHk from './en-HK.js';
 import enIe from './en-IE.js';
 import enIn from './en-IN.js';
+import enJm from './en-JM.js';
 import enKe from './en-KE.js';
+import enLk from './en-LK.js';
 import enMa from './en-MA.js';
 import enMm from './en-MM.js';
 import enMu from './en-MU.js';
@@ -36,9 +39,12 @@ import enPh from './en-PH.js';
 import enPk from './en-PK.js';
 import enSa from './en-SA.js';
 import enSg from './en-SG.js';
+import enTt from './en-TT.js';
 import enUs from './en-US.js';
 import enZa from './en-ZA.js';
 import esAr from './es-AR.js';
+import esCl from './es-CL.js';
+import esCo from './es-CO.js';
 import esEs from './es-ES.js';
 import esMx from './es-MX.js';
 import esUs from './es-US.js';
@@ -118,9 +124,12 @@ const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
   'en-CA': enCa,
   'en-GB': enGb,
   'en-GH': enGh,
+  'en-HK': enHk,
   'en-IE': enIe,
   'en-IN': enIn,
+  'en-JM': enJm,
   'en-KE': enKe,
+  'en-LK': enLk,
   'en-MA': enMa,
   'en-MM': enMm,
   'en-MU': enMu,
@@ -133,9 +142,12 @@ const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
   'en-PK': enPk,
   'en-SA': enSa,
   'en-SG': enSg,
+  'en-TT': enTt,
   'en-US': enUs,
   'en-ZA': enZa,
   'es-AR': esAr,
+  'es-CL': esCl,
+  'es-CO': esCo,
   'es-ES': esEs,
   'es-MX': esMx,
   'es-US': esUs,
