@@ -1,5 +1,12 @@
-import { describe, expect, test } from 'vitest';
-import { ToWords } from '../src/ToWords';
+import { describe, expect, test, vi, afterEach, beforeEach } from 'vitest';
+import {
+  ToWords,
+  toWords as toWordsFn,
+  toOrdinal as toOrdinalFn,
+  toCurrency as toCurrencyFn,
+  detectLocale as detectLocaleFn,
+  setLocaleDetector as setLocaleDetectorFn,
+} from '../src/ToWords';
 
 describe('Wrong Locale', () => {
   const localeCode = 'en-INDIA';
@@ -929,5 +936,238 @@ describe('Consistency Tests', () => {
       expect(result1).toBe(result2);
       expect(result2).toBe(result3);
     });
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Functional helpers: toWords(), toOrdinal(), toCurrency() (from 'to-words')
+// ---------------------------------------------------------------------------
+
+describe('toWords() functional helper', () => {
+  afterEach(() => {
+    setLocaleDetectorFn(null);
+  });
+
+  test('converts number with explicit localeCode', () => {
+    expect(toWordsFn(12345, { localeCode: 'en-US' })).toBe('Twelve Thousand Three Hundred Forty Five');
+  });
+
+  test('uses detected locale when no localeCode given', () => {
+    setLocaleDetectorFn(() => 'en-IN');
+    expect(toWordsFn(100)).toBe('One Hundred');
+  });
+
+  test('passes converter options through', () => {
+    expect(toWordsFn(100, { localeCode: 'en-US', currency: true, doNotAddOnly: true })).toBe('One Hundred Dollars');
+  });
+
+  test('handles negative numbers', () => {
+    expect(toWordsFn(-42, { localeCode: 'en-US' })).toBe('Minus Forty Two');
+  });
+
+  test('handles BigInt input', () => {
+    expect(toWordsFn(1000000n, { localeCode: 'en-US' })).toBe('One Million');
+  });
+
+  test('handles string input', () => {
+    expect(toWordsFn('999', { localeCode: 'en-US' })).toBe('Nine Hundred Ninety Nine');
+  });
+
+  test('returns same result as class-based convert()', () => {
+    const tw = new ToWords({ localeCode: 'fr-FR' });
+    expect(toWordsFn(1000, { localeCode: 'fr-FR' })).toBe(tw.convert(1000));
+  });
+
+  test('caches instances — repeated calls with same locale are consistent', () => {
+    const r1 = toWordsFn(42, { localeCode: 'en-US' });
+    const r2 = toWordsFn(42, { localeCode: 'en-US' });
+    expect(r1).toBe(r2);
+  });
+});
+
+describe('toOrdinal() functional helper', () => {
+  afterEach(() => {
+    setLocaleDetectorFn(null);
+  });
+
+  test('converts ordinal with explicit localeCode', () => {
+    expect(toOrdinalFn(1, { localeCode: 'en-US' })).toBe('First');
+    expect(toOrdinalFn(21, { localeCode: 'en-US' })).toBe('Twenty First');
+    expect(toOrdinalFn(100, { localeCode: 'en-US' })).toBe('One Hundredth');
+  });
+
+  test('uses detected locale when no localeCode given', () => {
+    setLocaleDetectorFn(() => 'en-IN');
+    expect(toOrdinalFn(2)).toBe('Second');
+  });
+
+  test('returns same result as class-based toOrdinal()', () => {
+    const tw = new ToWords({ localeCode: 'en-US' });
+    expect(toOrdinalFn(5, { localeCode: 'en-US' })).toBe(tw.toOrdinal(5));
+  });
+});
+
+describe('toCurrency() functional helper', () => {
+  afterEach(() => {
+    setLocaleDetectorFn(null);
+  });
+
+  test('converts currency with explicit localeCode', () => {
+    expect(toCurrencyFn(100, { localeCode: 'en-US' })).toBe('One Hundred Dollars Only');
+  });
+
+  test('uses detected locale when no localeCode given', () => {
+    setLocaleDetectorFn(() => 'en-IN');
+    expect(toCurrencyFn(100)).toBe('One Hundred Rupees Only');
+  });
+
+  test('respects doNotAddOnly option', () => {
+    expect(toCurrencyFn(100, { localeCode: 'en-US', doNotAddOnly: true })).toBe('One Hundred Dollars');
+  });
+
+  test('respects ignoreDecimal option', () => {
+    expect(toCurrencyFn(100.99, { localeCode: 'en-US', ignoreDecimal: true })).toBe('One Hundred Dollars Only');
+  });
+
+  test('returns same result as convert() with currency:true', () => {
+    const tw = new ToWords({ localeCode: 'en-IN' });
+    expect(toCurrencyFn(452.36, { localeCode: 'en-IN' })).toBe(tw.convert(452.36, { currency: true }));
+  });
+});
+
+// ---------------------------------------------------------------------------
+// detectLocale()
+// ---------------------------------------------------------------------------
+
+describe('detectLocale()', () => {
+  afterEach(() => {
+    setLocaleDetectorFn(null);
+    vi.restoreAllMocks();
+  });
+
+  // ---- LOCALES matching (tested via setLocaleDetector — no globals to mock) ----
+
+  test('returns default fallback (en-IN) when detector returns empty string', () => {
+    setLocaleDetectorFn(() => '');
+    expect(detectLocaleFn()).toBe('en-IN');
+  });
+
+  test('returns custom fallback when locale cannot be matched', () => {
+    setLocaleDetectorFn(() => 'xx-XX');
+    expect(detectLocaleFn('en-US')).toBe('en-US');
+  });
+
+  test('exact match: returns locale as-is when it is in LOCALES', () => {
+    setLocaleDetectorFn(() => 'fr-FR');
+    expect(detectLocaleFn()).toBe('fr-FR');
+  });
+
+  test('normalises lang-Script-REGION to lang-REGION (e.g. zh-Hant-CN → zh-CN)', () => {
+    setLocaleDetectorFn(() => 'zh-Hant-CN');
+    expect(detectLocaleFn()).toBe('zh-CN');
+  });
+
+  test('language-prefix fallback: sw-ZZ matches sw-KE via sw- prefix', () => {
+    setLocaleDetectorFn(() => 'sw-ZZ');
+    expect(detectLocaleFn()).toBe('sw-KE');
+  });
+
+  test('handles single-part locale (lang only) via prefix match', () => {
+    setLocaleDetectorFn(() => 'fr');
+    expect(detectLocaleFn()).toMatch(/^fr-/);
+  });
+
+  // ---- built-in env reading (readRawLocale) when no detector is set ----
+
+  test('reads navigator.language by default (browser path)', () => {
+    Object.defineProperty(globalThis, 'navigator', { value: { language: 'fr-FR' }, configurable: true });
+    expect(detectLocaleFn()).toBe('fr-FR');
+  });
+
+  test('falls back to Intl when navigator is absent (Node.js / Deno / Bun / CF Workers path)', () => {
+    Object.defineProperty(globalThis, 'navigator', { value: undefined, configurable: true });
+    vi.spyOn(Intl, 'DateTimeFormat').mockImplementation(
+      () =>
+        ({
+          resolvedOptions: () => ({ locale: 'de-DE' }) as Intl.ResolvedDateTimeFormatOptions,
+        }) as Intl.DateTimeFormat,
+    );
+    expect(detectLocaleFn()).toBe('de-DE');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// setLocaleDetector()
+// ---------------------------------------------------------------------------
+
+describe('setLocaleDetector()', () => {
+  afterEach(() => {
+    setLocaleDetectorFn(null);
+    vi.restoreAllMocks();
+  });
+
+  test('overrides built-in detection with a custom function', () => {
+    setLocaleDetectorFn(() => 'ja-JP');
+    expect(detectLocaleFn()).toBe('ja-JP');
+  });
+
+  test('null restores built-in env detection', () => {
+    Object.defineProperty(globalThis, 'navigator', { value: undefined, configurable: true });
+    vi.spyOn(Intl, 'DateTimeFormat').mockImplementation(
+      () =>
+        ({
+          resolvedOptions: () => ({ locale: 'ko-KR' }) as Intl.ResolvedDateTimeFormatOptions,
+        }) as Intl.DateTimeFormat,
+    );
+    setLocaleDetectorFn(() => 'ja-JP');
+    expect(detectLocaleFn()).toBe('ja-JP'); // override active
+    setLocaleDetectorFn(null);
+    expect(detectLocaleFn()).toBe('ko-KR'); // back to Intl
+  });
+
+  test('functional helpers use the registered detector', () => {
+    setLocaleDetectorFn(() => 'en-US');
+    expect(toWordsFn(1000000)).toBe('One Million'); // en-US uses millions
+    expect(toCurrencyFn(100)).toBe('One Hundred Dollars Only');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Locale-level functional exports (representative sample: en-US, fr-FR)
+// ---------------------------------------------------------------------------
+
+describe('Locale-level toWords() from to-words/en-US', () => {
+  test('converts number without localeCode argument', async () => {
+    const { toWords: enUsToWords } = await import('../src/locales/en-US');
+    expect(enUsToWords(12345)).toBe('Twelve Thousand Three Hundred Forty Five');
+  });
+
+  test('passes converter options through', async () => {
+    const { toWords: enUsToWords } = await import('../src/locales/en-US');
+    expect(enUsToWords(100, { currency: true })).toBe('One Hundred Dollars Only');
+  });
+});
+
+describe('Locale-level toOrdinal() from to-words/en-US', () => {
+  test('converts ordinal without localeCode argument', async () => {
+    const { toOrdinal: enUsToOrdinal } = await import('../src/locales/en-US');
+    expect(enUsToOrdinal(1)).toBe('First');
+    expect(enUsToOrdinal(21)).toBe('Twenty First');
+  });
+});
+
+describe('Locale-level toCurrency() from to-words/en-US', () => {
+  test('converts currency without localeCode argument', async () => {
+    const { toCurrency: enUsToCurrency } = await import('../src/locales/en-US');
+    expect(enUsToCurrency(100)).toBe('One Hundred Dollars Only');
+    expect(enUsToCurrency(100, { doNotAddOnly: true })).toBe('One Hundred Dollars');
+  });
+});
+
+describe('Locale-level toWords() from to-words/fr-FR', () => {
+  test('converts number in French without localeCode argument', async () => {
+    const { toWords: frToWords } = await import('../src/locales/fr-FR');
+    const tw = new ToWords({ localeCode: 'fr-FR' });
+    expect(frToWords(1000)).toBe(tw.convert(1000));
   });
 });

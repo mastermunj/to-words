@@ -83,13 +83,17 @@
       ]
     }
   },
+  "bin": {
+    "to-words": "./dist/cjs/cli.js"
+  },
   "files": [
     "dist/**/*"
   ],
   "scripts": {
     "bench": "vitest bench",
-    "build": "npm run clean && npm run build:cjs && npm run build:esm && npm run build:umd && npm run build:pkgjson",
+    "build": "npm run clean && npm run build:cjs && npm run build:esm && npm run build:umd && npm run build:pkgjson && npm run build:cli",
     "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build:cli": "chmod +x dist/cjs/cli.js",
     "build:esm": "tsc -p tsconfig.esm.json",
     "build:pkgjson": "echo '{\"type\":\"commonjs\"}' > dist/cjs/package.json",
     "build:umd": "node --experimental-strip-types scripts/build-umd.ts",
