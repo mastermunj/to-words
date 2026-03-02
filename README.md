@@ -38,7 +38,7 @@ Test locale behavior, currency conversion, ordinals, and large number inputs in 
 - [Installation](#-installation)
 - [Usage](#-usage)
 - [Migration Guide](#-migration-guide)
-- [CLI](#-cli)
+- [CLI](#%EF%B8%8F-cli)
 - [Framework Integration](#%EF%B8%8F-framework-integration)
 - [Numbering Systems](#-numbering-systems)
 - [API Reference](#%EF%B8%8F-api-reference)
