@@ -1,0 +1,29 @@
+# Verify that the compiled ESM output works correctly in Bun.
+name: Bun
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  bun:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Use Node.js 24.x (build only)
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24.x
+
+      - name: Install dependencies and build
+        run: npm ci && npm run build
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Bun smoke test
+        run: bun run scripts/runtime-smoke.mjs

@@ -3,13 +3,14 @@
 [![npm version](https://img.shields.io/npm/v/to-words.svg)](https://www.npmjs.com/package/to-words)
 [![npm downloads](https://img.shields.io/npm/dm/to-words.svg)](https://www.npmjs.com/package/to-words)
 [![build](https://img.shields.io/github/actions/workflow/status/mastermunj/to-words/ci.yml?branch=main&label=build)](https://github.com/mastermunj/to-words/actions)
-[![coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/mastermunj/to-words)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/mastermunj/to-words/badge)](https://securityscorecards.dev/viewer/?uri=github.com/mastermunj/to-words)
+[![coverage](https://codecov.io/gh/mastermunj/to-words/branch/main/graph/badge.svg)](https://codecov.io/gh/mastermunj/to-words)
 [![minzipped size](https://img.shields.io/bundlephobia/minzip/to-words?label=minzipped)](https://bundlephobia.com/package/to-words)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue)](https://www.typescriptlang.org/)
 [![license](https://img.shields.io/npm/l/to-words)](https://github.com/mastermunj/to-words/blob/main/LICENSE)
 [![node](https://img.shields.io/node/v/to-words)](https://www.npmjs.com/package/to-words)
-[![Bun](https://img.shields.io/badge/Bun-compatible-000000)](https://bun.sh)
-[![Deno](https://img.shields.io/badge/Deno-compatible-70FFAF)](https://deno.land)
+[![Bun](https://github.com/mastermunj/to-words/actions/workflows/bun.yml/badge.svg?branch=main)](https://github.com/mastermunj/to-words/actions/workflows/bun.yml)
+[![Deno](https://github.com/mastermunj/to-words/actions/workflows/deno.yml/badge.svg?branch=main)](https://github.com/mastermunj/to-words/actions/workflows/deno.yml)
 [![CF Workers](https://img.shields.io/badge/CF_Workers-compatible-F38020)](https://workers.cloudflare.com)
 
 Convert numbers and currency amounts into words across 100 locales with production-ready BigInt, ordinal, and TypeScript support.

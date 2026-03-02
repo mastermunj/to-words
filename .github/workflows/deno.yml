@@ -1,0 +1,31 @@
+# Verify that the compiled ESM output works correctly in Deno 2.
+name: Deno
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  deno:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Use Node.js 24.x (build only)
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24.x
+
+      - name: Install dependencies and build
+        run: npm ci && npm run build
+
+      - name: Set up Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Deno smoke test
+        run: deno run --allow-read --allow-env scripts/runtime-smoke.mjs
