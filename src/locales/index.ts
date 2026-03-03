@@ -111,6 +111,11 @@ import viVn from './vi-VN.js';
 import yoNg from './yo-NG.js';
 import zhCn from './zh-CN.js';
 import zhTw from './zh-TW.js';
+import uzUz from './uz-UZ.js';
+import myMm from './my-MM.js';
+import siLk from './si-LK.js';
+import kmKh from './km-KH.js';
+import zuZa from './zu-ZA.js';
 
 const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
   'af-ZA': afZa,
@@ -224,6 +229,11 @@ const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
   'zh-CN': zhCn,
   'zh-TW': zhTw,
   'es-VE': esVE,
+  'uz-UZ': uzUz,
+  'my-MM': myMm,
+  'si-LK': siLk,
+  'km-KH': kmKh,
+  'zu-ZA': zuZa,
 };
 
 export default LOCALES;
