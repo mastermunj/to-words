@@ -36,7 +36,7 @@ describe('Test Locale', () => {
   });
 });
 
-const testIntegers = [
+const testIntegers: [number, string][] = [
   [0, 'ශූන්‍ය'],
   [1, 'එක'],
   [2, 'දෙ'],
@@ -99,7 +99,9 @@ describe('Test Integers with options = {}', () => {
 describe('Test Negative Integers with options = {}', () => {
   const testNegativeIntegers = cloneDeep(testIntegers);
   testNegativeIntegers.map((row, i) => {
-    if (i === 0) return;
+    if (i === 0) {
+      return;
+    }
     row[0] = -row[0];
     row[1] = `ඍණ ${row[1]}`;
   });
@@ -145,7 +147,7 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
   });
 });
 
-const testFloats = [
+const testFloats: [number, string][] = [
   [0.5, 'ශූන්‍ය දශම පහ'],
   [1.5, 'එක දශම පහ'],
   [10.5, 'දහය දශම පහ'],

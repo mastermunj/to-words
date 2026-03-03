@@ -36,7 +36,7 @@ describe('Test Locale', () => {
   });
 });
 
-const testIntegers = [
+const testIntegers: [number, string][] = [
   [0, 'Null'],
   [137, 'Hundre Trettisju'],
   [700, 'Sju Hundre'],
@@ -136,7 +136,7 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
   });
 });
 
-const testFloats = [
+const testFloats: [number, string][] = [
   [0.0, 'Null'],
   [0.04, 'Null Komma Null Fire'],
   [0.0468, 'Null Komma Null Fire Seks Åtte'],

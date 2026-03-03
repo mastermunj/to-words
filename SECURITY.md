@@ -23,9 +23,9 @@ We will:
 
 ## Scope
 
-| In scope | Examples |
-| -------- | -------- |
-| ✅ | Prototype pollution, ReDoS, arbitrary code execution via crafted input |
-| ✅ | Supply chain issues (malicious dependency, compromised release) |
-| ❌ | Incorrect locale output for a specific number (file a regular issue) |
-| ❌ | Missing locale or currency support (file a regular issue) |
+| In scope | Examples                                                               |
+| -------- | ---------------------------------------------------------------------- |
+| ✅       | Prototype pollution, ReDoS, arbitrary code execution via crafted input |
+| ✅       | Supply chain issues (malicious dependency, compromised release)        |
+| ❌       | Incorrect locale output for a specific number (file a regular issue)   |
+| ❌       | Missing locale or currency support (file a regular issue)              |

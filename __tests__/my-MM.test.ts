@@ -37,7 +37,7 @@ describe('Test Locale', () => {
 });
 
 // trim:true — all words joined without spaces
-const testIntegers = [
+const testIntegers: [number, string][] = [
   [0, 'သုည'],
   [1, 'တစ်'],
   [2, 'နှစ်'],
@@ -95,7 +95,9 @@ describe('Test Integers with options = {}', () => {
 describe('Test Negative Integers with options = {}', () => {
   const testNegativeIntegers = cloneDeep(testIntegers);
   testNegativeIntegers.map((row, i) => {
-    if (i === 0) return;
+    if (i === 0) {
+      return;
+    }
     row[0] = -row[0];
     row[1] = `အနုတ်${row[1]}`;
   });
@@ -141,7 +143,7 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
   });
 });
 
-const testFloats = [
+const testFloats: [number, string][] = [
   [0.5, 'သုညဒသမငါး'],
   [1.5, 'တစ်ဒသမငါး'],
   [10.5, 'တစ်ဆယ်ဒသမငါး'],

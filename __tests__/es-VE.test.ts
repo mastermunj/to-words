@@ -36,7 +36,7 @@ describe('Test Locale', () => {
   });
 });
 
-const testIntegers = [
+const testIntegers: [number, string][] = [
   [0, 'Cero'],
   [137, 'Ciento Treinta Y Siete'],
   [700, 'Setecientos'],
@@ -85,7 +85,7 @@ describe('Test Negative Integers with options = {}', () => {
   });
 });
 
-const testIntegersCurrency = [
+const testIntegersCurrency: [number, string][] = [
   [0, 'Cero'],
   // [1, 'Un Bolívar'],
   [137, 'Ciento Treinta Y Siete'],
@@ -168,7 +168,7 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
   });
 });
 
-const testFloats = [
+const testFloats: [number, string][] = [
   [0.0, 'Cero'],
   [0.04, 'Cero Coma Cero Cuatro'],
   [0.0468, 'Cero Coma Cero Cuatro Seis Ocho'],

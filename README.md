@@ -94,9 +94,9 @@ There are three ways to use `to-words`. Pick the one that fits your use case:
 import { ToWords } from 'to-words';
 
 const tw = new ToWords({ localeCode: 'en-US' });
-tw.convert(12345);               // "Twelve Thousand Three Hundred Forty Five"
+tw.convert(12345); // "Twelve Thousand Three Hundred Forty Five"
 tw.convert(100, { currency: true }); // "One Hundred Dollars Only"
-tw.toOrdinal(3);                 // "Third"
+tw.toOrdinal(3); // "Third"
 ```
 
 **2. Functional (full bundle)** — one-liners with a `localeCode` option, all 116 locales available:
@@ -104,9 +104,9 @@ tw.toOrdinal(3);                 // "Third"
 ```js
 import { toWords, toOrdinal, toCurrency } from 'to-words';
 
-toWords(12345, { localeCode: 'en-US' });            // "Twelve Thousand Three Hundred Forty Five"
-toCurrency(100, { localeCode: 'en-US' });           // "One Hundred Dollars Only"
-toOrdinal(3, { localeCode: 'en-US' });              // "Third"
+toWords(12345, { localeCode: 'en-US' }); // "Twelve Thousand Three Hundred Forty Five"
+toCurrency(100, { localeCode: 'en-US' }); // "One Hundred Dollars Only"
+toOrdinal(3, { localeCode: 'en-US' }); // "Third"
 ```
 
 **3. Functional (per-locale import)** — locale baked in, fully tree-shakeable, smallest bundle (~3.5 KB gzip):
@@ -114,9 +114,9 @@ toOrdinal(3, { localeCode: 'en-US' });              // "Third"
 ```js
 import { toWords, toOrdinal, toCurrency } from 'to-words/en-US';
 
-toWords(12345);      // "Twelve Thousand Three Hundred Forty Five"
-toCurrency(100);     // "One Hundred Dollars Only"
-toOrdinal(3);        // "Third"
+toWords(12345); // "Twelve Thousand Three Hundred Forty Five"
+toCurrency(100); // "One Hundred Dollars Only"
+toOrdinal(3); // "Third"
 ```
 
 > **Default locale:** When no `localeCode` is provided, the runtime locale is **auto-detected** via `detectLocale()` and falls back to `en-IN` if it cannot be matched.
@@ -175,9 +175,9 @@ import { ToWords } from 'to-words/en-US';
 ```js
 const tw = new ToWords({ localeCode: 'en-US' });
 
-tw.convert(123);      // "One Hundred Twenty Three"
-tw.convert(123.45);   // "One Hundred Twenty Three Point Four Five"
-tw.convert(123.045);  // "One Hundred Twenty Three Point Zero Four Five"
+tw.convert(123); // "One Hundred Twenty Three"
+tw.convert(123.45); // "One Hundred Twenty Three Point Four Five"
+tw.convert(123.045); // "One Hundred Twenty Three Point Zero Four Five"
 ```
 
 **Functional (full bundle):**
@@ -185,8 +185,8 @@ tw.convert(123.045);  // "One Hundred Twenty Three Point Zero Four Five"
 ```js
 import { toWords } from 'to-words';
 
-toWords(123, { localeCode: 'en-US' });      // "One Hundred Twenty Three"
-toWords(123.45, { localeCode: 'en-US' });   // "One Hundred Twenty Three Point Four Five"
+toWords(123, { localeCode: 'en-US' }); // "One Hundred Twenty Three"
+toWords(123.45, { localeCode: 'en-US' }); // "One Hundred Twenty Three Point Four Five"
 ```
 
 **Functional (per-locale):**
@@ -194,8 +194,8 @@ toWords(123.45, { localeCode: 'en-US' });   // "One Hundred Twenty Three Point F
 ```js
 import { toWords } from 'to-words/en-US';
 
-toWords(123);      // "One Hundred Twenty Three"
-toWords(123.45);   // "One Hundred Twenty Three Point Four Five"
+toWords(123); // "One Hundred Twenty Three"
+toWords(123.45); // "One Hundred Twenty Three Point Four Five"
 ```
 
 > **Note:** When the fractional part starts with zero, digits after the decimal point are converted individually.
@@ -266,8 +266,8 @@ toCurrency(452, { localeCode: 'en-IN', doNotAddOnly: true });
 ```js
 import { toCurrency } from 'to-words/en-IN';
 
-toCurrency(452);        // "Four Hundred Fifty Two Rupees Only"
-toCurrency(452.36);     // "Four Hundred Fifty Two Rupees And Thirty Six Paise Only"
+toCurrency(452); // "Four Hundred Fifty Two Rupees Only"
+toCurrency(452.36); // "Four Hundred Fifty Two Rupees And Thirty Six Paise Only"
 ```
 
 ### Custom Currency
@@ -292,7 +292,7 @@ const toWords = new ToWords({
   },
 });
 
-toWords.convert(100.50);
+toWords.convert(100.5);
 // "One Hundred Euros And Fifty Cents Only"
 ```
 
@@ -303,9 +303,9 @@ toWords.convert(100.50);
 ```js
 const tw = new ToWords({ localeCode: 'en-US' });
 
-tw.toOrdinal(1);    // "First"
-tw.toOrdinal(21);   // "Twenty First"
-tw.toOrdinal(100);  // "One Hundredth"
+tw.toOrdinal(1); // "First"
+tw.toOrdinal(21); // "Twenty First"
+tw.toOrdinal(100); // "One Hundredth"
 ```
 
 **Functional — `toOrdinal()` (full bundle):**
@@ -313,9 +313,9 @@ tw.toOrdinal(100);  // "One Hundredth"
 ```js
 import { toOrdinal } from 'to-words';
 
-toOrdinal(1, { localeCode: 'en-US' });    // "First"
-toOrdinal(21, { localeCode: 'en-US' });   // "Twenty First"
-toOrdinal(100, { localeCode: 'en-US' });  // "One Hundredth"
+toOrdinal(1, { localeCode: 'en-US' }); // "First"
+toOrdinal(21, { localeCode: 'en-US' }); // "Twenty First"
+toOrdinal(100, { localeCode: 'en-US' }); // "One Hundredth"
 ```
 
 **Functional per-locale:**
@@ -323,8 +323,8 @@ toOrdinal(100, { localeCode: 'en-US' });  // "One Hundredth"
 ```js
 import { toOrdinal } from 'to-words/en-US';
 
-toOrdinal(1);    // "First"
-toOrdinal(21);   // "Twenty First"
+toOrdinal(1); // "First"
+toOrdinal(21); // "Twenty First"
 ```
 
 > **Note:** Full ordinal word mappings are available for English, Spanish, French, Portuguese, Turkish, and Dutch locales. Other locales use suffix-based ordinals.
@@ -333,12 +333,12 @@ toOrdinal(21);   // "Twenty First"
 
 Every locale entry point (`to-words/<locale>`) exports four things:
 
-| Export | Type | Description |
-|--------|------|-------------|
-| `ToWords` | class | Full class API pre-configured for this locale |
-| `toWords` | function | Convert number → words |
-| `toOrdinal` | function | Convert number → ordinal words |
-| `toCurrency` | function | Convert number → currency words |
+| Export       | Type     | Description                                   |
+| ------------ | -------- | --------------------------------------------- |
+| `ToWords`    | class    | Full class API pre-configured for this locale |
+| `toWords`    | function | Convert number → words                        |
+| `toOrdinal`  | function | Convert number → ordinal words                |
+| `toCurrency` | function | Convert number → currency words               |
 
 ```js
 // Class-based (locale pre-configured, no localeCode needed)
@@ -348,9 +348,9 @@ tw.convert(12345); // "Twelve Thousand Three Hundred Forty Five"
 
 // Functional helpers (locale baked in — smallest possible import)
 import { toWords, toOrdinal, toCurrency } from 'to-words/en-US';
-toWords(12345);      // "Twelve Thousand Three Hundred Forty Five"
-toOrdinal(3);        // "Third"
-toCurrency(100);     // "One Hundred Dollars Only"
+toWords(12345); // "Twelve Thousand Three Hundred Forty Five"
+toOrdinal(3); // "Third"
+toCurrency(100); // "One Hundred Dollars Only"
 ```
 
 > Individual imports are ~3.5 KB gzip vs ~58 KB for the full bundle.
@@ -409,9 +409,9 @@ toCurrency(1234.56, { doNotAddOnly: true });
 ```js
 import { toWords, toOrdinal, toCurrency } from 'to-words/en-US';
 
-toWords(12345);         // "Twelve Thousand Three Hundred Forty Five"
-toOrdinal(21);          // "Twenty First"
-toCurrency(1234.56);    // "One Thousand Two Hundred Thirty Four Dollars And Fifty Six Cents Only"
+toWords(12345); // "Twelve Thousand Three Hundred Forty Five"
+toOrdinal(21); // "Twenty First"
+toCurrency(1234.56); // "One Thousand Two Hundred Thirty Four Dollars And Fifty Six Cents Only"
 ```
 
 > **Performance note:** The functional API creates one `ToWords` instance per call. For high-frequency hot paths (invoice loops, real-time input), prefer a shared class instance.
@@ -436,7 +436,6 @@ tw.convert(1000);
 ```
 
 > Reads `navigator.language` in browsers, `Intl.DateTimeFormat().resolvedOptions().locale` in Node.js / Deno / Bun / CF Workers. Falls back to `'en-IN'` (or your custom fallback) if the detected value cannot be matched to a supported locale.
-
 
 ## 🔄 Migration Guide
 
@@ -497,9 +496,7 @@ import { ToWords } from 'to-words/en-US';
 const props = defineProps<{ amount: number }>();
 const toWords = new ToWords();
 
-const words = computed(() => 
-  toWords.convert(props.amount, { currency: true })
-);
+const words = computed(() => toWords.convert(props.amount, { currency: true }));
 </script>
 
 <template>
@@ -530,9 +527,9 @@ export class ToWordsPipe implements PipeTransform {
 ```svelte
 <script lang="ts">
   import { ToWords } from 'to-words/en-US';
-  
+
   export let amount: number;
-  
+
   const toWords = new ToWords();
   $: words = toWords.convert(amount, { currency: true });
 </script>
@@ -590,9 +587,7 @@ app.get('/convert', (req, res) => {
   const currency = req.query.currency === 'true';
 
   try {
-    const result = currency
-      ? toCurrency(number, { localeCode: locale })
-      : toWords(number, { localeCode: locale });
+    const result = currency ? toCurrency(number, { localeCode: locale }) : toWords(number, { localeCode: locale });
     res.json({ result, locale });
   } catch (e) {
     res.status(400).json({ error: (e as Error).message });
@@ -608,14 +603,14 @@ Different regions use different numbering systems. This library supports all maj
 
 Used in: USA, UK, Canada, Australia, and most English-speaking countries.
 
-| Number | Name |
-|--------|------|
-| 10^6 | Million |
-| 10^9 | Billion |
-| 10^12 | Trillion |
-| 10^15 | Quadrillion |
-| ... | ... |
-| 10^63 | Vigintillion |
+| Number | Name         |
+| ------ | ------------ |
+| 10^6   | Million      |
+| 10^9   | Billion      |
+| 10^12  | Trillion     |
+| 10^15  | Quadrillion  |
+| ...    | ...          |
+| 10^63  | Vigintillion |
 
 ```js
 const toWords = new ToWords({ localeCode: 'en-US' });
@@ -627,12 +622,12 @@ toWords.convert(1000000000000000000n);
 
 Used in: Germany, France, and many European countries.
 
-| Number | German | French |
-|--------|--------|--------|
-| 10^6 | Million | Million |
-| 10^9 | Milliarde | Milliard |
-| 10^12 | Billion | Billion |
-| 10^15 | Billiarde | Billiard |
+| Number | German    | French   |
+| ------ | --------- | -------- |
+| 10^6   | Million   | Million  |
+| 10^9   | Milliarde | Milliard |
+| 10^12  | Billion   | Billion  |
+| 10^15  | Billiarde | Billiard |
 
 ```js
 const toWords = new ToWords({ localeCode: 'de-DE' });
@@ -644,15 +639,15 @@ toWords.convert(1000000000);
 
 Used in: India, Bangladesh, Nepal, Pakistan.
 
-| Number | Name |
-|--------|------|
-| 10^5 | Lakh |
-| 10^7 | Crore |
-| 10^9 | Arab |
-| 10^11 | Kharab |
-| 10^13 | Neel |
-| 10^15 | Padma |
-| 10^17 | Shankh |
+| Number | Name   |
+| ------ | ------ |
+| 10^5   | Lakh   |
+| 10^7   | Crore  |
+| 10^9   | Arab   |
+| 10^11  | Kharab |
+| 10^13  | Neel   |
+| 10^15  | Padma  |
+| 10^17  | Shankh |
 
 ```js
 const toWords = new ToWords({ localeCode: 'en-IN' });
@@ -668,13 +663,13 @@ toWordsHindi.convert(100000000000000000n);
 
 Used in: Japan, China, Korea.
 
-| Number | Character |
-|--------|-----------|
-| 10^4 | 万 (Man/Wan) |
-| 10^8 | 億 (Oku/Yi) |
-| 10^12 | 兆 (Chō/Zhao) |
-| 10^16 | 京 (Kei/Jing) |
-| 10^20 | 垓 (Gai) |
+| Number | Character     |
+| ------ | ------------- |
+| 10^4   | 万 (Man/Wan)  |
+| 10^8   | 億 (Oku/Yi)   |
+| 10^12  | 兆 (Chō/Zhao) |
+| 10^16  | 京 (Kei/Jing) |
+| 10^20  | 垓 (Gai)      |
 
 ```js
 const toWords = new ToWords({ localeCode: 'ja-JP' });
@@ -688,12 +683,12 @@ toWords.convert(100000000);
 
 ```typescript
 interface ToWordsOptions {
-  localeCode?: string;           // Default: 'en-IN'
+  localeCode?: string; // Default: 'en-IN'
   converterOptions?: {
-    currency?: boolean;          // Default: false
-    ignoreDecimal?: boolean;     // Default: false
-    ignoreZeroCurrency?: boolean;// Default: false
-    doNotAddOnly?: boolean;      // Default: false
+    currency?: boolean; // Default: false
+    ignoreDecimal?: boolean; // Default: false
+    ignoreZeroCurrency?: boolean; // Default: false
+    doNotAddOnly?: boolean; // Default: false
     currencyOptions?: {
       name: string;
       plural: string;
@@ -734,14 +729,14 @@ All four functional helpers are available from the full bundle (`to-words`) and 
 Converts a number to words.
 
 - **number**: `number | bigint | string` — The number to convert
-- **options** *(full bundle)*: `ConverterOptions & { localeCode?: string }` — When `localeCode` is omitted, `detectLocale()` is called automatically
-- **options** *(per-locale)*: `ConverterOptions`
+- **options** _(full bundle)_: `ConverterOptions & { localeCode?: string }` — When `localeCode` is omitted, `detectLocale()` is called automatically
+- **options** _(per-locale)_: `ConverterOptions`
 - **returns**: `string`
 
 ```js
 import { toWords } from 'to-words';
 toWords(12345, { localeCode: 'en-US' }); // explicit locale
-toWords(12345);                          // auto-detects runtime locale
+toWords(12345); // auto-detects runtime locale
 
 import { toWords } from 'to-words/en-US';
 toWords(12345); // locale baked in, no detection needed
@@ -752,14 +747,14 @@ toWords(12345); // locale baked in, no detection needed
 Converts a number to ordinal words.
 
 - **number**: `number` — Must be a non-negative integer
-- **options** *(full bundle)*: `OrdinalOptions & { localeCode?: string }` — When `localeCode` is omitted, `detectLocale()` is called automatically
-- **options** *(per-locale)*: `OrdinalOptions`
+- **options** _(full bundle)_: `OrdinalOptions & { localeCode?: string }` — When `localeCode` is omitted, `detectLocale()` is called automatically
+- **options** _(per-locale)_: `OrdinalOptions`
 - **returns**: `string`
 
 ```js
 import { toOrdinal } from 'to-words';
 toOrdinal(21, { localeCode: 'en-US' }); // explicit locale
-toOrdinal(21);                          // auto-detects runtime locale
+toOrdinal(21); // auto-detects runtime locale
 
 import { toOrdinal } from 'to-words/en-US';
 toOrdinal(21); // locale baked in
@@ -770,14 +765,14 @@ toOrdinal(21); // locale baked in
 Shorthand for converting a number to currency words. Equivalent to `toWords(number, { currency: true, ...options })`.
 
 - **number**: `number | bigint | string`
-- **options** *(full bundle)*: `ConverterOptions & { localeCode?: string }` — When `localeCode` is omitted, `detectLocale()` is called automatically
-- **options** *(per-locale)*: `ConverterOptions`
+- **options** _(full bundle)_: `ConverterOptions & { localeCode?: string }` — When `localeCode` is omitted, `detectLocale()` is called automatically
+- **options** _(per-locale)_: `ConverterOptions`
 - **returns**: `string`
 
 ```js
 import { toCurrency } from 'to-words';
 toCurrency(1234.56, { localeCode: 'en-US' }); // explicit locale
-toCurrency(1234.56);                          // auto-detects runtime locale
+toCurrency(1234.56); // auto-detects runtime locale
 
 import { toCurrency } from 'to-words/en-US';
 toCurrency(1234.56); // locale baked in
@@ -786,17 +781,18 @@ toCurrency(1234.56); // locale baked in
 #### `detectLocale(fallback?)`
 
 Reads the current runtime locale.
+
 - In **browsers**: reads `navigator.language`
 - In **Node.js / Deno / Bun / CF Workers**: reads `Intl.DateTimeFormat().resolvedOptions().locale`
 - Normalises BCP 47 tags (e.g. `zh-Hant-TW` → `zh-TW`) and falls back to a language-prefix match
 
-- **fallback** *(optional)*: `string` — Returned when no supported locale can be matched. Default: `'en-IN'`
+- **fallback** _(optional)_: `string` — Returned when no supported locale can be matched. Default: `'en-IN'`
 - **returns**: `string` — A supported locale code
 
 ```js
 import { detectLocale } from 'to-words';
 
-detectLocale();        // e.g. 'en-US', 'fr-FR', 'ja-JP'
+detectLocale(); // e.g. 'en-US', 'fr-FR', 'ja-JP'
 detectLocale('en-GB'); // custom fallback if detection fails
 ```
 
@@ -804,13 +800,13 @@ detectLocale('en-GB'); // custom fallback if detection fails
 
 ### Converter Options
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `currency` | boolean | false | Convert as currency with locale-specific formatting |
-| `ignoreDecimal` | boolean | false | Ignore fractional part when converting |
-| `ignoreZeroCurrency` | boolean | false | Skip zero main currency (e.g., show only "Thirty Six Paise") |
-| `doNotAddOnly` | boolean | false | Omit "Only" suffix in currency mode |
-| `currencyOptions` | object | undefined | Override locale's default currency settings |
+| Option               | Type    | Default   | Description                                                  |
+| -------------------- | ------- | --------- | ------------------------------------------------------------ |
+| `currency`           | boolean | false     | Convert as currency with locale-specific formatting          |
+| `ignoreDecimal`      | boolean | false     | Ignore fractional part when converting                       |
+| `ignoreZeroCurrency` | boolean | false     | Skip zero main currency (e.g., show only "Thirty Six Paise") |
+| `doNotAddOnly`       | boolean | false     | Omit "Only" suffix in currency mode                          |
+| `currencyOptions`    | object  | undefined | Override locale's default currency settings                  |
 
 ### Common Options Example
 
@@ -827,11 +823,11 @@ toWords.convert(1234.56, {
 
 ## 📏 Bundle Sizes
 
-| Import Method | Raw | Gzip |
-|--------------|-----|------|
-| Full bundle (all locales) | 654 KB | 60 KB |
-| Single locale (en-US) | 12 KB | 3.5 KB |
-| Single locale (en-IN) | 10 KB | 3.4 KB |
+| Import Method             | Raw    | Gzip   |
+| ------------------------- | ------ | ------ |
+| Full bundle (all locales) | 654 KB | 60 KB  |
+| Single locale (en-US)     | 12 KB  | 3.5 KB |
+| Single locale (en-IN)     | 10 KB  | 3.4 KB |
 
 > **Tip:** Use tree-shakeable imports or single-locale UMD bundles for the smallest bundle size.
 
@@ -839,13 +835,13 @@ toWords.convert(1234.56, {
 
 Benchmarked on Apple M2 (Node.js 23):
 
-| Operation | Throughput |
-|-----------|------------|
-| Small integers (42) | ~4.7M ops/sec |
-| Medium integers (12,345) | ~2.2M ops/sec |
+| Operation                  | Throughput    |
+| -------------------------- | ------------- |
+| Small integers (42)        | ~4.7M ops/sec |
+| Medium integers (12,345)   | ~2.2M ops/sec |
 | Large integers (15 digits) | ~700K ops/sec |
-| Currency conversion | ~1M ops/sec |
-| BigInt (30+ digits) | ~225K ops/sec |
+| Currency conversion        | ~1M ops/sec   |
+| BigInt (30+ digits)        | ~225K ops/sec |
 
 Run benchmarks locally:
 
@@ -856,23 +852,23 @@ npm run bench
 ## 🌐 Browser Compatibility
 
 | Browser | Version |
-|---------|--------|
-| Chrome | 67+ |
-| Firefox | 68+ |
-| Safari | 14+ |
-| Edge | 79+ |
-| Opera | 54+ |
+| ------- | ------- |
+| Chrome  | 67+     |
+| Firefox | 68+     |
+| Safari  | 14+     |
+| Edge    | 79+     |
+| Opera   | 54+     |
 
 **BigInt Support:** BigInt is required for full functionality. Internet Explorer is not supported.
 
 ### Runtime Compatibility
 
-| Runtime | Support |
-|---------|--------|
-| Node.js | 20+ |
-| Deno | 1.28+ |
-| Bun | 1.0+ |
-| Cloudflare Workers | ✅ |
+| Runtime            | Support |
+| ------------------ | ------- |
+| Node.js            | 20+     |
+| Deno               | 1.28+   |
+| Bun                | 1.0+    |
+| Cloudflare Workers | ✅      |
 
 The library uses only standard ECMAScript features (BigInt, Intl, Map) with zero Node.js-specific APIs, making it compatible with any modern JavaScript runtime.
 
@@ -880,126 +876,127 @@ The library uses only standard ECMAScript features (BigInt, Intl, Map) with zero
 
 All 116 locales with their features:
 
-| Locale | Language | Country | Currency | Scale | Ordinal |
-|--------|----------|---------|----------|-------|---------|
-| af-ZA | Afrikaans | South Africa | Rand | Short | ✓ |
-| am-ET | Amharic | Ethiopia | ብር | Short | ✓ |
-| ar-AE | Arabic | UAE | درهم | Short | ✓ |
-| ar-LB | Arabic | Lebanon | ليرة | Short | ✓ |
-| ar-MA | Arabic | Morocco | درهم | Short | ✓ |
-| ar-SA | Arabic | Saudi Arabia | ريال | Short | ✓ |
-| az-AZ | Azerbaijani | Azerbaijan | Manat | Short | ✓ |
-| be-BY | Belarusian | Belarus | Рубель | Short | ✓ |
-| bg-BG | Bulgarian | Bulgaria | Лев | Short | ✓ |
-| bn-IN | Bengali | India | টাকা | Short | ✓ |
-| ca-ES | Catalan | Spain | Euro | Short | ✓ |
-| cs-CZ | Czech | Czech Republic | Koruna | Short | ✓ |
-| da-DK | Danish | Denmark | Krone | Long | ✓ |
-| de-AT | German | Austria | Euro | Long | ✓ |
-| de-CH | German | Switzerland | Franken | Long | ✓ |
-| de-DE | German | Germany | Euro | Long | ✓ |
-| ee-EE | Estonian | Estonia | Euro | Short | ✓ |
-| el-GR | Greek | Greece | Ευρώ | Short | ✓ |
-| en-AE | English | UAE | Dirham | Short | ✓ |
-| en-AU | English | Australia | Dollar | Short | ✓ |
-| en-BD | English | Bangladesh | Taka | Indian | ✓ |
-| en-CA | English | Canada | Dollar | Short | ✓ |
-| en-GB | English | United Kingdom | Pound | Short | ✓ |
-| en-GH | English | Ghana | Cedi | Short | ✓ |
-| en-HK | English | Hong Kong | Dollar | Short | ✓ |
-| en-IE | English | Ireland | Euro | Short | ✓ |
-| en-IN | English | India | Rupee | Indian | ✓ |
-| en-JM | English | Jamaica | Dollar | Short | ✓ |
-| en-KE | English | Kenya | Shilling | Short | ✓ |
-| en-LK | English | Sri Lanka | Rupee | Short | ✓ |
-| en-MA | English | Morocco | Dirham | Short | ✓ |
-| en-MM | English | Myanmar | Kyat | Short | ✓ |
-| en-MU | English | Mauritius | Rupee | Indian | ✓ |
-| en-MY | English | Malaysia | Ringgit | Short | ✓ |
-| en-NG | English | Nigeria | Naira | Short | ✓ |
-| en-NP | English | Nepal | Rupee | Indian | ✓ |
-| en-NZ | English | New Zealand | Dollar | Short | ✓ |
-| en-OM | English | Oman | Rial | Short | ✓ |
-| en-PH | English | Philippines | Peso | Short | ✓ |
-| en-PK | English | Pakistan | Rupee | Indian | ✓ |
-| en-SA | English | Saudi Arabia | Riyal | Short | ✓ |
-| en-SG | English | Singapore | Dollar | Short | ✓ |
-| en-TT | English | Trinidad and Tobago | Dollar | Short | ✓ |
-| en-TZ | English | Tanzania | Shilling | Short | ✓ |
-| en-UG | English | Uganda | Shilling | Short | ✓ |
-| en-US | English | USA | Dollar | Short | ✓ |
-| en-ZA | English | South Africa | Rand | Short | ✓ |
-| en-ZW | English | Zimbabwe | Zimbabwe Gold | Short | ✓ |
-| es-AR | Spanish | Argentina | Peso | Short | ✓ |
-| es-CL | Spanish | Chile | Peso | Short | ✓ |
-| es-CO | Spanish | Colombia | Peso | Short | ✓ |
-| es-ES | Spanish | Spain | Euro | Short | ✓ |
-| es-MX | Spanish | Mexico | Peso | Short | ✓ |
-| es-US | Spanish | USA | Dólar | Short | ✓ |
-| es-VE | Spanish | Venezuela | Bolívar | Short | ✓ |
-| fa-IR | Persian | Iran | تومان | Short | ✓ |
-| fi-FI | Finnish | Finland | Euro | Short | ✓ |
-| fil-PH | Filipino | Philippines | Piso | Short | ✓ |
-| fr-BE | French | Belgium | Euro | Long | ✓ |
-| fr-CA | French | Canada | Dollar | Long | ✓ |
-| fr-FR | French | France | Euro | Long | ✓ |
-| fr-MA | French | Morocco | Dirham | Long | ✓ |
-| fr-SA | French | Saudi Arabia | Riyal | Long | ✓ |
-| gu-IN | Gujarati | India | રૂપિયો | Short | ✓ |
-| ha-NG | Hausa | Nigeria | Naira | Short | ✓ |
-| hbo-IL | Biblical Hebrew | Israel | שקל | Short | ✓ |
-| he-IL | Hebrew | Israel | שקל | Short | ✓ |
-| hi-IN | Hindi | India | रुपया | Indian | ✓ |
-| hr-HR | Croatian | Croatia | Euro | Short | ✓ |
-| hu-HU | Hungarian | Hungary | Forint | Short | ✓ |
-| id-ID | Indonesian | Indonesia | Rupiah | Short | ✓ |
-| is-IS | Icelandic | Iceland | Króna | Short | ✓ |
-| it-IT | Italian | Italy | Euro | Short | ✓ |
-| ja-JP | Japanese | Japan | 円 | East Asian | ✓ |
-| ka-GE | Georgian | Georgia | ლარი | Short | ✓ |
-| km-KH | Khmer | Cambodia | រៀល | Khmer | ✗ |
-| kn-IN | Kannada | India | ರೂಪಾಯಿ | Short | ✓ |
-| ko-KR | Korean | South Korea | 원 | Short | ✓ |
-| lt-LT | Lithuanian | Lithuania | Euras | Short | ✓ |
-| lv-LV | Latvian | Latvia | Eiro | Short | ✓ |
-| mr-IN | Marathi | India | रुपया | Indian | ✓ |
-| ms-MY | Malay | Malaysia | Ringgit | Short | ✓ |
-| ms-SG | Malay | Singapore | Dolar | Short | ✓ |
-| my-MM | Burmese | Myanmar | ကျပ် | Burmese | ✗ |
-| nb-NO | Norwegian | Norway | Krone | Long | ✓ |
-| nl-NL | Dutch | Netherlands | Euro | Short | ✓ |
-| nl-SR | Dutch | Suriname | Dollar | Short | ✓ |
-| np-NP | Nepali | Nepal | रुपैयाँ | Indian | ✓ |
-| pa-IN | Punjabi | India | ਰੁਪਇਆ | Short | ✓ |
-| pl-PL | Polish | Poland | Złoty | Short | ✓ |
-| pt-AO | Portuguese | Angola | Kwanza | Short | ✓ |
-| pt-BR | Portuguese | Brazil | Real | Short | ✓ |
-| pt-MZ | Portuguese | Mozambique | Metical | Short | ✓ |
-| pt-PT | Portuguese | Portugal | Euro | Short | ✓ |
-| ro-RO | Romanian | Romania | Leu | Short | ✓ |
-| ru-RU | Russian | Russia | Рубль | Short | ✓ |
-| si-LK | Sinhala | Sri Lanka | රුපියල | Indian | ✓ |
-| sk-SK | Slovak | Slovakia | Euro | Short | ✓ |
-| sl-SI | Slovenian | Slovenia | Euro | Short | ✓ |
-| sq-AL | Albanian | Albania | Lek | Short | ✓ |
-| sr-RS | Serbian | Serbia | Dinar | Short | ✓ |
-| sv-SE | Swedish | Sweden | Krona | Short | ✓ |
-| sw-KE | Swahili | Kenya | Shilingi | Short | ✓ |
-| sw-TZ | Swahili | Tanzania | Shilingi | Short | ✓ |
-| ta-IN | Tamil | India | ரூபாய் | Short | ✓ |
-| te-IN | Telugu | India | రూపాయి | Short | ✓ |
-| th-TH | Thai | Thailand | บาท | Short | ✓ |
-| tr-TR | Turkish | Turkey | Lira | Short | ✓ |
-| uk-UA | Ukrainian | Ukraine | Гривня | Short | ✓ |
-| ur-PK | Urdu | Pakistan | روپیہ | Short | ✓ |
-| uz-UZ | Uzbek | Uzbekistan | So'm | Short | ✓ |
-| vi-VN | Vietnamese | Vietnam | Đồng | Short | ✓ |
-| yo-NG | Yoruba | Nigeria | Naira | Short | ✓ |
-| zh-CN | Chinese | China | 元 | East Asian | ✓ |
-| zh-TW | Chinese | Taiwan | 元 | East Asian | ✓ |
-| zu-ZA | Zulu | South Africa | Rand | Short | ✓ |
+| Locale | Language        | Country             | Currency      | Scale      | Ordinal |
+| ------ | --------------- | ------------------- | ------------- | ---------- | ------- |
+| af-ZA  | Afrikaans       | South Africa        | Rand          | Short      | ✓       |
+| am-ET  | Amharic         | Ethiopia            | ብር            | Short      | ✓       |
+| ar-AE  | Arabic          | UAE                 | درهم          | Short      | ✓       |
+| ar-LB  | Arabic          | Lebanon             | ليرة          | Short      | ✓       |
+| ar-MA  | Arabic          | Morocco             | درهم          | Short      | ✓       |
+| ar-SA  | Arabic          | Saudi Arabia        | ريال          | Short      | ✓       |
+| az-AZ  | Azerbaijani     | Azerbaijan          | Manat         | Short      | ✓       |
+| be-BY  | Belarusian      | Belarus             | Рубель        | Short      | ✓       |
+| bg-BG  | Bulgarian       | Bulgaria            | Лев           | Short      | ✓       |
+| bn-IN  | Bengali         | India               | টাকা          | Short      | ✓       |
+| ca-ES  | Catalan         | Spain               | Euro          | Short      | ✓       |
+| cs-CZ  | Czech           | Czech Republic      | Koruna        | Short      | ✓       |
+| da-DK  | Danish          | Denmark             | Krone         | Long       | ✓       |
+| de-AT  | German          | Austria             | Euro          | Long       | ✓       |
+| de-CH  | German          | Switzerland         | Franken       | Long       | ✓       |
+| de-DE  | German          | Germany             | Euro          | Long       | ✓       |
+| ee-EE  | Estonian        | Estonia             | Euro          | Short      | ✓       |
+| el-GR  | Greek           | Greece              | Ευρώ          | Short      | ✓       |
+| en-AE  | English         | UAE                 | Dirham        | Short      | ✓       |
+| en-AU  | English         | Australia           | Dollar        | Short      | ✓       |
+| en-BD  | English         | Bangladesh          | Taka          | Indian     | ✓       |
+| en-CA  | English         | Canada              | Dollar        | Short      | ✓       |
+| en-GB  | English         | United Kingdom      | Pound         | Short      | ✓       |
+| en-GH  | English         | Ghana               | Cedi          | Short      | ✓       |
+| en-HK  | English         | Hong Kong           | Dollar        | Short      | ✓       |
+| en-IE  | English         | Ireland             | Euro          | Short      | ✓       |
+| en-IN  | English         | India               | Rupee         | Indian     | ✓       |
+| en-JM  | English         | Jamaica             | Dollar        | Short      | ✓       |
+| en-KE  | English         | Kenya               | Shilling      | Short      | ✓       |
+| en-LK  | English         | Sri Lanka           | Rupee         | Short      | ✓       |
+| en-MA  | English         | Morocco             | Dirham        | Short      | ✓       |
+| en-MM  | English         | Myanmar             | Kyat          | Short      | ✓       |
+| en-MU  | English         | Mauritius           | Rupee         | Indian     | ✓       |
+| en-MY  | English         | Malaysia            | Ringgit       | Short      | ✓       |
+| en-NG  | English         | Nigeria             | Naira         | Short      | ✓       |
+| en-NP  | English         | Nepal               | Rupee         | Indian     | ✓       |
+| en-NZ  | English         | New Zealand         | Dollar        | Short      | ✓       |
+| en-OM  | English         | Oman                | Rial          | Short      | ✓       |
+| en-PH  | English         | Philippines         | Peso          | Short      | ✓       |
+| en-PK  | English         | Pakistan            | Rupee         | Indian     | ✓       |
+| en-SA  | English         | Saudi Arabia        | Riyal         | Short      | ✓       |
+| en-SG  | English         | Singapore           | Dollar        | Short      | ✓       |
+| en-TT  | English         | Trinidad and Tobago | Dollar        | Short      | ✓       |
+| en-TZ  | English         | Tanzania            | Shilling      | Short      | ✓       |
+| en-UG  | English         | Uganda              | Shilling      | Short      | ✓       |
+| en-US  | English         | USA                 | Dollar        | Short      | ✓       |
+| en-ZA  | English         | South Africa        | Rand          | Short      | ✓       |
+| en-ZW  | English         | Zimbabwe            | Zimbabwe Gold | Short      | ✓       |
+| es-AR  | Spanish         | Argentina           | Peso          | Short      | ✓       |
+| es-CL  | Spanish         | Chile               | Peso          | Short      | ✓       |
+| es-CO  | Spanish         | Colombia            | Peso          | Short      | ✓       |
+| es-ES  | Spanish         | Spain               | Euro          | Short      | ✓       |
+| es-MX  | Spanish         | Mexico              | Peso          | Short      | ✓       |
+| es-US  | Spanish         | USA                 | Dólar         | Short      | ✓       |
+| es-VE  | Spanish         | Venezuela           | Bolívar       | Short      | ✓       |
+| fa-IR  | Persian         | Iran                | تومان         | Short      | ✓       |
+| fi-FI  | Finnish         | Finland             | Euro          | Short      | ✓       |
+| fil-PH | Filipino        | Philippines         | Piso          | Short      | ✓       |
+| fr-BE  | French          | Belgium             | Euro          | Long       | ✓       |
+| fr-CA  | French          | Canada              | Dollar        | Long       | ✓       |
+| fr-FR  | French          | France              | Euro          | Long       | ✓       |
+| fr-MA  | French          | Morocco             | Dirham        | Long       | ✓       |
+| fr-SA  | French          | Saudi Arabia        | Riyal         | Long       | ✓       |
+| gu-IN  | Gujarati        | India               | રૂપિયો        | Short      | ✓       |
+| ha-NG  | Hausa           | Nigeria             | Naira         | Short      | ✓       |
+| hbo-IL | Biblical Hebrew | Israel              | שקל           | Short      | ✓       |
+| he-IL  | Hebrew          | Israel              | שקל           | Short      | ✓       |
+| hi-IN  | Hindi           | India               | रुपया         | Indian     | ✓       |
+| hr-HR  | Croatian        | Croatia             | Euro          | Short      | ✓       |
+| hu-HU  | Hungarian       | Hungary             | Forint        | Short      | ✓       |
+| id-ID  | Indonesian      | Indonesia           | Rupiah        | Short      | ✓       |
+| is-IS  | Icelandic       | Iceland             | Króna         | Short      | ✓       |
+| it-IT  | Italian         | Italy               | Euro          | Short      | ✓       |
+| ja-JP  | Japanese        | Japan               | 円            | East Asian | ✓       |
+| ka-GE  | Georgian        | Georgia             | ლარი          | Short      | ✓       |
+| km-KH  | Khmer           | Cambodia            | រៀល           | Khmer      | ✗       |
+| kn-IN  | Kannada         | India               | ರೂಪಾಯಿ        | Short      | ✓       |
+| ko-KR  | Korean          | South Korea         | 원            | Short      | ✓       |
+| lt-LT  | Lithuanian      | Lithuania           | Euras         | Short      | ✓       |
+| lv-LV  | Latvian         | Latvia              | Eiro          | Short      | ✓       |
+| mr-IN  | Marathi         | India               | रुपया         | Indian     | ✓       |
+| ms-MY  | Malay           | Malaysia            | Ringgit       | Short      | ✓       |
+| ms-SG  | Malay           | Singapore           | Dolar         | Short      | ✓       |
+| my-MM  | Burmese         | Myanmar             | ကျပ်          | Burmese    | ✗       |
+| nb-NO  | Norwegian       | Norway              | Krone         | Long       | ✓       |
+| nl-NL  | Dutch           | Netherlands         | Euro          | Short      | ✓       |
+| nl-SR  | Dutch           | Suriname            | Dollar        | Short      | ✓       |
+| np-NP  | Nepali          | Nepal               | रुपैयाँ       | Indian     | ✓       |
+| pa-IN  | Punjabi         | India               | ਰੁਪਇਆ         | Short      | ✓       |
+| pl-PL  | Polish          | Poland              | Złoty         | Short      | ✓       |
+| pt-AO  | Portuguese      | Angola              | Kwanza        | Short      | ✓       |
+| pt-BR  | Portuguese      | Brazil              | Real          | Short      | ✓       |
+| pt-MZ  | Portuguese      | Mozambique          | Metical       | Short      | ✓       |
+| pt-PT  | Portuguese      | Portugal            | Euro          | Short      | ✓       |
+| ro-RO  | Romanian        | Romania             | Leu           | Short      | ✓       |
+| ru-RU  | Russian         | Russia              | Рубль         | Short      | ✓       |
+| si-LK  | Sinhala         | Sri Lanka           | රුපියල        | Indian     | ✓       |
+| sk-SK  | Slovak          | Slovakia            | Euro          | Short      | ✓       |
+| sl-SI  | Slovenian       | Slovenia            | Euro          | Short      | ✓       |
+| sq-AL  | Albanian        | Albania             | Lek           | Short      | ✓       |
+| sr-RS  | Serbian         | Serbia              | Dinar         | Short      | ✓       |
+| sv-SE  | Swedish         | Sweden              | Krona         | Short      | ✓       |
+| sw-KE  | Swahili         | Kenya               | Shilingi      | Short      | ✓       |
+| sw-TZ  | Swahili         | Tanzania            | Shilingi      | Short      | ✓       |
+| ta-IN  | Tamil           | India               | ரூபாய்        | Short      | ✓       |
+| te-IN  | Telugu          | India               | రూపాయి        | Short      | ✓       |
+| th-TH  | Thai            | Thailand            | บาท           | Short      | ✓       |
+| tr-TR  | Turkish         | Turkey              | Lira          | Short      | ✓       |
+| uk-UA  | Ukrainian       | Ukraine             | Гривня        | Short      | ✓       |
+| ur-PK  | Urdu            | Pakistan            | روپیہ         | Short      | ✓       |
+| uz-UZ  | Uzbek           | Uzbekistan          | So'm          | Short      | ✓       |
+| vi-VN  | Vietnamese      | Vietnam             | Đồng          | Short      | ✓       |
+| yo-NG  | Yoruba          | Nigeria             | Naira         | Short      | ✓       |
+| zh-CN  | Chinese         | China               | 元            | East Asian | ✓       |
+| zh-TW  | Chinese         | Taiwan              | 元            | East Asian | ✓       |
+| zu-ZA  | Zulu            | South Africa        | Rand          | Short      | ✓       |
 
 **Scale Legend:**
+
 - **Short** — Western short scale (Million, Billion, Trillion...)
 - **Long** — European long scale (Million, Milliard, Billion, Billiard...)
 - **Indian** — Indian numbering (Lakh, Crore, Arab, Kharab...)
@@ -1106,8 +1103,8 @@ toWords.convert(1234.56, {
     name: 'Bitcoin',
     plural: 'Bitcoins',
     symbol: '₿',
-    fractionalUnit: { name: 'Satoshi', plural: 'Satoshis', symbol: 'sat' }
-  }
+    fractionalUnit: { name: 'Satoshi', plural: 'Satoshis', symbol: 'sat' },
+  },
 });
 // "One Thousand Two Hundred Thirty Four Bitcoins And Fifty Six Satoshis Only"
 ```

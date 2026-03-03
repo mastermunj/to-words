@@ -1,47 +1,72 @@
 {
   "name": "to-words",
   "version": "5.1.0",
-  "description": "Convert numbers to words in 100 locales with currency, ordinal, and BigInt support (TypeScript, ESM/CJS/UMD).",
+  "description": "Convert numbers to words in 116 locales with currency, ordinal, and BigInt support (TypeScript, ESM/CJS/UMD).",
   "keywords": [
-    "to words",
+    "amount in words",
+    "bigint",
+    "cheque amount in words",
+    "convert-numbers",
+    "converter",
+    "currency",
+    "currency amount to words",
+    "currency to words",
+    "i18n",
+    "international number to words",
+    "international number to words currency",
+    "internationalization",
+    "invoice amount in words",
+    "localization",
+    "multilingual",
+    "num2words",
+    "number",
+    "number to text",
     "number to words",
+    "number to words currency",
     "number-to-words",
     "numbers to words",
     "numbers-to-words",
-    "num2words",
-    "number to text",
-    "amount in words",
-    "currency to words",
-    "currency amount to words",
-    "invoice amount in words",
-    "cheque amount in words",
-    "number to words currency",
-    "international number to words",
-    "international number to words currency",
-    "convert-numbers",
-    "i18n",
-    "internationalization",
-    "localization",
-    "multilingual",
-    "bigint",
     "ordinal",
+    "to words",
     "typescript",
-    "converter",
-    "number",
-    "word",
-    "currency"
+    "word"
   ],
   "homepage": "https://github.com/mastermunj/to-words#readme",
   "bugs": {
     "url": "https://github.com/mastermunj/to-words/issues"
   },
+  "license": "MIT",
+  "author": "Munjal Dhamecha",
   "repository": {
     "type": "git",
     "url": "https://github.com/mastermunj/to-words.git"
   },
-  "license": "MIT",
-  "author": "Munjal Dhamecha",
+  "bin": {
+    "to-words": "./dist/cjs/cli.js"
+  },
+  "files": [
+    "dist/**/*"
+  ],
   "type": "module",
+  "main": "dist/cjs/ToWords.js",
+  "module": "dist/esm/ToWords.js",
+  "browser": "dist/umd/to-words.min.js",
+  "types": "dist/types/ToWords.d.ts",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "dist/types/locales/*"
+      ],
+      "types": [
+        "dist/types/types"
+      ],
+      "core": [
+        "dist/types/ToWordsCore"
+      ]
+    }
+  },
+  "unpkg": "dist/umd/to-words.min.js",
+  "jsdelivr": "dist/umd/to-words.min.js",
   "exports": {
     ".": {
       "types": "./dist/types/ToWords.d.ts",
@@ -64,31 +89,6 @@
       "require": "./dist/cjs/ToWordsCore.js"
     }
   },
-  "main": "dist/cjs/ToWords.js",
-  "jsdelivr": "dist/umd/to-words.min.js",
-  "unpkg": "dist/umd/to-words.min.js",
-  "module": "dist/esm/ToWords.js",
-  "browser": "dist/umd/to-words.min.js",
-  "types": "dist/types/ToWords.d.ts",
-  "typesVersions": {
-    "*": {
-      "*": [
-        "dist/types/locales/*"
-      ],
-      "types": [
-        "dist/types/types"
-      ],
-      "core": [
-        "dist/types/ToWordsCore"
-      ]
-    }
-  },
-  "bin": {
-    "to-words": "./dist/cjs/cli.js"
-  },
-  "files": [
-    "dist/**/*"
-  ],
   "scripts": {
     "bench": "vitest bench",
     "build": "npm run clean && npm run build:cjs && npm run build:esm && npm run build:umd && npm run build:pkgjson && npm run build:cli",
@@ -100,7 +100,9 @@
     "build:watch": "npm run build -- --watch",
     "clean": "rimraf dist coverage",
     "commit": "git-cz",
-    "lint": "eslint --max-warnings=0 .",
+    "format": "oxfmt --check --config ./node_modules/@mastermunj/oxc-config/.oxfmtrc.json .",
+    "format:fix": "oxfmt --write --config ./node_modules/@mastermunj/oxc-config/.oxfmtrc.json .",
+    "lint": "oxlint --type-aware .",
     "lint:fix": "npm run lint -- --fix",
     "prepare": "husky",
     "release": "commit-and-tag-version",
@@ -108,15 +110,10 @@
     "test": "vitest",
     "test:watch": "npm run test -- --watch"
   },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
-  },
   "devDependencies": {
-    "@commitlint/cli": "^20.4.2",
-    "@commitlint/config-conventional": "^20.4.2",
-    "@mastermunj/eslint-config": "^0.0.2",
+    "@commitlint/cli": "^20.4.3",
+    "@commitlint/config-conventional": "^20.4.3",
+    "@mastermunj/oxc-config": "^0.0.1",
     "@types/lodash": "^4.17.24",
     "@types/node": "^25.3.3",
     "@types/source-map-support": "^0.5.10",
@@ -124,16 +121,21 @@
     "commit-and-tag-version": "^12.6.1",
     "cz-conventional-changelog": "^3.3.0",
     "esbuild": "^0.27.3",
-    "eslint": "^9.39.2",
     "husky": "^9.1.7",
-    "lint-staged": "^16.3.1",
+    "lint-staged": "^16.3.2",
     "lodash": "^4.17.23",
-    "prettier": "^3.8.1",
+    "oxfmt": "^0.36.0",
+    "oxlint": "^1.51.0",
+    "oxlint-tsgolint": "^0.16.0",
     "rimraf": "^6.1.3",
-    "sort-package-json": "^3.6.1",
     "source-map-support": "^0.5.21",
     "typescript": "^5.9.3",
     "vitest": "^4.0.18"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   },
   "engines": {
     "node": ">=20.0.0"

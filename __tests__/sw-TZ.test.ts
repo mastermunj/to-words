@@ -36,7 +36,7 @@ describe('Test Locale', () => {
   });
 });
 
-const testIntegers = [
+const testIntegers: [number, string][] = [
   [0, 'Sifuri'],
   [137, 'Moja Mia Thelathini Saba'],
   [700, 'Saba Mia'],
@@ -139,7 +139,7 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
   });
 });
 
-const testFloats = [
+const testFloats: [number, string][] = [
   [0.0, 'Sifuri'],
   [0.04, 'Sifuri Nukta Sifuri Nne'],
   [0.0468, 'Sifuri Nukta Sifuri Nne Sita Nane'],

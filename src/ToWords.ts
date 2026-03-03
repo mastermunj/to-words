@@ -51,7 +51,9 @@ function readRawLocale(): string {
   // Browser — access through globalThis so it works in all environments
   try {
     const nav = (globalThis as { navigator?: { language?: string } }).navigator;
-    if (nav?.language) return nav.language;
+    if (nav?.language) {
+      return nav.language;
+    }
   } catch {
     // noop — browser globals unavailable
   }
@@ -59,7 +61,9 @@ function readRawLocale(): string {
   // Node.js / Deno / Bun / CF Workers
   try {
     const locale = Intl.DateTimeFormat().resolvedOptions().locale;
-    if (locale) return locale;
+    if (locale) {
+      return locale;
+    }
   } catch {
     // noop — Intl unavailable
   }
@@ -145,23 +149,31 @@ function getCachedInstance(localeCode?: string): ToWords {
  */
 export function detectLocale(fallback: string = DefaultToWordsOptions.localeCode!): string {
   const candidate = _localeDetector ? _localeDetector() : readRawLocale();
-  if (!candidate) return fallback;
+  if (!candidate) {
+    return fallback;
+  }
 
   const parts = candidate.split('-');
 
   // 1. Exact match
-  if (candidate in LOCALES) return candidate;
+  if (candidate in LOCALES) {
+    return candidate;
+  }
 
   // 2. Normalise: strip script tag, upper-case region (e.g. zh-Hant-TW → zh-TW)
   if (parts.length >= 2) {
     const normalized = `${parts[0]}-${parts[parts.length - 1].toUpperCase()}`;
-    if (normalized in LOCALES) return normalized;
+    if (normalized in LOCALES) {
+      return normalized;
+    }
   }
 
   // 3. Language-prefix fallback (e.g. sw-ZZ → sw-KE)
   const lang = parts[0].toLowerCase();
   const match = Object.keys(LOCALES).find((code) => code.toLowerCase().startsWith(`${lang}-`));
-  if (match) return match;
+  if (match) {
+    return match;
+  }
 
   return fallback;
 }

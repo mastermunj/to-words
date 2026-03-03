@@ -14,8 +14,8 @@ function assert(label, value) {
   console.log(`  ✓ ${label}: ${value}`);
 }
 
-assert('toWords(1234)',     toWords(1234,  { localeCode: 'en-IN' }));
-assert('toOrdinal(3)',      toOrdinal(3,   { localeCode: 'en-IN' }));
-assert('toCurrency(10.5)',  toCurrency(10.5, { localeCode: 'en-IN' }));
+assert('toWords(1234)', toWords(1234, { localeCode: 'en-IN' }));
+assert('toOrdinal(3)', toOrdinal(3, { localeCode: 'en-IN' }));
+assert('toCurrency(10.5)', toCurrency(10.5, { localeCode: 'en-IN' }));
 
 console.log('\n✅ All runtime smoke checks passed');

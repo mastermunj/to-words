@@ -36,7 +36,7 @@ describe('Test Locale', () => {
   });
 });
 
-const testIntegers = [
+const testIntegers: [number, string][] = [
   [0, '영'],
   [137, '일백삼십칠'],
   [700, '칠백'],
@@ -130,7 +130,7 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
   });
 });
 
-const testFloats = [
+const testFloats: [number, string][] = [
   [0.0, '영'],
   [0.04, '영점영사'],
   [0.0468, '영점영사육팔'],

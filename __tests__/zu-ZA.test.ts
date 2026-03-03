@@ -39,7 +39,7 @@ describe('Test Locale', () => {
 // NOTE: The connector particle (Na) used for compound numbers (21–99) is an
 // approximation. Fully correct Zulu connector forms (nanye, nambili, etc.) require
 // explicit 21–99 mappings, tracked in docs/locale-backlog.md.
-const testIntegers = [
+const testIntegers: [number, string][] = [
   [0, 'Iqanda'],
   [1, 'Kunye'],
   [2, 'Kubili'],
@@ -108,7 +108,9 @@ describe('Test Integers with options = {}', () => {
 describe('Test Negative Integers with options = {}', () => {
   const testNegativeIntegers = cloneDeep(testIntegers);
   testNegativeIntegers.map((row, i) => {
-    if (i === 0) return;
+    if (i === 0) {
+      return;
+    }
     row[0] = -row[0];
     row[1] = `Minus ${row[1]}`;
   });
@@ -154,7 +156,7 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
   });
 });
 
-const testFloats = [
+const testFloats: [number, string][] = [
   [0.5, 'Iqanda Iphoyinti Kuhlanu'],
   [1.5, 'Kunye Iphoyinti Kuhlanu'],
   [12.34, 'Ishumi Nambili Iphoyinti Amashumi Amathathu Na Kune'],

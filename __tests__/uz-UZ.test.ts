@@ -36,7 +36,7 @@ describe('Test Locale', () => {
   });
 });
 
-const testIntegers = [
+const testIntegers: [number, string][] = [
   [0, 'Nol'],
   [1, 'Bir'],
   [2, 'Ikki'],
@@ -102,7 +102,9 @@ describe('Test Integers with options = {}', () => {
 describe('Test Negative Integers with options = {}', () => {
   const testNegativeIntegers = cloneDeep(testIntegers);
   testNegativeIntegers.map((row, i) => {
-    if (i === 0) return;
+    if (i === 0) {
+      return;
+    }
     row[0] = -row[0];
     row[1] = `Minus ${row[1]}`;
   });
@@ -159,7 +161,7 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
   });
 });
 
-const testFloats = [
+const testFloats: [number, string][] = [
   [0.5, 'Nol Vergul Besh'],
   [1.5, 'Bir Vergul Besh'],
   [10.5, "O'n Vergul Besh"],

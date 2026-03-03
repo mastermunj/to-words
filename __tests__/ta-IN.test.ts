@@ -36,7 +36,7 @@ describe('Test Locale', () => {
   });
 });
 
-const testIntegers = [
+const testIntegers: [number, string][] = [
   [0, 'பூஜ்ஜியம்'],
   [137, 'ஒன்று நூறு முப்பத்தி ஏழு'],
   [700, 'ஏழு நூறு'],
@@ -111,7 +111,7 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
   });
 });
 
-const testFloats = [
+const testFloats: [number, string][] = [
   [0.0, 'பூஜ்ஜியம்'],
   [0.04, 'பூஜ்ஜியம் புள்ளி பூஜ்ஜியம் நான்கு'],
   [0.0468, 'பூஜ்ஜியம் புள்ளி பூஜ்ஜியம் நான்கு ஆறு எட்டு'],

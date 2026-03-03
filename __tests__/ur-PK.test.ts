@@ -32,7 +32,7 @@ describe('Test Locale', () => {
   });
 });
 
-const testIntegers = [
+const testIntegers: [number, string][] = [
   [0, 'صفر'],
   [137, 'ایک سو سینتیس'],
   [700, 'سات سو'],
@@ -60,7 +60,9 @@ describe('Test Integers with options = {}', () => {
 describe('Test Negative Integers with options = {}', () => {
   const testNegativeIntegers = cloneDeep(testIntegers);
   testNegativeIntegers.map((row, i) => {
-    if (i === 0) return; // skip zero
+    if (i === 0) {
+      return;
+    } // skip zero
     row[0] = -row[0];
     row[1] = `منفی ${row[1]}`;
   });
@@ -119,7 +121,7 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
   });
 });
 
-const testFloats = [
+const testFloats: [number, string][] = [
   [0.0, 'صفر'],
   [0.04, 'صفر اعشاریہ صفر چار'],
   [0.0468, 'صفر اعشاریہ صفر چار چھ آٹھ'],

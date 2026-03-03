@@ -3,9 +3,9 @@ name: Scorecard supply-chain security
 on:
   branch_protection_rule:
   schedule:
-    - cron: '0 0 * * 1'  # Every Monday at midnight UTC
+    - cron: '0 0 * * 1' # Every Monday at midnight UTC
   push:
-    branches: [ main ]
+    branches: [main]
 
 permissions: read-all
 

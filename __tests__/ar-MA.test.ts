@@ -36,7 +36,7 @@ describe('Test Locale', () => {
   });
 });
 
-const testIntegers = [
+const testIntegers: [number, string][] = [
   [0, 'صفر'],
   [1, 'واحد'],
   [2, 'اثنان'],
@@ -121,7 +121,7 @@ describe('Test Negative Integers with options = {}', () => {
   });
 });
 
-const testFloats = [
+const testFloats: [number, string][] = [
   [0.0, 'صفر'],
   [0.4, 'صفر فاصلة أربعة'],
   [0.04, 'صفر فاصلة صفر أربعة'],

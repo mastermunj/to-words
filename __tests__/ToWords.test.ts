@@ -1,4 +1,4 @@
-import { describe, expect, test, vi, afterEach, beforeEach } from 'vitest';
+import { describe, expect, test, vi, afterEach } from 'vitest';
 import {
   ToWords,
   toWords as toWordsFn,

@@ -13,15 +13,15 @@ Current as of **v5.x** — check [npm](https://www.npmjs.com/package/to-words) f
 
 ### What changed
 
-| Area | v4 | v5 |
-|---|---|---|
-| Class API | `new ToWords({ localeCode })` → `.convert()` / `.toOrdinal()` | **Unchanged** — fully backwards-compatible |
-| Functional helpers | Not available | `toWords()`, `toOrdinal()`, `toCurrency()` named exports |
-| Auto locale detection | Not available | `detectLocale()` — reads `navigator.language` / `Intl` |
-| Locale detector override | Not available | `setLocaleDetector(fn)` — for SSR, tests, CF Workers |
-| Per-locale tree-shaking | `import { ToWords } from 'to-words/en-US'` | Same, plus per-locale `toWords` / `toOrdinal` / `toCurrency` exports |
-| BigInt support | Not available | `convert(1000000000000n)` |
-| ESM | Not default | Native ESM with CJS interop |
+| Area                     | v4                                                            | v5                                                                   |
+| ------------------------ | ------------------------------------------------------------- | -------------------------------------------------------------------- |
+| Class API                | `new ToWords({ localeCode })` → `.convert()` / `.toOrdinal()` | **Unchanged** — fully backwards-compatible                           |
+| Functional helpers       | Not available                                                 | `toWords()`, `toOrdinal()`, `toCurrency()` named exports             |
+| Auto locale detection    | Not available                                                 | `detectLocale()` — reads `navigator.language` / `Intl`               |
+| Locale detector override | Not available                                                 | `setLocaleDetector(fn)` — for SSR, tests, CF Workers                 |
+| Per-locale tree-shaking  | `import { ToWords } from 'to-words/en-US'`                    | Same, plus per-locale `toWords` / `toOrdinal` / `toCurrency` exports |
+| BigInt support           | Not available                                                 | `convert(1000000000000n)`                                            |
+| ESM                      | Not default                                                   | Native ESM with CJS interop                                          |
 
 ### No breaking changes
 
@@ -32,7 +32,7 @@ If you use the class-based API, **nothing breaks**. The upgrade is additive.
 import { ToWords } from 'to-words';
 const tw = new ToWords({ localeCode: 'en-IN' });
 tw.convert(1234); // 'One Thousand Two Hundred Thirty Four'
-tw.toOrdinal(3);  // 'Third'
+tw.toOrdinal(3); // 'Third'
 ```
 
 ### New: functional helpers (v5)
@@ -42,16 +42,16 @@ v5 adds three named function exports that cache instances internally — no `new
 ```js
 import { toWords, toOrdinal, toCurrency } from 'to-words';
 
-toWords(1234, { localeCode: 'en-US' });               // 'One Thousand Two Hundred Thirty Four'
-toOrdinal(21, { localeCode: 'en-US' });               // 'Twenty First'
-toCurrency(1234.56, { localeCode: 'en-US' });         // 'One Thousand Two Hundred Thirty Four Dollars And Fifty Six Cents Only'
+toWords(1234, { localeCode: 'en-US' }); // 'One Thousand Two Hundred Thirty Four'
+toOrdinal(21, { localeCode: 'en-US' }); // 'Twenty First'
+toCurrency(1234.56, { localeCode: 'en-US' }); // 'One Thousand Two Hundred Thirty Four Dollars And Fifty Six Cents Only'
 ```
 
 When `localeCode` is omitted, the runtime locale is auto-detected:
 
 ```js
 // In a browser set to fr-FR, or a Node.js process with LANG=fr_FR.UTF-8:
-toWords(100);   // 'Cent' (auto-detected fr-FR)
+toWords(100); // 'Cent' (auto-detected fr-FR)
 ```
 
 ### New: locale auto-detection (v5)
@@ -60,8 +60,8 @@ toWords(100);   // 'Cent' (auto-detected fr-FR)
 import { detectLocale, setLocaleDetector } from 'to-words';
 
 // Inspect what the auto-detector would return
-detectLocale();          // e.g. 'en-US' (from navigator / Intl)
-detectLocale('en-GB');   // custom fallback when nothing matches
+detectLocale(); // e.g. 'en-US' (from navigator / Intl)
+detectLocale('en-GB'); // custom fallback when nothing matches
 
 // Server / SSR: derive locale from the request, not the process
 setLocaleDetector(() => req.headers['accept-language']?.split(',')[0] ?? 'en-US');
@@ -80,22 +80,22 @@ Each locale entry point now also exports `toWords`, `toOrdinal`, and `toCurrency
 // ~3–4 KB gzipped: only en-US locale bundled, no localeCode arg needed
 import { toWords, toOrdinal, toCurrency } from 'to-words/en-US';
 
-toWords(1234);            // 'One Thousand Two Hundred Thirty Four'
-toOrdinal(21);            // 'Twenty First'
-toCurrency(99.50);        // 'Ninety Nine Dollars And Fifty Cents Only'
+toWords(1234); // 'One Thousand Two Hundred Thirty Four'
+toOrdinal(21); // 'Twenty First'
+toCurrency(99.5); // 'Ninety Nine Dollars And Fifty Cents Only'
 ```
 
 ---
 
 ## Quick Comparison: `to-words` vs alternatives
 
-| Package | Scope | Maintenance | Locales | Currency | Ordinal | BigInt |
-|---|---|---|---|---|---|---|
-| **`to-words`** | Multi-locale | Active | 116 locales | Yes | Yes | Yes |
-| `number-to-words` | English only | Inactive | 1 | No | Yes (suffix) | Limited |
-| `written-number` | Multi-language | Inactive | Multiple | No | No | No |
-| `num-words` | Indian English | Inactive | 1 | No | No | No |
-| `n2words` | Multi-language | Active | 52 | No | Language-specific | Yes |
+| Package           | Scope          | Maintenance | Locales     | Currency | Ordinal           | BigInt  |
+| ----------------- | -------------- | ----------- | ----------- | -------- | ----------------- | ------- |
+| **`to-words`**    | Multi-locale   | Active      | 116 locales | Yes      | Yes               | Yes     |
+| `number-to-words` | English only   | Inactive    | 1           | No       | Yes (suffix)      | Limited |
+| `written-number`  | Multi-language | Inactive    | Multiple    | No       | No                | No      |
+| `num-words`       | Indian English | Inactive    | 1           | No       | No                | No      |
+| `n2words`         | Multi-language | Active      | 52          | No       | Language-specific | Yes     |
 
 ---
 
@@ -110,13 +110,13 @@ toCurrency(99.50);        // 'Ninety Nine Dollars And Fifty Cents Only'
 ```js
 // Before
 const converter = require('number-to-words');
-converter.toWords(21);          // 'twenty-one'
-converter.toWordsOrdinal(21);   // 'twenty-first'
+converter.toWords(21); // 'twenty-one'
+converter.toWordsOrdinal(21); // 'twenty-first'
 
 // After — nearly identical call site, proper casing
 import { toWords, toOrdinal } from 'to-words';
 
-toWords(21, { localeCode: 'en-US' });    // 'Twenty One'
+toWords(21, { localeCode: 'en-US' }); // 'Twenty One'
 toOrdinal(21, { localeCode: 'en-US' }); // 'Twenty First'
 ```
 
@@ -125,8 +125,8 @@ Or use a per-locale import so you never have to pass `localeCode`:
 ```js
 import { toWords, toOrdinal } from 'to-words/en-US';
 
-toWords(21);    // 'Twenty One'
-toOrdinal(21);  // 'Twenty First'
+toWords(21); // 'Twenty One'
+toOrdinal(21); // 'Twenty First'
 ```
 
 ### Class-based equivalent
@@ -135,8 +135,8 @@ toOrdinal(21);  // 'Twenty First'
 import { ToWords } from 'to-words';
 const tw = new ToWords({ localeCode: 'en-US' });
 
-tw.convert(21);    // 'Twenty One'
-tw.toOrdinal(21);  // 'Twenty First'
+tw.convert(21); // 'Twenty One'
+tw.toOrdinal(21); // 'Twenty First'
 ```
 
 ### Key differences
@@ -154,7 +154,7 @@ tw.toOrdinal(21);  // 'Twenty First'
 ```js
 const writtenNumber = require('written-number');
 
-writtenNumber(1234);               // 'one thousand two hundred and thirty-four'
+writtenNumber(1234); // 'one thousand two hundred and thirty-four'
 writtenNumber(1234, { lang: 'es' });
 ```
 
@@ -226,7 +226,7 @@ function convertInvoiceNumber(value) {
 ```js
 import { en, es } from 'n2words';
 
-en(42);  // 'forty-two'
+en(42); // 'forty-two'
 es(42);
 ```
 
@@ -287,14 +287,14 @@ es.convert(42);
 
 When migrating, verify at least these inputs in your app tests:
 
-| Input | Notes |
-|---|---|
-| `0`, `1`, `11`, `21`, `99`, `100`, `101`, `999`, `1000` | Core range |
-| `-1`, `-101` | Negatives |
-| `1.01`, `10.50`, `0.04` | Decimals / currency sub-units |
-| `9007199254740992n` | Beyond `MAX_SAFE_INTEGER` (BigInt) |
-| Currency amount with your locale | e.g. `toCurrency(1.99, { localeCode: 'en-US' })` |
-| Ordinal with your locale | e.g. `toOrdinal(21, { localeCode: 'en-US' })` |
+| Input                                                   | Notes                                            |
+| ------------------------------------------------------- | ------------------------------------------------ |
+| `0`, `1`, `11`, `21`, `99`, `100`, `101`, `999`, `1000` | Core range                                       |
+| `-1`, `-101`                                            | Negatives                                        |
+| `1.01`, `10.50`, `0.04`                                 | Decimals / currency sub-units                    |
+| `9007199254740992n`                                     | Beyond `MAX_SAFE_INTEGER` (BigInt)               |
+| Currency amount with your locale                        | e.g. `toCurrency(1.99, { localeCode: 'en-US' })` |
+| Ordinal with your locale                                | e.g. `toOrdinal(21, { localeCode: 'en-US' })`    |
 
 ## Need Help?
 

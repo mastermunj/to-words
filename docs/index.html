@@ -1,1607 +1,1754 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>to-words | Convert Numbers and Currency Amounts in 116 Locales</title>
-  <meta name="description" content="Convert numbers and currency amounts into words across 116 locales with BigInt and ordinal support. Try the interactive demo.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔢</text></svg>">
-  <style>
-    :root {
-      --primary: #667eea;
-      --primary-dark: #5a67d8;
-      --secondary: #764ba2;
-      --success: #48bb78;
-      --error: #f56565;
-      --bg-dark: #1a202c;
-      --text-light: rgba(255, 255, 255, 0.9);
-      --card-bg: white;
-      --card-text: #333;
-      --input-border: #e0e0e0;
-      --input-bg: white;
-    }
-    
-    [data-theme="dark"] {
-      --card-bg: #2d3748;
-      --card-text: #e2e8f0;
-      --input-border: #4a5568;
-      --input-bg: #1a202c;
-    }
-    
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-      min-height: 100vh;
-      padding: 1.5rem;
-      overflow-x: hidden;
-    }
-    
-    /* Animated background particles */
-    .particles {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      overflow: hidden;
-      z-index: 0;
-    }
-    
-    .particle {
-      position: absolute;
-      font-size: 1.5rem;
-      opacity: 0.15;
-      animation: float 20s infinite linear;
-    }
-    
-    @keyframes float {
-      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-      10% { opacity: 0.15; }
-      90% { opacity: 0.15; }
-      100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
-    }
-    
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      position: relative;
-      z-index: 1;
-    }
-    
-    header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-    
-    h1 {
-      color: white;
-      font-size: 3rem;
-      font-weight: 700;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
-      animation: fadeInDown 0.6s ease-out;
-    }
-    
-    @keyframes fadeInDown {
-      from { opacity: 0; transform: translateY(-20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .tagline {
-      color: var(--text-light);
-      font-size: 1.2rem;
-      margin-top: 0.5rem;
-      animation: fadeInUp 0.6s ease-out 0.2s both;
-    }
-    
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .badges {
-      display: flex;
-      justify-content: center;
-      gap: 0.5rem;
-      margin-top: 1rem;
-      flex-wrap: wrap;
-      animation: fadeIn 0.6s ease-out 0.4s both;
-    }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    
-    .badge {
-      background: rgba(255,255,255,0.2);
-      color: white;
-      padding: 0.3rem 0.8rem;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      backdrop-filter: blur(10px);
-    }
-    
-    .card {
-      background: white;
-      border-radius: 24px;
-      padding: 2rem;
-      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
-      animation: scaleIn 0.5s ease-out 0.3s both;
-    }
-    
-    @keyframes scaleIn {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
-    }
-    
-    .input-section {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 1rem;
-      align-items: end;
-      margin-bottom: 1.5rem;
-    }
-    
-    @media (max-width: 600px) {
-      .input-section { grid-template-columns: 1fr; }
-      h1 { font-size: 2rem; }
-    }
-    
-    .input-group {
-      position: relative;
-    }
-    
-    label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: #333;
-      font-size: 0.9rem;
-    }
-    
-    .number-input {
-      width: 100%;
-      padding: 1rem 1.25rem;
-      font-size: 1.5rem;
-      font-weight: 600;
-      border: 3px solid #e0e0e0;
-      border-radius: 12px;
-      transition: all 0.3s;
-      font-family: 'SF Mono', Monaco, 'Courier New', monospace;
-    }
-    
-    .number-input:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
-    }
-    
-    .number-input.shake {
-      animation: shake 0.5s ease-in-out;
-    }
-    
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      20%, 60% { transform: translateX(-5px); }
-      40%, 80% { transform: translateX(5px); }
-    }
-    
-    .speak-btn-wrapper {
-      position: relative;
-    }
-    
-    .speak-btn {
-      padding: 1rem 1.5rem;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-size: 1.5rem;
-      cursor: pointer;
-      transition: all 0.3s;
-      height: fit-content;
-    }
-    
-    .speak-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
-    }
-    
-    .speak-btn:active {
-      transform: scale(0.98);
-    }
-    
-    .speak-btn.speaking {
-      animation: pulse 1s infinite;
-    }
-    
-    @keyframes pulse {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4); }
-      50% { box-shadow: 0 0 0 15px rgba(102, 126, 234, 0); }
-    }
-    
-    .controls {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-    
-    select {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      font-size: 1rem;
-      border: 2px solid #e0e0e0;
-      border-radius: 10px;
-      background: white;
-      cursor: pointer;
-      transition: border-color 0.2s;
-    }
-    
-    select:focus {
-      outline: none;
-      border-color: var(--primary);
-    }
-    
-    .toggle-group {
-      display: flex;
-      gap: 0.5rem;
-    }
-    
-    .toggle-btn {
-      flex: 1;
-      padding: 0.75rem;
-      border: 2px solid #e0e0e0;
-      background: white;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      font-weight: 500;
-      transition: all 0.2s;
-    }
-    
-    .toggle-btn.active {
-      background: var(--primary);
-      border-color: var(--primary);
-      color: white;
-    }
-    
-    .toggle-btn:hover:not(.active) {
-      border-color: var(--primary);
-      color: var(--primary);
-    }
-    
-    .result-container {
-      position: relative;
-    }
-    
-    .result {
-      background: linear-gradient(135deg, var(--bg-dark) 0%, #2d3748 100%);
-      color: white;
-      padding: 2rem;
-      border-radius: 16px;
-      min-height: 120px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      font-size: 1.4rem;
-      line-height: 1.8;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .result::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-      transition: left 0.5s;
-    }
-    
-    .result.updating::before {
-      left: 100%;
-    }
-    
-    .result.error {
-      background: linear-gradient(135deg, var(--error) 0%, #c53030 100%);
-    }
-    
-    .result-text {
-      transition: opacity 0.2s;
-    }
-    
-    .copy-btn {
-      position: absolute;
-      top: 0.75rem;
-      right: 0.75rem;
-      padding: 0.5rem 0.75rem;
-      background: rgba(255,255,255,0.1);
-      border: none;
-      border-radius: 8px;
-      color: rgba(255,255,255,0.7);
-      cursor: pointer;
-      font-size: 0.8rem;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-    }
-    
-    .copy-btn:hover {
-      background: rgba(255,255,255,0.2);
-      color: white;
-    }
-    
-    .copy-btn.copied {
-      background: var(--success);
-      color: white;
-    }
-    
-    .examples {
-      margin-top: 2rem;
-      padding-top: 1.5rem;
-      border-top: 2px solid #f0f0f0;
-    }
-    
-    .examples h3 {
-      color: #666;
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 1rem;
-    }
-    
-    .example-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 0.75rem;
-    }
-    
-    .example-btn {
-      padding: 0.75rem 1rem;
-      background: #f7fafc;
-      border: 2px solid #e2e8f0;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      transition: all 0.2s;
-      text-align: left;
-    }
-    
-    .example-btn:hover {
-      border-color: var(--primary);
-      background: #eef2ff;
-      transform: translateY(-2px);
-    }
-    
-    .example-btn .num {
-      font-weight: 700;
-      font-family: 'SF Mono', Monaco, 'Courier New', monospace;
-      color: var(--primary);
-      display: block;
-    }
-    
-    .example-btn .desc {
-      font-size: 0.75rem;
-      color: #718096;
-      margin-top: 0.25rem;
-    }
-    
-    .stats-bar {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      margin-top: 2rem;
-      flex-wrap: wrap;
-    }
-    
-    .stat {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: white;
-      font-size: 0.85rem;
-      background: rgba(255,255,255,0.15);
-      padding: 0.5rem 1rem;
-      border-radius: 30px;
-      backdrop-filter: blur(10px);
-    }
-    
-    .stat-icon {
-      font-size: 1.1rem;
-    }
-    
-    footer {
-      text-align: center;
-      margin-top: 2rem;
-      color: rgba(255, 255, 255, 0.8);
-    }
-    
-    footer a {
-      color: white;
-      text-decoration: none;
-      font-weight: 500;
-      transition: opacity 0.2s;
-    }
-    
-    footer a:hover {
-      opacity: 0.8;
-    }
-    
-    .install-cmd {
-      background: rgba(0,0,0,0.3);
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      font-family: 'SF Mono', Monaco, 'Courier New', monospace;
-      font-size: 0.85rem;
-      display: inline-block;
-      margin-top: 1rem;
-    }
-    
-    /* Locale flag indicator */
-    .locale-info {
-      font-size: 0.8rem;
-      color: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-      margin-top: 0.5rem;
-      text-align: right;
-    }
-    
-    /* Searchable locale dropdown */
-    .locale-search-wrapper {
-      position: relative;
-    }
-    
-    .locale-search {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      padding-right: 2.5rem;
-      font-size: 1rem;
-      border: 2px solid #e0e0e0;
-      border-radius: 10px;
-      background: white;
-      cursor: text;
-      transition: border-color 0.2s;
-    }
-    
-    .locale-search:focus {
-      outline: none;
-      border-color: var(--primary);
-    }
-    
-    .locale-search-wrapper::after {
-      content: '▼';
-      position: absolute;
-      right: 1rem;
-      top: 50%;
-      transform: translateY(-50%);
-      pointer-events: none;
-      color: #666;
-      font-size: 0.7rem;
-    }
-    
-    .locale-dropdown {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      max-height: 300px;
-      overflow-y: auto;
-      background: white;
-      border: 2px solid var(--primary);
-      border-top: none;
-      border-radius: 0 0 10px 10px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-      z-index: 100;
-      display: none;
-    }
-    
-    .locale-dropdown.show {
-      display: block;
-    }
-    
-    .locale-option {
-      padding: 0.75rem 1rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      border-bottom: 1px solid #f0f0f0;
-      transition: background 0.15s;
-    }
-    
-    .locale-option:last-child {
-      border-bottom: none;
-    }
-    
-    .locale-option:hover,
-    .locale-option.highlighted {
-      background: #eef2ff;
-    }
-    
-    .locale-option.selected {
-      background: var(--primary);
-      color: white;
-    }
-    
-    .locale-option .flag {
-      font-size: 1.3rem;
-    }
-    
-    .locale-option .details {
-      flex: 1;
-    }
-    
-    .locale-option .lang-country {
-      font-weight: 500;
-    }
-    
-    .locale-option .code {
-      font-size: 0.8rem;
-      color: #718096;
-      font-family: 'SF Mono', Monaco, 'Courier New', monospace;
-    }
-    
-    .locale-option.selected .code {
-      color: rgba(255,255,255,0.8);
-    }
-    
-    .no-results {
-      padding: 1rem;
-      text-align: center;
-      color: #718096;
-    }
-    
-    /* Speech tooltip for errors/warnings */
-    .speech-tooltip {
-      position: absolute;
-      top: 100%;
-      right: 0;
-      margin-top: 0.5rem;
-      padding: 0.5rem 0.75rem;
-      background: #2d3748;
-      color: white;
-      font-size: 0.8rem;
-      border-radius: 8px;
-      white-space: nowrap;
-      z-index: 50;
-      animation: fadeIn 0.2s ease-out;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-    
-    .speech-tooltip::before {
-      content: '';
-      position: absolute;
-      top: -6px;
-      right: 1rem;
-      border-left: 6px solid transparent;
-      border-right: 6px solid transparent;
-      border-bottom: 6px solid #2d3748;
-    }
-    
-    .speech-tooltip.fade-out {
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-    
-    /* Dark mode toggle */
-    .theme-toggle {
-      position: fixed;
-      top: 1rem;
-      right: 1rem;
-      padding: 0.75rem;
-      background: rgba(255,255,255,0.2);
-      border: none;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 1.25rem;
-      z-index: 100;
-      backdrop-filter: blur(10px);
-      transition: all 0.3s;
-    }
-    
-    .theme-toggle:hover {
-      background: rgba(255,255,255,0.3);
-      transform: scale(1.1);
-    }
-    
-    /* Dark mode card styles */
-    [data-theme="dark"] .card {
-      background: var(--card-bg);
-      color: var(--card-text);
-    }
-    
-    [data-theme="dark"] label {
-      color: var(--card-text);
-    }
-    
-    [data-theme="dark"] .number-input,
-    [data-theme="dark"] .locale-search {
-      background: var(--input-bg);
-      border-color: var(--input-border);
-      color: var(--card-text);
-    }
-    
-    [data-theme="dark"] .toggle-btn {
-      background: var(--input-bg);
-      border-color: var(--input-border);
-      color: var(--card-text);
-    }
-    
-    [data-theme="dark"] .example-btn {
-      background: var(--input-bg);
-      border-color: var(--input-border);
-      color: var(--card-text);
-    }
-    
-    [data-theme="dark"] .example-btn .desc {
-      color: #a0aec0;
-    }
-    
-    [data-theme="dark"] .locale-dropdown {
-      background: var(--input-bg);
-    }
-    
-    [data-theme="dark"] .locale-option {
-      border-color: var(--input-border);
-    }
-    
-    [data-theme="dark"] .locale-option:hover,
-    [data-theme="dark"] .locale-option.highlighted {
-      background: #4a5568;
-    }
-    
-    [data-theme="dark"] .locale-option .code {
-      color: #a0aec0;
-    }
-    
-    [data-theme="dark"] .examples {
-      border-color: var(--input-border);
-    }
-    
-    /* Action buttons row */
-    .action-buttons {
-      display: flex;
-      gap: 0.5rem;
-    }
-    
-    .action-btn {
-      padding: 1rem;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-size: 1.25rem;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-    
-    .action-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
-    }
-    
-    .action-btn:active {
-      transform: scale(0.98);
-    }
-    
-    /* Result stats */
-    .result-stats {
-      display: flex;
-      gap: 1rem;
-      margin-top: 0.75rem;
-      font-size: 0.75rem;
-      color: #718096;
-      justify-content: space-between;
-      flex-wrap: wrap;
-    }
-    
-    .result-stats .stat-item {
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-    }
-    
-    [data-theme="dark"] .result-stats {
-      color: #a0aec0;
-    }
-    
-    /* Share button in result */
-    .share-btn {
-      position: absolute;
-      top: 0.75rem;
-      left: 0.75rem;
-      padding: 0.5rem 0.75rem;
-      background: rgba(255,255,255,0.1);
-      border: none;
-      border-radius: 8px;
-      color: rgba(255,255,255,0.7);
-      cursor: pointer;
-      font-size: 0.8rem;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-    }
-    
-    .share-btn:hover {
-      background: rgba(255,255,255,0.2);
-      color: white;
-    }
-    
-    .share-btn.shared {
-      background: var(--success);
-      color: white;
-    }
-    
-    /* Keyboard shortcuts hint */
-    .shortcuts-hint {
-      position: fixed;
-      bottom: 1rem;
-      right: 1rem;
-      font-size: 0.7rem;
-      color: rgba(255,255,255,0.6);
-      text-align: right;
-      z-index: 50;
-    }
-    
-    .shortcuts-hint kbd {
-      background: rgba(255,255,255,0.2);
-      padding: 0.15rem 0.4rem;
-      border-radius: 4px;
-      font-family: inherit;
-      margin: 0 0.1rem;
-    }
-    
-    @media (max-width: 600px) {
-      .shortcuts-hint {
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>to-words | Convert Numbers and Currency Amounts in 116 Locales</title>
+    <meta
+      name="description"
+      content="Convert numbers and currency amounts into words across 116 locales with BigInt and ordinal support. Try the interactive demo."
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔢</text></svg>"
+    />
+    <style>
+      :root {
+        --primary: #667eea;
+        --primary-dark: #5a67d8;
+        --secondary: #764ba2;
+        --success: #48bb78;
+        --error: #f56565;
+        --bg-dark: #1a202c;
+        --text-light: rgba(255, 255, 255, 0.9);
+        --card-bg: white;
+        --card-text: #333;
+        --input-border: #e0e0e0;
+        --input-bg: white;
+      }
+
+      [data-theme='dark'] {
+        --card-bg: #2d3748;
+        --card-text: #e2e8f0;
+        --input-border: #4a5568;
+        --input-bg: #1a202c;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        min-height: 100vh;
+        padding: 1.5rem;
+        overflow-x: hidden;
+      }
+
+      /* Animated background particles */
+      .particles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 0;
+      }
+
+      .particle {
+        position: absolute;
+        font-size: 1.5rem;
+        opacity: 0.15;
+        animation: float 20s infinite linear;
+      }
+
+      @keyframes float {
+        0% {
+          transform: translateY(100vh) rotate(0deg);
+          opacity: 0;
+        }
+        10% {
+          opacity: 0.15;
+        }
+        90% {
+          opacity: 0.15;
+        }
+        100% {
+          transform: translateY(-100vh) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+      }
+
+      header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      h1 {
+        color: white;
+        font-size: 3rem;
+        font-weight: 700;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        animation: fadeInDown 0.6s ease-out;
+      }
+
+      @keyframes fadeInDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .tagline {
+        color: var(--text-light);
+        font-size: 1.2rem;
+        margin-top: 0.5rem;
+        animation: fadeInUp 0.6s ease-out 0.2s both;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .badges {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        flex-wrap: wrap;
+        animation: fadeIn 0.6s ease-out 0.4s both;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .badge {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        backdrop-filter: blur(10px);
+      }
+
+      .card {
+        background: white;
+        border-radius: 24px;
+        padding: 2rem;
+        box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+        animation: scaleIn 0.5s ease-out 0.3s both;
+      }
+
+      @keyframes scaleIn {
+        from {
+          opacity: 0;
+          transform: scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .input-section {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 1rem;
+        align-items: end;
+        margin-bottom: 1.5rem;
+      }
+
+      @media (max-width: 600px) {
+        .input-section {
+          grid-template-columns: 1fr;
+        }
+        h1 {
+          font-size: 2rem;
+        }
+      }
+
+      .input-group {
+        position: relative;
+      }
+
+      label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #333;
+        font-size: 0.9rem;
+      }
+
+      .number-input {
+        width: 100%;
+        padding: 1rem 1.25rem;
+        font-size: 1.5rem;
+        font-weight: 600;
+        border: 3px solid #e0e0e0;
+        border-radius: 12px;
+        transition: all 0.3s;
+        font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+      }
+
+      .number-input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+      }
+
+      .number-input.shake {
+        animation: shake 0.5s ease-in-out;
+      }
+
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        20%,
+        60% {
+          transform: translateX(-5px);
+        }
+        40%,
+        80% {
+          transform: translateX(5px);
+        }
+      }
+
+      .speak-btn-wrapper {
+        position: relative;
+      }
+
+      .speak-btn {
+        padding: 1rem 1.5rem;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        height: fit-content;
+      }
+
+      .speak-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+      }
+
+      .speak-btn:active {
+        transform: scale(0.98);
+      }
+
+      .speak-btn.speaking {
+        animation: pulse 1s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4);
+        }
+        50% {
+          box-shadow: 0 0 0 15px rgba(102, 126, 234, 0);
+        }
+      }
+
+      .controls {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      select {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        background: white;
+        cursor: pointer;
+        transition: border-color 0.2s;
+      }
+
+      select:focus {
+        outline: none;
+        border-color: var(--primary);
+      }
+
+      .toggle-group {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .toggle-btn {
+        flex: 1;
+        padding: 0.75rem;
+        border: 2px solid #e0e0e0;
+        background: white;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: all 0.2s;
+      }
+
+      .toggle-btn.active {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: white;
+      }
+
+      .toggle-btn:hover:not(.active) {
+        border-color: var(--primary);
+        color: var(--primary);
+      }
+
+      .result-container {
+        position: relative;
+      }
+
+      .result {
+        background: linear-gradient(135deg, var(--bg-dark) 0%, #2d3748 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 16px;
+        min-height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-size: 1.4rem;
+        line-height: 1.8;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .result::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s;
+      }
+
+      .result.updating::before {
+        left: 100%;
+      }
+
+      .result.error {
+        background: linear-gradient(135deg, var(--error) 0%, #c53030 100%);
+      }
+
+      .result-text {
+        transition: opacity 0.2s;
+      }
+
+      .copy-btn {
+        position: absolute;
+        top: 0.75rem;
+        right: 0.75rem;
+        padding: 0.5rem 0.75rem;
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        border-radius: 8px;
+        color: rgba(255, 255, 255, 0.7);
+        cursor: pointer;
+        font-size: 0.8rem;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+      }
+
+      .copy-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+      }
+
+      .copy-btn.copied {
+        background: var(--success);
+        color: white;
+      }
+
+      .examples {
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 2px solid #f0f0f0;
+      }
+
+      .examples h3 {
+        color: #666;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 1rem;
+      }
+
+      .example-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 0.75rem;
+      }
+
+      .example-btn {
+        padding: 0.75rem 1rem;
+        background: #f7fafc;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+        text-align: left;
+      }
+
+      .example-btn:hover {
+        border-color: var(--primary);
+        background: #eef2ff;
+        transform: translateY(-2px);
+      }
+
+      .example-btn .num {
+        font-weight: 700;
+        font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+        color: var(--primary);
+        display: block;
+      }
+
+      .example-btn .desc {
+        font-size: 0.75rem;
+        color: #718096;
+        margin-top: 0.25rem;
+      }
+
+      .stats-bar {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 2rem;
+        flex-wrap: wrap;
+      }
+
+      .stat {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: white;
+        font-size: 0.85rem;
+        background: rgba(255, 255, 255, 0.15);
+        padding: 0.5rem 1rem;
+        border-radius: 30px;
+        backdrop-filter: blur(10px);
+      }
+
+      .stat-icon {
+        font-size: 1.1rem;
+      }
+
+      footer {
+        text-align: center;
+        margin-top: 2rem;
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      footer a {
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+        transition: opacity 0.2s;
+      }
+
+      footer a:hover {
+        opacity: 0.8;
+      }
+
+      .install-cmd {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+        font-size: 0.85rem;
+        display: inline-block;
+        margin-top: 1rem;
+      }
+
+      /* Locale flag indicator */
+      .locale-info {
+        font-size: 0.8rem;
+        color: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        margin-top: 0.5rem;
+        text-align: right;
+      }
+
+      /* Searchable locale dropdown */
+      .locale-search-wrapper {
+        position: relative;
+      }
+
+      .locale-search {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        padding-right: 2.5rem;
+        font-size: 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        background: white;
+        cursor: text;
+        transition: border-color 0.2s;
+      }
+
+      .locale-search:focus {
+        outline: none;
+        border-color: var(--primary);
+      }
+
+      .locale-search-wrapper::after {
+        content: '▼';
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        color: #666;
+        font-size: 0.7rem;
+      }
+
+      .locale-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        max-height: 300px;
+        overflow-y: auto;
+        background: white;
+        border: 2px solid var(--primary);
+        border-top: none;
+        border-radius: 0 0 10px 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        z-index: 100;
         display: none;
       }
-    }
-    
-    /* Confetti animation */
-    .confetti {
-      position: fixed;
-      pointer-events: none;
-      z-index: 1000;
-    }
-    
-    .confetti-piece {
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      animation: confetti-fall 3s ease-out forwards;
-    }
-    
-    @keyframes confetti-fall {
-      0% {
-        transform: translateY(0) rotate(0deg);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(100vh) rotate(720deg);
-        opacity: 0;
-      }
-    }
-    
-    /* Accessibility focus styles */
-    button:focus-visible,
-    input:focus-visible {
-      outline: 3px solid var(--primary);
-      outline-offset: 2px;
-    }
-    
-    /* Skip link for accessibility */
-    .skip-link {
-      position: absolute;
-      top: -40px;
-      left: 0;
-      background: var(--primary);
-      color: white;
-      padding: 0.5rem 1rem;
-      z-index: 1000;
-      transition: top 0.3s;
-    }
-    
-    .skip-link:focus {
-      top: 0;
-    }
-  </style>
-</head>
-<body>
-  <!-- Skip link for accessibility -->
-  <a href="#number" class="skip-link">Skip to main content</a>
-  
-  <!-- Dark mode toggle -->
-  <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark mode (D)">🌙</button>
-  
-  <!-- Floating particles background -->
-  <div class="particles" id="particles" aria-hidden="true"></div>
-  
-  <div class="container">
-    <header>
-      <h1>🔢 to-words</h1>
-      <p class="tagline">Convert numbers and currency amounts into words across 116 locales</p>
-      <div class="badges">
-        <span class="badge">🌍 116 Locales</span>
-        <span class="badge">✨ BigInt Support</span>
-        <span class="badge">💰 Currencies</span>
-        <span class="badge">🔢 Ordinals</span>
-        <span class="badge">🌳 Tree-Shakeable</span>
-      </div>
-    </header>
-    
-    <div class="card">
-      <div class="input-section">
-        <div class="input-group">
-          <label for="number">Enter a Number</label>
-          <input type="text" id="number" class="number-input" value="12345.67" 
-                 placeholder="Try any number..." autocomplete="off" spellcheck="false">
-        </div>
-        <div class="action-buttons">
-          <div class="speak-btn-wrapper">
-            <button class="speak-btn" id="speakBtn" title="Listen (Enter)" aria-label="Listen to result">🔊</button>
-          </div>
-          <button class="action-btn" id="randomBtn" title="Random number (R)" aria-label="Generate random number">🎲</button>
-        </div>
-      </div>
-      
-      <div class="controls">
-        <div class="input-group">
-          <label for="localeSearch">Language & Region (type to search)</label>
-          <div class="locale-search-wrapper">
-            <input type="text" id="localeSearch" class="locale-search" 
-                   placeholder="Search locale..." autocomplete="off" spellcheck="false">
-            <div class="locale-dropdown" id="localeDropdown"></div>
-          </div>
-          <input type="hidden" id="locale" value="en-US">
-        </div>
-        
-        <div class="input-group">
-          <label>Conversion Mode</label>
-          <div class="toggle-group">
-            <button class="toggle-btn active" data-mode="currency">💰 Currency</button>
-            <button class="toggle-btn" data-mode="words">🔤 Words</button>
-            <button class="toggle-btn" data-mode="ordinal">🏅 Ordinal</button>
-          </div>
-        </div>
-      </div>
-      
-      <div class="result-container">
-        <div class="result" id="result" role="status" aria-live="polite">
-          <span class="result-text">Loading...</span>
-        </div>
-        <button class="share-btn" id="shareBtn" title="Share this conversion" aria-label="Share">🔗 Share</button>
-        <button class="copy-btn" id="copyBtn" aria-label="Copy result">📋 Copy</button>
-        <div class="result-stats" id="resultStats">
-          <span class="stat-item" id="wordCount">📝 0 words</span>
-          <span class="stat-item" id="charCount">🔤 0 characters</span>
-          <div class="locale-info" id="localeInfo"></div>
-        </div>
-      </div>
-      
-      <div class="examples">
-        <h3>Quick Examples</h3>
-        <div class="example-grid">
-          <button class="example-btn" data-value="42" data-mode="words">
-            <span class="num">42</span>
-            <span class="desc">The Answer</span>
-          </button>
-          <button class="example-btn" data-value="1234.56" data-mode="currency">
-            <span class="num">1,234.56</span>
-            <span class="desc">Currency</span>
-          </button>
-          <button class="example-btn" data-value="1000000" data-mode="words">
-            <span class="num">1,000,000</span>
-            <span class="desc">One Million</span>
-          </button>
-          <button class="example-btn" data-value="1" data-mode="ordinal">
-            <span class="num">1st</span>
-            <span class="desc">Ordinal</span>
-          </button>
-          <button class="example-btn" data-value="9007199254740993" data-mode="words">
-            <span class="num">9×10¹⁵</span>
-            <span class="desc">Beyond MAX_SAFE</span>
-          </button>
-          <button class="example-btn" data-value="100000000000000000" data-mode="words">
-            <span class="num">10¹⁷</span>
-            <span class="desc">Shankh / Quintillion</span>
-          </button>
-          <button class="example-btn" data-value="-273.15" data-mode="words">
-            <span class="num">-273.15</span>
-            <span class="desc">Absolute Zero</span>
-          </button>
-          <button class="example-btn" data-value="3.14159" data-mode="words">
-            <span class="num">π</span>
-            <span class="desc">Pi</span>
-          </button>
-        </div>
-      </div>
-    </div>
-    
-    <div class="stats-bar">
-      <div class="stat"><span class="stat-icon">🌍</span> 116 Locales</div>
-      <div class="stat"><span class="stat-icon">⚡</span> 1M+ ops/sec</div>
-      <div class="stat"><span class="stat-icon">📦</span> ~3KB gzip</div>
-      <div class="stat"><span class="stat-icon">🔷</span> TypeScript</div>
-    </div>
-    
-    <footer>
-      <p>
-        <a href="https://github.com/mastermunj/to-words" target="_blank">GitHub</a> · 
-        <a href="https://www.npmjs.com/package/to-words" target="_blank">npm</a> · 
-        <a href="https://github.com/mastermunj/to-words#readme" target="_blank">Documentation</a>
-      </p>
-      <code class="install-cmd">npm install to-words</code>
-    </footer>
-    
-    <!-- Keyboard shortcuts hint -->
-    <div class="shortcuts-hint" aria-hidden="true">
-      <kbd>Enter</kbd> Speak · <kbd>R</kbd> Random · <kbd>D</kbd> Dark mode · <kbd>C</kbd> Copy
-    </div>
-  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/to-words@5/dist/umd/to-words.min.js"></script>
-  <script>
-    // All 116 locales with language, country, and locale code
-    var LOCALES = [
-      { code: 'af-ZA', language: 'Afrikaans', country: 'South Africa', flag: '🇿🇦' },
-      { code: 'am-ET', language: 'Amharic', country: 'Ethiopia', flag: '🇪🇹' },
-      { code: 'ar-AE', language: 'Arabic', country: 'UAE', flag: '🇦🇪' },
-      { code: 'ar-LB', language: 'Arabic', country: 'Lebanon', flag: '🇱🇧' },
-      { code: 'ar-MA', language: 'Arabic', country: 'Morocco', flag: '🇲🇦' },
-      { code: 'ar-SA', language: 'Arabic', country: 'Saudi Arabia', flag: '🇸🇦' },
-      { code: 'az-AZ', language: 'Azerbaijani', country: 'Azerbaijan', flag: '🇦🇿' },
-      { code: 'be-BY', language: 'Belarusian', country: 'Belarus', flag: '🇧🇾' },
-      { code: 'bg-BG', language: 'Bulgarian', country: 'Bulgaria', flag: '🇧🇬' },
-      { code: 'bn-IN', language: 'Bengali', country: 'India', flag: '🇮🇳' },
-      { code: 'ca-ES', language: 'Catalan', country: 'Spain', flag: '🇪🇸' },
-      { code: 'cs-CZ', language: 'Czech', country: 'Czech Republic', flag: '🇨🇿' },
-      { code: 'da-DK', language: 'Danish', country: 'Denmark', flag: '🇩🇰' },
-      { code: 'de-AT', language: 'German', country: 'Austria', flag: '🇦🇹' },
-      { code: 'de-CH', language: 'German', country: 'Switzerland', flag: '🇨🇭' },
-      { code: 'de-DE', language: 'German', country: 'Germany', flag: '🇩🇪' },
-      { code: 'ee-EE', language: 'Estonian', country: 'Estonia', flag: '🇪🇪' },
-      { code: 'el-GR', language: 'Greek', country: 'Greece', flag: '🇬🇷' },
-      { code: 'en-AE', language: 'English', country: 'UAE', flag: '🇦🇪' },
-      { code: 'en-AU', language: 'English', country: 'Australia', flag: '🇦🇺' },
-      { code: 'en-BD', language: 'English', country: 'Bangladesh', flag: '🇧🇩' },
-      { code: 'en-CA', language: 'English', country: 'Canada', flag: '🇨🇦' },
-      { code: 'en-GB', language: 'English', country: 'United Kingdom', flag: '🇬🇧' },
-      { code: 'en-GH', language: 'English', country: 'Ghana', flag: '🇬🇭' },
-      { code: 'en-HK', language: 'English', country: 'Hong Kong', flag: '🇭🇰' },
-      { code: 'en-IE', language: 'English', country: 'Ireland', flag: '🇮🇪' },
-      { code: 'en-IN', language: 'English', country: 'India', flag: '🇮🇳' },
-      { code: 'en-JM', language: 'English', country: 'Jamaica', flag: '🇯🇲' },
-      { code: 'en-KE', language: 'English', country: 'Kenya', flag: '🇰🇪' },
-      { code: 'en-LK', language: 'English', country: 'Sri Lanka', flag: '🇱🇰' },
-      { code: 'en-MA', language: 'English', country: 'Morocco', flag: '🇲🇦' },
-      { code: 'en-MM', language: 'English', country: 'Myanmar', flag: '🇲🇲' },
-      { code: 'en-MU', language: 'English', country: 'Mauritius', flag: '🇲🇺' },
-      { code: 'en-MY', language: 'English', country: 'Malaysia', flag: '🇲🇾' },
-      { code: 'en-NG', language: 'English', country: 'Nigeria', flag: '🇳🇬' },
-      { code: 'en-NP', language: 'English', country: 'Nepal', flag: '🇳🇵' },
-      { code: 'en-NZ', language: 'English', country: 'New Zealand', flag: '🇳🇿' },
-      { code: 'en-OM', language: 'English', country: 'Oman', flag: '🇴🇲' },
-      { code: 'en-PH', language: 'English', country: 'Philippines', flag: '🇵🇭' },
-      { code: 'en-PK', language: 'English', country: 'Pakistan', flag: '🇵🇰' },
-      { code: 'en-SA', language: 'English', country: 'Saudi Arabia', flag: '🇸🇦' },
-      { code: 'en-SG', language: 'English', country: 'Singapore', flag: '🇸🇬' },
-      { code: 'en-TT', language: 'English', country: 'Trinidad and Tobago', flag: '🇹🇹' },
-      { code: 'en-TZ', language: 'English', country: 'Tanzania', flag: '🇹🇿' },
-      { code: 'en-UG', language: 'English', country: 'Uganda', flag: '🇺🇬' },
-      { code: 'en-US', language: 'English', country: 'USA', flag: '🇺🇸' },
-      { code: 'en-ZA', language: 'English', country: 'South Africa', flag: '🇿🇦' },
-      { code: 'en-ZW', language: 'English', country: 'Zimbabwe', flag: '🇿🇼' },
-      { code: 'es-AR', language: 'Spanish', country: 'Argentina', flag: '🇦🇷' },
-      { code: 'es-CL', language: 'Spanish', country: 'Chile', flag: '🇨🇱' },
-      { code: 'es-CO', language: 'Spanish', country: 'Colombia', flag: '🇨🇴' },
-      { code: 'es-ES', language: 'Spanish', country: 'Spain', flag: '🇪🇸' },
-      { code: 'es-MX', language: 'Spanish', country: 'Mexico', flag: '🇲🇽' },
-      { code: 'es-US', language: 'Spanish', country: 'USA', flag: '🇺🇸' },
-      { code: 'es-VE', language: 'Spanish', country: 'Venezuela', flag: '🇻🇪' },
-      { code: 'fa-IR', language: 'Persian', country: 'Iran', flag: '🇮🇷' },
-      { code: 'fi-FI', language: 'Finnish', country: 'Finland', flag: '🇫🇮' },
-      { code: 'fil-PH', language: 'Filipino', country: 'Philippines', flag: '🇵🇭' },
-      { code: 'fr-BE', language: 'French', country: 'Belgium', flag: '🇧🇪' },
-      { code: 'fr-CA', language: 'French', country: 'Canada', flag: '🇨🇦' },
-      { code: 'fr-FR', language: 'French', country: 'France', flag: '🇫🇷' },
-      { code: 'fr-MA', language: 'French', country: 'Morocco', flag: '🇲🇦' },
-      { code: 'fr-SA', language: 'French', country: 'Saudi Arabia', flag: '🇸🇦' },
-      { code: 'gu-IN', language: 'Gujarati', country: 'India', flag: '🇮🇳' },
-      { code: 'ha-NG', language: 'Hausa', country: 'Nigeria', flag: '🇳🇬' },
-      { code: 'hbo-IL', language: 'Hebrew (Biblical)', country: 'Israel', flag: '🇮🇱' },
-      { code: 'he-IL', language: 'Hebrew', country: 'Israel', flag: '🇮🇱' },
-      { code: 'hi-IN', language: 'Hindi', country: 'India', flag: '🇮🇳' },
-      { code: 'hr-HR', language: 'Croatian', country: 'Croatia', flag: '🇭🇷' },
-      { code: 'hu-HU', language: 'Hungarian', country: 'Hungary', flag: '🇭🇺' },
-      { code: 'id-ID', language: 'Indonesian', country: 'Indonesia', flag: '🇮🇩' },
-      { code: 'is-IS', language: 'Icelandic', country: 'Iceland', flag: '🇮🇸' },
-      { code: 'it-IT', language: 'Italian', country: 'Italy', flag: '🇮🇹' },
-      { code: 'ja-JP', language: 'Japanese', country: 'Japan', flag: '🇯🇵' },
-      { code: 'ka-GE', language: 'Georgian', country: 'Georgia', flag: '🇬🇪' },
-      { code: 'km-KH', language: 'Khmer', country: 'Cambodia', flag: '🇰🇭' },
-      { code: 'kn-IN', language: 'Kannada', country: 'India', flag: '🇮🇳' },
-      { code: 'ko-KR', language: 'Korean', country: 'South Korea', flag: '🇰🇷' },
-      { code: 'lt-LT', language: 'Lithuanian', country: 'Lithuania', flag: '🇱🇹' },
-      { code: 'lv-LV', language: 'Latvian', country: 'Latvia', flag: '🇱🇻' },
-      { code: 'mr-IN', language: 'Marathi', country: 'India', flag: '🇮🇳' },
-      { code: 'ms-MY', language: 'Malay', country: 'Malaysia', flag: '🇲🇾' },
-      { code: 'ms-SG', language: 'Malay', country: 'Singapore', flag: '🇸🇬' },
-      { code: 'my-MM', language: 'Burmese', country: 'Myanmar', flag: '🇲🇲' },
-      { code: 'nb-NO', language: 'Norwegian', country: 'Norway', flag: '🇳🇴' },
-      { code: 'nl-NL', language: 'Dutch', country: 'Netherlands', flag: '🇳🇱' },
-      { code: 'nl-SR', language: 'Dutch', country: 'Suriname', flag: '🇸🇷' },
-      { code: 'np-NP', language: 'Nepali', country: 'Nepal', flag: '🇳🇵' },
-      { code: 'pa-IN', language: 'Punjabi', country: 'India', flag: '🇮🇳' },
-      { code: 'pl-PL', language: 'Polish', country: 'Poland', flag: '🇵🇱' },
-      { code: 'pt-AO', language: 'Portuguese', country: 'Angola', flag: '🇦🇴' },
-      { code: 'pt-BR', language: 'Portuguese', country: 'Brazil', flag: '🇧🇷' },
-      { code: 'pt-MZ', language: 'Portuguese', country: 'Mozambique', flag: '🇲🇿' },
-      { code: 'pt-PT', language: 'Portuguese', country: 'Portugal', flag: '🇵🇹' },
-      { code: 'ro-RO', language: 'Romanian', country: 'Romania', flag: '🇷🇴' },
-      { code: 'ru-RU', language: 'Russian', country: 'Russia', flag: '🇷🇺' },
-      { code: 'si-LK', language: 'Sinhala', country: 'Sri Lanka', flag: '🇱🇰' },
-      { code: 'sk-SK', language: 'Slovak', country: 'Slovakia', flag: '🇸🇰' },
-      { code: 'sl-SI', language: 'Slovenian', country: 'Slovenia', flag: '🇸🇮' },
-      { code: 'sq-AL', language: 'Albanian', country: 'Albania', flag: '🇦🇱' },
-      { code: 'sr-RS', language: 'Serbian', country: 'Serbia', flag: '🇷🇸' },
-      { code: 'sv-SE', language: 'Swedish', country: 'Sweden', flag: '🇸🇪' },
-      { code: 'sw-KE', language: 'Swahili', country: 'Kenya', flag: '🇰🇪' },
-      { code: 'sw-TZ', language: 'Swahili', country: 'Tanzania', flag: '🇹🇿' },
-      { code: 'ta-IN', language: 'Tamil', country: 'India', flag: '🇮🇳' },
-      { code: 'te-IN', language: 'Telugu', country: 'India', flag: '🇮🇳' },
-      { code: 'th-TH', language: 'Thai', country: 'Thailand', flag: '🇹🇭' },
-      { code: 'tr-TR', language: 'Turkish', country: 'Turkey', flag: '🇹🇷' },
-      { code: 'uk-UA', language: 'Ukrainian', country: 'Ukraine', flag: '🇺🇦' },
-      { code: 'ur-PK', language: 'Urdu', country: 'Pakistan', flag: '🇵🇰' },
-      { code: 'uz-UZ', language: 'Uzbek', country: 'Uzbekistan', flag: '🇺🇿' },
-      { code: 'vi-VN', language: 'Vietnamese', country: 'Vietnam', flag: '🇻🇳' },
-      { code: 'yo-NG', language: 'Yoruba', country: 'Nigeria', flag: '🇳🇬' },
-      { code: 'zh-CN', language: 'Chinese', country: 'China', flag: '🇨🇳' },
-      { code: 'zh-TW', language: 'Chinese', country: 'Taiwan', flag: '🇹🇼' },
-      { code: 'zu-ZA', language: 'Zulu', country: 'South Africa', flag: '🇿🇦' },
-    ];
-    
-    // DOM elements
-    var numberInput = document.getElementById('number');
-    var localeHidden = document.getElementById('locale');
-    var localeSearch = document.getElementById('localeSearch');
-    var localeDropdown = document.getElementById('localeDropdown');
-    var resultDiv = document.getElementById('result');
-    var resultText = resultDiv.querySelector('.result-text');
-    var copyBtn = document.getElementById('copyBtn');
-    var shareBtn = document.getElementById('shareBtn');
-    var speakBtn = document.getElementById('speakBtn');
-    var randomBtn = document.getElementById('randomBtn');
-    var themeToggle = document.getElementById('themeToggle');
-    var localeInfo = document.getElementById('localeInfo');
-    var wordCountEl = document.getElementById('wordCount');
-    var charCountEl = document.getElementById('charCount');
-    var toggleBtns = document.querySelectorAll('.toggle-btn');
-    var exampleBtns = document.querySelectorAll('.example-btn');
-    
-    var currentMode = 'currency';
-    var currentResult = '';
-    var toWords;
-    var highlightedIndex = -1;
-    var filteredLocales = LOCALES;
-    
-    // Get display text for a locale
-    function getLocaleDisplayText(locale) {
-      return locale.flag + ' ' + locale.language + ' - ' + locale.country + ' (' + locale.code + ')';
-    }
-    
-    // Render locale dropdown options
-    function renderLocaleOptions(filter) {
-      filter = (filter || '').toLowerCase();
-      filteredLocales = LOCALES.filter(function(l) {
-        return l.language.toLowerCase().indexOf(filter) >= 0 ||
-               l.country.toLowerCase().indexOf(filter) >= 0 ||
-               l.code.toLowerCase().indexOf(filter) >= 0;
-      });
-      
-      if (filteredLocales.length === 0) {
-        localeDropdown.innerHTML = '<div class="no-results">No locales found</div>';
-        return;
+      .locale-dropdown.show {
+        display: block;
       }
-      
-      localeDropdown.innerHTML = filteredLocales.map(function(locale, index) {
-        var isSelected = locale.code === localeHidden.value;
-        return '<div class="locale-option' + (isSelected ? ' selected' : '') + '" data-code="' + locale.code + '" data-index="' + index + '">' +
-          '<span class="flag">' + locale.flag + '</span>' +
-          '<div class="details">' +
-            '<div class="lang-country">' + locale.language + ' - ' + locale.country + '</div>' +
-            '<div class="code">' + locale.code + '</div>' +
-          '</div>' +
-        '</div>';
-      }).join('');
-      
-      // Add click handlers
-      localeDropdown.querySelectorAll('.locale-option').forEach(function(opt) {
-        opt.addEventListener('click', function() {
-          selectLocale(this.dataset.code);
-        });
-      });
-      
-      highlightedIndex = -1;
-    }
-    
-    // Select a locale
-    function selectLocale(code) {
-      var locale = LOCALES.find(function(l) { return l.code === code; });
-      if (!locale) return;
-      
-      localeHidden.value = code;
-      localeSearch.value = getLocaleDisplayText(locale);
-      localeDropdown.classList.remove('show');
-      convert();
-    }
-    
-    // Show/hide dropdown
-    function showDropdown() {
-      renderLocaleOptions(localeSearch.value === getLocaleDisplayText(LOCALES.find(function(l) { return l.code === localeHidden.value; })) ? '' : localeSearch.value);
-      localeDropdown.classList.add('show');
-    }
-    
-    function hideDropdown() {
-      setTimeout(function() {
-        localeDropdown.classList.remove('show');
-      }, 150);
-    }
-    
-    // Handle keyboard navigation
-    function handleLocaleKeydown(e) {
-      if (!localeDropdown.classList.contains('show')) {
-        if (e.key === 'ArrowDown' || e.key === 'Enter') {
-          showDropdown();
-          e.preventDefault();
-        }
-        return;
+
+      .locale-option {
+        padding: 0.75rem 1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        border-bottom: 1px solid #f0f0f0;
+        transition: background 0.15s;
       }
-      
-      var options = localeDropdown.querySelectorAll('.locale-option');
-      
-      if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        highlightedIndex = Math.min(highlightedIndex + 1, options.length - 1);
-        updateHighlight(options);
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        highlightedIndex = Math.max(highlightedIndex - 1, 0);
-        updateHighlight(options);
-      } else if (e.key === 'Enter') {
-        e.preventDefault();
-        if (highlightedIndex >= 0 && options[highlightedIndex]) {
-          selectLocale(options[highlightedIndex].dataset.code);
-        } else if (filteredLocales.length > 0) {
-          selectLocale(filteredLocales[0].code);
-        }
-      } else if (e.key === 'Escape') {
-        hideDropdown();
-        localeSearch.blur();
+
+      .locale-option:last-child {
+        border-bottom: none;
       }
-    }
-    
-    function updateHighlight(options) {
-      options.forEach(function(opt, i) {
-        if (i === highlightedIndex) {
-          opt.classList.add('highlighted');
-          opt.scrollIntoView({ block: 'nearest' });
-        } else {
-          opt.classList.remove('highlighted');
-        }
-      });
-    }
-    
-    // Initialize locale search
-    function initLocaleSearch() {
-      // Set initial value
-      var initialLocale = LOCALES.find(function(l) { return l.code === 'en-US'; });
-      localeSearch.value = getLocaleDisplayText(initialLocale);
-      
-      // Event listeners
-      localeSearch.addEventListener('focus', function() {
-        this.select();
-        showDropdown();
-      });
-      
-      localeSearch.addEventListener('blur', hideDropdown);
-      
-      localeSearch.addEventListener('input', function() {
-        renderLocaleOptions(this.value);
-        localeDropdown.classList.add('show');
-      });
-      
-      localeSearch.addEventListener('keydown', handleLocaleKeydown);
-    }
-    
-    // Create floating particles
-    function createParticles() {
-      var container = document.getElementById('particles');
-      var symbols = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '+', '=', '×', '÷', '%'];
-      
-      for (var i = 0; i < 20; i++) {
-        var particle = document.createElement('div');
-        particle.className = 'particle';
-        particle.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.animationDelay = Math.random() * 20 + 's';
-        particle.style.animationDuration = (15 + Math.random() * 10) + 's';
-        container.appendChild(particle);
+
+      .locale-option:hover,
+      .locale-option.highlighted {
+        background: #eef2ff;
       }
-    }
-    
-    // Convert number
-    function convert() {
-      var value = numberInput.value.trim();
-      var locale = localeHidden.value;
-      
-      resultDiv.classList.add('updating');
-      
-      setTimeout(function() {
-        try {
-          toWords = new ToWords({ localeCode: locale });
-          
-          var result;
-          if (currentMode === 'ordinal') {
-            var num = parseInt(value, 10);
-            if (isNaN(num) || num < 0) {
-              throw new Error('Ordinal requires a non-negative integer');
-            }
-            result = toWords.toOrdinal(num);
-          } else {
-            var num = value.indexOf('.') >= 0 || value.length < 16 
-              ? parseFloat(value) 
-              : value;
-            
-            if (typeof num === 'number' && isNaN(num)) {
-              throw new Error('Please enter a valid number');
-            }
-            
-            result = toWords.convert(num, { currency: currentMode === 'currency' });
-          }
-          
-          currentResult = result;
-          resultText.textContent = result;
-          resultDiv.classList.remove('error');
-          
-          // Update word and character count
-          var words = result.split(/\s+/).filter(function(w) { return w.length > 0; });
-          wordCountEl.textContent = '📝 ' + words.length + ' word' + (words.length !== 1 ? 's' : '');
-          charCountEl.textContent = '🔤 ' + result.length + ' char' + (result.length !== 1 ? 's' : '');
-          
-          // Update locale info
-          var localeData = LOCALES.find(function(l) { return l.code === locale; });
-          if (localeData) {
-            localeInfo.textContent = localeData.flag + ' ' + localeData.language + ' - ' + localeData.country;
-          }
-          
-          // Celebrate large numbers (over 1 trillion)
-          var numValue = parseFloat(value.replace(/[^\d.-]/g, ''));
-          if (numValue >= 1e12 || value.length > 15) {
-            triggerConfetti();
-          }
-        } catch (error) {
-          currentResult = '';
-          resultText.textContent = error.message;
-          resultDiv.classList.add('error');
-          localeInfo.textContent = '';
-          wordCountEl.textContent = '📝 0 words';
-          charCountEl.textContent = '🔤 0 chars';
-          
-          // Shake input on error
-          numberInput.classList.add('shake');
-          setTimeout(function() { numberInput.classList.remove('shake'); }, 500);
-        }
-        
-        resultDiv.classList.remove('updating');
-      }, 100);
-    }
-    
-    // Copy to clipboard
-    function copyResult() {
-      if (!currentResult) return;
-      
-      navigator.clipboard.writeText(currentResult).then(function() {
-        copyBtn.textContent = '✓ Copied!';
-        copyBtn.classList.add('copied');
-        
-        setTimeout(function() {
-          copyBtn.textContent = '📋 Copy';
-          copyBtn.classList.remove('copied');
-        }, 2000);
-      });
-    }
-    
-    // Text to speech
-    function speak() {
-      if (!currentResult) return;
-      
-      if (!('speechSynthesis' in window)) {
-        showSpeechError('Speech not supported in this browser');
-        return;
+
+      .locale-option.selected {
+        background: var(--primary);
+        color: white;
       }
-      
-      // Cancel any ongoing speech
-      speechSynthesis.cancel();
-      
-      var utterance = new SpeechSynthesisUtterance(currentResult);
-      var locale = localeHidden.value;
-      var langCode = locale.split('-')[0];
-      
-      // Try to match voice to locale (exact match first, then language only)
-      var voices = speechSynthesis.getVoices();
-      var matchingVoice = voices.find(function(v) { 
-        return v.lang.toLowerCase() === locale.toLowerCase();
-      }) || voices.find(function(v) { 
-        return v.lang.toLowerCase().indexOf(langCode.toLowerCase()) === 0;
-      });
-      
-      if (matchingVoice) {
-        utterance.voice = matchingVoice;
-        utterance.lang = matchingVoice.lang;
-      } else {
-        // No matching voice - show feedback and use default
-        showSpeechError('No voice available for ' + locale + '. Using default voice.');
-        // Try English as fallback
-        var englishVoice = voices.find(function(v) { 
-          return v.lang.indexOf('en') === 0; 
-        });
-        if (englishVoice) {
-          utterance.voice = englishVoice;
-          utterance.lang = englishVoice.lang;
+
+      .locale-option .flag {
+        font-size: 1.3rem;
+      }
+
+      .locale-option .details {
+        flex: 1;
+      }
+
+      .locale-option .lang-country {
+        font-weight: 500;
+      }
+
+      .locale-option .code {
+        font-size: 0.8rem;
+        color: #718096;
+        font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+      }
+
+      .locale-option.selected .code {
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .no-results {
+        padding: 1rem;
+        text-align: center;
+        color: #718096;
+      }
+
+      /* Speech tooltip for errors/warnings */
+      .speech-tooltip {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        margin-top: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        background: #2d3748;
+        color: white;
+        font-size: 0.8rem;
+        border-radius: 8px;
+        white-space: nowrap;
+        z-index: 50;
+        animation: fadeIn 0.2s ease-out;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      }
+
+      .speech-tooltip::before {
+        content: '';
+        position: absolute;
+        top: -6px;
+        right: 1rem;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-bottom: 6px solid #2d3748;
+      }
+
+      .speech-tooltip.fade-out {
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+
+      /* Dark mode toggle */
+      .theme-toggle {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.75rem;
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 1.25rem;
+        z-index: 100;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s;
+      }
+
+      .theme-toggle:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.1);
+      }
+
+      /* Dark mode card styles */
+      [data-theme='dark'] .card {
+        background: var(--card-bg);
+        color: var(--card-text);
+      }
+
+      [data-theme='dark'] label {
+        color: var(--card-text);
+      }
+
+      [data-theme='dark'] .number-input,
+      [data-theme='dark'] .locale-search {
+        background: var(--input-bg);
+        border-color: var(--input-border);
+        color: var(--card-text);
+      }
+
+      [data-theme='dark'] .toggle-btn {
+        background: var(--input-bg);
+        border-color: var(--input-border);
+        color: var(--card-text);
+      }
+
+      [data-theme='dark'] .example-btn {
+        background: var(--input-bg);
+        border-color: var(--input-border);
+        color: var(--card-text);
+      }
+
+      [data-theme='dark'] .example-btn .desc {
+        color: #a0aec0;
+      }
+
+      [data-theme='dark'] .locale-dropdown {
+        background: var(--input-bg);
+      }
+
+      [data-theme='dark'] .locale-option {
+        border-color: var(--input-border);
+      }
+
+      [data-theme='dark'] .locale-option:hover,
+      [data-theme='dark'] .locale-option.highlighted {
+        background: #4a5568;
+      }
+
+      [data-theme='dark'] .locale-option .code {
+        color: #a0aec0;
+      }
+
+      [data-theme='dark'] .examples {
+        border-color: var(--input-border);
+      }
+
+      /* Action buttons row */
+      .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .action-btn {
+        padding: 1rem;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1.25rem;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .action-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+      }
+
+      .action-btn:active {
+        transform: scale(0.98);
+      }
+
+      /* Result stats */
+      .result-stats {
+        display: flex;
+        gap: 1rem;
+        margin-top: 0.75rem;
+        font-size: 0.75rem;
+        color: #718096;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+
+      .result-stats .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+      }
+
+      [data-theme='dark'] .result-stats {
+        color: #a0aec0;
+      }
+
+      /* Share button in result */
+      .share-btn {
+        position: absolute;
+        top: 0.75rem;
+        left: 0.75rem;
+        padding: 0.5rem 0.75rem;
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        border-radius: 8px;
+        color: rgba(255, 255, 255, 0.7);
+        cursor: pointer;
+        font-size: 0.8rem;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+      }
+
+      .share-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+      }
+
+      .share-btn.shared {
+        background: var(--success);
+        color: white;
+      }
+
+      /* Keyboard shortcuts hint */
+      .shortcuts-hint {
+        position: fixed;
+        bottom: 1rem;
+        right: 1rem;
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.6);
+        text-align: right;
+        z-index: 50;
+      }
+
+      .shortcuts-hint kbd {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 0.15rem 0.4rem;
+        border-radius: 4px;
+        font-family: inherit;
+        margin: 0 0.1rem;
+      }
+
+      @media (max-width: 600px) {
+        .shortcuts-hint {
+          display: none;
         }
       }
-      
-      utterance.rate = 0.9;
-      
-      speakBtn.classList.add('speaking');
-      utterance.onend = function() {
-        speakBtn.classList.remove('speaking');
-      };
-      utterance.onerror = function(e) {
-        speakBtn.classList.remove('speaking');
-        showSpeechError('Speech failed: ' + e.error);
-      };
-      
-      speechSynthesis.speak(utterance);
-    }
-    
-    // Show speech error/warning as tooltip
-    function showSpeechError(message) {
-      var tooltip = document.createElement('div');
-      tooltip.className = 'speech-tooltip';
-      tooltip.textContent = message;
-      speakBtn.parentElement.appendChild(tooltip);
-      
-      setTimeout(function() {
-        tooltip.classList.add('fade-out');
-        setTimeout(function() { tooltip.remove(); }, 300);
-      }, 2500);
-    }
-    
-    // Generate random number
-    function generateRandom() {
-      var types = [
-        function() { return Math.floor(Math.random() * 1000); }, // Small
-        function() { return (Math.random() * 10000).toFixed(2); }, // Decimal
-        function() { return Math.floor(Math.random() * 1000000); }, // Medium
-        function() { return Math.floor(Math.random() * 1e9); }, // Large
-        function() { return Math.floor(Math.random() * 1e12); }, // Very large
-        function() { return String(BigInt(Math.floor(Math.random() * 1e15)) * BigInt(1000)); }, // BigInt
-        function() { return -Math.floor(Math.random() * 10000); }, // Negative
-        function() { return Math.floor(Math.random() * 100) + 1; }, // Ordinal-friendly
+
+      /* Confetti animation */
+      .confetti {
+        position: fixed;
+        pointer-events: none;
+        z-index: 1000;
+      }
+
+      .confetti-piece {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        animation: confetti-fall 3s ease-out forwards;
+      }
+
+      @keyframes confetti-fall {
+        0% {
+          transform: translateY(0) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(100vh) rotate(720deg);
+          opacity: 0;
+        }
+      }
+
+      /* Accessibility focus styles */
+      button:focus-visible,
+      input:focus-visible {
+        outline: 3px solid var(--primary);
+        outline-offset: 2px;
+      }
+
+      /* Skip link for accessibility */
+      .skip-link {
+        position: absolute;
+        top: -40px;
+        left: 0;
+        background: var(--primary);
+        color: white;
+        padding: 0.5rem 1rem;
+        z-index: 1000;
+        transition: top 0.3s;
+      }
+
+      .skip-link:focus {
+        top: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Skip link for accessibility -->
+    <a href="#number" class="skip-link">Skip to main content</a>
+
+    <!-- Dark mode toggle -->
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark mode (D)">🌙</button>
+
+    <!-- Floating particles background -->
+    <div class="particles" id="particles" aria-hidden="true"></div>
+
+    <div class="container">
+      <header>
+        <h1>🔢 to-words</h1>
+        <p class="tagline">Convert numbers and currency amounts into words across 116 locales</p>
+        <div class="badges">
+          <span class="badge">🌍 116 Locales</span>
+          <span class="badge">✨ BigInt Support</span>
+          <span class="badge">💰 Currencies</span>
+          <span class="badge">🔢 Ordinals</span>
+          <span class="badge">🌳 Tree-Shakeable</span>
+        </div>
+      </header>
+
+      <div class="card">
+        <div class="input-section">
+          <div class="input-group">
+            <label for="number">Enter a Number</label>
+            <input
+              type="text"
+              id="number"
+              class="number-input"
+              value="12345.67"
+              placeholder="Try any number..."
+              autocomplete="off"
+              spellcheck="false"
+            />
+          </div>
+          <div class="action-buttons">
+            <div class="speak-btn-wrapper">
+              <button class="speak-btn" id="speakBtn" title="Listen (Enter)" aria-label="Listen to result">🔊</button>
+            </div>
+            <button class="action-btn" id="randomBtn" title="Random number (R)" aria-label="Generate random number">
+              🎲
+            </button>
+          </div>
+        </div>
+
+        <div class="controls">
+          <div class="input-group">
+            <label for="localeSearch">Language & Region (type to search)</label>
+            <div class="locale-search-wrapper">
+              <input
+                type="text"
+                id="localeSearch"
+                class="locale-search"
+                placeholder="Search locale..."
+                autocomplete="off"
+                spellcheck="false"
+              />
+              <div class="locale-dropdown" id="localeDropdown"></div>
+            </div>
+            <input type="hidden" id="locale" value="en-US" />
+          </div>
+
+          <div class="input-group">
+            <label>Conversion Mode</label>
+            <div class="toggle-group">
+              <button class="toggle-btn active" data-mode="currency">💰 Currency</button>
+              <button class="toggle-btn" data-mode="words">🔤 Words</button>
+              <button class="toggle-btn" data-mode="ordinal">🏅 Ordinal</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="result-container">
+          <div class="result" id="result" role="status" aria-live="polite">
+            <span class="result-text">Loading...</span>
+          </div>
+          <button class="share-btn" id="shareBtn" title="Share this conversion" aria-label="Share">🔗 Share</button>
+          <button class="copy-btn" id="copyBtn" aria-label="Copy result">📋 Copy</button>
+          <div class="result-stats" id="resultStats">
+            <span class="stat-item" id="wordCount">📝 0 words</span>
+            <span class="stat-item" id="charCount">🔤 0 characters</span>
+            <div class="locale-info" id="localeInfo"></div>
+          </div>
+        </div>
+
+        <div class="examples">
+          <h3>Quick Examples</h3>
+          <div class="example-grid">
+            <button class="example-btn" data-value="42" data-mode="words">
+              <span class="num">42</span>
+              <span class="desc">The Answer</span>
+            </button>
+            <button class="example-btn" data-value="1234.56" data-mode="currency">
+              <span class="num">1,234.56</span>
+              <span class="desc">Currency</span>
+            </button>
+            <button class="example-btn" data-value="1000000" data-mode="words">
+              <span class="num">1,000,000</span>
+              <span class="desc">One Million</span>
+            </button>
+            <button class="example-btn" data-value="1" data-mode="ordinal">
+              <span class="num">1st</span>
+              <span class="desc">Ordinal</span>
+            </button>
+            <button class="example-btn" data-value="9007199254740993" data-mode="words">
+              <span class="num">9×10¹⁵</span>
+              <span class="desc">Beyond MAX_SAFE</span>
+            </button>
+            <button class="example-btn" data-value="100000000000000000" data-mode="words">
+              <span class="num">10¹⁷</span>
+              <span class="desc">Shankh / Quintillion</span>
+            </button>
+            <button class="example-btn" data-value="-273.15" data-mode="words">
+              <span class="num">-273.15</span>
+              <span class="desc">Absolute Zero</span>
+            </button>
+            <button class="example-btn" data-value="3.14159" data-mode="words">
+              <span class="num">π</span>
+              <span class="desc">Pi</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat"><span class="stat-icon">🌍</span> 116 Locales</div>
+        <div class="stat"><span class="stat-icon">⚡</span> 1M+ ops/sec</div>
+        <div class="stat"><span class="stat-icon">📦</span> ~3KB gzip</div>
+        <div class="stat"><span class="stat-icon">🔷</span> TypeScript</div>
+      </div>
+
+      <footer>
+        <p>
+          <a href="https://github.com/mastermunj/to-words" target="_blank">GitHub</a> ·
+          <a href="https://www.npmjs.com/package/to-words" target="_blank">npm</a> ·
+          <a href="https://github.com/mastermunj/to-words#readme" target="_blank">Documentation</a>
+        </p>
+        <code class="install-cmd">npm install to-words</code>
+      </footer>
+
+      <!-- Keyboard shortcuts hint -->
+      <div class="shortcuts-hint" aria-hidden="true">
+        <kbd>Enter</kbd> Speak · <kbd>R</kbd> Random · <kbd>D</kbd> Dark mode · <kbd>C</kbd> Copy
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/to-words@5/dist/umd/to-words.min.js"></script>
+    <script>
+      // All 116 locales with language, country, and locale code
+      var LOCALES = [
+        { code: 'af-ZA', language: 'Afrikaans', country: 'South Africa', flag: '🇿🇦' },
+        { code: 'am-ET', language: 'Amharic', country: 'Ethiopia', flag: '🇪🇹' },
+        { code: 'ar-AE', language: 'Arabic', country: 'UAE', flag: '🇦🇪' },
+        { code: 'ar-LB', language: 'Arabic', country: 'Lebanon', flag: '🇱🇧' },
+        { code: 'ar-MA', language: 'Arabic', country: 'Morocco', flag: '🇲🇦' },
+        { code: 'ar-SA', language: 'Arabic', country: 'Saudi Arabia', flag: '🇸🇦' },
+        { code: 'az-AZ', language: 'Azerbaijani', country: 'Azerbaijan', flag: '🇦🇿' },
+        { code: 'be-BY', language: 'Belarusian', country: 'Belarus', flag: '🇧🇾' },
+        { code: 'bg-BG', language: 'Bulgarian', country: 'Bulgaria', flag: '🇧🇬' },
+        { code: 'bn-IN', language: 'Bengali', country: 'India', flag: '🇮🇳' },
+        { code: 'ca-ES', language: 'Catalan', country: 'Spain', flag: '🇪🇸' },
+        { code: 'cs-CZ', language: 'Czech', country: 'Czech Republic', flag: '🇨🇿' },
+        { code: 'da-DK', language: 'Danish', country: 'Denmark', flag: '🇩🇰' },
+        { code: 'de-AT', language: 'German', country: 'Austria', flag: '🇦🇹' },
+        { code: 'de-CH', language: 'German', country: 'Switzerland', flag: '🇨🇭' },
+        { code: 'de-DE', language: 'German', country: 'Germany', flag: '🇩🇪' },
+        { code: 'ee-EE', language: 'Estonian', country: 'Estonia', flag: '🇪🇪' },
+        { code: 'el-GR', language: 'Greek', country: 'Greece', flag: '🇬🇷' },
+        { code: 'en-AE', language: 'English', country: 'UAE', flag: '🇦🇪' },
+        { code: 'en-AU', language: 'English', country: 'Australia', flag: '🇦🇺' },
+        { code: 'en-BD', language: 'English', country: 'Bangladesh', flag: '🇧🇩' },
+        { code: 'en-CA', language: 'English', country: 'Canada', flag: '🇨🇦' },
+        { code: 'en-GB', language: 'English', country: 'United Kingdom', flag: '🇬🇧' },
+        { code: 'en-GH', language: 'English', country: 'Ghana', flag: '🇬🇭' },
+        { code: 'en-HK', language: 'English', country: 'Hong Kong', flag: '🇭🇰' },
+        { code: 'en-IE', language: 'English', country: 'Ireland', flag: '🇮🇪' },
+        { code: 'en-IN', language: 'English', country: 'India', flag: '🇮🇳' },
+        { code: 'en-JM', language: 'English', country: 'Jamaica', flag: '🇯🇲' },
+        { code: 'en-KE', language: 'English', country: 'Kenya', flag: '🇰🇪' },
+        { code: 'en-LK', language: 'English', country: 'Sri Lanka', flag: '🇱🇰' },
+        { code: 'en-MA', language: 'English', country: 'Morocco', flag: '🇲🇦' },
+        { code: 'en-MM', language: 'English', country: 'Myanmar', flag: '🇲🇲' },
+        { code: 'en-MU', language: 'English', country: 'Mauritius', flag: '🇲🇺' },
+        { code: 'en-MY', language: 'English', country: 'Malaysia', flag: '🇲🇾' },
+        { code: 'en-NG', language: 'English', country: 'Nigeria', flag: '🇳🇬' },
+        { code: 'en-NP', language: 'English', country: 'Nepal', flag: '🇳🇵' },
+        { code: 'en-NZ', language: 'English', country: 'New Zealand', flag: '🇳🇿' },
+        { code: 'en-OM', language: 'English', country: 'Oman', flag: '🇴🇲' },
+        { code: 'en-PH', language: 'English', country: 'Philippines', flag: '🇵🇭' },
+        { code: 'en-PK', language: 'English', country: 'Pakistan', flag: '🇵🇰' },
+        { code: 'en-SA', language: 'English', country: 'Saudi Arabia', flag: '🇸🇦' },
+        { code: 'en-SG', language: 'English', country: 'Singapore', flag: '🇸🇬' },
+        { code: 'en-TT', language: 'English', country: 'Trinidad and Tobago', flag: '🇹🇹' },
+        { code: 'en-TZ', language: 'English', country: 'Tanzania', flag: '🇹🇿' },
+        { code: 'en-UG', language: 'English', country: 'Uganda', flag: '🇺🇬' },
+        { code: 'en-US', language: 'English', country: 'USA', flag: '🇺🇸' },
+        { code: 'en-ZA', language: 'English', country: 'South Africa', flag: '🇿🇦' },
+        { code: 'en-ZW', language: 'English', country: 'Zimbabwe', flag: '🇿🇼' },
+        { code: 'es-AR', language: 'Spanish', country: 'Argentina', flag: '🇦🇷' },
+        { code: 'es-CL', language: 'Spanish', country: 'Chile', flag: '🇨🇱' },
+        { code: 'es-CO', language: 'Spanish', country: 'Colombia', flag: '🇨🇴' },
+        { code: 'es-ES', language: 'Spanish', country: 'Spain', flag: '🇪🇸' },
+        { code: 'es-MX', language: 'Spanish', country: 'Mexico', flag: '🇲🇽' },
+        { code: 'es-US', language: 'Spanish', country: 'USA', flag: '🇺🇸' },
+        { code: 'es-VE', language: 'Spanish', country: 'Venezuela', flag: '🇻🇪' },
+        { code: 'fa-IR', language: 'Persian', country: 'Iran', flag: '🇮🇷' },
+        { code: 'fi-FI', language: 'Finnish', country: 'Finland', flag: '🇫🇮' },
+        { code: 'fil-PH', language: 'Filipino', country: 'Philippines', flag: '🇵🇭' },
+        { code: 'fr-BE', language: 'French', country: 'Belgium', flag: '🇧🇪' },
+        { code: 'fr-CA', language: 'French', country: 'Canada', flag: '🇨🇦' },
+        { code: 'fr-FR', language: 'French', country: 'France', flag: '🇫🇷' },
+        { code: 'fr-MA', language: 'French', country: 'Morocco', flag: '🇲🇦' },
+        { code: 'fr-SA', language: 'French', country: 'Saudi Arabia', flag: '🇸🇦' },
+        { code: 'gu-IN', language: 'Gujarati', country: 'India', flag: '🇮🇳' },
+        { code: 'ha-NG', language: 'Hausa', country: 'Nigeria', flag: '🇳🇬' },
+        { code: 'hbo-IL', language: 'Hebrew (Biblical)', country: 'Israel', flag: '🇮🇱' },
+        { code: 'he-IL', language: 'Hebrew', country: 'Israel', flag: '🇮🇱' },
+        { code: 'hi-IN', language: 'Hindi', country: 'India', flag: '🇮🇳' },
+        { code: 'hr-HR', language: 'Croatian', country: 'Croatia', flag: '🇭🇷' },
+        { code: 'hu-HU', language: 'Hungarian', country: 'Hungary', flag: '🇭🇺' },
+        { code: 'id-ID', language: 'Indonesian', country: 'Indonesia', flag: '🇮🇩' },
+        { code: 'is-IS', language: 'Icelandic', country: 'Iceland', flag: '🇮🇸' },
+        { code: 'it-IT', language: 'Italian', country: 'Italy', flag: '🇮🇹' },
+        { code: 'ja-JP', language: 'Japanese', country: 'Japan', flag: '🇯🇵' },
+        { code: 'ka-GE', language: 'Georgian', country: 'Georgia', flag: '🇬🇪' },
+        { code: 'km-KH', language: 'Khmer', country: 'Cambodia', flag: '🇰🇭' },
+        { code: 'kn-IN', language: 'Kannada', country: 'India', flag: '🇮🇳' },
+        { code: 'ko-KR', language: 'Korean', country: 'South Korea', flag: '🇰🇷' },
+        { code: 'lt-LT', language: 'Lithuanian', country: 'Lithuania', flag: '🇱🇹' },
+        { code: 'lv-LV', language: 'Latvian', country: 'Latvia', flag: '🇱🇻' },
+        { code: 'mr-IN', language: 'Marathi', country: 'India', flag: '🇮🇳' },
+        { code: 'ms-MY', language: 'Malay', country: 'Malaysia', flag: '🇲🇾' },
+        { code: 'ms-SG', language: 'Malay', country: 'Singapore', flag: '🇸🇬' },
+        { code: 'my-MM', language: 'Burmese', country: 'Myanmar', flag: '🇲🇲' },
+        { code: 'nb-NO', language: 'Norwegian', country: 'Norway', flag: '🇳🇴' },
+        { code: 'nl-NL', language: 'Dutch', country: 'Netherlands', flag: '🇳🇱' },
+        { code: 'nl-SR', language: 'Dutch', country: 'Suriname', flag: '🇸🇷' },
+        { code: 'np-NP', language: 'Nepali', country: 'Nepal', flag: '🇳🇵' },
+        { code: 'pa-IN', language: 'Punjabi', country: 'India', flag: '🇮🇳' },
+        { code: 'pl-PL', language: 'Polish', country: 'Poland', flag: '🇵🇱' },
+        { code: 'pt-AO', language: 'Portuguese', country: 'Angola', flag: '🇦🇴' },
+        { code: 'pt-BR', language: 'Portuguese', country: 'Brazil', flag: '🇧🇷' },
+        { code: 'pt-MZ', language: 'Portuguese', country: 'Mozambique', flag: '🇲🇿' },
+        { code: 'pt-PT', language: 'Portuguese', country: 'Portugal', flag: '🇵🇹' },
+        { code: 'ro-RO', language: 'Romanian', country: 'Romania', flag: '🇷🇴' },
+        { code: 'ru-RU', language: 'Russian', country: 'Russia', flag: '🇷🇺' },
+        { code: 'si-LK', language: 'Sinhala', country: 'Sri Lanka', flag: '🇱🇰' },
+        { code: 'sk-SK', language: 'Slovak', country: 'Slovakia', flag: '🇸🇰' },
+        { code: 'sl-SI', language: 'Slovenian', country: 'Slovenia', flag: '🇸🇮' },
+        { code: 'sq-AL', language: 'Albanian', country: 'Albania', flag: '🇦🇱' },
+        { code: 'sr-RS', language: 'Serbian', country: 'Serbia', flag: '🇷🇸' },
+        { code: 'sv-SE', language: 'Swedish', country: 'Sweden', flag: '🇸🇪' },
+        { code: 'sw-KE', language: 'Swahili', country: 'Kenya', flag: '🇰🇪' },
+        { code: 'sw-TZ', language: 'Swahili', country: 'Tanzania', flag: '🇹🇿' },
+        { code: 'ta-IN', language: 'Tamil', country: 'India', flag: '🇮🇳' },
+        { code: 'te-IN', language: 'Telugu', country: 'India', flag: '🇮🇳' },
+        { code: 'th-TH', language: 'Thai', country: 'Thailand', flag: '🇹🇭' },
+        { code: 'tr-TR', language: 'Turkish', country: 'Turkey', flag: '🇹🇷' },
+        { code: 'uk-UA', language: 'Ukrainian', country: 'Ukraine', flag: '🇺🇦' },
+        { code: 'ur-PK', language: 'Urdu', country: 'Pakistan', flag: '🇵🇰' },
+        { code: 'uz-UZ', language: 'Uzbek', country: 'Uzbekistan', flag: '🇺🇿' },
+        { code: 'vi-VN', language: 'Vietnamese', country: 'Vietnam', flag: '🇻🇳' },
+        { code: 'yo-NG', language: 'Yoruba', country: 'Nigeria', flag: '🇳🇬' },
+        { code: 'zh-CN', language: 'Chinese', country: 'China', flag: '🇨🇳' },
+        { code: 'zh-TW', language: 'Chinese', country: 'Taiwan', flag: '🇹🇼' },
+        { code: 'zu-ZA', language: 'Zulu', country: 'South Africa', flag: '🇿🇦' },
       ];
-      
-      var generator = types[Math.floor(Math.random() * types.length)];
-      var value = generator();
-      
-      // For ordinal mode, use positive integers
-      if (currentMode === 'ordinal') {
-        value = Math.floor(Math.random() * 100) + 1;
+
+      // DOM elements
+      var numberInput = document.getElementById('number');
+      var localeHidden = document.getElementById('locale');
+      var localeSearch = document.getElementById('localeSearch');
+      var localeDropdown = document.getElementById('localeDropdown');
+      var resultDiv = document.getElementById('result');
+      var resultText = resultDiv.querySelector('.result-text');
+      var copyBtn = document.getElementById('copyBtn');
+      var shareBtn = document.getElementById('shareBtn');
+      var speakBtn = document.getElementById('speakBtn');
+      var randomBtn = document.getElementById('randomBtn');
+      var themeToggle = document.getElementById('themeToggle');
+      var localeInfo = document.getElementById('localeInfo');
+      var wordCountEl = document.getElementById('wordCount');
+      var charCountEl = document.getElementById('charCount');
+      var toggleBtns = document.querySelectorAll('.toggle-btn');
+      var exampleBtns = document.querySelectorAll('.example-btn');
+
+      var currentMode = 'currency';
+      var currentResult = '';
+      var toWords;
+      var highlightedIndex = -1;
+      var filteredLocales = LOCALES;
+
+      // Get display text for a locale
+      function getLocaleDisplayText(locale) {
+        return locale.flag + ' ' + locale.language + ' - ' + locale.country + ' (' + locale.code + ')';
       }
-      
-      numberInput.value = value;
-      convert();
-      
-      // Add a little animation
-      randomBtn.style.transform = 'scale(1.2) rotate(180deg)';
-      setTimeout(function() {
-        randomBtn.style.transform = '';
-      }, 300);
-    }
-    
-    // Share current conversion
-    function shareConversion() {
-      var url = new URL(window.location.href.split('?')[0]);
-      url.searchParams.set('n', numberInput.value);
-      url.searchParams.set('l', localeHidden.value);
-      url.searchParams.set('m', currentMode);
-      
-      navigator.clipboard.writeText(url.toString()).then(function() {
-        shareBtn.innerHTML = '✓ Link copied!';
-        shareBtn.classList.add('shared');
-        
-        setTimeout(function() {
-          shareBtn.innerHTML = '🔗 Share';
-          shareBtn.classList.remove('shared');
-        }, 2000);
-      });
-    }
-    
-    // Load state from URL
-    function loadFromURL() {
-      var params = new URLSearchParams(window.location.search);
-      var num = params.get('n');
-      var locale = params.get('l');
-      var mode = params.get('m');
-      
-      if (num) numberInput.value = num;
-      if (locale && LOCALES.find(function(l) { return l.code === locale; })) {
-        localeHidden.value = locale;
-        var localeData = LOCALES.find(function(l) { return l.code === locale; });
-        localeSearch.value = getLocaleDisplayText(localeData);
-      }
-      if (mode && ['currency', 'words', 'ordinal'].indexOf(mode) >= 0) {
-        setMode(mode);
-      }
-    }
-    
-    // Toggle dark mode
-    function toggleTheme() {
-      var html = document.documentElement;
-      var isDark = html.getAttribute('data-theme') === 'dark';
-      
-      if (isDark) {
-        html.removeAttribute('data-theme');
-        themeToggle.textContent = '🌙';
-        localStorage.setItem('theme', 'light');
-      } else {
-        html.setAttribute('data-theme', 'dark');
-        themeToggle.textContent = '☀️';
-        localStorage.setItem('theme', 'dark');
-      }
-    }
-    
-    // Load saved theme
-    function loadTheme() {
-      var savedTheme = localStorage.getItem('theme');
-      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      
-      if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        themeToggle.textContent = '☀️';
-      }
-    }
-    
-    // Confetti celebration
-    function triggerConfetti() {
-      var container = document.createElement('div');
-      container.className = 'confetti';
-      container.style.cssText = 'top:0;left:0;width:100%;height:100%;';
-      document.body.appendChild(container);
-      
-      var colors = ['#667eea', '#764ba2', '#48bb78', '#f56565', '#ecc94b', '#4299e1'];
-      var shapes = ['■', '●', '▲', '★', '♦'];
-      
-      for (var i = 0; i < 50; i++) {
-        var piece = document.createElement('div');
-        piece.className = 'confetti-piece';
-        piece.textContent = shapes[Math.floor(Math.random() * shapes.length)];
-        piece.style.cssText = 
-          'left:' + Math.random() * 100 + '%;' +
-          'color:' + colors[Math.floor(Math.random() * colors.length)] + ';' +
-          'font-size:' + (10 + Math.random() * 20) + 'px;' +
-          'animation-delay:' + Math.random() * 0.5 + 's;' +
-          'animation-duration:' + (2 + Math.random() * 2) + 's;';
-        container.appendChild(piece);
-      }
-      
-      setTimeout(function() { container.remove(); }, 4000);
-    }
-    
-    // Mode toggle
-    function setMode(mode) {
-      currentMode = mode;
-      toggleBtns.forEach(function(btn) {
-        if (btn.dataset.mode === mode) {
-          btn.classList.add('active');
-        } else {
-          btn.classList.remove('active');
+
+      // Render locale dropdown options
+      function renderLocaleOptions(filter) {
+        filter = (filter || '').toLowerCase();
+        filteredLocales = LOCALES.filter(function (l) {
+          return (
+            l.language.toLowerCase().indexOf(filter) >= 0 ||
+            l.country.toLowerCase().indexOf(filter) >= 0 ||
+            l.code.toLowerCase().indexOf(filter) >= 0
+          );
+        });
+
+        if (filteredLocales.length === 0) {
+          localeDropdown.innerHTML = '<div class="no-results">No locales found</div>';
+          return;
         }
-      });
-      convert();
-    }
-    
-    // Event listeners
-    numberInput.addEventListener('input', convert);
-    copyBtn.addEventListener('click', copyResult);
-    shareBtn.addEventListener('click', shareConversion);
-    speakBtn.addEventListener('click', speak);
-    randomBtn.addEventListener('click', generateRandom);
-    themeToggle.addEventListener('click', toggleTheme);
-    
-    toggleBtns.forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        setMode(this.dataset.mode);
-      });
-    });
-    
-    exampleBtns.forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        numberInput.value = this.dataset.value;
-        if (this.dataset.mode) {
+
+        localeDropdown.innerHTML = filteredLocales
+          .map(function (locale, index) {
+            var isSelected = locale.code === localeHidden.value;
+            return (
+              '<div class="locale-option' +
+              (isSelected ? ' selected' : '') +
+              '" data-code="' +
+              locale.code +
+              '" data-index="' +
+              index +
+              '">' +
+              '<span class="flag">' +
+              locale.flag +
+              '</span>' +
+              '<div class="details">' +
+              '<div class="lang-country">' +
+              locale.language +
+              ' - ' +
+              locale.country +
+              '</div>' +
+              '<div class="code">' +
+              locale.code +
+              '</div>' +
+              '</div>' +
+              '</div>'
+            );
+          })
+          .join('');
+
+        // Add click handlers
+        localeDropdown.querySelectorAll('.locale-option').forEach(function (opt) {
+          opt.addEventListener('click', function () {
+            selectLocale(this.dataset.code);
+          });
+        });
+
+        highlightedIndex = -1;
+      }
+
+      // Select a locale
+      function selectLocale(code) {
+        var locale = LOCALES.find(function (l) {
+          return l.code === code;
+        });
+        if (!locale) return;
+
+        localeHidden.value = code;
+        localeSearch.value = getLocaleDisplayText(locale);
+        localeDropdown.classList.remove('show');
+        convert();
+      }
+
+      // Show/hide dropdown
+      function showDropdown() {
+        renderLocaleOptions(
+          localeSearch.value ===
+            getLocaleDisplayText(
+              LOCALES.find(function (l) {
+                return l.code === localeHidden.value;
+              }),
+            )
+            ? ''
+            : localeSearch.value,
+        );
+        localeDropdown.classList.add('show');
+      }
+
+      function hideDropdown() {
+        setTimeout(function () {
+          localeDropdown.classList.remove('show');
+        }, 150);
+      }
+
+      // Handle keyboard navigation
+      function handleLocaleKeydown(e) {
+        if (!localeDropdown.classList.contains('show')) {
+          if (e.key === 'ArrowDown' || e.key === 'Enter') {
+            showDropdown();
+            e.preventDefault();
+          }
+          return;
+        }
+
+        var options = localeDropdown.querySelectorAll('.locale-option');
+
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          highlightedIndex = Math.min(highlightedIndex + 1, options.length - 1);
+          updateHighlight(options);
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          highlightedIndex = Math.max(highlightedIndex - 1, 0);
+          updateHighlight(options);
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          if (highlightedIndex >= 0 && options[highlightedIndex]) {
+            selectLocale(options[highlightedIndex].dataset.code);
+          } else if (filteredLocales.length > 0) {
+            selectLocale(filteredLocales[0].code);
+          }
+        } else if (e.key === 'Escape') {
+          hideDropdown();
+          localeSearch.blur();
+        }
+      }
+
+      function updateHighlight(options) {
+        options.forEach(function (opt, i) {
+          if (i === highlightedIndex) {
+            opt.classList.add('highlighted');
+            opt.scrollIntoView({ block: 'nearest' });
+          } else {
+            opt.classList.remove('highlighted');
+          }
+        });
+      }
+
+      // Initialize locale search
+      function initLocaleSearch() {
+        // Set initial value
+        var initialLocale = LOCALES.find(function (l) {
+          return l.code === 'en-US';
+        });
+        localeSearch.value = getLocaleDisplayText(initialLocale);
+
+        // Event listeners
+        localeSearch.addEventListener('focus', function () {
+          this.select();
+          showDropdown();
+        });
+
+        localeSearch.addEventListener('blur', hideDropdown);
+
+        localeSearch.addEventListener('input', function () {
+          renderLocaleOptions(this.value);
+          localeDropdown.classList.add('show');
+        });
+
+        localeSearch.addEventListener('keydown', handleLocaleKeydown);
+      }
+
+      // Create floating particles
+      function createParticles() {
+        var container = document.getElementById('particles');
+        var symbols = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '+', '=', '×', '÷', '%'];
+
+        for (var i = 0; i < 20; i++) {
+          var particle = document.createElement('div');
+          particle.className = 'particle';
+          particle.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+          particle.style.left = Math.random() * 100 + '%';
+          particle.style.animationDelay = Math.random() * 20 + 's';
+          particle.style.animationDuration = 15 + Math.random() * 10 + 's';
+          container.appendChild(particle);
+        }
+      }
+
+      // Convert number
+      function convert() {
+        var value = numberInput.value.trim();
+        var locale = localeHidden.value;
+
+        resultDiv.classList.add('updating');
+
+        setTimeout(function () {
+          try {
+            toWords = new ToWords({ localeCode: locale });
+
+            var result;
+            if (currentMode === 'ordinal') {
+              var num = parseInt(value, 10);
+              if (isNaN(num) || num < 0) {
+                throw new Error('Ordinal requires a non-negative integer');
+              }
+              result = toWords.toOrdinal(num);
+            } else {
+              var num = value.indexOf('.') >= 0 || value.length < 16 ? parseFloat(value) : value;
+
+              if (typeof num === 'number' && isNaN(num)) {
+                throw new Error('Please enter a valid number');
+              }
+
+              result = toWords.convert(num, { currency: currentMode === 'currency' });
+            }
+
+            currentResult = result;
+            resultText.textContent = result;
+            resultDiv.classList.remove('error');
+
+            // Update word and character count
+            var words = result.split(/\s+/).filter(function (w) {
+              return w.length > 0;
+            });
+            wordCountEl.textContent = '📝 ' + words.length + ' word' + (words.length !== 1 ? 's' : '');
+            charCountEl.textContent = '🔤 ' + result.length + ' char' + (result.length !== 1 ? 's' : '');
+
+            // Update locale info
+            var localeData = LOCALES.find(function (l) {
+              return l.code === locale;
+            });
+            if (localeData) {
+              localeInfo.textContent = localeData.flag + ' ' + localeData.language + ' - ' + localeData.country;
+            }
+
+            // Celebrate large numbers (over 1 trillion)
+            var numValue = parseFloat(value.replace(/[^\d.-]/g, ''));
+            if (numValue >= 1e12 || value.length > 15) {
+              triggerConfetti();
+            }
+          } catch (error) {
+            currentResult = '';
+            resultText.textContent = error.message;
+            resultDiv.classList.add('error');
+            localeInfo.textContent = '';
+            wordCountEl.textContent = '📝 0 words';
+            charCountEl.textContent = '🔤 0 chars';
+
+            // Shake input on error
+            numberInput.classList.add('shake');
+            setTimeout(function () {
+              numberInput.classList.remove('shake');
+            }, 500);
+          }
+
+          resultDiv.classList.remove('updating');
+        }, 100);
+      }
+
+      // Copy to clipboard
+      function copyResult() {
+        if (!currentResult) return;
+
+        navigator.clipboard.writeText(currentResult).then(function () {
+          copyBtn.textContent = '✓ Copied!';
+          copyBtn.classList.add('copied');
+
+          setTimeout(function () {
+            copyBtn.textContent = '📋 Copy';
+            copyBtn.classList.remove('copied');
+          }, 2000);
+        });
+      }
+
+      // Text to speech
+      function speak() {
+        if (!currentResult) return;
+
+        if (!('speechSynthesis' in window)) {
+          showSpeechError('Speech not supported in this browser');
+          return;
+        }
+
+        // Cancel any ongoing speech
+        speechSynthesis.cancel();
+
+        var utterance = new SpeechSynthesisUtterance(currentResult);
+        var locale = localeHidden.value;
+        var langCode = locale.split('-')[0];
+
+        // Try to match voice to locale (exact match first, then language only)
+        var voices = speechSynthesis.getVoices();
+        var matchingVoice =
+          voices.find(function (v) {
+            return v.lang.toLowerCase() === locale.toLowerCase();
+          }) ||
+          voices.find(function (v) {
+            return v.lang.toLowerCase().indexOf(langCode.toLowerCase()) === 0;
+          });
+
+        if (matchingVoice) {
+          utterance.voice = matchingVoice;
+          utterance.lang = matchingVoice.lang;
+        } else {
+          // No matching voice - show feedback and use default
+          showSpeechError('No voice available for ' + locale + '. Using default voice.');
+          // Try English as fallback
+          var englishVoice = voices.find(function (v) {
+            return v.lang.indexOf('en') === 0;
+          });
+          if (englishVoice) {
+            utterance.voice = englishVoice;
+            utterance.lang = englishVoice.lang;
+          }
+        }
+
+        utterance.rate = 0.9;
+
+        speakBtn.classList.add('speaking');
+        utterance.onend = function () {
+          speakBtn.classList.remove('speaking');
+        };
+        utterance.onerror = function (e) {
+          speakBtn.classList.remove('speaking');
+          showSpeechError('Speech failed: ' + e.error);
+        };
+
+        speechSynthesis.speak(utterance);
+      }
+
+      // Show speech error/warning as tooltip
+      function showSpeechError(message) {
+        var tooltip = document.createElement('div');
+        tooltip.className = 'speech-tooltip';
+        tooltip.textContent = message;
+        speakBtn.parentElement.appendChild(tooltip);
+
+        setTimeout(function () {
+          tooltip.classList.add('fade-out');
+          setTimeout(function () {
+            tooltip.remove();
+          }, 300);
+        }, 2500);
+      }
+
+      // Generate random number
+      function generateRandom() {
+        var types = [
+          function () {
+            return Math.floor(Math.random() * 1000);
+          }, // Small
+          function () {
+            return (Math.random() * 10000).toFixed(2);
+          }, // Decimal
+          function () {
+            return Math.floor(Math.random() * 1000000);
+          }, // Medium
+          function () {
+            return Math.floor(Math.random() * 1e9);
+          }, // Large
+          function () {
+            return Math.floor(Math.random() * 1e12);
+          }, // Very large
+          function () {
+            return String(BigInt(Math.floor(Math.random() * 1e15)) * BigInt(1000));
+          }, // BigInt
+          function () {
+            return -Math.floor(Math.random() * 10000);
+          }, // Negative
+          function () {
+            return Math.floor(Math.random() * 100) + 1;
+          }, // Ordinal-friendly
+        ];
+
+        var generator = types[Math.floor(Math.random() * types.length)];
+        var value = generator();
+
+        // For ordinal mode, use positive integers
+        if (currentMode === 'ordinal') {
+          value = Math.floor(Math.random() * 100) + 1;
+        }
+
+        numberInput.value = value;
+        convert();
+
+        // Add a little animation
+        randomBtn.style.transform = 'scale(1.2) rotate(180deg)';
+        setTimeout(function () {
+          randomBtn.style.transform = '';
+        }, 300);
+      }
+
+      // Share current conversion
+      function shareConversion() {
+        var url = new URL(window.location.href.split('?')[0]);
+        url.searchParams.set('n', numberInput.value);
+        url.searchParams.set('l', localeHidden.value);
+        url.searchParams.set('m', currentMode);
+
+        navigator.clipboard.writeText(url.toString()).then(function () {
+          shareBtn.innerHTML = '✓ Link copied!';
+          shareBtn.classList.add('shared');
+
+          setTimeout(function () {
+            shareBtn.innerHTML = '🔗 Share';
+            shareBtn.classList.remove('shared');
+          }, 2000);
+        });
+      }
+
+      // Load state from URL
+      function loadFromURL() {
+        var params = new URLSearchParams(window.location.search);
+        var num = params.get('n');
+        var locale = params.get('l');
+        var mode = params.get('m');
+
+        if (num) numberInput.value = num;
+        if (
+          locale &&
+          LOCALES.find(function (l) {
+            return l.code === locale;
+          })
+        ) {
+          localeHidden.value = locale;
+          var localeData = LOCALES.find(function (l) {
+            return l.code === locale;
+          });
+          localeSearch.value = getLocaleDisplayText(localeData);
+        }
+        if (mode && ['currency', 'words', 'ordinal'].indexOf(mode) >= 0) {
+          setMode(mode);
+        }
+      }
+
+      // Toggle dark mode
+      function toggleTheme() {
+        var html = document.documentElement;
+        var isDark = html.getAttribute('data-theme') === 'dark';
+
+        if (isDark) {
+          html.removeAttribute('data-theme');
+          themeToggle.textContent = '🌙';
+          localStorage.setItem('theme', 'light');
+        } else {
+          html.setAttribute('data-theme', 'dark');
+          themeToggle.textContent = '☀️';
+          localStorage.setItem('theme', 'dark');
+        }
+      }
+
+      // Load saved theme
+      function loadTheme() {
+        var savedTheme = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+          themeToggle.textContent = '☀️';
+        }
+      }
+
+      // Confetti celebration
+      function triggerConfetti() {
+        var container = document.createElement('div');
+        container.className = 'confetti';
+        container.style.cssText = 'top:0;left:0;width:100%;height:100%;';
+        document.body.appendChild(container);
+
+        var colors = ['#667eea', '#764ba2', '#48bb78', '#f56565', '#ecc94b', '#4299e1'];
+        var shapes = ['■', '●', '▲', '★', '♦'];
+
+        for (var i = 0; i < 50; i++) {
+          var piece = document.createElement('div');
+          piece.className = 'confetti-piece';
+          piece.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+          piece.style.cssText =
+            'left:' +
+            Math.random() * 100 +
+            '%;' +
+            'color:' +
+            colors[Math.floor(Math.random() * colors.length)] +
+            ';' +
+            'font-size:' +
+            (10 + Math.random() * 20) +
+            'px;' +
+            'animation-delay:' +
+            Math.random() * 0.5 +
+            's;' +
+            'animation-duration:' +
+            (2 + Math.random() * 2) +
+            's;';
+          container.appendChild(piece);
+        }
+
+        setTimeout(function () {
+          container.remove();
+        }, 4000);
+      }
+
+      // Mode toggle
+      function setMode(mode) {
+        currentMode = mode;
+        toggleBtns.forEach(function (btn) {
+          if (btn.dataset.mode === mode) {
+            btn.classList.add('active');
+          } else {
+            btn.classList.remove('active');
+          }
+        });
+        convert();
+      }
+
+      // Event listeners
+      numberInput.addEventListener('input', convert);
+      copyBtn.addEventListener('click', copyResult);
+      shareBtn.addEventListener('click', shareConversion);
+      speakBtn.addEventListener('click', speak);
+      randomBtn.addEventListener('click', generateRandom);
+      themeToggle.addEventListener('click', toggleTheme);
+
+      toggleBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
           setMode(this.dataset.mode);
-        } else {
-          convert();
-        }
-        numberInput.focus();
+        });
       });
-    });
-    
-    // Keyboard shortcuts
-    document.addEventListener('keydown', function(e) {
-      // Ignore if user is typing in an input
-      if (e.target.tagName === 'INPUT' && e.target !== numberInput) return;
-      
-      // Enter in number input = speak
-      if (e.key === 'Enter' && document.activeElement === numberInput) {
-        e.preventDefault();
-        speak();
-        return;
-      }
-      
-      // Global shortcuts (when not focused on inputs, or with modifier)
-      if (document.activeElement.tagName !== 'INPUT' || e.ctrlKey || e.metaKey) {
-        switch(e.key.toLowerCase()) {
-          case 'r':
-            if (!e.ctrlKey && !e.metaKey) {
-              e.preventDefault();
-              generateRandom();
-            }
-            break;
-          case 'd':
-            if (!e.ctrlKey && !e.metaKey) {
-              e.preventDefault();
-              toggleTheme();
-            }
-            break;
-          case 'c':
-            if (!e.ctrlKey && !e.metaKey && document.activeElement.tagName !== 'INPUT') {
-              e.preventDefault();
-              copyResult();
-            }
-            break;
+
+      exampleBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          numberInput.value = this.dataset.value;
+          if (this.dataset.mode) {
+            setMode(this.dataset.mode);
+          } else {
+            convert();
+          }
+          numberInput.focus();
+        });
+      });
+
+      // Keyboard shortcuts
+      document.addEventListener('keydown', function (e) {
+        // Ignore if user is typing in an input
+        if (e.target.tagName === 'INPUT' && e.target !== numberInput) return;
+
+        // Enter in number input = speak
+        if (e.key === 'Enter' && document.activeElement === numberInput) {
+          e.preventDefault();
+          speak();
+          return;
         }
+
+        // Global shortcuts (when not focused on inputs, or with modifier)
+        if (document.activeElement.tagName !== 'INPUT' || e.ctrlKey || e.metaKey) {
+          switch (e.key.toLowerCase()) {
+            case 'r':
+              if (!e.ctrlKey && !e.metaKey) {
+                e.preventDefault();
+                generateRandom();
+              }
+              break;
+            case 'd':
+              if (!e.ctrlKey && !e.metaKey) {
+                e.preventDefault();
+                toggleTheme();
+              }
+              break;
+            case 'c':
+              if (!e.ctrlKey && !e.metaKey && document.activeElement.tagName !== 'INPUT') {
+                e.preventDefault();
+                copyResult();
+              }
+              break;
+          }
+        }
+      });
+
+      // Initialize
+      loadTheme();
+      initLocaleSearch();
+      createParticles();
+      loadFromURL();
+
+      // Load voices for speech synthesis
+      if ('speechSynthesis' in window) {
+        speechSynthesis.onvoiceschanged = function () {
+          // Voices loaded
+        };
       }
-    });
-    
-    // Initialize
-    loadTheme();
-    initLocaleSearch();
-    createParticles();
-    loadFromURL();
-    
-    // Load voices for speech synthesis
-    if ('speechSynthesis' in window) {
-      speechSynthesis.onvoiceschanged = function() {
-        // Voices loaded
-      };
-    }
-    
-    // Initial conversion
-    convert();
-  </script>
-</body>
+
+      // Initial conversion
+      convert();
+    </script>
+  </body>
 </html>
