@@ -13,7 +13,7 @@
 [![Deno](https://github.com/mastermunj/to-words/actions/workflows/deno.yml/badge.svg?branch=main)](https://github.com/mastermunj/to-words/actions/workflows/deno.yml)
 [![CF Workers](https://img.shields.io/badge/CF_Workers-compatible-F38020)](https://workers.cloudflare.com)
 
-Convert numbers and currency amounts into words across 111 locales with production-ready BigInt, ordinal, and TypeScript support.
+Convert numbers and currency amounts into words across 116 locales with production-ready BigInt, ordinal, and TypeScript support.
 
 ## 🎮 Live Demo
 
@@ -23,7 +23,7 @@ Test locale behavior, currency conversion, ordinals, and large number inputs in 
 
 ## 🏆 Why to-words
 
-- **111 locale implementations** with region-specific numbering and currency conventions
+- **116 locale implementations** with region-specific numbering and currency conventions
 - **Built for real financial flows**: amount in words, decimals, currency units, and negatives
 - **Large number safe** with `BigInt` and string input support
 - **Run anywhere**: Node.js, Deno, Bun, Cloudflare Workers, and all modern browsers
@@ -69,7 +69,7 @@ Test locale behavior, currency conversion, ordinals, and large number inputs in 
 
 ## ✨ Features
 
-- **111 Locales** — The most comprehensive locale coverage available
+- **116 Locales** — The most comprehensive locale coverage available
 - **BigInt Support** — Handle numbers up to 10^63 (Vigintillion) and beyond
 - **Multiple Numbering Systems** — Short scale, Long scale, Indian, and East Asian
 - **Currency Formatting** — Locale-specific currency with fractional units
@@ -99,7 +99,7 @@ tw.convert(100, { currency: true }); // "One Hundred Dollars Only"
 tw.toOrdinal(3);                 // "Third"
 ```
 
-**2. Functional (full bundle)** — one-liners with a `localeCode` option, all 111 locales available:
+**2. Functional (full bundle)** — one-liners with a `localeCode` option, all 116 locales available:
 
 ```js
 import { toWords, toOrdinal, toCurrency } from 'to-words';
@@ -829,7 +829,7 @@ toWords.convert(1234.56, {
 
 | Import Method | Raw | Gzip |
 |--------------|-----|------|
-| Full bundle (all locales) | 628 KB | 58 KB |
+| Full bundle (all locales) | 654 KB | 60 KB |
 | Single locale (en-US) | 12 KB | 3.5 KB |
 | Single locale (en-IN) | 10 KB | 3.4 KB |
 
@@ -878,7 +878,7 @@ The library uses only standard ECMAScript features (BigInt, Intl, Map) with zero
 
 ## 🗺️ Supported Locales
 
-All 111 locales with their features:
+All 116 locales with their features:
 
 | Locale | Language | Country | Currency | Scale | Ordinal |
 |--------|----------|---------|----------|-------|---------|
@@ -895,6 +895,8 @@ All 111 locales with their features:
 | ca-ES | Catalan | Spain | Euro | Short | ✓ |
 | cs-CZ | Czech | Czech Republic | Koruna | Short | ✓ |
 | da-DK | Danish | Denmark | Krone | Long | ✓ |
+| de-AT | German | Austria | Euro | Long | ✓ |
+| de-CH | German | Switzerland | Franken | Long | ✓ |
 | de-DE | German | Germany | Euro | Long | ✓ |
 | ee-EE | Estonian | Estonia | Euro | Short | ✓ |
 | el-GR | Greek | Greece | Ευρώ | Short | ✓ |
@@ -923,8 +925,11 @@ All 111 locales with their features:
 | en-SA | English | Saudi Arabia | Riyal | Short | ✓ |
 | en-SG | English | Singapore | Dollar | Short | ✓ |
 | en-TT | English | Trinidad and Tobago | Dollar | Short | ✓ |
+| en-TZ | English | Tanzania | Shilling | Short | ✓ |
+| en-UG | English | Uganda | Shilling | Short | ✓ |
 | en-US | English | USA | Dollar | Short | ✓ |
 | en-ZA | English | South Africa | Rand | Short | ✓ |
+| en-ZW | English | Zimbabwe | Zimbabwe Gold | Short | ✓ |
 | es-AR | Spanish | Argentina | Peso | Short | ✓ |
 | es-CL | Spanish | Chile | Peso | Short | ✓ |
 | es-CO | Spanish | Colombia | Peso | Short | ✓ |
@@ -936,6 +941,7 @@ All 111 locales with their features:
 | fi-FI | Finnish | Finland | Euro | Short | ✓ |
 | fil-PH | Filipino | Philippines | Piso | Short | ✓ |
 | fr-BE | French | Belgium | Euro | Long | ✓ |
+| fr-CA | French | Canada | Dollar | Long | ✓ |
 | fr-FR | French | France | Euro | Long | ✓ |
 | fr-MA | French | Morocco | Dirham | Long | ✓ |
 | fr-SA | French | Saudi Arabia | Riyal | Long | ✓ |
@@ -951,43 +957,55 @@ All 111 locales with their features:
 | it-IT | Italian | Italy | Euro | Short | ✓ |
 | ja-JP | Japanese | Japan | 円 | East Asian | ✓ |
 | ka-GE | Georgian | Georgia | ლარი | Short | ✓ |
+| km-KH | Khmer | Cambodia | រៀល | Khmer | ✗ |
 | kn-IN | Kannada | India | ರೂಪಾಯಿ | Short | ✓ |
 | ko-KR | Korean | South Korea | 원 | Short | ✓ |
 | lt-LT | Lithuanian | Lithuania | Euras | Short | ✓ |
 | lv-LV | Latvian | Latvia | Eiro | Short | ✓ |
 | mr-IN | Marathi | India | रुपया | Indian | ✓ |
 | ms-MY | Malay | Malaysia | Ringgit | Short | ✓ |
+| ms-SG | Malay | Singapore | Dolar | Short | ✓ |
+| my-MM | Burmese | Myanmar | ကျပ် | Burmese | ✗ |
 | nb-NO | Norwegian | Norway | Krone | Long | ✓ |
 | nl-NL | Dutch | Netherlands | Euro | Short | ✓ |
 | nl-SR | Dutch | Suriname | Dollar | Short | ✓ |
 | np-NP | Nepali | Nepal | रुपैयाँ | Indian | ✓ |
 | pa-IN | Punjabi | India | ਰੁਪਇਆ | Short | ✓ |
 | pl-PL | Polish | Poland | Złoty | Short | ✓ |
+| pt-AO | Portuguese | Angola | Kwanza | Short | ✓ |
 | pt-BR | Portuguese | Brazil | Real | Short | ✓ |
+| pt-MZ | Portuguese | Mozambique | Metical | Short | ✓ |
 | pt-PT | Portuguese | Portugal | Euro | Short | ✓ |
 | ro-RO | Romanian | Romania | Leu | Short | ✓ |
 | ru-RU | Russian | Russia | Рубль | Short | ✓ |
+| si-LK | Sinhala | Sri Lanka | රුපියල | Indian | ✓ |
 | sk-SK | Slovak | Slovakia | Euro | Short | ✓ |
 | sl-SI | Slovenian | Slovenia | Euro | Short | ✓ |
 | sq-AL | Albanian | Albania | Lek | Short | ✓ |
 | sr-RS | Serbian | Serbia | Dinar | Short | ✓ |
 | sv-SE | Swedish | Sweden | Krona | Short | ✓ |
 | sw-KE | Swahili | Kenya | Shilingi | Short | ✓ |
+| sw-TZ | Swahili | Tanzania | Shilingi | Short | ✓ |
 | ta-IN | Tamil | India | ரூபாய் | Short | ✓ |
 | te-IN | Telugu | India | రూపాయి | Short | ✓ |
 | th-TH | Thai | Thailand | บาท | Short | ✓ |
 | tr-TR | Turkish | Turkey | Lira | Short | ✓ |
 | uk-UA | Ukrainian | Ukraine | Гривня | Short | ✓ |
 | ur-PK | Urdu | Pakistan | روپیہ | Short | ✓ |
+| uz-UZ | Uzbek | Uzbekistan | So'm | Short | ✓ |
 | vi-VN | Vietnamese | Vietnam | Đồng | Short | ✓ |
 | yo-NG | Yoruba | Nigeria | Naira | Short | ✓ |
 | zh-CN | Chinese | China | 元 | East Asian | ✓ |
+| zh-TW | Chinese | Taiwan | 元 | East Asian | ✓ |
+| zu-ZA | Zulu | South Africa | Rand | Short | ✓ |
 
 **Scale Legend:**
 - **Short** — Western short scale (Million, Billion, Trillion...)
 - **Long** — European long scale (Million, Milliard, Billion, Billiard...)
 - **Indian** — Indian numbering (Lakh, Crore, Arab, Kharab...)
 - **East Asian** — East Asian numbering (万, 億, 兆, 京...)
+- **Burmese** — Burmese traditional scale (သောင်း=10k, သိန်း=100k, သန်း=1M)
+- **Khmer** — Khmer traditional scale (មុឺន=10k, សែន=100k, លាន=1M)
 
 ## ⚠️ Error Handling
 
