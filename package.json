@@ -105,8 +105,6 @@
     "lint": "oxlint --type-aware .",
     "lint:fix": "npm run lint -- --fix",
     "prepare": "husky",
-    "release": "commit-and-tag-version",
-    "release:mock": "npm run release -- --dry-run",
     "test": "vitest",
     "test:watch": "npm run test -- --watch"
   },
@@ -118,7 +116,6 @@
     "@types/node": "^25.3.3",
     "@types/source-map-support": "^0.5.10",
     "@vitest/coverage-v8": "^4.0.18",
-    "commit-and-tag-version": "^12.6.1",
     "cz-conventional-changelog": "^3.3.0",
     "esbuild": "^0.27.3",
     "husky": "^9.1.7",
@@ -132,6 +129,12 @@
     "typescript": "^5.9.3",
     "vitest": "^4.0.18"
   },
+  "overrides": {
+    "commitizen": {
+      "lodash": "4.17.23"
+    },
+    "tmp": "0.2.5"
+  },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
@@ -139,11 +142,5 @@
   },
   "engines": {
     "node": ">=20.0.0"
-  },
-  "overrides": {
-    "tmp": "0.2.5",
-    "commitizen": {
-      "lodash": "4.17.23"
-    }
   }
 }
