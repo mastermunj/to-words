@@ -1,0 +1,6 @@
+# Every file requires review from the repo owner by default.
+* @mastermunj
+
+# Workflow changes require explicit owner sign-off.
+.github/workflows/ @mastermunj
+.github/CODEOWNERS @mastermunj
