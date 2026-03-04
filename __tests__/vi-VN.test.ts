@@ -2,7 +2,12 @@ import { describe, expect, test } from 'vitest';
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
 import viVn from '../src/locales/vi-VN.js';
-import { ToWords as LocaleToWords } from '../src/locales/vi-VN.js';
+import {
+  ToWords as LocaleToWords,
+  toWords as localeToWords,
+  toOrdinal as localeToOrdinal,
+  toCurrency as localeToCurrency,
+} from '../src/locales/vi-VN.js';
 
 const localeCode = 'vi-VN';
 const toWords = new ToWords({
@@ -33,6 +38,40 @@ describe('Test Locale', () => {
 
 const testIntegers: [number, string][] = [
   [0, 'Không'],
+  [1, 'Một'],
+  [2, 'Hai'],
+  [3, 'Ba'],
+  [4, 'Bốn'],
+  [5, 'Năm'],
+  [6, 'Sáu'],
+  [7, 'Bảy'],
+  [8, 'Tám'],
+  [9, 'Chín'],
+  [10, 'Mười'],
+  [11, 'Mười Một'],
+  [12, 'Mười Hai'],
+  [13, 'Mười Ba'],
+  [14, 'Mười Bốn'],
+  [15, 'Mười Năm'],
+  [16, 'Mười Sáu'],
+  [17, 'Mười Bảy'],
+  [18, 'Mười Tám'],
+  [19, 'Mười Chín'],
+  [20, 'Hai Mươi'],
+  [21, 'Hai Mươi Một'],
+  [22, 'Hai Mươi Hai'],
+  [25, 'Hai Mươi Năm'],
+  [30, 'Ba Mươi'],
+  [40, 'Bốn Mươi'],
+  [50, 'Năm Mươi'],
+  [60, 'Sáu Mươi'],
+  [70, 'Bảy Mươi'],
+  [80, 'Tám Mươi'],
+  [90, 'Chín Mươi'],
+  [99, 'Chín Mươi Chín'],
+  [100, 'Một Trăm'],
+  [101, 'Một Trăm Một'],
+  [110, 'Một Trăm Mười'],
   [137, 'Một Trăm Ba Mươi Bảy'],
   [700, 'Bảy Trăm'],
   [1100, 'Một Nghìn Một Trăm'],
@@ -207,7 +246,21 @@ const testOrdinalNumbers: [number, string][] = [
   [8, 'Thứ Tám'],
   [9, 'Thứ Chín'],
   [10, 'Thứ Mười'],
+  [11, 'Mười Một'],
+  [12, 'Mười Hai'],
+  [13, 'Mười Ba'],
+  [14, 'Mười Bốn'],
+  [15, 'Mười Năm'],
+  [16, 'Mười Sáu'],
+  [17, 'Mười Bảy'],
+  [18, 'Mười Tám'],
+  [19, 'Mười Chín'],
+  [20, 'Hai Mươi'],
   [21, 'Hai Mươi Thứ Nhất'],
+  [22, 'Hai Mươi Thứ Hai'],
+  [25, 'Hai Mươi Thứ Năm'],
+  [30, 'Ba Mươi'],
+  [50, 'Năm Mươi'],
   [100, 'Một Trăm'],
 ];
 
@@ -309,5 +362,24 @@ describe('Test Invalid Inputs', () => {
 
   test.concurrent.each(testInvalidInputs)('convert %s => throws %s', (input, expectedError) => {
     expect(() => toWords.convert(input as number)).toThrow(expectedError);
+  });
+});
+
+describe('Functional helpers (locale-level)', () => {
+  test('toWords() matches new ToWords().convert()', () => {
+    const tw = new LocaleToWords();
+    expect(localeToWords(1)).toBe(tw.convert(1));
+    expect(localeToWords(100)).toBe(tw.convert(100));
+  });
+
+  test('toOrdinal() matches new ToWords().toOrdinal()', () => {
+    const tw = new LocaleToWords();
+    expect(localeToOrdinal(1)).toBe(tw.toOrdinal(1));
+  });
+
+  test('toCurrency() matches new ToWords().convert() with currency:true', () => {
+    const tw = new LocaleToWords();
+    expect(localeToCurrency(1)).toBe(tw.convert(1, { currency: true }));
+    expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });

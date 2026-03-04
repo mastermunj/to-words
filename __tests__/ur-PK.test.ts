@@ -2,7 +2,12 @@ import { describe, expect, test } from 'vitest';
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
 import urPk from '../src/locales/ur-PK.js';
-import { ToWords as LocaleToWords } from '../src/locales/ur-PK.js';
+import {
+  ToWords as LocaleToWords,
+  toWords as localeToWords,
+  toOrdinal as localeToOrdinal,
+  toCurrency as localeToCurrency,
+} from '../src/locales/ur-PK.js';
 
 const localeCode = 'ur-PK';
 const toWords = new ToWords({ localeCode });
@@ -27,7 +32,7 @@ describe('Test Locale', () => {
   });
 });
 
-const testIntegers = [
+const testIntegers: [number, string][] = [
   [0, 'صفر'],
   [137, 'ایک سو سینتیس'],
   [700, 'سات سو'],
@@ -55,7 +60,9 @@ describe('Test Integers with options = {}', () => {
 describe('Test Negative Integers with options = {}', () => {
   const testNegativeIntegers = cloneDeep(testIntegers);
   testNegativeIntegers.map((row, i) => {
-    if (i === 0) return; // skip zero
+    if (i === 0) {
+      return;
+    } // skip zero
     row[0] = -row[0];
     row[1] = `منفی ${row[1]}`;
   });
@@ -114,7 +121,7 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
   });
 });
 
-const testFloats = [
+const testFloats: [number, string][] = [
   [0.0, 'صفر'],
   [0.04, 'صفر اعشاریہ صفر چار'],
   [0.0468, 'صفر اعشاریہ صفر چار چھ آٹھ'],
@@ -354,5 +361,24 @@ describe('Test Invalid Input', () => {
 
   test('Non-numeric string throws error', () => {
     expect(() => toWords.convert('abc')).toThrow('Invalid Number "abc"');
+  });
+});
+
+describe('Functional helpers (locale-level)', () => {
+  test('toWords() matches new ToWords().convert()', () => {
+    const tw = new LocaleToWords();
+    expect(localeToWords(1)).toBe(tw.convert(1));
+    expect(localeToWords(100)).toBe(tw.convert(100));
+  });
+
+  test('toOrdinal() matches new ToWords().toOrdinal()', () => {
+    const tw = new LocaleToWords();
+    expect(localeToOrdinal(1)).toBe(tw.toOrdinal(1));
+  });
+
+  test('toCurrency() matches new ToWords().convert() with currency:true', () => {
+    const tw = new LocaleToWords();
+    expect(localeToCurrency(1)).toBe(tw.convert(1, { currency: true }));
+    expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });

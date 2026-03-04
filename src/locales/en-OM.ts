@@ -1,4 +1,11 @@
-import { type LocaleConfig, type LocaleInterface, type ToWordsOptions } from '../types.js';
+import {
+  type ConverterOptions,
+  type LocaleConfig,
+  type LocaleInterface,
+  type NumberInput,
+  type OrdinalOptions,
+  type ToWordsOptions,
+} from '../types.js';
 import { ToWordsCore } from '../ToWordsCore.js';
 
 export default class Locale implements LocaleInterface {
@@ -144,4 +151,29 @@ export class ToWords extends ToWordsCore {
     super(options);
     this.setLocale(Locale);
   }
+}
+
+// Module-level singleton — reused across calls to avoid per-call instance creation
+const instance = new ToWords();
+
+/**
+ * Convert a number to words for this locale (functional style).
+ */
+export function toWords(number: NumberInput, options?: ConverterOptions): string {
+  return instance.convert(number, options);
+}
+
+/**
+ * Convert a number to ordinal words for this locale (functional style).
+ */
+export function toOrdinal(number: NumberInput, options?: OrdinalOptions): string {
+  return instance.toOrdinal(number, options);
+}
+
+/**
+ * Convert a number to currency words for this locale (functional style).
+ * Shorthand for toWords(number, { currency: true, ...options }).
+ */
+export function toCurrency(number: NumberInput, options?: ConverterOptions): string {
+  return instance.convert(number, { ...options, currency: true });
 }

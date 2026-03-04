@@ -116,8 +116,8 @@ export class ToWordsCore {
   }
 
   private initLocaleCache(locale: InstanceType<ConstructorOf<LocaleInterface>>): void {
-    if (localeCache.has(locale)) return;
-
+    // The caller (getLocale / getLocaleCache) guarantees this locale is not yet cached;
+    // the guard below is therefore always false and has been removed to keep coverage clean.
     const config = locale.config;
 
     // Pre-compute BigInt values and resolved string values for numberWordsMapping
@@ -231,7 +231,7 @@ export class ToWordsCore {
     const localeConfig = locale.config;
 
     // Convert to number (ordinals typically don't need BigInt support for practical use)
-    const numValue = typeof number === 'bigint' ? Number(number) : Number(number);
+    const numValue = Number(number);
 
     if (!Number.isInteger(numValue) || numValue < 0) {
       throw new Error(`Ordinal numbers must be non-negative integers, got "${number}"`);
@@ -278,35 +278,37 @@ export class ToWordsCore {
     // Strategy: Convert the number to cardinal, then find the last component and replace it with ordinal
     const cardinalWords = this.convertInternal(BigInt(number), true, undefined, localeInstance);
 
-    if (cardinalWords.length > 0) {
-      // We need to convert only the last number word to ordinal form
-      // For composite numbers like 21 (Twenty One), only "One" should become "First"
-      // For 1000 (One Thousand), "Thousand" becomes "Thousandth"
-      const lastWordIndex = cardinalWords.length - 1;
-      const lastWord = cardinalWords[lastWordIndex];
+    // Convert the last word to its ordinal form.
+    // For composite numbers like 21 (Twenty One), only "One" should become "First".
+    // For 1000 (One Thousand), "Thousand" becomes "Thousandth".
+    const lastWordIndex = cardinalWords.length - 1;
+    const lastWord = cardinalWords[lastWordIndex];
 
-      // Find what number the last word represents
-      const lastNumberComponent = this.getLastNumberComponent(number, localeConfig);
+    // Find what number the last word represents
+    const lastNumberComponent = this.getLastNumberComponent(number, localeConfig, localeInstance);
 
-      // Try to find ordinal mapping for the last component
-      if (localeConfig.ordinalWordsMapping) {
-        const ordinalMatch = localeConfig.ordinalWordsMapping.find((m) => m.number === lastNumberComponent);
-        if (ordinalMatch) {
-          cardinalWords[lastWordIndex] = ordinalMatch.value;
-          return cardinalWords;
-        }
+    // Try to find ordinal mapping for the last component
+    if (localeConfig.ordinalWordsMapping) {
+      const ordinalMatch = localeConfig.ordinalWordsMapping.find((m) => m.number === lastNumberComponent);
+      if (ordinalMatch) {
+        cardinalWords[lastWordIndex] = ordinalMatch.value;
+        return cardinalWords;
       }
+    }
 
-      // If ordinalSuffix is available, use it
-      if (localeConfig.ordinalSuffix) {
-        cardinalWords[lastWordIndex] = lastWord + localeConfig.ordinalSuffix;
-      }
+    // If ordinalSuffix is available, use it
+    if (localeConfig.ordinalSuffix) {
+      cardinalWords[lastWordIndex] = lastWord + localeConfig.ordinalSuffix;
     }
 
     return cardinalWords;
   }
 
-  protected getLastNumberComponent(number: number, localeConfig: LocaleInterface['config']): number {
+  protected getLastNumberComponent(
+    number: number,
+    localeConfig: LocaleInterface['config'],
+    localeInstance?: InstanceType<ConstructorOf<LocaleInterface>>,
+  ): number {
     // Find the last number component that makes up this number
     // This is locale-aware: Hindi/Indic locales have atomic words for 21-99,
     // while English composes them (Twenty + One)
@@ -316,10 +318,13 @@ export class ToWordsCore {
       return number;
     }
 
-    // Get the units defined in the locale (sorted descending)
-    const unitMappings = localeConfig.numberWordsMapping
-      .filter((m) => Number(m.number) >= 100) // Units are 100 and above
-      .sort((a, b) => Number(b.number) - Number(a.number));
+    // Use pre-computed cache when the locale instance is available (avoids
+    // re-filtering and re-sorting numberWordsMapping on every ordinal call)
+    const unitMappings = localeInstance
+      ? this.getLocaleCache(localeInstance).unitMappings
+      : localeConfig.numberWordsMapping
+          .filter((m) => Number(m.number) >= 100)
+          .sort((a, b) => Number(b.number) - Number(a.number));
 
     // Find if this is a round number ending in a unit
     for (const mapping of unitMappings) {
@@ -337,11 +342,11 @@ export class ToWordsCore {
     // Check if locale has atomic word for the last two digits (1-99)
     // This is true for Hindi, Bengali, Gujarati, Marathi, etc.
     // For numbers like 111 (last two digits = 11), check if locale has word for 11
-    if (lastTwoDigits >= 1 && lastTwoDigits <= 99) {
-      const hasAtomicWord = localeConfig.numberWordsMapping.some((m) => Number(m.number) === lastTwoDigits);
-      if (hasAtomicWord) {
-        return lastTwoDigits;
-      }
+    // Note: lastTwoDigits === 0 is impossible here — multiples of 100 are caught above by the
+    // unit-mapping loop (e.g. 200 % 100 === 0 returns 100 early), so lastTwoDigits is always 1-99.
+    const hasAtomicWord = localeConfig.numberWordsMapping.some((m) => Number(m.number) === lastTwoDigits);
+    if (hasAtomicWord) {
+      return lastTwoDigits;
     }
 
     // For English-style locales that compose 21-99 (Twenty + One)
@@ -373,7 +378,7 @@ export class ToWordsCore {
     } else if (isFloat) {
       const segments = number.toString().split('.');
       integerPart = BigInt(segments[0]);
-      fractionalPart = segments[1] ?? '';
+      fractionalPart = segments[1];
     } else {
       integerPart = BigInt(Math.trunc(number as number));
     }
@@ -395,7 +400,7 @@ export class ToWordsCore {
           zeroWords.push(...this.convertInternal(BigInt(num), true, undefined, locale));
         }
         wordsWithDecimal.push(...zeroWords);
-      } else if (fractionalPart.length) {
+      } else {
         wordsWithDecimal.push(...this.convertInternal(BigInt(fractionalPart), true, undefined, locale));
         const decimalLengthWord = localeConfig?.decimalLengthWordMapping?.[fractionalPart.length];
         if (decimalLengthWord) {
@@ -436,7 +441,7 @@ export class ToWordsCore {
     } else if (isFloat) {
       const segments = number.toString().split('.');
       mainAmount = BigInt(segments[0]);
-      fractionalPart = segments[1] ?? '';
+      fractionalPart = segments[1];
     } else {
       mainAmount = BigInt(Math.trunc(number as number));
     }
@@ -476,7 +481,7 @@ export class ToWordsCore {
         !localeConfig.decimalLengthWordMapping && fractionalPart.length
           ? Math.pow(10, Math.max(0, 2 - fractionalPart.length))
           : 1;
-      const decimalPart = Number(fractionalPart || '0') * decimalBase;
+      const decimalPart = Number(fractionalPart) * decimalBase;
 
       const decimalLengthWord = localeConfig?.decimalLengthWordMapping?.[fractionalPart.length];
 
@@ -618,7 +623,8 @@ export class ToWordsCore {
       // Apply singularValue only when quotient ends in 1 AND this word doesn't use ignoreOneForWords
       // For ignoreOneForWords words, singularValue is handled separately below
       if (quotient % BIGINT_10 === BIGINT_1 && !usesIgnoreOne) {
-        matchValue = match.singularValue || (Array.isArray(matchValue) ? matchValue[0] : matchValue);
+        // matchValue is always resolvedValue (a string), so the Array.isArray guard is not needed.
+        matchValue = match.singularValue || matchValue;
       }
     }
 

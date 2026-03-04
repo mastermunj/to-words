@@ -2,7 +2,12 @@ import { describe, expect, test } from 'vitest';
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
 import enCa from '../src/locales/en-CA.js';
-import { ToWords as LocaleToWords } from '../src/locales/en-CA.js';
+import {
+  ToWords as LocaleToWords,
+  toWords as localeToWords,
+  toOrdinal as localeToOrdinal,
+  toCurrency as localeToCurrency,
+} from '../src/locales/en-CA.js';
 
 const localeCode = 'en-CA';
 const toWords = new ToWords({
@@ -31,7 +36,7 @@ describe('Test Locale', () => {
   });
 });
 
-const testIntegers = [
+const testIntegers: [number, string][] = [
   [0, 'Zero'],
   [1, 'One'],
   [2, 'Two'],
@@ -183,7 +188,7 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
   });
 });
 
-const testFloats = [
+const testFloats: [number, string][] = [
   [0.0, 'Zero'],
   [0.04, 'Zero Point Zero Four'],
   [0.0468, 'Zero Point Zero Four Six Eight'],
@@ -530,5 +535,24 @@ describe('Test Invalid Inputs', () => {
 
   test('should throw error for non-numeric string', () => {
     expect(() => toWords.convert('abc')).toThrow('Invalid Number "abc"');
+  });
+});
+
+describe('Functional helpers (locale-level)', () => {
+  test('toWords() matches new ToWords().convert()', () => {
+    const tw = new LocaleToWords();
+    expect(localeToWords(1)).toBe(tw.convert(1));
+    expect(localeToWords(100)).toBe(tw.convert(100));
+  });
+
+  test('toOrdinal() matches new ToWords().toOrdinal()', () => {
+    const tw = new LocaleToWords();
+    expect(localeToOrdinal(1)).toBe(tw.toOrdinal(1));
+  });
+
+  test('toCurrency() matches new ToWords().convert() with currency:true', () => {
+    const tw = new LocaleToWords();
+    expect(localeToCurrency(1)).toBe(tw.convert(1, { currency: true }));
+    expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });

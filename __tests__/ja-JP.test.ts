@@ -2,7 +2,12 @@ import { describe, expect, test } from 'vitest';
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
 import jaJp from '../src/locales/ja-JP.js';
-import { ToWords as LocaleToWords } from '../src/locales/ja-JP.js';
+import {
+  ToWords as LocaleToWords,
+  toWords as localeToWords,
+  toOrdinal as localeToOrdinal,
+  toCurrency as localeToCurrency,
+} from '../src/locales/ja-JP.js';
 
 const localeCode = 'ja-JP';
 const toWords = new ToWords({
@@ -31,7 +36,7 @@ describe('Test Locale', () => {
   });
 });
 
-const testIntegers = [
+const testIntegers: [number, string][] = [
   [0, '零'],
   [137, '百 三十 七'],
   [700, '七 百'],
@@ -125,7 +130,7 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
   });
 });
 
-const testFloats = [
+const testFloats: [number, string][] = [
   [0, '零'],
   [0.04, '零 点 零 四'],
   [0.0468, '零 点 零 四 六 八'],
@@ -478,5 +483,24 @@ describe('Test All Currency Options Combinations', () => {
 
   test('currency + doNotAddOnly', () => {
     expect(toWords.convert(testValue, { currency: true, doNotAddOnly: true })).toBe('千 二 百 三十 四 円');
+  });
+});
+
+describe('Functional helpers (locale-level)', () => {
+  test('toWords() matches new ToWords().convert()', () => {
+    const tw = new LocaleToWords();
+    expect(localeToWords(1)).toBe(tw.convert(1));
+    expect(localeToWords(100)).toBe(tw.convert(100));
+  });
+
+  test('toOrdinal() matches new ToWords().toOrdinal()', () => {
+    const tw = new LocaleToWords();
+    expect(localeToOrdinal(1)).toBe(tw.toOrdinal(1));
+  });
+
+  test('toCurrency() matches new ToWords().convert() with currency:true', () => {
+    const tw = new LocaleToWords();
+    expect(localeToCurrency(1)).toBe(tw.convert(1, { currency: true }));
+    expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });

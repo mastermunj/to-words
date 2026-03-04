@@ -29,7 +29,9 @@ function getLocaleCodes(): string[] {
 }
 
 function formatBytes(bytes: number): string {
-  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024) {
+    return bytes + ' B';
+  }
   return (bytes / 1024).toFixed(2) + ' KB';
 }
 
@@ -95,7 +97,9 @@ async function main(): Promise<void> {
   const results: { name: string; raw: number; gzipped: number }[] = [];
 
   // Build full package (minified and unminified)
-  if (verbose) console.log('Building full package...');
+  if (verbose) {
+    console.log('Building full package...');
+  }
   const fullEntry = path.join(SRC_DIR, 'ToWords.ts');
 
   await buildBundle(fullEntry, path.join(DIST_DIR, 'to-words.js'), false);
@@ -104,7 +108,9 @@ async function main(): Promise<void> {
   results.push({ name: 'to-words.min.js (full)', ...fullResult });
 
   // Build individual locale bundles
-  if (verbose) console.log(`Building ${locales.length} locale bundles...`);
+  if (verbose) {
+    console.log(`Building ${locales.length} locale bundles...`);
+  }
   let completed = 0;
 
   for (const locale of locales) {
@@ -115,9 +121,13 @@ async function main(): Promise<void> {
     results.push({ name: `${locale}.min.js`, ...result });
 
     completed++;
-    if (verbose) process.stdout.write(`\rProgress: ${completed}/${locales.length} locales...`);
+    if (verbose) {
+      process.stdout.write(`\rProgress: ${completed}/${locales.length} locales...`);
+    }
   }
-  if (verbose) console.log('\n');
+  if (verbose) {
+    console.log('\n');
+  }
 
   // Sort results by size
   const fullPkg = results[0];

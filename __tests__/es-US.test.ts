@@ -2,7 +2,12 @@ import { describe, expect, test } from 'vitest';
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
 import esUS from '../src/locales/es-US.js';
-import { ToWords as LocaleToWords } from '../src/locales/es-US.js';
+import {
+  ToWords as LocaleToWords,
+  toWords as localeToWords,
+  toOrdinal as localeToOrdinal,
+  toCurrency as localeToCurrency,
+} from '../src/locales/es-US.js';
 
 const localeCode = 'es-US';
 const toWords = new ToWords({
@@ -31,7 +36,7 @@ describe('Test Locale', () => {
   });
 });
 
-const testIntegers = [
+const testIntegers: [number, string][] = [
   [0, 'Cero'],
   [137, 'Ciento Treinta Y Siete'],
   [700, 'Setecientos'],
@@ -80,7 +85,7 @@ describe('Test Negative Integers with options = {}', () => {
   });
 });
 
-const testIntegersCurrency = [
+const testIntegersCurrency: [number, string][] = [
   [0, 'Cero'],
   [137, 'Ciento Treinta Y Siete'],
   [700, 'Setecientos'],
@@ -162,7 +167,7 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
   });
 });
 
-const testFloats = [
+const testFloats: [number, string][] = [
   [0.0, 'Cero'],
   [0.04, 'Cero Punto Cero Cuatro'],
   [0.0468, 'Cero Punto Cero Cuatro Seis Ocho'],
@@ -437,5 +442,24 @@ describe('Test Invalid Inputs', () => {
 
   test('convert "abc" throws error', () => {
     expect(() => toWords.convert('abc')).toThrow('Invalid Number "abc"');
+  });
+});
+
+describe('Functional helpers (locale-level)', () => {
+  test('toWords() matches new ToWords().convert()', () => {
+    const tw = new LocaleToWords();
+    expect(localeToWords(1)).toBe(tw.convert(1));
+    expect(localeToWords(100)).toBe(tw.convert(100));
+  });
+
+  test('toOrdinal() matches new ToWords().toOrdinal()', () => {
+    const tw = new LocaleToWords();
+    expect(localeToOrdinal(1)).toBe(tw.toOrdinal(1));
+  });
+
+  test('toCurrency() matches new ToWords().convert() with currency:true', () => {
+    const tw = new LocaleToWords();
+    expect(localeToCurrency(1)).toBe(tw.convert(1, { currency: true }));
+    expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });

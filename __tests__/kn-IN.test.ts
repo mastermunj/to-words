@@ -2,7 +2,12 @@ import { describe, expect, test } from 'vitest';
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
 import knIn from '../src/locales/kn-IN.js';
-import { ToWords as LocaleToWords } from '../src/locales/kn-IN.js';
+import {
+  ToWords as LocaleToWords,
+  toWords as localeToWords,
+  toOrdinal as localeToOrdinal,
+  toCurrency as localeToCurrency,
+} from '../src/locales/kn-IN.js';
 
 const localeCode = 'kn-IN';
 const toWords = new ToWords({
@@ -31,7 +36,7 @@ describe('Test Locale', () => {
   });
 });
 
-const testIntegers = [
+const testIntegers: [number, string][] = [
   [0, 'ಶೂನ್ಯ'],
   [137, 'ಒಂದು ನೂರು ಮೂವತ್ತೇಳು'],
   [700, 'ಏಳು ನೂರು'],
@@ -44,14 +49,8 @@ const testIntegers = [
   [9876543210, 'ಒಂಬತ್ತು ಅರಬ್ ಎಂಭತ್ತೇಳು ಕೋಟಿ ಅರುವತ್ತೈದು ಲಕ್ಷ ನಲವತ್ತಮೂರು ಸಾವಿರ ಎರಡು ನೂರು ಹತ್ತು'],
   [98765432101, 'ತೊಂಬತ್ತೆಂಟು ಅರಬ್ ಎಪ್ಪತ್ತಾರು ಕೋಟಿ ಐವತ್ತನಾಲ್ಕು ಲಕ್ಷ ಮೂವತ್ತೆರಡು ಸಾವಿರ ಒಂದು ನೂರು ಒಂದು'],
   [987654321012, 'ಒಂಬತ್ತು ಖರಬ್ ಎಂಭತ್ತೇಳು ಅರಬ್ ಅರುವತ್ತೈದು ಕೋಟಿ ನಲವತ್ತಮೂರು ಲಕ್ಷ ಇಪ್ಪತ್ತೊಂದು ಸಾವಿರ ಹನ್ನೆರಡು'],
-  [
-    9876543210123,
-    'ತೊಂಬತ್ತೆಂಟು ಖರಬ್ ಎಪ್ಪತ್ತಾರು ಅರಬ್ ಐವತ್ತನಾಲ್ಕು ಕೋಟಿ ಮೂವತ್ತೆರಡು ಲಕ್ಷ ಹತ್ತು ಸಾವಿರ ಒಂದು ನೂರು ಇಪ್ಪತ್ತಮೂರು',
-  ],
-  [
-    98765432101234,
-    'ಒಂಬತ್ತು ನೀಲ್ ಎಂಭತ್ತೇಳು ಖರಬ್ ಅರುವತ್ತೈದು ಅರಬ್ ನಲವತ್ತಮೂರು ಕೋಟಿ ಇಪ್ಪತ್ತೊಂದು ಲಕ್ಷ ಒಂದು ಸಾವಿರ ಎರಡು ನೂರು ಮೂವತ್ತನಾಲ್ಕು',
-  ],
+  [9876543210123, 'ತೊಂಬತ್ತೆಂಟು ಖರಬ್ ಎಪ್ಪತ್ತಾರು ಅರಬ್ ಐವತ್ತನಾಲ್ಕು ಕೋಟಿ ಮೂವತ್ತೆರಡು ಲಕ್ಷ ಹತ್ತು ಸಾವಿರ ಒಂದು ನೂರು ಇಪ್ಪತ್ತಮೂರು'],
+  [98765432101234, 'ಒಂಬತ್ತು ನೀಲ್ ಎಂಭತ್ತೇಳು ಖರಬ್ ಅರುವತ್ತೈದು ಅರಬ್ ನಲವತ್ತಮೂರು ಕೋಟಿ ಇಪ್ಪತ್ತೊಂದು ಲಕ್ಷ ಒಂದು ಸಾವಿರ ಎರಡು ನೂರು ಮೂವತ್ತನಾಲ್ಕು'],
 ];
 
 describe('Test Integers with options = {}', () => {
@@ -117,7 +116,7 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
   });
 });
 
-const testFloats = [
+const testFloats: [number, string][] = [
   [0.0, 'ಶೂನ್ಯ'],
   [0.04, 'ಶೂನ್ಯ ದಶಾಂಶ ಶೂನ್ಯ ನಾಲ್ಕು'],
   [0.0468, 'ಶೂನ್ಯ ದಶಾಂಶ ಶೂನ್ಯ ನಾಲ್ಕು ಆರು ಎಂಟು'],
@@ -325,5 +324,24 @@ describe('Invalid Input Tests', () => {
     ['abc', 'Invalid Number "abc"'],
   ] as [number | string, string][])('convert %s throws error', (input, expectedMessage) => {
     expect(() => toWords.convert(input as number)).toThrow(expectedMessage);
+  });
+});
+
+describe('Functional helpers (locale-level)', () => {
+  test('toWords() matches new ToWords().convert()', () => {
+    const tw = new LocaleToWords();
+    expect(localeToWords(1)).toBe(tw.convert(1));
+    expect(localeToWords(100)).toBe(tw.convert(100));
+  });
+
+  test('toOrdinal() matches new ToWords().toOrdinal()', () => {
+    const tw = new LocaleToWords();
+    expect(localeToOrdinal(1)).toBe(tw.toOrdinal(1));
+  });
+
+  test('toCurrency() matches new ToWords().convert() with currency:true', () => {
+    const tw = new LocaleToWords();
+    expect(localeToCurrency(1)).toBe(tw.convert(1, { currency: true }));
+    expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });

@@ -5,8 +5,5 @@
     "moduleResolution": "bundler",
     "noEmit": true
   },
-  "include": [
-    "./src/**/*",
-    "./__tests__/**/*"
-  ]
+  "include": ["./src/**/*", "./__tests__/**/*"]
 }

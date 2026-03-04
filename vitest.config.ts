@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { defineConfig } from 'vite';
 
 export default defineConfig({
@@ -8,6 +9,7 @@ export default defineConfig({
     coverage: {
       enabled: true,
       include: ['src/**'],
+      reporter: ['text', 'html', 'clover', 'json', 'lcov'],
     },
   },
 });

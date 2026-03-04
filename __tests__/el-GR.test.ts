@@ -2,7 +2,12 @@ import { describe, expect, test } from 'vitest';
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
 import elGr from '../src/locales/el-GR.js';
-import { ToWords as LocaleToWords } from '../src/locales/el-GR.js';
+import {
+  ToWords as LocaleToWords,
+  toWords as localeToWords,
+  toOrdinal as localeToOrdinal,
+  toCurrency as localeToCurrency,
+} from '../src/locales/el-GR.js';
 
 const localeCode = 'el-GR';
 const toWords = new ToWords({
@@ -33,6 +38,40 @@ describe('Test Locale', () => {
 
 const testIntegers: [number, string][] = [
   [0, 'Μηδέν'],
+  [1, 'Ένα'],
+  [2, 'Δύο'],
+  [3, 'Τρία'],
+  [4, 'Τέσσερα'],
+  [5, 'Πέντε'],
+  [6, 'Έξι'],
+  [7, 'Επτά'],
+  [8, 'Οκτώ'],
+  [9, 'Εννέα'],
+  [10, 'Δέκα'],
+  [11, 'Έντεκα'],
+  [12, 'Δώδεκα'],
+  [13, 'Δεκατρία'],
+  [14, 'Δεκατέσσερα'],
+  [15, 'Δεκαπέντε'],
+  [16, 'Δεκαέξι'],
+  [17, 'Δεκαεπτά'],
+  [18, 'Δεκαοκτώ'],
+  [19, 'Δεκαεννέα'],
+  [20, 'Είκοσι'],
+  [21, 'Είκοσι Ένα'],
+  [22, 'Είκοσι Δύο'],
+  [25, 'Είκοσι Πέντε'],
+  [30, 'Τριάντα'],
+  [40, 'Σαράντα'],
+  [50, 'Πενήντα'],
+  [60, 'Εξήντα'],
+  [70, 'Εβδομήντα'],
+  [80, 'Ογδόντα'],
+  [90, 'Ενενήντα'],
+  [99, 'Ενενήντα Εννέα'],
+  [100, 'Εκατό'],
+  [101, 'Εκατό Ένα'],
+  [110, 'Εκατό Δέκα'],
   [137, 'Εκατό Τριάντα Επτά'],
   [700, 'Επτακόσια'],
   [1100, 'Χίλια Εκατό'],
@@ -208,9 +247,21 @@ const testOrdinalNumbers: [number, string][] = [
   [10, 'Δέκατο'],
   [11, 'Ενδέκατο'],
   [12, 'Δωδέκατο'],
+  [13, 'Δέκατο Τρίτο'],
+  [14, 'Δέκατο Τέταρτο'],
+  [15, 'Δέκατο Πέμπτο'],
+  [16, 'Δέκατο Έκτο'],
+  [17, 'Δέκατο Έβδομο'],
+  [18, 'Δέκατο Όγδοο'],
+  [19, 'Δέκατο Ένατο'],
   [20, 'Εικοστό'],
   [21, 'Είκοσι Πρώτο'],
+  [22, 'Είκοσι Δεύτερο'],
+  [25, 'Είκοσι Πέμπτο'],
+  [30, 'Τριακοστό'],
+  [50, 'Πεντηκοστό'],
   [100, 'Εκατοστό'],
+  [1000, 'Χιλιοστό'],
 ];
 
 describe('Test Ordinal Numbers', () => {
@@ -327,5 +378,24 @@ describe('Test Invalid Input', () => {
 
   test('should throw error for non-numeric string', () => {
     expect(() => toWords.convert('abc')).toThrow('Invalid Number "abc"');
+  });
+});
+
+describe('Functional helpers (locale-level)', () => {
+  test('toWords() matches new ToWords().convert()', () => {
+    const tw = new LocaleToWords();
+    expect(localeToWords(1)).toBe(tw.convert(1));
+    expect(localeToWords(100)).toBe(tw.convert(100));
+  });
+
+  test('toOrdinal() matches new ToWords().toOrdinal()', () => {
+    const tw = new LocaleToWords();
+    expect(localeToOrdinal(1)).toBe(tw.toOrdinal(1));
+  });
+
+  test('toCurrency() matches new ToWords().convert() with currency:true', () => {
+    const tw = new LocaleToWords();
+    expect(localeToCurrency(1)).toBe(tw.convert(1, { currency: true }));
+    expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
