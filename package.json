@@ -139,5 +139,11 @@
   },
   "engines": {
     "node": ">=20.0.0"
+  },
+  "overrides": {
+    "tmp": "0.2.5",
+    "commitizen": {
+      "lodash": "4.17.23"
+    }
   }
 }

@@ -7,3 +7,12 @@ updates:
       time: '06:30'
       timezone: Asia/Kolkata
     open-pull-requests-limit: 20
+
+  - package-ecosystem: github-actions
+    directory: '/'
+    schedule:
+      interval: weekly
+      day: monday
+      time: '06:30'
+      timezone: Asia/Kolkata
+    open-pull-requests-limit: 10
