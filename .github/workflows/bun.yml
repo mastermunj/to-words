@@ -7,15 +7,19 @@ on:
   pull_request:
     branches: [main]
 
+permissions: {}
+
 jobs:
   bun:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
       - name: Use Node.js 24.x (build only)
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6
         with:
           node-version: 24.x
 
@@ -23,7 +27,7 @@ jobs:
         run: npm ci && npm run build
 
       - name: Set up Bun
-        uses: oven-sh/setup-bun@v2
+        uses: oven-sh/setup-bun@3d267786b128fe76c2f16a390aa2448b815359f3 # v2
 
       - name: Bun smoke test
         run: bun run scripts/runtime-smoke.mjs
