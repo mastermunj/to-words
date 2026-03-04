@@ -1,0 +1,40 @@
+name: Publish
+
+# Triggered automatically when release-please merges a Release PR and creates a tag.
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+permissions: {}
+
+jobs:
+  publish:
+    name: npm publish with provenance
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # required to update the GitHub Release created by release-please
+      id-token: write # required for npm OIDC trusted publishing + provenance
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6
+        with:
+          node-version: '24.x'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Publish to npm
+        run: npm publish
+        env:
+          CI: true

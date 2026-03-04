@@ -4,10 +4,9 @@ All notable changes to this project will be documented in this file. See [commit
 
 ## [5.2.0](https://github.com/mastermunj/to-words/compare/v5.1.0...v5.2.0) (2026-03-04)
 
-
 ### Features
 
-* add new locale, functional helpers, auto-detect ([#2177](https://github.com/mastermunj/to-words/issues/2177)) ([b17b33e](https://github.com/mastermunj/to-words/commit/b17b33ea8968478682fc9e9b1f4eb08dda125fa3))
+- add new locale, functional helpers, auto-detect ([#2177](https://github.com/mastermunj/to-words/issues/2177)) ([b17b33e](https://github.com/mastermunj/to-words/commit/b17b33ea8968478682fc9e9b1f4eb08dda125fa3))
 
 ## [5.1.0](https://github.com/mastermunj/to-words/compare/v5.0.0...v5.1.0) (2026-02-03)
 
