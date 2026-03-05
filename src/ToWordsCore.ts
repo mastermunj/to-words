@@ -32,6 +32,7 @@ export const DefaultConverterOptions: ConverterOptions = {
   ignoreDecimal: false,
   ignoreZeroCurrency: false,
   doNotAddOnly: false,
+  includeZeroFractional: false,
 };
 
 export const DefaultToWordsOptions: ToWordsOptions = {
@@ -194,6 +195,7 @@ export class ToWordsCore {
             ignoreDecimal: options.ignoreDecimal ?? baseOptions?.ignoreDecimal ?? false,
             ignoreZeroCurrency: options.ignoreZeroCurrency ?? baseOptions?.ignoreZeroCurrency ?? false,
             doNotAddOnly: options.doNotAddOnly ?? baseOptions?.doNotAddOnly ?? false,
+            includeZeroFractional: options.includeZeroFractional ?? baseOptions?.includeZeroFractional ?? false,
             currencyOptions: options.currencyOptions ?? baseOptions?.currencyOptions,
           };
 
@@ -208,9 +210,19 @@ export class ToWordsCore {
       numericValue = Math.trunc(numericValue as number);
     }
 
+    // Detect string inputs like "123.00" or "5.0" where the caller has explicitly expressed
+    // a zero fractional part. Number() coercion loses this info, so we capture it here.
+    const forceZeroFractional =
+      !!mergedOptions.includeZeroFractional &&
+      !isBigInt &&
+      !mergedOptions.ignoreDecimal &&
+      typeof number === 'string' &&
+      /\.\d+$/.test(number as string) &&
+      Number((number as string).split('.')[1]) === 0;
+
     let words: string[] = [];
     if (mergedOptions.currency) {
-      words = this.convertCurrency(numericValue, mergedOptions);
+      words = this.convertCurrency(numericValue, mergedOptions, forceZeroFractional);
     } else {
       words = this.convertNumber(numericValue);
     }
@@ -416,7 +428,11 @@ export class ToWordsCore {
     return words;
   }
 
-  protected convertCurrency(number: number | bigint, options: ConverterOptions = {}): string[] {
+  protected convertCurrency(
+    number: number | bigint,
+    options: ConverterOptions = {},
+    forceZeroFractional = false,
+  ): string[] {
     const locale = this.getLocale();
     const localeConfig = locale.config;
 
@@ -499,6 +515,19 @@ export class ToWordsCore {
         } else {
           wordsWithDecimal.push(currencyOptions.fractionalUnit.plural);
         }
+      }
+    } else if (
+      forceZeroFractional &&
+      !ignoreZero &&
+      !localeConfig.decimalLengthWordMapping &&
+      !!currencyOptions.fractionalUnit.plural
+    ) {
+      wordsWithDecimal.push(localeConfig.texts.and);
+      if (currencyOptions.fractionalUnit.numberSpecificForms?.[0]) {
+        wordsWithDecimal.push(currencyOptions.fractionalUnit.numberSpecificForms[0]);
+      } else {
+        wordsWithDecimal.push(...this.convertInternal(0n, false, undefined, locale));
+        wordsWithDecimal.push(currencyOptions.fractionalUnit.plural);
       }
     } else if (localeConfig.decimalLengthWordMapping && words.length) {
       wordsWithDecimal.push(currencyOptions.fractionalUnit.plural);

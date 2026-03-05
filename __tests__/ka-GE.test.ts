@@ -144,6 +144,27 @@ const testFloats: [number, string][] = [
   [37.683, 'ოცდაათი შვიდი მძიმე ექვსი ასი ოთხმოცი სამი'],
 ];
 
+describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
+  const testIncludeZeroFractional: [number | string, string][] = [
+    [123, `ერთი ასი ოცი სამი ლარი`],
+    ['123', `ერთი ასი ოცი სამი ლარი`],
+    ['123.0', `ერთი ასი ოცი სამი ლარი და ნული თეთრი`],
+    ['123.00', `ერთი ასი ოცი სამი ლარი და ნული თეთრი`],
+    ['0.00', `ნული ლარი და ნული თეთრი`],
+    ['-123.00', `მინუს ერთი ასი ოცი სამი ლარი და ნული თეთრი`],
+    ['37.68', `ოცდაათი შვიდი ლარი და სამოცი რვა თეთრი`],
+  ];
+
+  test.concurrent.each(testIncludeZeroFractional)('convert %s => %s', (input, expected) => {
+    expect(
+      toWords.convert(input, {
+        currency: true,
+        includeZeroFractional: true,
+      }),
+    ).toBe(expected);
+  });
+});
+
 describe('Test Floats with options = {}', () => {
   test.concurrent.each(testFloats)('convert %d => %s', (input, expected) => {
     expect(toWords.convert(input as number)).toBe(expected);

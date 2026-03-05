@@ -8,6 +8,7 @@ describe('ToWordsCore - DefaultConverterOptions', () => {
       ignoreDecimal: false,
       ignoreZeroCurrency: false,
       doNotAddOnly: false,
+      includeZeroFractional: false,
     });
   });
 });

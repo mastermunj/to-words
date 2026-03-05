@@ -18,6 +18,7 @@ export type ConverterOptions = {
   ignoreDecimal?: boolean;
   ignoreZeroCurrency?: boolean;
   doNotAddOnly?: boolean; // applicable only when currency = true
+  includeZeroFractional?: boolean; // applicable only when currency = true — when input is a string like "123.00", includes "And Zero <unit>" instead of omitting it
   currencyOptions?: CurrencyOptions; // applicable only when currency = true, overwrites options from locales
 };
 

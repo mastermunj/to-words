@@ -50,9 +50,10 @@ new ToWords({
   localeCode?: string;           // BCP 47 locale code. Default: 'en-IN'
   converterOptions?: {
     currency?: boolean;          // Default: false
-    ignoreDecimal?: boolean;     // Default: false
-    ignoreZeroCurrency?: boolean;// Default: false — skip zero main unit
-    doNotAddOnly?: boolean;      // Default: false — omit "Only" suffix
+    ignoreDecimal?: boolean;        // Default: false
+    ignoreZeroCurrency?: boolean;   // Default: false — skip zero main unit
+    doNotAddOnly?: boolean;         // Default: false — omit "Only" suffix
+    includeZeroFractional?: boolean;// Default: false — include "And Zero <unit>" for string inputs like "123.00"
     currencyOptions?: {          // Override locale's default currency
       name: string;
       plural: string;
@@ -97,6 +98,7 @@ new ToWords({
 | `ignoreDecimal` | boolean | false | Ignore fractional part |
 | `ignoreZeroCurrency` | boolean | false | Skip zero main currency |
 | `doNotAddOnly` | boolean | false | Omit "Only" suffix in currency mode |
+| `includeZeroFractional` | boolean | false | Include fractional unit when decimal is zero (string input required, e.g. `"123.00"`) |
 | `currencyOptions` | object | — | Override locale currency name/symbol |
 
 ## Custom Locale Injection

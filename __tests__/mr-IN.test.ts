@@ -129,6 +129,27 @@ const testFloats: [number, string][] = [
   [37.683, 'सदतीस पूर्णांक सहाशे त्र्याऐंशी'],
 ];
 
+describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
+  const testIncludeZeroFractional: [number | string, string][] = [
+    [123, `एकशे तेवीस रुपये`],
+    ['123', `एकशे तेवीस रुपये`],
+    ['123.0', `एकशे तेवीस रुपये आणि शून्य पैसे`],
+    ['123.00', `एकशे तेवीस रुपये आणि शून्य पैसे`],
+    ['0.00', `शून्य रुपये आणि शून्य पैसे`],
+    ['-123.00', `वजा एकशे तेवीस रुपये आणि शून्य पैसे`],
+    ['37.68', `सदतीस रुपये आणि अडुसष्ठ पैसे`],
+  ];
+
+  test.concurrent.each(testIncludeZeroFractional)('convert %s => %s', (input, expected) => {
+    expect(
+      toWords.convert(input, {
+        currency: true,
+        includeZeroFractional: true,
+      }),
+    ).toBe(expected);
+  });
+});
+
 describe('Test Floats with options = {}', () => {
   test.each(testFloats)('convert %d => %s', (input, expected) => {
     expect(toWords.convert(input as number)).toBe(expected);
