@@ -244,6 +244,10 @@ tw.convert(452.36, { currency: true, ignoreDecimal: true });
 // Ignore zero currency
 tw.convert(0.36, { currency: true, ignoreZeroCurrency: true });
 // "Thirty Six Paise Only"
+
+// Show fractional unit even when zero (string input preserves .00)
+tw.convert('452.00', { currency: true, includeZeroFractional: true });
+// "Four Hundred Fifty Two Rupees And Zero Paise Only"
 ```
 
 **Functional — `toCurrency()` shorthand:**
@@ -689,6 +693,7 @@ interface ToWordsOptions {
     ignoreDecimal?: boolean; // Default: false
     ignoreZeroCurrency?: boolean; // Default: false
     doNotAddOnly?: boolean; // Default: false
+    includeZeroFractional?: boolean; // Default: false
     currencyOptions?: {
       name: string;
       plural: string;
@@ -800,13 +805,14 @@ detectLocale('en-GB'); // custom fallback if detection fails
 
 ### Converter Options
 
-| Option               | Type    | Default   | Description                                                  |
-| -------------------- | ------- | --------- | ------------------------------------------------------------ |
-| `currency`           | boolean | false     | Convert as currency with locale-specific formatting          |
-| `ignoreDecimal`      | boolean | false     | Ignore fractional part when converting                       |
-| `ignoreZeroCurrency` | boolean | false     | Skip zero main currency (e.g., show only "Thirty Six Paise") |
-| `doNotAddOnly`       | boolean | false     | Omit "Only" suffix in currency mode                          |
-| `currencyOptions`    | object  | undefined | Override locale's default currency settings                  |
+| Option                  | Type    | Default   | Description                                                                                      |
+| ----------------------- | ------- | --------- | ------------------------------------------------------------------------------------------------ |
+| `currency`              | boolean | false     | Convert as currency with locale-specific formatting                                              |
+| `ignoreDecimal`         | boolean | false     | Ignore fractional part when converting                                                           |
+| `ignoreZeroCurrency`    | boolean | false     | Skip zero main currency (e.g., show only "Thirty Six Paise")                                     |
+| `doNotAddOnly`          | boolean | false     | Omit "Only" suffix in currency mode                                                              |
+| `includeZeroFractional` | boolean | false     | When input is a string like `"123.00"`, include "And Zero Paise" even though the decimal is zero |
+| `currencyOptions`       | object  | undefined | Override locale's default currency settings                                                      |
 
 ### Common Options Example
 

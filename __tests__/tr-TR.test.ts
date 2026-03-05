@@ -129,6 +129,27 @@ const testFloats: [number, string][] = [
   [37.683, 'otuz yedi virgül altı yüz seksen üç bininci'],
 ];
 
+describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
+  const testIncludeZeroFractional: [number | string, string][] = [
+    [123, `yüz yirmi üç lira`],
+    ['123', `yüz yirmi üç lira`],
+    ['123.0', `yüz yirmi üç lira`],
+    ['123.00', `yüz yirmi üç lira`],
+    ['0.00', `sıfır lira`],
+    ['-123.00', `eksi yüz yirmi üç lira`],
+    ['37.68', `otuz yedi virgül altmış sekiz yüzüncü lira`],
+  ];
+
+  test.concurrent.each(testIncludeZeroFractional)('convert %s => %s', (input, expected) => {
+    expect(
+      toWords.convert(input, {
+        currency: true,
+        includeZeroFractional: true,
+      }),
+    ).toBe(expected);
+  });
+});
+
 describe('Test Floats with options = {}', () => {
   test.each(testFloats)('convert %d => %s', (input, expected) => {
     expect(toWords.convert(input as number)).toBe(expected);

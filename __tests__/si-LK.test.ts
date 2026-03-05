@@ -156,6 +156,27 @@ const testFloats: [number, string][] = [
   [0.04, 'ශූන්‍ය දශම ශූන්‍ය හතර'],
 ];
 
+describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
+  const testIncludeZeroFractional: [number | string, string][] = [
+    [123, `සිය විස තුන රුපියල`],
+    ['123', `සිය විස තුන රුපියල`],
+    ['123.0', `සිය විස තුන රුපියල සහ ශූන්‍ය සත`],
+    ['123.00', `සිය විස තුන රුපියල සහ ශූන්‍ය සත`],
+    ['0.00', `ශූන්‍ය රුපියල සහ ශූන්‍ය සත`],
+    ['-123.00', `ඍණ සිය විස තුන රුපියල සහ ශූන්‍ය සත`],
+    ['37.68', `තිස හත රුපියල සහ හැට අට සත`],
+  ];
+
+  test.concurrent.each(testIncludeZeroFractional)('convert %s => %s', (input, expected) => {
+    expect(
+      toWords.convert(input, {
+        currency: true,
+        includeZeroFractional: true,
+      }),
+    ).toBe(expected);
+  });
+});
+
 describe('Test Floats with options = {}', () => {
   test.concurrent.each(testFloats)('convert %d => %s', (input, expected) => {
     expect(toWords.convert(input as number)).toBe(expected);

@@ -181,6 +181,27 @@ const testFloats: [number, string][] = [
   [37.683, 'Treinta Y Siete Coma Seiscientos Ochenta Y Tres'],
 ];
 
+describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
+  const testIncludeZeroFractional: [number | string, string][] = [
+    [123, `Ciento Veintitrés Pesos Colombianos`],
+    ['123', `Ciento Veintitrés Pesos Colombianos`],
+    ['123.0', `Ciento Veintitrés Pesos Colombianos Y Cero Centavos`],
+    ['123.00', `Ciento Veintitrés Pesos Colombianos Y Cero Centavos`],
+    ['0.00', `Cero Pesos Colombianos Y Cero Centavos`],
+    ['-123.00', `Menos Ciento Veintitrés Pesos Colombianos Y Cero Centavos`],
+    ['37.68', `Treinta Y Siete Pesos Colombianos Y Sesenta Y Ocho Centavos`],
+  ];
+
+  test.concurrent.each(testIncludeZeroFractional)('convert %s => %s', (input, expected) => {
+    expect(
+      toWords.convert(input, {
+        currency: true,
+        includeZeroFractional: true,
+      }),
+    ).toBe(expected);
+  });
+});
+
 describe('Test Floats with options = {}', () => {
   test.concurrent.each(testFloats)('convert %d => %s', (input, expected) => {
     expect(toWords.convert(input as number)).toBe(expected);

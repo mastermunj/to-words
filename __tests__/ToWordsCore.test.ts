@@ -8,6 +8,7 @@ describe('ToWordsCore - DefaultConverterOptions', () => {
       ignoreDecimal: false,
       ignoreZeroCurrency: false,
       doNotAddOnly: false,
+      includeZeroFractional: false,
     });
   });
 });
@@ -654,5 +655,33 @@ describe('ToWordsCore - internal coverage via subclass', () => {
     core.setLocale(EnInLocale);
     const result = core.convert(100, { currency: false });
     expect(result).toBe('One Hundred');
+  });
+
+  test('includeZeroFractional uses fractionalUnit.numberSpecificForms[0] when defined (line 527)', async () => {
+    const { default: EnInLocale } = await import('../src/locales/en-IN');
+    const core = new ToWordsCore();
+    core.setLocale(EnInLocale);
+
+    const result = core.convert('5.00', {
+      currency: true,
+      includeZeroFractional: true,
+      currencyOptions: {
+        name: 'Rupee',
+        plural: 'Rupees',
+        singular: 'Rupee',
+        symbol: '₹',
+        fractionalUnit: {
+          name: 'Paisa',
+          plural: 'Paise',
+          singular: 'Paisa',
+          symbol: '',
+          numberSpecificForms: {
+            0: 'Zero Paise Special',
+          },
+        },
+      },
+    });
+
+    expect(result).toBe('Five Rupees And Zero Paise Special Only');
   });
 });
