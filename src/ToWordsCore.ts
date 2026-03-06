@@ -185,10 +185,18 @@ export class ToWordsCore {
   }
 
   public convert(number: NumberInput, options: ConverterOptions = {}): string {
-    // Fast path: merge options only when needed (avoid Object.assign in hot path)
+    // Fast path: merge options only when needed (avoid Object.assign in hot path).
+    // Deliberately checks only the known ConverterOptions fields so that callers may
+    // attach extra properties (e.g. localeCode from the functional helpers) without
+    // triggering the slow merge path, and without the array allocation of Object.keys().
     const baseOptions = this.options.converterOptions;
     const mergedOptions: ConverterOptions =
-      Object.keys(options).length === 0
+      options.currency === undefined &&
+      options.ignoreDecimal === undefined &&
+      options.ignoreZeroCurrency === undefined &&
+      options.doNotAddOnly === undefined &&
+      options.includeZeroFractional === undefined &&
+      options.currencyOptions === undefined
         ? (baseOptions ?? {})
         : {
             currency: options.currency ?? baseOptions?.currency ?? false,

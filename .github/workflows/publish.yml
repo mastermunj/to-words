@@ -10,7 +10,7 @@ permissions: {}
 
 jobs:
   publish:
-    name: npm publish with provenance
+    name: npm publish
     runs-on: ubuntu-latest
     permissions:
       contents: write # required to update the GitHub Release created by release-please

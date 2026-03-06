@@ -190,8 +190,12 @@ export function detectLocale(fallback: string = DefaultToWordsOptions.localeCode
  * toWords(12345); // uses auto-detected runtime locale, falls back to 'en-IN'
  */
 export function toWords(number: NumberInput, options?: ConverterOptions & { localeCode?: string }): string {
-  const { localeCode, ...converterOptions } = options ?? {};
-  return getCachedInstance(localeCode).convert(number, converterOptions);
+  // Avoid spread allocation: extra `localeCode` key is silently ignored by convert's
+  // fast-path check (which tests individual ConverterOptions fields, not Object.keys).
+  if (!options) {
+    return getCachedInstance().convert(number);
+  }
+  return getCachedInstance(options.localeCode).convert(number, options);
 }
 
 /**
@@ -205,8 +209,11 @@ export function toWords(number: NumberInput, options?: ConverterOptions & { loca
  * toOrdinal(21); // uses auto-detected runtime locale, falls back to 'en-IN'
  */
 export function toOrdinal(number: NumberInput, options?: OrdinalOptions & { localeCode?: string }): string {
-  const { localeCode, ...ordinalOptions } = options ?? {};
-  return getCachedInstance(localeCode).toOrdinal(number, ordinalOptions);
+  // Avoid spread allocation: localeCode key is not consumed by toOrdinal internals.
+  if (!options) {
+    return getCachedInstance().toOrdinal(number);
+  }
+  return getCachedInstance(options.localeCode).toOrdinal(number, options);
 }
 
 /**
@@ -220,7 +227,25 @@ export function toOrdinal(number: NumberInput, options?: OrdinalOptions & { loca
  * toCurrency(1234.56, { localeCode: 'en-US' }); // "One Thousand Two Hundred Thirty Four Dollars And Fifty Six Cents Only"
  * toCurrency(1234.56); // uses auto-detected runtime locale, falls back to 'en-IN'
  */
+// Shared singleton for the common "no extra converter options" case in toCurrency.
+const _CURRENCY_ONLY_OPTS: ConverterOptions = { currency: true };
+
 export function toCurrency(number: NumberInput, options?: ConverterOptions & { localeCode?: string }): string {
-  const { localeCode, ...converterOptions } = options ?? {};
-  return getCachedInstance(localeCode).convert(number, { ...converterOptions, currency: true });
+  const localeCode = options?.localeCode;
+  // Fast path: caller only specified localeCode (or nothing) — reuse shared object, no allocation.
+  if (
+    !options ||
+    (options.currency === undefined &&
+      options.ignoreDecimal === undefined &&
+      options.ignoreZeroCurrency === undefined &&
+      options.doNotAddOnly === undefined &&
+      options.includeZeroFractional === undefined &&
+      options.currencyOptions === undefined)
+  ) {
+    return getCachedInstance(localeCode).convert(number, _CURRENCY_ONLY_OPTS);
+  }
+  // Slow path: caller passed real converter options — one spread + mutation instead of two spreads.
+  const { localeCode: _, ...converterOptions } = options;
+  converterOptions.currency = true;
+  return getCachedInstance(localeCode).convert(number, converterOptions);
 }

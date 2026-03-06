@@ -4,10 +4,9 @@ All notable changes to this project will be documented in this file. See [commit
 
 ## [5.3.0](https://github.com/mastermunj/to-words/compare/v5.2.1...v5.3.0) (2026-03-05)
 
-
 ### Features
 
-* add support for zero fractional in currency ([#2182](https://github.com/mastermunj/to-words/issues/2182)) ([b614d06](https://github.com/mastermunj/to-words/commit/b614d06709dc10b9f1b9505f8d09526de4772bf5))
+- add support for zero fractional in currency ([#2182](https://github.com/mastermunj/to-words/issues/2182)) ([b614d06](https://github.com/mastermunj/to-words/commit/b614d06709dc10b9f1b9505f8d09526de4772bf5))
 
 ## [5.2.1](https://github.com/mastermunj/to-words/compare/v5.2.0...v5.2.1) (2026-03-04)
 
