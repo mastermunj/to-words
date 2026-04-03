@@ -463,6 +463,14 @@ describe('Gender-aware cardinals', () => {
       expect(toWords.convert(11, { gender: 'feminine' })).toBe('إحدى عشرة');
     });
 
+    test('21 feminine', () => {
+      expect(toWords.convert(21, { gender: 'feminine' })).toBe('واحدة و عشرون');
+    });
+
+    test('99 feminine', () => {
+      expect(toWords.convert(99, { gender: 'feminine' })).toBe('تسع و تسعون');
+    });
+
     test('composite: 101 feminine', () => {
       expect(toWords.convert(101, { gender: 'feminine' })).toBe('مائة و واحدة');
     });
@@ -497,6 +505,14 @@ describe('Gender-aware cardinals', () => {
 
     test('10 feminine', () => {
       expect(toWords.convert(10, { gender: 'feminine' })).toBe('عشر');
+    });
+
+    test('21 feminine', () => {
+      expect(toWords.convert(21, { gender: 'feminine' })).toBe('واحدة و عشرون');
+    });
+
+    test('99 feminine', () => {
+      expect(toWords.convert(99, { gender: 'feminine' })).toBe('تسع و تسعون');
     });
 
     test('composite: 1001 feminine', () => {
