@@ -496,6 +496,95 @@ describe('Test All Currency Options Combinations', () => {
   });
 });
 
+// ============================================================
+// FORMAL (大寫) TESTS FOR zh-TW
+// ============================================================
+
+const testFormalIntegers: [number, string][] = [
+  [0, '零'],
+  [1, '壹'],
+  [2, '貳'],
+  [3, '參'],
+  [4, '肆'],
+  [5, '伍'],
+  [6, '陸'],
+  [7, '柒'],
+  [8, '捌'],
+  [9, '玖'],
+  [10, '拾'],
+  [11, '拾 壹'],
+  [20, '貳拾'],
+  [21, '貳拾 壹'],
+  [50, '伍拾'],
+  [99, '玖拾 玖'],
+  [100, '佰'],
+  [137, '佰 參拾 柒'],
+  [700, '柒 佰'],
+  [1100, '仟 佰'],
+  [4680, '肆 仟 陸 佰 捌拾'],
+  [10000, '萬'],
+  [63892, '陸 萬 參 仟 捌 佰 玖拾 貳'],
+  [100000000, '億'],
+  [975310864, '玖 億 柒 仟萬 伍 佰萬 參 拾萬 萬 捌 佰 陸拾 肆'],
+  [1000000000000, '兆'],
+];
+
+describe('Test Formal Integers with options = { formal: true }', () => {
+  test.concurrent.each(testFormalIntegers)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { formal: true })).toBe(expected);
+  });
+});
+
+describe('Test Formal Integers with options = { formal: true, currency: true }', () => {
+  const testFormalIntegersWithCurrency = cloneDeep(testFormalIntegers);
+  testFormalIntegersWithCurrency.map((row) => {
+    row[1] = `${row[1]} 圓 整`;
+  });
+
+  test.concurrent.each(testFormalIntegersWithCurrency)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { formal: true, currency: true })).toBe(expected);
+  });
+});
+
+describe('Test Formal Floats with options = { formal: true, currency: true }', () => {
+  const testFormalFloatsWithCurrency: [number, string][] = [
+    [0.01, '零 圓  壹 分 整'],
+    [1.25, '壹 圓  貳拾 伍 分 整'],
+    [10.99, '拾 圓  玖拾 玖 分 整'],
+    [37.68, '參拾 柒 圓  陸拾 捌 分 整'],
+  ];
+
+  test.concurrent.each(testFormalFloatsWithCurrency)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { formal: true, currency: true })).toBe(expected);
+  });
+});
+
+const testFormalOrdinals: [number, string][] = [
+  [1, '第壹'],
+  [2, '第貳'],
+  [3, '第參'],
+  [4, '第肆'],
+  [5, '第伍'],
+  [6, '第陸'],
+  [7, '第柒'],
+  [8, '第捌'],
+  [9, '第玖'],
+  [10, '第拾'],
+  [20, '第貳拾'],
+  [30, '第參拾'],
+  [50, '第伍拾'],
+  [100, '第佰'],
+  [21, '貳拾 第壹'],
+  [123, '佰 貳拾 第參'],
+  [1234, '仟 貳 佰 參拾 第肆'],
+];
+
+describe('Test Formal Ordinal Numbers', () => {
+  test.concurrent.each(testFormalOrdinals)('toOrdinal %d => %s', (input, expected) => {
+    expect(toWords.toOrdinal(input as number, { formal: true })).toBe(expected);
+  });
+});
+
 describe('Functional helpers (locale-level)', () => {
   test('toWords() matches new ToWords().convert()', () => {
     const tw = new LocaleToWords();

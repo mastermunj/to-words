@@ -69,7 +69,7 @@ export default class Locale implements LocaleInterface {
       { number: 4, value: 'Patru' },
       { number: 3, value: 'Trei' },
       { number: 2, value: 'Două' },
-      { number: 1, value: 'Unu' },
+      { number: 1, value: 'Unu', feminineValue: 'Una' },
       { number: 0, value: 'Zero' },
     ],
     exactWordsMapping: [

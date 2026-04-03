@@ -8,9 +8,7 @@ import {
 } from '../types.js';
 import { ToWordsCore } from '../ToWordsCore.js';
 
-// NOTE: Ordinal conversion is not yet supported for this locale.
-// Khmer ordinals use the prefix ទី (ti) which the engine does not natively support.
-// toOrdinal() will throw.
+// Khmer ordinals use the prefix ទី (ti), e.g. ទីមួយ (first), ទីពីរ (second).
 
 export default class Locale implements LocaleInterface {
   public config: LocaleConfig = {
@@ -34,6 +32,7 @@ export default class Locale implements LocaleInterface {
       point: 'ចុច',
     },
     trim: true,
+    ordinalPrefix: 'ទី',
     numberWordsMapping: [
       { number: 1000000000000, value: 'ទ្រីលាន' },
       { number: 1000000000, value: 'ប៊ីលាន' },

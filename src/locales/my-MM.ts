@@ -8,9 +8,7 @@ import {
 } from '../types.js';
 import { ToWordsCore } from '../ToWordsCore.js';
 
-// NOTE: Ordinal conversion is not yet supported for this locale.
-// Burmese ordinals use a prefix system (ပထမ, ဒုတိယ, တတိယ ...) that requires
-// a future prefix-ordinal feature in the engine. toOrdinal() will throw.
+// Burmese ordinals support irregular first forms and a general "မြောက်" suffix.
 
 export default class Locale implements LocaleInterface {
   public config: LocaleConfig = {
@@ -33,6 +31,12 @@ export default class Locale implements LocaleInterface {
       point: 'ဒသမ',
     },
     trim: true,
+    ordinalSuffix: 'မြောက်',
+    ordinalExactWordsMapping: [
+      { number: 1, value: 'ပထမ' },
+      { number: 2, value: 'ဒုတိယ' },
+      { number: 3, value: 'တတိယ' },
+    ],
     numberWordsMapping: [
       { number: 1000000000000, value: 'ထရီလီယံ' },
       { number: 1000000000, value: 'ဘီလီယံ' },

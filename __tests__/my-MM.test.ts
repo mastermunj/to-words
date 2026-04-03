@@ -214,13 +214,16 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
   });
 });
 
-describe('Test Ordinal (unsupported — throws)', () => {
-  test('toOrdinal throws for my-MM', () => {
-    expect(() => toWords.toOrdinal(1)).toThrow('Ordinal conversion not supported for locale "my-MM"');
+describe('Test Ordinal', () => {
+  test('toOrdinal handles irregular first ordinals', () => {
+    expect(toWords.toOrdinal(1)).toBe('ပထမ');
+    expect(toWords.toOrdinal(2)).toBe('ဒုတိယ');
+    expect(toWords.toOrdinal(3)).toBe('တတိယ');
   });
 
-  test('localeToOrdinal throws for my-MM', () => {
-    expect(() => localeToOrdinal(1)).toThrow('Ordinal conversion not supported for locale');
+  test('toOrdinal uses suffix for other values', () => {
+    expect(localeToOrdinal(4)).toBe('လေးမြောက်');
+    expect(localeToOrdinal(21)).toBe('နှစ်ဆယ့်တစ်မြောက်');
   });
 });
 

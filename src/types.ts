@@ -20,10 +20,14 @@ export type ConverterOptions = {
   doNotAddOnly?: boolean; // applicable only when currency = true
   includeZeroFractional?: boolean; // applicable only when currency = true — when input is a string like "123.00", includes "And Zero <unit>" instead of omitting it
   currencyOptions?: CurrencyOptions; // applicable only when currency = true, overwrites options from locales
+  gender?: 'masculine' | 'feminine';
+  useAnd?: boolean;
+  formal?: boolean;
 };
 
 export type OrdinalOptions = {
   gender?: 'masculine' | 'feminine';
+  formal?: boolean;
 };
 
 export type ToWordsOptions = {
@@ -39,6 +43,8 @@ export type NumberWordMap = {
   number: number | bigint;
   value: string | [string, string];
   singularValue?: string;
+  feminineValue?: string;
+  masculineValue?: string;
 };
 
 export type OrdinalWordMap = {
@@ -73,8 +79,10 @@ export type LocaleConfig = {
   exactWordsMapping?: NumberWordMap[];
   ordinalWordsMapping?: OrdinalWordMap[];
   ordinalSuffix?: string;
+  ordinalPrefix?: string;
   ordinalExactWordsMapping?: OrdinalWordMap[];
   namedLessThan1000?: boolean;
+  scaleFirst?: boolean;
   splitWord?: string;
   ignoreZeroInDecimals?: boolean;
   decimalLengthWordMapping?: Record<number, string>;
@@ -88,8 +96,18 @@ export type LocaleConfig = {
   onlyInFront?: boolean;
   trim?: boolean;
   useTrailingForCurrency?: boolean; // If true, use trailing=true in currency mode (for French-style plurals)
+  formalConfig?: FormalConfig;
 };
 
 export interface LocaleInterface {
   config: LocaleConfig;
 }
+
+export type FormalConfig = {
+  numberWordsMapping?: NumberWordMap[];
+  exactWordsMapping?: NumberWordMap[];
+  ordinalWordsMapping?: OrdinalWordMap[];
+  ordinalExactWordsMapping?: OrdinalWordMap[];
+  currency?: CurrencyOptions;
+  ignoreOneForWords?: string[];
+};

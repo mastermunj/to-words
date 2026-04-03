@@ -69,7 +69,7 @@ export default class Locale implements LocaleInterface {
       { number: 4, value: 'Четири' },
       { number: 3, value: 'Три' },
       { number: 2, value: 'Две' },
-      { number: 1, value: 'Едно' },
+      { number: 1, value: 'Едно', feminineValue: 'Една' },
       { number: 0, value: 'Нула' },
     ],
     exactWordsMapping: [{ number: 100, value: 'Сто' }],

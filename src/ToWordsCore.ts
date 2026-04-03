@@ -20,6 +20,7 @@
 import {
   type ConstructorOf,
   type ConverterOptions,
+  type FormalConfig,
   type LocaleInterface,
   type NumberInput,
   type NumberWordMap,
@@ -44,6 +45,8 @@ export const DefaultToWordsOptions: ToWordsOptions = {
 interface CachedNumberWordMap extends NumberWordMap {
   numberBigInt: bigint;
   resolvedValue: string; // Pre-resolved value (first element if array)
+  feminineValue?: string;
+  masculineValue?: string;
 }
 
 interface LocaleCache {
@@ -80,8 +83,76 @@ export class ToWordsCore {
 
   protected localeClass: ConstructorOf<LocaleInterface> | undefined = undefined;
 
+  private formalLocale: InstanceType<ConstructorOf<LocaleInterface>> | undefined = undefined;
+
   constructor(options: ToWordsOptions = {}) {
     this.options = Object.assign({}, DefaultToWordsOptions, options);
+  }
+
+  /**
+   * Resolve gendered value from a cached number-word mapping entry.
+   */
+  private resolveGenderedValue(
+    entry: CachedNumberWordMap,
+    gender: 'masculine' | 'feminine' | undefined,
+    trailing: boolean,
+  ): string {
+    if (gender === 'feminine' && entry.feminineValue) {
+      return entry.feminineValue;
+    }
+    if (gender === 'masculine' && entry.masculineValue) {
+      return entry.masculineValue;
+    }
+    return trailing && Array.isArray(entry.value) ? entry.value[1] : entry.resolvedValue;
+  }
+
+  /**
+   * Resolve locale instance, applying formalConfig merge when formal=true.
+   */
+  private resolveLocale(formal?: boolean): InstanceType<ConstructorOf<LocaleInterface>> {
+    const locale = this.getLocale();
+    if (!formal) {
+      return locale;
+    }
+    const formalConfig = locale.config.formalConfig;
+    if (!formalConfig) {
+      return locale;
+    }
+    if (!this.formalLocale) {
+      this.formalLocale = this.createFormalLocale(locale, formalConfig);
+    }
+    return this.formalLocale;
+  }
+
+  /**
+   * Create a synthetic locale instance with formalConfig merged in.
+   */
+  private createFormalLocale(
+    base: InstanceType<ConstructorOf<LocaleInterface>>,
+    formalConfig: FormalConfig,
+  ): InstanceType<ConstructorOf<LocaleInterface>> {
+    const mergedConfig = { ...base.config };
+    if (formalConfig.numberWordsMapping) {
+      mergedConfig.numberWordsMapping = formalConfig.numberWordsMapping;
+    }
+    if (formalConfig.exactWordsMapping) {
+      mergedConfig.exactWordsMapping = formalConfig.exactWordsMapping;
+    }
+    if (formalConfig.ordinalWordsMapping) {
+      mergedConfig.ordinalWordsMapping = formalConfig.ordinalWordsMapping;
+    }
+    if (formalConfig.ordinalExactWordsMapping) {
+      mergedConfig.ordinalExactWordsMapping = formalConfig.ordinalExactWordsMapping;
+    }
+    if (formalConfig.currency) {
+      mergedConfig.currency = formalConfig.currency;
+    }
+    if (formalConfig.ignoreOneForWords) {
+      mergedConfig.ignoreOneForWords = formalConfig.ignoreOneForWords;
+    }
+    // Remove formalConfig from merged to prevent double-application
+    mergedConfig.formalConfig = undefined;
+    return { config: mergedConfig };
   }
 
   /**
@@ -197,6 +268,9 @@ export class ToWordsCore {
             doNotAddOnly: options.doNotAddOnly ?? baseOptions?.doNotAddOnly ?? false,
             includeZeroFractional: options.includeZeroFractional ?? baseOptions?.includeZeroFractional ?? false,
             currencyOptions: options.currencyOptions ?? baseOptions?.currencyOptions,
+            gender: options.gender ?? baseOptions?.gender,
+            useAnd: options.useAnd ?? baseOptions?.useAnd,
+            formal: options.formal ?? baseOptions?.formal,
           };
 
     if (!this.isValidNumber(number)) {
@@ -221,13 +295,14 @@ export class ToWordsCore {
       Number((number as string).split('.')[1]) === 0;
 
     let words: string[] = [];
+    const localeOverride = this.resolveLocale(mergedOptions.formal);
     if (mergedOptions.currency) {
-      words = this.convertCurrency(numericValue, mergedOptions, forceZeroFractional);
+      words = this.convertCurrency(numericValue, mergedOptions, forceZeroFractional, localeOverride);
     } else {
-      words = this.convertNumber(numericValue);
+      words = this.convertNumber(numericValue, mergedOptions, localeOverride);
     }
 
-    if (this.locale?.config.trim) {
+    if (localeOverride.config.trim) {
       return words.join('');
     }
 
@@ -239,7 +314,7 @@ export class ToWordsCore {
       throw new Error(`Invalid Number "${number}"`);
     }
 
-    const locale = this.getLocale();
+    const locale = this.resolveLocale(options.formal);
     const localeConfig = locale.config;
 
     // Convert to number (ordinals typically don't need BigInt support for practical use)
@@ -250,7 +325,12 @@ export class ToWordsCore {
     }
 
     // Check if locale supports ordinals
-    if (!localeConfig.ordinalWordsMapping && !localeConfig.ordinalSuffix) {
+    if (
+      !localeConfig.ordinalWordsMapping &&
+      !localeConfig.ordinalSuffix &&
+      !localeConfig.ordinalPrefix &&
+      !localeConfig.ordinalExactWordsMapping
+    ) {
       throw new Error(`Ordinal conversion not supported for locale "${this.options.localeCode}"`);
     }
 
@@ -300,17 +380,24 @@ export class ToWordsCore {
     const lastNumberComponent = this.getLastNumberComponent(number, localeConfig, localeInstance);
 
     // Try to find ordinal mapping for the last component
+    let transformed = false;
     if (localeConfig.ordinalWordsMapping) {
       const ordinalMatch = localeConfig.ordinalWordsMapping.find((m) => m.number === lastNumberComponent);
       if (ordinalMatch) {
         cardinalWords[lastWordIndex] = ordinalMatch.value;
-        return cardinalWords;
+        transformed = true;
       }
     }
 
     // If ordinalSuffix is available, use it
-    if (localeConfig.ordinalSuffix) {
+    if (!transformed && localeConfig.ordinalSuffix) {
       cardinalWords[lastWordIndex] = lastWord + localeConfig.ordinalSuffix;
+      transformed = true;
+    }
+
+    // Prefix-based ordinals (e.g. Khmer "ទី", Javanese "Kaping", Igbo "Nke")
+    if (!transformed && localeConfig.ordinalPrefix) {
+      cardinalWords.unshift(localeConfig.ordinalPrefix);
     }
 
     return cardinalWords;
@@ -371,9 +458,15 @@ export class ToWordsCore {
     return number % 10;
   }
 
-  protected convertNumber(number: number | bigint): string[] {
-    const locale = this.getLocale();
+  protected convertNumber(
+    number: number | bigint,
+    options: ConverterOptions = {},
+    localeOverride?: InstanceType<ConstructorOf<LocaleInterface>>,
+  ): string[] {
+    const locale = localeOverride ?? this.getLocale();
     const localeConfig = locale.config;
+    const gender = options.gender;
+    const useAnd = options.useAnd;
 
     const isNegativeNumber = number < 0 || (typeof number === 'bigint' && number < 0n);
     if (isNegativeNumber) {
@@ -396,7 +489,7 @@ export class ToWordsCore {
     }
 
     const ignoreZero = this.isNumberZero(number) && localeConfig.ignoreZeroInDecimals;
-    let words = this.convertInternal(integerPart, true, undefined, locale);
+    let words = this.convertInternal(integerPart, true, undefined, locale, gender, useAnd);
     if (isFloat && ignoreZero) {
       words = [];
     }
@@ -409,11 +502,11 @@ export class ToWordsCore {
       if (fractionalPart.startsWith('0') && !localeConfig?.decimalLengthWordMapping) {
         const zeroWords: string[] = [];
         for (const num of fractionalPart) {
-          zeroWords.push(...this.convertInternal(BigInt(num), true, undefined, locale));
+          zeroWords.push(...this.convertInternal(BigInt(num), true, undefined, locale, gender));
         }
         wordsWithDecimal.push(...zeroWords);
       } else {
-        wordsWithDecimal.push(...this.convertInternal(BigInt(fractionalPart), true, undefined, locale));
+        wordsWithDecimal.push(...this.convertInternal(BigInt(fractionalPart), true, undefined, locale, gender));
         const decimalLengthWord = localeConfig?.decimalLengthWordMapping?.[fractionalPart.length];
         if (decimalLengthWord) {
           wordsWithDecimal.push(decimalLengthWord);
@@ -432,9 +525,12 @@ export class ToWordsCore {
     number: number | bigint,
     options: ConverterOptions = {},
     forceZeroFractional = false,
+    localeOverride?: InstanceType<ConstructorOf<LocaleInterface>>,
   ): string[] {
-    const locale = this.getLocale();
+    const locale = localeOverride ?? this.getLocale();
     const localeConfig = locale.config;
+    const gender = options.gender;
+    const useAnd = options.useAnd;
 
     const currencyOptions = options.currencyOptions ?? localeConfig.currency;
 
@@ -473,7 +569,7 @@ export class ToWordsCore {
       // French needs trailing=true to get "Quatre-Vingts Euros" (with 's')
       // Spanish needs trailing=false to get "Un Euro" (not "Uno Euro")
       const trailing = localeConfig.useTrailingForCurrency ?? false;
-      words = [...this.convertInternal(mainAmount, trailing, undefined, locale)];
+      words = [...this.convertInternal(mainAmount, trailing, undefined, locale, gender, useAnd)];
       if (mainAmount === 1n && currencyOptions.singular) {
         words.push(currencyOptions.singular);
       } else if (currencyOptions.plural) {
@@ -504,7 +600,7 @@ export class ToWordsCore {
       if (currencyOptions.fractionalUnit.numberSpecificForms?.[decimalPart]) {
         wordsWithDecimal.push(currencyOptions.fractionalUnit.numberSpecificForms[decimalPart]);
       } else {
-        wordsWithDecimal.push(...this.convertInternal(BigInt(decimalPart), false, undefined, locale));
+        wordsWithDecimal.push(...this.convertInternal(BigInt(decimalPart), false, undefined, locale, gender));
 
         if (decimalLengthWord?.length) {
           wordsWithDecimal.push(decimalLengthWord);
@@ -526,7 +622,7 @@ export class ToWordsCore {
       if (currencyOptions.fractionalUnit.numberSpecificForms?.[0]) {
         wordsWithDecimal.push(currencyOptions.fractionalUnit.numberSpecificForms[0]);
       } else {
-        wordsWithDecimal.push(...this.convertInternal(0n, false, undefined, locale));
+        wordsWithDecimal.push(...this.convertInternal(0n, false, undefined, locale, gender));
         wordsWithDecimal.push(currencyOptions.fractionalUnit.plural);
       }
     } else if (localeConfig.decimalLengthWordMapping && words.length) {
@@ -555,6 +651,8 @@ export class ToWordsCore {
     trailing: boolean = false,
     overrides: Record<number, string> | undefined = undefined,
     localeInstance?: InstanceType<ConstructorOf<LocaleInterface>>,
+    gender?: 'masculine' | 'feminine',
+    useAnd?: boolean,
   ): string[] {
     const locale = localeInstance ?? this.getLocale();
     const localeConfig = locale.config;
@@ -571,7 +669,7 @@ export class ToWordsCore {
     // Check exactWordsMapping using O(1) Map lookup
     const exactMatch = cache.exactWordsMap.get(number);
     if (exactMatch) {
-      return [trailing && Array.isArray(exactMatch.value) ? exactMatch.value[1] : exactMatch.resolvedValue];
+      return [this.resolveGenderedValue(exactMatch, gender, trailing)];
     }
 
     // Fast path: Use O(1) Map lookup for small numbers (0-100)
@@ -579,7 +677,7 @@ export class ToWordsCore {
     if (number <= BIGINT_100) {
       const directMatch = cache.smallNumbersMap.get(number);
       if (directMatch) {
-        return [trailing && Array.isArray(directMatch.value) ? directMatch.value[1] : directMatch.resolvedValue];
+        return [this.resolveGenderedValue(directMatch, gender, trailing)];
       }
       // Number not directly in map, use binary search (e.g., 21 = 20 + 1)
       match = this.binarySearchDescending(cache.numberWordsMappingBigInt, number);
@@ -592,13 +690,13 @@ export class ToWordsCore {
     const words: string[] = [];
 
     if (number <= BIGINT_100 || (number < BIGINT_1000 && localeConfig.namedLessThan1000)) {
-      words.push(match.resolvedValue);
+      words.push(this.resolveGenderedValue(match, gender, trailing));
       const remainder = number - matchNumber;
       if (remainder > BIGINT_0) {
         if (localeConfig.splitWord) {
           words.push(localeConfig.splitWord);
         }
-        const remainderWords = this.convertInternal(remainder, trailing, overrides, locale);
+        const remainderWords = this.convertInternal(remainder, trailing, overrides, locale, gender, useAnd);
         for (const remainderWord of remainderWords) {
           words.push(remainderWord);
         }
@@ -659,24 +757,47 @@ export class ToWordsCore {
 
     if ((quotient === BIGINT_1 && usesIgnoreOne) || usedPluralForm) {
       // When ignoring "one" and quotient is exactly 1, use singularValue if available
-      const valueToUse = quotient === BIGINT_1 && match.singularValue ? match.singularValue : matchValue;
+      let valueToUse: string;
+      if (usedPluralForm) {
+        valueToUse = matchValue;
+      } else if (match.singularValue) {
+        valueToUse = match.singularValue;
+      } else {
+        // Gender-resolve the value (e.g. Spanish "Doscientos" → "Doscientas")
+        valueToUse = this.resolveGenderedValue(match, gender, trailing);
+      }
       words.push(valueToUse);
     } else {
-      const quotientWords = this.convertInternal(quotient, false, overrides, locale);
-      for (const quotientWord of quotientWords) {
-        words.push(quotientWord);
+      // Quotient does NOT get gender — gender applies to the number being described, not scale multipliers
+      const quotientWords = this.convertInternal(quotient, false, overrides, locale, undefined, useAnd);
+      if (localeConfig.scaleFirst) {
+        // Scale-first ordering (e.g. Igbo: "Puku Abụọ" = Thousand Two = 2000)
+        words.push(matchValue);
+        for (const quotientWord of quotientWords) {
+          words.push(quotientWord);
+        }
+      } else {
+        for (const quotientWord of quotientWords) {
+          words.push(quotientWord);
+        }
+        words.push(matchValue);
       }
-      words.push(matchValue);
     }
 
     if (remainder > BIGINT_0) {
+      // useAnd: insert "And" between unit word and remainder when remainder < 100
+      // Skip if locale already uses splitWord (e.g. Portuguese "E")
+      const andWord = localeConfig.texts.and?.trim();
+      if (useAnd && remainder < BIGINT_100 && !localeConfig.splitWord && andWord) {
+        words.push(localeConfig.texts.and);
+      }
       if (localeConfig.splitWord) {
         // Use O(1) Set lookup instead of array.includes()
         if (!cache.noSplitWordAfterSet.has(match.resolvedValue)) {
           words.push(localeConfig.splitWord);
         }
       }
-      const remainderWords = this.convertInternal(remainder, trailing, overrides, locale);
+      const remainderWords = this.convertInternal(remainder, trailing, overrides, locale, gender, useAnd);
       for (const remainderWord of remainderWords) {
         words.push(remainderWord);
       }

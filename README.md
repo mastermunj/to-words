@@ -13,7 +13,7 @@
 [![Deno](https://github.com/mastermunj/to-words/actions/workflows/deno.yml/badge.svg?branch=main)](https://github.com/mastermunj/to-words/actions/workflows/deno.yml)
 [![CF Workers](https://img.shields.io/badge/CF_Workers-compatible-F38020)](https://workers.cloudflare.com)
 
-Convert numbers and currency amounts into words across 116 locales with production-ready BigInt, ordinal, and TypeScript support.
+Convert numbers and currency amounts into words across 124 locales with production-ready BigInt, ordinal, and TypeScript support.
 
 ## 🎮 Live Demo
 
@@ -23,7 +23,7 @@ Test locale behavior, currency conversion, ordinals, and large number inputs in 
 
 ## 🏆 Why to-words
 
-- **116 locale implementations** with region-specific numbering and currency conventions
+- **124 locale implementations** with region-specific numbering and currency conventions
 - **Built for real financial flows**: amount in words, decimals, currency units, and negatives
 - **Large number safe** with `BigInt` and string input support
 - **Run anywhere**: Node.js, Deno, Bun, Cloudflare Workers, and all modern browsers
@@ -69,11 +69,13 @@ Test locale behavior, currency conversion, ordinals, and large number inputs in 
 
 ## ✨ Features
 
-- **116 Locales** — The most comprehensive locale coverage available
+- **124 Locales** — The most comprehensive locale coverage available
 - **BigInt Support** — Handle numbers up to 10^63 (Vigintillion) and beyond
 - **Multiple Numbering Systems** — Short scale, Long scale, Indian, and East Asian
 - **Currency Formatting** — Locale-specific currency with fractional units
 - **Ordinal Numbers** — First, Second, Third, etc.
+- **Gender-Aware** — Grammatical gender for locales that require it (Spanish, Portuguese, Arabic, Hebrew, Slavic, and more)
+- **Formal Numerals** — Formal/financial Chinese characters (大写/大寫) via `formal: true`
 - **Tree-Shakeable** — Import only the locales you need
 - **TypeScript Native** — Full type definitions included
 - **Multiple Formats** — ESM, CommonJS, and UMD browser bundles
@@ -99,7 +101,7 @@ tw.convert(100, { currency: true }); // "One Hundred Dollars Only"
 tw.toOrdinal(3); // "Third"
 ```
 
-**2. Functional (full bundle)** — one-liners with a `localeCode` option, all 116 locales available:
+**2. Functional (full bundle)** — one-liners with a `localeCode` option, all 124 locales available:
 
 ```js
 import { toWords, toOrdinal, toCurrency } from 'to-words';
@@ -331,7 +333,76 @@ toOrdinal(1); // "First"
 toOrdinal(21); // "Twenty First"
 ```
 
-> **Note:** Full ordinal word mappings are available for English, Spanish, French, Portuguese, Turkish, and Dutch locales. Other locales use suffix-based ordinals.
+> **Note:** Full ordinal word mappings are available for English, Spanish, French, Portuguese, Turkish, and Dutch locales. Other locales use locale-specific suffix or prefix strategies.
+
+### Gender-Aware Conversion
+
+Many languages use grammatical gender for number words. Pass `gender` via converter options:
+
+```js
+// Spanish: masculine (default) vs feminine
+const tw = new ToWords({ localeCode: 'es-ES' });
+tw.convert(1);                              // "Uno"
+tw.convert(1, { gender: 'feminine' });      // "Una"
+tw.convert(21, { gender: 'feminine' });     // "Veintiuna"
+tw.convert(200, { gender: 'feminine' });    // "Doscientas"
+
+// Portuguese
+const pt = new ToWords({ localeCode: 'pt-BR' });
+pt.convert(2, { gender: 'feminine' });      // "Duas"
+
+// Arabic
+const ar = new ToWords({ localeCode: 'ar-AE' });
+ar.convert(3, { gender: 'feminine' });      // "ثلاث"
+```
+
+Gender can also be set via constructor options and overridden per call:
+
+```js
+const tw = new ToWords({
+  localeCode: 'es-ES',
+  converterOptions: { gender: 'feminine' },
+});
+tw.convert(1);                             // "Una" (constructor default)
+tw.convert(1, { gender: 'masculine' });    // "Uno" (per-call override)
+```
+
+> **Supported locales:** Spanish (7), Portuguese (4), Arabic (4), Hebrew (2), Russian, Ukrainian, Polish, Czech, Croatian, Slovak, Serbian, Belarusian, Bulgarian, Catalan, Romanian, Latvian, Lithuanian, and Slovenian.
+
+### UseAnd Option
+
+Insert the locale's "And" word before the last two digits:
+
+```js
+const tw = new ToWords({ localeCode: 'en-US' });
+tw.convert(123);                            // "One Hundred Twenty Three"
+tw.convert(123, { useAnd: true });          // "One Hundred And Twenty Three"
+tw.convert(1023, { useAnd: true });         // "One Thousand And Twenty Three"
+
+// Works with currency too
+tw.convert(123, { currency: true, useAnd: true });
+// "One Hundred And Twenty Three Dollars Only"
+```
+
+> **Note:** `useAnd` is a no-op for locales that already use a split word (e.g., Portuguese uses "E" by default) and for locales where the connector token is empty (e.g., ja-JP, zh-CN, zh-TW, yue-HK).
+
+### Formal Chinese Numerals
+
+Use formal/financial characters (大写/大寫) for Chinese locales:
+
+```js
+// Simplified Chinese
+const cn = new ToWords({ localeCode: 'zh-CN' });
+cn.convert(123);                            // "百 二十 三"
+cn.convert(123, { formal: true });          // "佰 贰拾 叁"
+cn.convert(100, { currency: true, formal: true });
+// "佰 圆 整"
+
+// Traditional Chinese
+const tw = new ToWords({ localeCode: 'zh-TW' });
+tw.convert(123, { formal: true });          // "佰 貳拾 參"
+tw.toOrdinal(5, { formal: true });          // "第伍"
+```
 
 ### Tree-Shakeable Imports
 
@@ -357,7 +428,7 @@ toOrdinal(3); // "Third"
 toCurrency(100); // "One Hundred Dollars Only"
 ```
 
-> Individual imports are ~3.5 KB gzip vs ~58 KB for the full bundle.
+> Individual imports are ~3.5 KB gzip vs ~60 KB for the full bundle.
 
 ### Browser Usage (UMD)
 
@@ -371,7 +442,7 @@ toCurrency(100); // "One Hundred Dollars Only"
   // "Twelve Thousand Three Hundred Forty Five"
 </script>
 
-<!-- Full bundle with all locales (~58 KB gzip) -->
+<!-- Full bundle with all locales (~60 KB gzip) -->
 <script src="https://cdn.jsdelivr.net/npm/to-words/dist/umd/to-words.min.js"></script>
 <script>
   // Specify locale when using full bundle
@@ -418,7 +489,7 @@ toOrdinal(21); // "Twenty First"
 toCurrency(1234.56); // "One Thousand Two Hundred Thirty Four Dollars And Fifty Six Cents Only"
 ```
 
-> **Performance note:** The functional API creates one `ToWords` instance per call. For high-frequency hot paths (invoice loops, real-time input), prefer a shared class instance.
+> **Performance note:** The functional API caches one `ToWords` instance per locale. Repeated calls for the same locale reuse the cached instance.
 
 ### Auto-Detect Locale
 
@@ -718,16 +789,17 @@ Converts a number to words.
 - **options**: `ConverterOptions` — Override instance options
 - **returns**: `string` — The number in words
 
-#### `toOrdinal(number)`
+#### `toOrdinal(number, options?)`
 
 Converts a number to ordinal words.
 
-- **number**: `number` — The number to convert (must be non-negative integer)
+- **number**: `number | bigint | string` — The number to convert (must be a non-negative integer value)
+- **options**: `OrdinalOptions` — Optional settings (`{ formal?: boolean }`)
 - **returns**: `string` — The ordinal in words (e.g., "First", "Twenty Third")
 
 ### Functional Exports
 
-All four functional helpers are available from the full bundle (`to-words`) and from every per-locale entry point (`to-words/<locale>`). When importing from `to-words/<locale>`, the locale is already baked in and `localeCode` is not accepted.
+The three conversion helpers (`toWords`, `toOrdinal`, `toCurrency`) are available from the full bundle (`to-words`) and from every per-locale entry point (`to-words/<locale>`). `detectLocale` is only available from the full bundle. When importing from `to-words/<locale>`, the locale is already baked in and `localeCode` is not accepted.
 
 #### `toWords(number, options?)`
 
@@ -751,7 +823,7 @@ toWords(12345); // locale baked in, no detection needed
 
 Converts a number to ordinal words.
 
-- **number**: `number` — Must be a non-negative integer
+- **number**: `number | bigint | string` — Must represent a non-negative integer
 - **options** _(full bundle)_: `OrdinalOptions & { localeCode?: string }` — When `localeCode` is omitted, `detectLocale()` is called automatically
 - **options** _(per-locale)_: `OrdinalOptions`
 - **returns**: `string`
@@ -813,6 +885,9 @@ detectLocale('en-GB'); // custom fallback if detection fails
 | `doNotAddOnly`          | boolean | false     | Omit "Only" suffix in currency mode                                                              |
 | `includeZeroFractional` | boolean | false     | When input is a string like `"123.00"`, include "And Zero Paise" even though the decimal is zero |
 | `currencyOptions`       | object  | undefined | Override locale's default currency settings                                                      |
+| `gender`                | string  | undefined | Grammatical gender: `'masculine'` or `'feminine'`. Applies to locales with gendered number words |
+| `useAnd`                | boolean | undefined | Insert the locale connector before the last two digits (e.g., "One Hundred **And** Twenty Three"). No-op when locale already defines a split word or has an empty connector token |
+| `formal`                | boolean | undefined | Use formal/financial characters (currently supported for zh-CN and zh-TW)                        |
 
 ### Common Options Example
 
@@ -880,7 +955,7 @@ The library uses only standard ECMAScript features (BigInt, Intl, Map) with zero
 
 ## 🗺️ Supported Locales
 
-All 116 locales with their features:
+All 124 locales with their features:
 
 | Locale | Language        | Country             | Currency      | Scale      | Ordinal |
 | ------ | --------------- | ------------------- | ------------- | ---------- | ------- |
@@ -890,9 +965,11 @@ All 116 locales with their features:
 | ar-LB  | Arabic          | Lebanon             | ليرة          | Short      | ✓       |
 | ar-MA  | Arabic          | Morocco             | درهم          | Short      | ✓       |
 | ar-SA  | Arabic          | Saudi Arabia        | ريال          | Short      | ✓       |
+| as-IN  | Assamese        | India               | টকা           | Indian     | ✓       |
 | az-AZ  | Azerbaijani     | Azerbaijan          | Manat         | Short      | ✓       |
 | be-BY  | Belarusian      | Belarus             | Рубель        | Short      | ✓       |
 | bg-BG  | Bulgarian       | Bulgaria            | Лев           | Short      | ✓       |
+| bn-BD  | Bengali         | Bangladesh          | টাকা          | Short      | ✓       |
 | bn-IN  | Bengali         | India               | টাকা          | Short      | ✓       |
 | ca-ES  | Catalan         | Spain               | Euro          | Short      | ✓       |
 | cs-CZ  | Czech           | Czech Republic      | Koruna        | Short      | ✓       |
@@ -944,6 +1021,7 @@ All 116 locales with their features:
 | fil-PH | Filipino        | Philippines         | Piso          | Short      | ✓       |
 | fr-BE  | French          | Belgium             | Euro          | Long       | ✓       |
 | fr-CA  | French          | Canada              | Dollar        | Long       | ✓       |
+| fr-CH  | French          | Switzerland         | Franc         | Long       | ✓       |
 | fr-FR  | French          | France              | Euro          | Long       | ✓       |
 | fr-MA  | French          | Morocco             | Dirham        | Long       | ✓       |
 | fr-SA  | French          | Saudi Arabia        | Riyal         | Long       | ✓       |
@@ -955,23 +1033,27 @@ All 116 locales with their features:
 | hr-HR  | Croatian        | Croatia             | Euro          | Short      | ✓       |
 | hu-HU  | Hungarian       | Hungary             | Forint        | Short      | ✓       |
 | id-ID  | Indonesian      | Indonesia           | Rupiah        | Short      | ✓       |
+| ig-NG  | Igbo            | Nigeria             | Naira         | Short      | ✓       |
 | is-IS  | Icelandic       | Iceland             | Króna         | Short      | ✓       |
 | it-IT  | Italian         | Italy               | Euro          | Short      | ✓       |
 | ja-JP  | Japanese        | Japan               | 円            | East Asian | ✓       |
+| jv-ID  | Javanese        | Indonesia           | Rupiah        | Short      | ✓       |
 | ka-GE  | Georgian        | Georgia             | ლარი          | Short      | ✓       |
-| km-KH  | Khmer           | Cambodia            | រៀល           | Khmer      | ✗       |
+| km-KH  | Khmer           | Cambodia            | រៀល           | Khmer      | ✓       |
 | kn-IN  | Kannada         | India               | ರೂಪಾಯಿ        | Short      | ✓       |
 | ko-KR  | Korean          | South Korea         | 원            | Short      | ✓       |
 | lt-LT  | Lithuanian      | Lithuania           | Euras         | Short      | ✓       |
 | lv-LV  | Latvian         | Latvia              | Eiro          | Short      | ✓       |
+| ml-IN  | Malayalam       | India               | രൂപ           | Indian     | ✓       |
 | mr-IN  | Marathi         | India               | रुपया         | Indian     | ✓       |
 | ms-MY  | Malay           | Malaysia            | Ringgit       | Short      | ✓       |
 | ms-SG  | Malay           | Singapore           | Dolar         | Short      | ✓       |
-| my-MM  | Burmese         | Myanmar             | ကျပ်          | Burmese    | ✗       |
+| my-MM  | Burmese         | Myanmar             | ကျပ်          | Burmese    | ✓       |
 | nb-NO  | Norwegian       | Norway              | Krone         | Long       | ✓       |
 | nl-NL  | Dutch           | Netherlands         | Euro          | Short      | ✓       |
 | nl-SR  | Dutch           | Suriname            | Dollar        | Short      | ✓       |
 | np-NP  | Nepali          | Nepal               | रुपैयाँ       | Indian     | ✓       |
+| or-IN  | Odia            | India               | ଟଙ୍କା          | Short      | ✓       |
 | pa-IN  | Punjabi         | India               | ਰੁਪਇਆ         | Short      | ✓       |
 | pl-PL  | Polish          | Poland              | Złoty         | Short      | ✓       |
 | pt-AO  | Portuguese      | Angola              | Kwanza        | Short      | ✓       |
@@ -997,6 +1079,7 @@ All 116 locales with their features:
 | uz-UZ  | Uzbek           | Uzbekistan          | So'm          | Short      | ✓       |
 | vi-VN  | Vietnamese      | Vietnam             | Đồng          | Short      | ✓       |
 | yo-NG  | Yoruba          | Nigeria             | Naira         | Short      | ✓       |
+| yue-HK | Cantonese       | Hong Kong           | 元            | East Asian | ✓       |
 | zh-CN  | Chinese         | China               | 元            | East Asian | ✓       |
 | zh-TW  | Chinese         | Taiwan              | 元            | East Asian | ✓       |
 | zu-ZA  | Zulu            | South Africa        | Rand          | Short      | ✓       |
@@ -1009,6 +1092,21 @@ All 116 locales with their features:
 - **East Asian** — East Asian numbering (万, 億, 兆, 京...)
 - **Burmese** — Burmese traditional scale (သောင်း=10k, သိန်း=100k, သန်း=1M)
 - **Khmer** — Khmer traditional scale (មុឺន=10k, សែន=100k, លាន=1M)
+
+**Gender Support:**
+
+The following locales support grammatical gender via `{ gender: 'feminine' }` or `{ gender: 'masculine' }`:
+
+- **Spanish:** es-ES, es-MX, es-CO, es-CL, es-AR, es-VE, es-US
+- **Portuguese:** pt-BR, pt-PT, pt-AO, pt-MZ
+- **Arabic:** ar-AE, ar-LB, ar-MA, ar-SA
+- **Hebrew:** he-IL, hbo-IL
+- **Slavic:** ru-RU, uk-UA, pl-PL, cs-CZ, hr-HR, sk-SK, sr-RS, be-BY, bg-BG
+- **Other:** ca-ES, ro-RO, lv-LV, lt-LT, sl-SI
+
+**Formal Numerals:** zh-CN and zh-TW support formal/financial Chinese characters (大写/大寫) via `{ formal: true }`.
+
+**Scale-First Ordering:** ig-NG uses scale-first word ordering (e.g., "Puku Abụọ" = "Thousand Two" for 2000).
 
 ## ⚠️ Error Handling
 
