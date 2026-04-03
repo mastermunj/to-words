@@ -318,6 +318,63 @@ describe('ToWordsCore - different locales', () => {
 });
 
 describe('ToWordsCore - Edge Cases for Coverage', () => {
+  test('formal=true falls back to base locale when formalConfig is not present', async () => {
+    const { default: EnInLocale } = await import('../src/locales/en-IN');
+    const core = new ToWordsCore();
+    core.setLocale(EnInLocale);
+
+    const regular = core.convert(42);
+    const formal = core.convert(42, { formal: true });
+
+    expect(formal).toBe(regular);
+  });
+
+  test('formal exactWordsMapping overrides base exact words when provided', () => {
+    const MinimalFormalLocale = class {
+      config = {
+        currency: {
+          name: 'Dollar',
+          plural: 'Dollars',
+          singular: 'Dollar',
+          symbol: '$',
+          fractionalUnit: { name: 'Cent', plural: 'Cents', singular: 'Cent', symbol: '' },
+        },
+        texts: { and: 'And', minus: 'Minus', only: 'Only', point: 'Point' },
+        numberWordsMapping: [
+          { number: 100, value: 'Hundred' },
+          { number: 90, value: 'Ninety' },
+          { number: 80, value: 'Eighty' },
+          { number: 70, value: 'Seventy' },
+          { number: 60, value: 'Sixty' },
+          { number: 50, value: 'Fifty' },
+          { number: 40, value: 'Forty' },
+          { number: 30, value: 'Thirty' },
+          { number: 20, value: 'Twenty' },
+          { number: 10, value: 'Ten' },
+          { number: 9, value: 'Nine' },
+          { number: 8, value: 'Eight' },
+          { number: 7, value: 'Seven' },
+          { number: 6, value: 'Six' },
+          { number: 5, value: 'Five' },
+          { number: 4, value: 'Four' },
+          { number: 3, value: 'Three' },
+          { number: 2, value: 'Two' },
+          { number: 1, value: 'One' },
+          { number: 0, value: 'Zero' },
+        ],
+        formalConfig: {
+          exactWordsMapping: [{ number: 42, value: 'Exact Forty Two' }],
+        },
+      };
+    };
+
+    const core = new ToWordsCore();
+    core.setLocale(MinimalFormalLocale as never);
+
+    expect(core.convert(42)).toBe('Forty Two');
+    expect(core.convert(42, { formal: true })).toBe('Exact Forty Two');
+  });
+
   test('ordinal throws for locales without ordinal support', async () => {
     // Create a minimal locale without ordinal support
     const MinimalLocale = class {
@@ -527,6 +584,22 @@ describe('ToWordsCore - internal coverage via subclass', () => {
     callGetLastNumberComponent(number: number, localeConfig: any, localeInstance?: InstanceType<any>): number {
       return this.getLastNumberComponent(number, localeConfig, localeInstance);
     }
+
+    callConvertNumberWithOverride(number: number | bigint, localeInstance: InstanceType<any>): string[] {
+      return this.convertNumber(number, {}, localeInstance);
+    }
+
+    callConvertNumberNoOverride(number: number | bigint): string[] {
+      return this.convertNumber(number);
+    }
+
+    callConvertCurrencyWithOverride(number: number | bigint, localeInstance: InstanceType<any>): string[] {
+      return this.convertCurrency(number, {}, false, localeInstance);
+    }
+
+    callConvertCurrencyNoOverride(number: number | bigint): string[] {
+      return this.convertCurrency(number);
+    }
   }
 
   test('getLocaleCache initialises cache on first access for a fresh locale instance (lines 180-181)', async () => {
@@ -647,6 +720,50 @@ describe('ToWordsCore - internal coverage via subclass', () => {
     // currency:true comes from constructor -> Rupees Only appended
     expect(result).toContain('Hundred');
     expect(result).toContain('Rupees');
+  });
+
+  test('convert handles empty call options when constructor converterOptions is undefined (line 263 ?? fallback)', async () => {
+    const { default: EnInLocale } = await import('../src/locales/en-IN');
+    const core = new ToWordsCore({ converterOptions: undefined as any });
+    core.setLocale(EnInLocale);
+
+    expect(core.convert(100, {})).toBe('One Hundred');
+  });
+
+  test('convertNumber uses localeOverride when provided (line 466 left side)', async () => {
+    const { default: EnInLocale } = await import('../src/locales/en-IN');
+    const core = new TestableCore();
+    const locale = new EnInLocale();
+
+    expect(core.callConvertNumberWithOverride(42, locale)).toEqual(['Forty', 'Two']);
+  });
+
+  test('convertNumber falls back to getLocale when localeOverride is omitted (line 466 right side)', async () => {
+    const { default: EnInLocale } = await import('../src/locales/en-IN');
+    const core = new TestableCore();
+    core.setLocale(EnInLocale);
+
+    expect(core.callConvertNumberNoOverride(42)).toEqual(['Forty', 'Two']);
+  });
+
+  test('convertCurrency uses localeOverride when provided (line 530 left side)', async () => {
+    const { default: EnInLocale } = await import('../src/locales/en-IN');
+    const core = new TestableCore();
+    const locale = new EnInLocale();
+
+    const words = core.callConvertCurrencyWithOverride(5, locale);
+    expect(words).toContain('Five');
+    expect(words).toContain('Rupees');
+  });
+
+  test('convertCurrency falls back to getLocale when localeOverride is omitted (line 530 right side)', async () => {
+    const { default: EnInLocale } = await import('../src/locales/en-IN');
+    const core = new TestableCore();
+    core.setLocale(EnInLocale);
+
+    const words = core.callConvertCurrencyNoOverride(5);
+    expect(words).toContain('Five');
+    expect(words).toContain('Rupees');
   });
 
   test('convert uses false fallback for fields absent from both call options and constructor options (lines 193-196)', async () => {
