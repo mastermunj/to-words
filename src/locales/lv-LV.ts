@@ -66,8 +66,8 @@ export default class Locale implements LocaleInterface {
       { number: 5, value: 'pieci' },
       { number: 4, value: 'četri' },
       { number: 3, value: 'trīs' },
-      { number: 2, value: 'divi' },
-      { number: 1, value: 'viens' },
+      { number: 2, value: 'divi', feminineValue: 'divas' },
+      { number: 1, value: 'viens', feminineValue: 'viena' },
       { number: 0, value: 'nulle' },
     ],
     ordinalWordsMapping: [

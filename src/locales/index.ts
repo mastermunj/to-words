@@ -3,12 +3,14 @@ import { type ConstructorOf, type LocaleInterface } from '../types.js';
 import afZa from './af-ZA.js';
 import amEt from './am-ET.js';
 import arAe from './ar-AE.js';
+import asIn from './as-IN.js';
 import arLb from './ar-LB.js';
 import arMa from './ar-MA.js';
 import arSa from './ar-SA.js';
 import azAz from './az-AZ.js';
 import beBy from './be-BY.js';
 import bgBg from './bg-BG.js';
+import bnBd from './bn-BD.js';
 import bnIn from './bn-IN.js';
 import caEs from './ca-ES.js';
 import csCz from './cs-CZ.js';
@@ -57,6 +59,7 @@ import faIr from './fa-IR.js';
 import fiFi from './fi-FI.js';
 import frBe from './fr-BE.js';
 import frCa from './fr-CA.js';
+import frCh from './fr-CH.js';
 import frFr from './fr-FR.js';
 import frMa from './fr-MA.js';
 import frSa from './fr-SA.js';
@@ -68,14 +71,17 @@ import hiIn from './hi-IN.js';
 import hrHr from './hr-HR.js';
 import huHu from './hu-HU.js';
 import idId from './id-ID.js';
+import igNg from './ig-NG.js';
 import isIs from './is-IS.js';
 import itIt from './it-IT.js';
 import jaJp from './ja-JP.js';
+import jvId from './jv-ID.js';
 import kaGe from './ka-GE.js';
 import knIn from './kn-IN.js';
 import koKr from './ko-KR.js';
 import ltLt from './lt-LT.js';
 import lvLv from './lv-LV.js';
+import mlIn from './ml-IN.js';
 import mrIn from './mr-IN.js';
 import msMy from './ms-MY.js';
 import msSg from './ms-SG.js';
@@ -83,6 +89,7 @@ import nbNo from './nb-NO.js';
 import nlNl from './nl-NL.js';
 import nlSr from './nl-SR.js';
 import npNp from './np-NP.js';
+import orIn from './or-IN.js';
 import paIn from './pa-IN.js';
 import plPl from './pl-PL.js';
 import ptAo from './pt-AO.js';
@@ -109,6 +116,7 @@ import swKe from './sw-KE.js';
 import swTz from './sw-TZ.js';
 import viVn from './vi-VN.js';
 import yoNg from './yo-NG.js';
+import yueHk from './yue-HK.js';
 import zhCn from './zh-CN.js';
 import zhTw from './zh-TW.js';
 import uzUz from './uz-UZ.js';
@@ -121,12 +129,14 @@ const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
   'af-ZA': afZa,
   'am-ET': amEt,
   'ar-AE': arAe,
+  'as-IN': asIn,
   'ar-LB': arLb,
   'ar-MA': arMa,
   'ar-SA': arSa,
   'az-AZ': azAz,
   'be-BY': beBy,
   'bg-BG': bgBg,
+  'bn-BD': bnBd,
   'bn-IN': bnIn,
   'ca-ES': caEs,
   'cs-CZ': csCz,
@@ -177,6 +187,7 @@ const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
   'fil-PH': filPh,
   'fr-BE': frBe,
   'fr-CA': frCa,
+  'fr-CH': frCh,
   'fr-FR': frFr,
   'fr-MA': frMa,
   'fr-SA': frSa,
@@ -188,14 +199,17 @@ const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
   'hr-HR': hrHr,
   'hu-HU': huHu,
   'id-ID': idId,
+  'ig-NG': igNg,
   'is-IS': isIs,
   'it-IT': itIt,
   'ja-JP': jaJp,
+  'jv-ID': jvId,
   'ka-GE': kaGe,
   'kn-IN': knIn,
   'ko-KR': koKr,
   'lt-LT': ltLt,
   'lv-LV': lvLv,
+  'ml-IN': mlIn,
   'mr-IN': mrIn,
   'ms-MY': msMy,
   'ms-SG': msSg,
@@ -203,6 +217,7 @@ const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
   'nl-NL': nlNl,
   'nl-SR': nlSr,
   'np-NP': npNp,
+  'or-IN': orIn,
   'pa-IN': paIn,
   'pl-PL': plPl,
   'pt-AO': ptAo,
@@ -226,6 +241,7 @@ const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
   'ur-PK': urPk,
   'vi-VN': viVn,
   'yo-NG': yoNg,
+  'yue-HK': yueHk,
   'zh-CN': zhCn,
   'zh-TW': zhTw,
   'es-VE': esVE,

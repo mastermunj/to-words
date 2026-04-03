@@ -263,13 +263,11 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
   });
 });
 
-describe('Test Ordinal (unsupported — throws)', () => {
-  test('toOrdinal throws for km-KH', () => {
-    expect(() => toWords.toOrdinal(1)).toThrow('Ordinal conversion not supported for locale "km-KH"');
-  });
-
-  test('localeToOrdinal throws for km-KH', () => {
-    expect(() => localeToOrdinal(1)).toThrow('Ordinal conversion not supported for locale');
+describe('Test Ordinal', () => {
+  test('toOrdinal uses Khmer ordinal prefix', () => {
+    expect(toWords.toOrdinal(1)).toBe('ទីមួយ');
+    expect(toWords.toOrdinal(2)).toBe('ទីពីរ');
+    expect(toWords.toOrdinal(21)).toBe('ទីម្ភៃមួយ');
   });
 });
 
@@ -384,6 +382,10 @@ describe('Test Invalid Input', () => {
 describe('Test Locale Functional API', () => {
   test('localeToWords', () => {
     expect(localeToWords(20)).toBe('ម្ភៃ');
+  });
+
+  test('localeToOrdinal', () => {
+    expect(localeToOrdinal(2)).toBe('ទីពីរ');
   });
 
   test('localeToCurrency', () => {

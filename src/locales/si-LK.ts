@@ -8,9 +8,7 @@ import {
 } from '../types.js';
 import { ToWordsCore } from '../ToWordsCore.js';
 
-// NOTE: Ordinal conversion is not yet supported for this locale.
-// Sinhala ordinals are irregular for 1–3 (පළමු, දෙවෙනි, තෙවෙනි) and the
-// suffix form (-වෙනි) needs native-speaker review before shipping. toOrdinal() will throw.
+// Sinhala ordinals have irregular forms for 1–3 and commonly use the "වැනි" suffix.
 
 export default class Locale implements LocaleInterface {
   public config: LocaleConfig = {
@@ -32,6 +30,12 @@ export default class Locale implements LocaleInterface {
       only: '',
       point: 'දශම',
     },
+    ordinalSuffix: 'වැනි',
+    ordinalExactWordsMapping: [
+      { number: 1, value: 'පළමු' },
+      { number: 2, value: 'දෙවෙනි' },
+      { number: 3, value: 'තෙවෙනි' },
+    ],
     numberWordsMapping: [
       { number: 1000000000000, value: 'ට්‍රිලියනය' },
       { number: 1000000000, value: 'බිලියනය' },

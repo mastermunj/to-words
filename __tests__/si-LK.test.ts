@@ -218,13 +218,16 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
   });
 });
 
-describe('Test Ordinal (unsupported — throws)', () => {
-  test('toOrdinal throws for si-LK', () => {
-    expect(() => toWords.toOrdinal(1)).toThrow('Ordinal conversion not supported for locale "si-LK"');
+describe('Test Ordinal', () => {
+  test('toOrdinal handles irregular first ordinals', () => {
+    expect(toWords.toOrdinal(1)).toBe('පළමු');
+    expect(toWords.toOrdinal(2)).toBe('දෙවෙනි');
+    expect(toWords.toOrdinal(3)).toBe('තෙවෙනි');
   });
 
-  test('localeToOrdinal throws for si-LK', () => {
-    expect(() => localeToOrdinal(1)).toThrow('Ordinal conversion not supported for locale');
+  test('toOrdinal uses suffix for other values', () => {
+    expect(localeToOrdinal(4)).toBe('හතරවැනි');
+    expect(localeToOrdinal(21)).toBe('විස එකවැනි');
   });
 });
 
