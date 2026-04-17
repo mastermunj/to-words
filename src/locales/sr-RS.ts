@@ -134,6 +134,14 @@ export default class Locale implements LocaleInterface {
       'Bilion',
       'Bilijarda',
     ],
+    fractionDenominatorMapping: {
+      1: { singular: 'Десетинка', plural: 'Десетинке' },
+      2: { singular: 'Стотинка', plural: 'Стотинке' },
+      3: { singular: 'Хиљадинка', plural: 'Хиљадинке' },
+      4: { singular: 'Десетохиљадинка', plural: 'Десетохиљадинке' },
+      5: { singular: 'Стохиљадинка', plural: 'Стохиљадинке' },
+      6: { singular: 'Милионинка', plural: 'Милионинке' },
+    },
   };
 }
 

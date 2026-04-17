@@ -406,3 +406,38 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleFaIR: [number, string][] = [
+  [1.1, 'یک و یک دهم'],
+  [2.5, 'دو و پنج دهم'],
+  [1.01, 'یک و یک صدم'],
+  [1.45, 'یک و چهل و پنج صدم'],
+  [0.05, 'پنج صدم'],
+  [1.001, 'یک و یک هزارم'],
+  [1.005, 'یک و پنج هزارم'],
+  [1.0001, 'یک و یک ده‌هزارم'],
+  [1.0005, 'یک و پنج ده‌هزارم'],
+  [1.00001, 'یک و یک صدهزارم'],
+  [1.00005, 'یک و پنج صدهزارم'],
+  [1.000001, 'یک و یک میلیونم'],
+  [1.000005, 'یک و پنج میلیونم'],
+  [123.45, 'صد و بیست و سه و چهل و پنج صدم'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleFaIR)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'یک و یک میلیون و دویست و سی و چهار هزار و پانصد و شصت و هفت ده‌میلیونیوم',
+    );
+    expect(toWords.convert(1.1234567)).toBe('یک و یک میلیون و دویست و سی و چهار هزار و پانصد و شصت و هفت ده‌میلیونیوم');
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('یک و پنج دهم');
+    expect(toWords.convert(0.05)).toBe('پنج صدم');
+  });
+});

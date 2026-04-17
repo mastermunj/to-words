@@ -29,11 +29,11 @@ export default class Locale implements LocaleInterface {
       point: 'പോയിന്റ്',
     },
     numberWordsMapping: [
-      { number: 10n**17n, value: 'ശംഖം' },
-      { number: 10n**15n, value: 'പദ്മം' },
-      { number: 10n**13n, value: 'നീൽ' },
-      { number: 10n**11n, value: 'ഖരബ്' },
-      { number: 10n**9n, value: 'അറബ്' },
+      { number: 10n ** 17n, value: 'ശംഖം' },
+      { number: 10n ** 15n, value: 'പദ്മം' },
+      { number: 10n ** 13n, value: 'നീൽ' },
+      { number: 10n ** 11n, value: 'ഖരബ്' },
+      { number: 10n ** 9n, value: 'അറബ്' },
       { number: 10000000, value: 'കോടി' },
       { number: 100000, value: 'ലക്ഷം' },
       { number: 1000, value: 'ആയിരം' },
@@ -245,6 +245,14 @@ export default class Locale implements LocaleInterface {
       { number: 1, value: 'ഒന്നാം' },
       { number: 0, value: 'പൂജ്യത്താം' },
     ],
+    fractionDenominatorMapping: {
+      1: { singular: 'ദശാംശം', plural: 'ദശാംശം' },
+      2: { singular: 'ശതാംശം', plural: 'ശതാംശം' },
+      3: { singular: 'സഹസ്രാംശം', plural: 'സഹസ്രാംശം' },
+      4: { singular: 'ദശ-സഹസ്രാംശം', plural: 'ദശ-സഹസ്രാംശം' },
+      5: { singular: 'ശത-സഹസ്രാംശം', plural: 'ശത-സഹസ്രാംശം' },
+      6: { singular: 'ദശ-ലക്ഷാംശം', plural: 'ദശ-ലക്ഷാംശം' },
+    },
   };
 }
 

@@ -420,3 +420,40 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleElGR: [number, string][] = [
+  [1.1, 'Ένα Και Ένα Δέκατο'],
+  [2.5, 'Δύο Και Πέντε Δέκατα'],
+  [1.01, 'Ένα Και Ένα Εκατοστό'],
+  [1.45, 'Ένα Και Σαράντα Πέντε Εκατοστά'],
+  [0.05, 'Μηδέν Και Πέντε Εκατοστά'],
+  [1.001, 'Ένα Και Ένα Χιλιοστό'],
+  [1.005, 'Ένα Και Πέντε Χιλιοστά'],
+  [1.0001, 'Ένα Και Ένα Δεκάκις Χιλιοστό'],
+  [1.0005, 'Ένα Και Πέντε Δεκάκις Χιλιοστά'],
+  [1.00001, 'Ένα Και Ένα Εκατοντάκις Χιλιοστό'],
+  [1.00005, 'Ένα Και Πέντε Εκατοντάκις Χιλιοστά'],
+  [1.000001, 'Ένα Και Ένα Εκατομμυριοστό'],
+  [1.000005, 'Ένα Και Πέντε Εκατομμυριοστά'],
+  [123.45, 'Εκατό Είκοσι Τρία Και Σαράντα Πέντε Εκατοστά'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleElGR)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'Ένα Κόμμα Ένα Εκατομμύριο Διακόσια Τριάντα Τέσσερα Χιλιάδες Πεντακόσια Εξήντα Επτά',
+    );
+    expect(toWords.convert(1.1234567)).toBe(
+      'Ένα Κόμμα Ένα Εκατομμύριο Διακόσια Τριάντα Τέσσερα Χιλιάδες Πεντακόσια Εξήντα Επτά',
+    );
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('Ένα Κόμμα Πέντε');
+    expect(toWords.convert(0.05)).toBe('Μηδέν Κόμμα Μηδέν Πέντε');
+  });
+});

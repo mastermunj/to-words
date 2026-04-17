@@ -366,3 +366,38 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleKnIN: [number, string][] = [
+  [1.1, 'ಒಂದು ಮತ್ತು ಒಂದು ದಶಾಂಶ'],
+  [2.5, 'ಎರಡು ಮತ್ತು ಐದು ದಶಾಂಶ'],
+  [1.01, 'ಒಂದು ಮತ್ತು ಒಂದು ಶತಾಂಶ'],
+  [1.45, 'ಒಂದು ಮತ್ತು ನಲವತ್ತೈದು ಶತಾಂಶ'],
+  [0.05, 'ಶೂನ್ಯ ಮತ್ತು ಐದು ಶತಾಂಶ'],
+  [1.001, 'ಒಂದು ಮತ್ತು ಒಂದು ಸಹಸ್ರಾಂಶ'],
+  [1.005, 'ಒಂದು ಮತ್ತು ಐದು ಸಹಸ್ರಾಂಶ'],
+  [1.0001, 'ಒಂದು ಮತ್ತು ಒಂದು ದಶ-ಸಹಸ್ರಾಂಶ'],
+  [1.0005, 'ಒಂದು ಮತ್ತು ಐದು ದಶ-ಸಹಸ್ರಾಂಶ'],
+  [1.00001, 'ಒಂದು ಮತ್ತು ಒಂದು ಶತ-ಸಹಸ್ರಾಂಶ'],
+  [1.00005, 'ಒಂದು ಮತ್ತು ಐದು ಶತ-ಸಹಸ್ರಾಂಶ'],
+  [1.000001, 'ಒಂದು ಮತ್ತು ಒಂದು ದಶ-ಲಕ್ಷಾಂಶ'],
+  [1.000005, 'ಒಂದು ಮತ್ತು ಐದು ದಶ-ಲಕ್ಷಾಂಶ'],
+  [123.45, 'ಒಂದು ನೂರು ಇಪ್ಪತ್ತಮೂರು ಮತ್ತು ನಲವತ್ತೈದು ಶತಾಂಶ'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleKnIN)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'ಒಂದು ದಶಾಂಶ ಹನ್ನೆರಡು ಲಕ್ಷ ಮೂವತ್ತನಾಲ್ಕು ಸಾವಿರ ಐದು ನೂರು ಅರುವತ್ತೇಳು',
+    );
+    expect(toWords.convert(1.1234567)).toBe('ಒಂದು ದಶಾಂಶ ಹನ್ನೆರಡು ಲಕ್ಷ ಮೂವತ್ತನಾಲ್ಕು ಸಾವಿರ ಐದು ನೂರು ಅರುವತ್ತೇಳು');
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('ಒಂದು ದಶಾಂಶ ಐದು');
+    expect(toWords.convert(0.05)).toBe('ಶೂನ್ಯ ದಶಾಂಶ ಶೂನ್ಯ ಐದು');
+  });
+});

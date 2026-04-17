@@ -118,6 +118,14 @@ export default class Locale implements LocaleInterface {
     exactWordsMapping: [{ number: 100, value: 'Simtu' }],
     pluralMark: 'i',
     pluralWords: ['kvadriljon', 'triljon', 'miljard'],
+    fractionDenominatorMapping: {
+      1: { singular: 'Desmitdaļa', plural: 'Desmitdaļas' },
+      2: { singular: 'Simtdaļa', plural: 'Simtdaļas' },
+      3: { singular: 'Tūkstošdaļa', plural: 'Tūkstošdaļas' },
+      4: { singular: 'Desmittūkstošdaļa', plural: 'Desmittūkstošdaļas' },
+      5: { singular: 'Simttūkstošdaļa', plural: 'Simttūkstošdaļas' },
+      6: { singular: 'Miljonsdaļa', plural: 'Miljonsdaļas' },
+    },
   };
 }
 

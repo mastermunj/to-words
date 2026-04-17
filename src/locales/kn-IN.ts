@@ -244,6 +244,14 @@ export default class Locale implements LocaleInterface {
       { number: 2, value: 'ಎರಡನೇ' },
       { number: 1, value: 'ಮೊದಲನೇ' },
     ],
+    fractionDenominatorMapping: {
+      1: { singular: 'ದಶಾಂಶ', plural: 'ದಶಾಂಶ' },
+      2: { singular: 'ಶತಾಂಶ', plural: 'ಶತಾಂಶ' },
+      3: { singular: 'ಸಹಸ್ರಾಂಶ', plural: 'ಸಹಸ್ರಾಂಶ' },
+      4: { singular: 'ದಶ-ಸಹಸ್ರಾಂಶ', plural: 'ದಶ-ಸಹಸ್ರಾಂಶ' },
+      5: { singular: 'ಶತ-ಸಹಸ್ರಾಂಶ', plural: 'ಶತ-ಸಹಸ್ರಾಂಶ' },
+      6: { singular: 'ದಶ-ಲಕ್ಷಾಂಶ', plural: 'ದಶ-ಲಕ್ಷಾಂಶ' },
+    },
   };
 }
 

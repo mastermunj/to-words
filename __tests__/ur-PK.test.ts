@@ -403,3 +403,38 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleUrPK: [number, string][] = [
+  [1.1, 'ایک اور ایک دسواں'],
+  [2.5, 'دو اور پانچ دسویں'],
+  [1.01, 'ایک اور ایک سوواں'],
+  [1.45, 'ایک اور پینتالیس سویں'],
+  [0.05, 'صفر اور پانچ سویں'],
+  [1.001, 'ایک اور ایک ہزارواں'],
+  [1.005, 'ایک اور پانچ ہزاروی'],
+  [1.0001, 'ایک اور ایک دس-ہزارواں'],
+  [1.0005, 'ایک اور پانچ دس-ہزاروی'],
+  [1.00001, 'ایک اور ایک لاکھواں'],
+  [1.00005, 'ایک اور پانچ لاکھوی'],
+  [1.000001, 'ایک اور ایک دس-لاکھواں'],
+  [1.000005, 'ایک اور پانچ دس-لاکھوی'],
+  [123.45, 'ایک سو تئیس اور پینتالیس سویں'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleUrPK)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'ایک اعشاریہ بارہ لاکھ چونتیس ہزار پانچ سو سڑسٹھ',
+    );
+    expect(toWords.convert(1.1234567)).toBe('ایک اعشاریہ بارہ لاکھ چونتیس ہزار پانچ سو سڑسٹھ');
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('ایک اعشاریہ پانچ');
+    expect(toWords.convert(0.05)).toBe('صفر اعشاریہ صفر پانچ');
+  });
+});

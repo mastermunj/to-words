@@ -492,3 +492,38 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleKaGE: [number, string][] = [
+  [1.1, 'ერთი და ერთი მეათედი'],
+  [2.5, 'ორი და ხუთი მეათედი'],
+  [1.01, 'ერთი და ერთი მეასედი'],
+  [1.45, 'ერთი და ორმოცი ხუთი მეასედი'],
+  [0.05, 'ნული და ხუთი მეასედი'],
+  [1.001, 'ერთი და ერთი მეათასედი'],
+  [1.005, 'ერთი და ხუთი მეათასედი'],
+  [1.0001, 'ერთი და ერთი მეათი-ათასედი'],
+  [1.0005, 'ერთი და ხუთი მეათი-ათასედი'],
+  [1.00001, 'ერთი და ერთი მეასი-ათასედი'],
+  [1.00005, 'ერთი და ხუთი მეასი-ათასედი'],
+  [1.000001, 'ერთი და ერთი მემილიონედი'],
+  [1.000005, 'ერთი და ხუთი მემილიონედი'],
+  [123.45, 'ერთი ასი ოცი სამი და ორმოცი ხუთი მეასედი'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleKaGE)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'ერთი მძიმე ერთი მილიონი ორი ასი ოცდაათი ოთხი ათასი ხუთი ასი სამოცი შვიდი',
+    );
+    expect(toWords.convert(1.1234567)).toBe('ერთი მძიმე ერთი მილიონი ორი ასი ოცდაათი ოთხი ათასი ხუთი ასი სამოცი შვიდი');
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('ერთი მძიმე ხუთი');
+    expect(toWords.convert(0.05)).toBe('ნული მძიმე ნული ხუთი');
+  });
+});

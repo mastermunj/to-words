@@ -755,3 +755,33 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyle: [number, string][] = [
+  [1.1, 'One And One Tenth'],
+  [1.5, 'One And Five Tenths'],
+  [1.01, 'One And One Hundredth'],
+  [123.45, 'One Hundred Twenty Three And Forty Five Hundredths'],
+  [0.05, 'Zero And Five Hundredths'],
+  [0.001, 'Zero And One Thousandth'],
+  [0.012, 'Zero And Twelve Thousandths'],
+  [5.0001, 'Five And One Ten-Thousandth'],
+  [1.000001, 'One And One Millionth'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyle)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit when denominator key is missing', () => {
+    // 7 decimal places — no mapping exists for key 7
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'One Point One Million Two Hundred Thirty Four Thousand Five Hundred Sixty Seven',
+    );
+  });
+
+  test('digit-by-digit still works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('One Point Five');
+    expect(toWords.convert(123.45)).toBe('One Hundred Twenty Three Point Forty Five');
+  });
+});

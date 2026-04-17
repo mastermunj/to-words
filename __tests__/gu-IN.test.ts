@@ -396,3 +396,36 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleGuIN: [number, string][] = [
+  [1.1, 'એક અને એક દશાંશ'],
+  [2.5, 'બે અને પાંચ દશાંશ'],
+  [1.01, 'એક અને એક શતાંશ'],
+  [1.45, 'એક અને પિસ્તાલીસ શતાંશ'],
+  [0.05, 'શૂન્ય અને પાંચ શતાંશ'],
+  [1.001, 'એક અને એક સહસ્રાંશ'],
+  [1.005, 'એક અને પાંચ સહસ્રાંશ'],
+  [1.0001, 'એક અને એક દશ-સહસ્રાંશ'],
+  [1.0005, 'એક અને પાંચ દશ-સહસ્રાંશ'],
+  [1.00001, 'એક અને એક શત-સહસ્રાંશ'],
+  [1.00005, 'એક અને પાંચ શત-સહસ્રાંશ'],
+  [1.000001, 'એક અને એક દશ-લક્ષાંશ'],
+  [1.000005, 'એક અને પાંચ દશ-લક્ષાંશ'],
+  [123.45, 'એક સો તેવીસ અને પિસ્તાલીસ શતાંશ'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleGuIN)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe('એક દશાંશ બાર લાખ ચોત્રીસ હજાર પાંચ સો સડસઠ');
+    expect(toWords.convert(1.1234567)).toBe('એક દશાંશ બાર લાખ ચોત્રીસ હજાર પાંચ સો સડસઠ');
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('એક દશાંશ પાંચ');
+    expect(toWords.convert(0.05)).toBe('શૂન્ય દશાંશ શૂન્ય પાંચ');
+  });
+});

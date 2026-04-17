@@ -463,3 +463,40 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleSqAL: [number, string][] = [
+  [1.1, 'Një E Një E Dhjeta'],
+  [2.5, 'Dy E Pesë Të Dhjeta'],
+  [1.01, 'Një E Një E Qindta'],
+  [1.45, 'Një E Dyzet Pesë Të Qindtat'],
+  [0.05, 'Zero E Pesë Të Qindtat'],
+  [1.001, 'Një E Një E Mijëta'],
+  [1.005, 'Një E Pesë Të Mijëtat'],
+  [1.0001, 'Një E Një E Dhjetë Mijëta'],
+  [1.0005, 'Një E Pesë Të Dhjetë Mijëtat'],
+  [1.00001, 'Një E Një E Njëqind Mijëta'],
+  [1.00005, 'Një E Pesë Të Njëqind Mijëtat'],
+  [1.000001, 'Një E Një E Milionëta'],
+  [1.000005, 'Një E Pesë Të Milionëtat'],
+  [123.45, 'Njëqind Njëzet Tre E Dyzet Pesë Të Qindtat'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleSqAL)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'Një Presje Një Milion Dyqind Tridhjetë Katër Mijë Pesëqind Gjashtëdhjetë Shtatë',
+    );
+    expect(toWords.convert(1.1234567)).toBe(
+      'Një Presje Një Milion Dyqind Tridhjetë Katër Mijë Pesëqind Gjashtëdhjetë Shtatë',
+    );
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('Një Presje Pesë');
+    expect(toWords.convert(0.05)).toBe('Zero Presje Zero Pesë');
+  });
+});

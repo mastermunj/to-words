@@ -156,6 +156,14 @@ export default class Locale implements LocaleInterface {
       { number: 0, value: 'Ničti' },
     ],
     ordinalExactWordsMapping: [{ number: 100, value: 'Stoti' }],
+    fractionDenominatorMapping: {
+      1: { singular: 'Desetinka', plural: 'Desetinke' },
+      2: { singular: 'Stotinka', plural: 'Stotinke' },
+      3: { singular: 'Tisočinka', plural: 'Tisočinke' },
+      4: { singular: 'Desetotisočinka', plural: 'Desetotisočinke' },
+      5: { singular: 'Sto-Tisočinka', plural: 'Sto-Tisočinke' },
+      6: { singular: 'Milijontinka', plural: 'Milijontinke' },
+    },
   };
 }
 

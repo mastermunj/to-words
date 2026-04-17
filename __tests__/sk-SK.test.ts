@@ -490,3 +490,38 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleSkSK: [number, string][] = [
+  [1.1, 'Jeden A Jeden Desatina'],
+  [2.5, 'Dva A Päť Desatiny'],
+  [1.01, 'Jeden A Jeden Stotina'],
+  [1.45, 'Jeden A Štyridsať Päť Stotiny'],
+  [0.05, 'Nula A Päť Stotiny'],
+  [1.001, 'Jeden A Jeden Tisícina'],
+  [1.005, 'Jeden A Päť Tisíciny'],
+  [1.0001, 'Jeden A Jeden Desaťtisícina'],
+  [1.0005, 'Jeden A Päť Desaťtisíciny'],
+  [1.00001, 'Jeden A Jeden Stotisícina'],
+  [1.00005, 'Jeden A Päť Stotisíciny'],
+  [1.000001, 'Jeden A Jeden Miliontina'],
+  [1.000005, 'Jeden A Päť Miliontiny'],
+  [123.45, 'Sto Dvadsať Tri A Štyridsať Päť Stotiny'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleSkSK)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'Jeden Celá Milión Dvesto Tridsať Štyri Tisíc Päťsto Šesťdesiat Sedem',
+    );
+    expect(toWords.convert(1.1234567)).toBe('Jeden Celá Milión Dvesto Tridsať Štyri Tisíc Päťsto Šesťdesiat Sedem');
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('Jeden Celá Päť');
+    expect(toWords.convert(0.05)).toBe('Nula Celá Nula Päť');
+  });
+});

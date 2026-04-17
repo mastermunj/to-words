@@ -29,10 +29,10 @@ export default class Locale implements LocaleInterface {
       point: 'Virgule',
     },
     numberWordsMapping: [
-      { number: 10n**27n, value: 'Quadrilliard' },
-      { number: 10n**24n, value: 'Quadrillion' },
-      { number: 10n**21n, value: 'Trilliard' },
-      { number: 10n**18n, value: 'Trillion' },
+      { number: 10n ** 27n, value: 'Quadrilliard' },
+      { number: 10n ** 24n, value: 'Quadrillion' },
+      { number: 10n ** 21n, value: 'Trilliard' },
+      { number: 10n ** 18n, value: 'Trillion' },
       { number: 1000000000000000, value: 'Billiard' },
       { number: 1000000000000, value: 'Billion' },
       { number: 1000000000, value: 'Milliard' },
@@ -180,6 +180,14 @@ export default class Locale implements LocaleInterface {
       { number: 1, value: 'Premier' },
       { number: 0, value: 'Zéroième' },
     ],
+    fractionDenominatorMapping: {
+      1: { singular: 'Dixième', plural: 'Dixièmes' },
+      2: { singular: 'Centième', plural: 'Centièmes' },
+      3: { singular: 'Millième', plural: 'Millièmes' },
+      4: { singular: 'Dix-Millième', plural: 'Dix-Millièmes' },
+      5: { singular: 'Cent-Millième', plural: 'Cent-Millièmes' },
+      6: { singular: 'Millionième', plural: 'Millionièmes' },
+    },
   };
 }
 

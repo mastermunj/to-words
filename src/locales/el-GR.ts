@@ -127,6 +127,14 @@ export default class Locale implements LocaleInterface {
       { number: 0, value: 'Μηδενικό' },
     ],
     ordinalExactWordsMapping: [{ number: 100, value: 'Εκατοστό' }],
+    fractionDenominatorMapping: {
+      1: { singular: 'Δέκατο', plural: 'Δέκατα' },
+      2: { singular: 'Εκατοστό', plural: 'Εκατοστά' },
+      3: { singular: 'Χιλιοστό', plural: 'Χιλιοστά' },
+      4: { singular: 'Δεκάκις Χιλιοστό', plural: 'Δεκάκις Χιλιοστά' },
+      5: { singular: 'Εκατοντάκις Χιλιοστό', plural: 'Εκατοντάκις Χιλιοστά' },
+      6: { singular: 'Εκατομμυριοστό', plural: 'Εκατομμυριοστά' },
+    },
   };
 }
 

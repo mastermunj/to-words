@@ -510,3 +510,38 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleSvSE: [number, string][] = [
+  [1.1, 'Ett Och Ett Tiondel'],
+  [2.5, 'Två Och Fem Tiondelar'],
+  [1.01, 'Ett Och Ett Hundradel'],
+  [1.45, 'Ett Och Fyrtiofem Hundradedelar'],
+  [0.05, 'Noll Och Fem Hundradedelar'],
+  [1.001, 'Ett Och Ett Tusendel'],
+  [1.005, 'Ett Och Fem Tusendelar'],
+  [1.0001, 'Ett Och Ett Tiotusendel'],
+  [1.0005, 'Ett Och Fem Tiotunsendelar'],
+  [1.00001, 'Ett Och Ett Hundratusendel'],
+  [1.00005, 'Ett Och Fem Hundratusendelar'],
+  [1.000001, 'Ett Och Ett Milliondel'],
+  [1.000005, 'Ett Och Fem Miljondelar'],
+  [123.45, 'Hundra Tjugotre Och Fyrtiofem Hundradedelar'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleSvSE)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'Ett Komma Ett Miljon Två Hundra Trettiofyra Tusen Fem Hundra Sextiosju',
+    );
+    expect(toWords.convert(1.1234567)).toBe('Ett Komma Ett Miljon Två Hundra Trettiofyra Tusen Fem Hundra Sextiosju');
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('Ett Komma Fem');
+    expect(toWords.convert(0.05)).toBe('Noll Komma Noll Fem');
+  });
+});

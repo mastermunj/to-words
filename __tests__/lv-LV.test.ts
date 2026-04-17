@@ -431,3 +431,40 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleLvLV: [number, string][] = [
+  [1.1, 'viens un viens Desmitdaļa'],
+  [2.5, 'divi un pieci Desmitdaļas'],
+  [1.01, 'viens un viens Simtdaļa'],
+  [1.45, 'viens un četrdesmit pieci Simtdaļas'],
+  [0.05, 'nulle un pieci Simtdaļas'],
+  [1.001, 'viens un viens Tūkstošdaļa'],
+  [1.005, 'viens un pieci Tūkstošdaļas'],
+  [1.0001, 'viens un viens Desmittūkstošdaļa'],
+  [1.0005, 'viens un pieci Desmittūkstošdaļas'],
+  [1.00001, 'viens un viens Simttūkstošdaļa'],
+  [1.00005, 'viens un pieci Simttūkstošdaļas'],
+  [1.000001, 'viens un viens Miljonsdaļa'],
+  [1.000005, 'viens un pieci Miljonsdaļas'],
+  [123.45, 'simtu divdesmit trīs un četrdesmit pieci Simtdaļas'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleLvLV)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'viens komats viens miljons divi simti trīsdesmit četri tūkstoši pieci simti sešdesmit septiņi',
+    );
+    expect(toWords.convert(1.1234567)).toBe(
+      'viens komats viens miljons divi simti trīsdesmit četri tūkstoši pieci simti sešdesmit septiņi',
+    );
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('viens komats pieci');
+    expect(toWords.convert(0.05)).toBe('nulle komats nulle pieci');
+  });
+});

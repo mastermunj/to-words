@@ -677,3 +677,17 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleFrFR: [number, string][] = [
+  [1.1, 'Un Et Un Dixième'],
+  [1.5, 'Un Et Cinq Dixièmes'],
+  [123.45, 'Cent Vingt-Trois Et Quarante-Cinq Centièmes'],
+  [0.05, 'Zéro Et Cinq Centièmes'],
+  [0.001, 'Zéro Et Un Millième'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleFrFR)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+});

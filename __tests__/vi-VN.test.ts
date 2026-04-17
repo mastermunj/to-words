@@ -404,3 +404,38 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleViVN: [number, string][] = [
+  [1.1, 'Một Và Một Phần Mười'],
+  [2.5, 'Hai Và Năm Phần Mười'],
+  [1.01, 'Một Và Một Phần Trăm'],
+  [1.45, 'Một Và Bốn Mươi Năm Phần Trăm'],
+  [0.05, 'Không Và Năm Phần Trăm'],
+  [1.001, 'Một Và Một Phần Nghìn'],
+  [1.005, 'Một Và Năm Phần Nghìn'],
+  [1.0001, 'Một Và Một Phần Mười Nghìn'],
+  [1.0005, 'Một Và Năm Phần Mười Nghìn'],
+  [1.00001, 'Một Và Một Phần Trăm Nghìn'],
+  [1.00005, 'Một Và Năm Phần Trăm Nghìn'],
+  [1.000001, 'Một Và Một Phần Triệu'],
+  [1.000005, 'Một Và Năm Phần Triệu'],
+  [123.45, 'Một Trăm Hai Mươi Ba Và Bốn Mươi Năm Phần Trăm'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleViVN)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'Một Phẩy Một Triệu Hai Trăm Ba Mươi Bốn Nghìn Năm Trăm Sáu Mươi Bảy',
+    );
+    expect(toWords.convert(1.1234567)).toBe('Một Phẩy Một Triệu Hai Trăm Ba Mươi Bốn Nghìn Năm Trăm Sáu Mươi Bảy');
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('Một Phẩy Năm');
+    expect(toWords.convert(0.05)).toBe('Không Phẩy Không Năm');
+  });
+});

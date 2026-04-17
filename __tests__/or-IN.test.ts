@@ -404,3 +404,36 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleOrIN: [number, string][] = [
+  [1.1, 'ଏକ ଏବଂ ଏକ ଦଶାଂଶ'],
+  [2.5, 'ଦୁଇ ଏବଂ ପାଞ୍ଚ ଦଶାଂଶ'],
+  [1.01, 'ଏକ ଏବଂ ଏକ ଶତାଂଶ'],
+  [1.45, 'ଏକ ଏବଂ ପଞ୍ଚଚାଳିଶି ଶତାଂଶ'],
+  [0.05, 'ଶୂନ ଏବଂ ପାଞ୍ଚ ଶତାଂଶ'],
+  [1.001, 'ଏକ ଏବଂ ଏକ ସହସ୍ରାଂଶ'],
+  [1.005, 'ଏକ ଏବଂ ପାଞ୍ଚ ସହସ୍ରାଂଶ'],
+  [1.0001, 'ଏକ ଏବଂ ଏକ ଦଶ-ସହସ୍ରାଂଶ'],
+  [1.0005, 'ଏକ ଏବଂ ପାଞ୍ଚ ଦଶ-ସହସ୍ରାଂଶ'],
+  [1.00001, 'ଏକ ଏବଂ ଏକ ଶତ-ସହସ୍ରାଂଶ'],
+  [1.00005, 'ଏକ ଏବଂ ପାଞ୍ଚ ଶତ-ସହସ୍ରାଂଶ'],
+  [1.000001, 'ଏକ ଏବଂ ଏକ ଦଶ-ଲକ୍ଷାଂଶ'],
+  [1.000005, 'ଏକ ଏବଂ ପାଞ୍ଚ ଦଶ-ଲକ୍ଷାଂଶ'],
+  [123.45, 'ଏକ ଶହ ତେଇଶି ଏବଂ ପଞ୍ଚଚାଳିଶି ଶତାଂଶ'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleOrIN)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe('ଏକ ଦଶମିକ ବାର ଲକ୍ଷ ଚଉତିରିଶି ହଜାର ପାଞ୍ଚ ଶହ ସତଷଠି');
+    expect(toWords.convert(1.1234567)).toBe('ଏକ ଦଶମିକ ବାର ଲକ୍ଷ ଚଉତିରିଶି ହଜାର ପାଞ୍ଚ ଶହ ସତଷଠି');
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('ଏକ ଦଶମିକ ପାଞ୍ଚ');
+    expect(toWords.convert(0.05)).toBe('ଶୂନ ଦଶମିକ ଶୂନ ପାଞ୍ଚ');
+  });
+});

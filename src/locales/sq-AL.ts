@@ -93,18 +93,6 @@ export default class Locale implements LocaleInterface {
       1000: {
         plural: 'Mijë',
       },
-      1000000: {
-        plural: 'Milionë',
-      },
-      1000000000: {
-        plural: 'Miliardë',
-      },
-      1000000000000: {
-        plural: 'Trilionë',
-      },
-      1000000000000000: {
-        plural: 'Kuadrilionë',
-      },
     },
     ordinalWordsMapping: [
       { number: 1000000000000000, value: 'I Kuadrilionti' },
@@ -156,6 +144,14 @@ export default class Locale implements LocaleInterface {
       { number: 1000000, value: 'I Milionti' },
       { number: 1000000000, value: 'I Miliardti' },
     ],
+    fractionDenominatorMapping: {
+      1: { singular: 'E Dhjeta', plural: 'Të Dhjeta' },
+      2: { singular: 'E Qindta', plural: 'Të Qindtat' },
+      3: { singular: 'E Mijëta', plural: 'Të Mijëtat' },
+      4: { singular: 'E Dhjetë Mijëta', plural: 'Të Dhjetë Mijëtat' },
+      5: { singular: 'E Njëqind Mijëta', plural: 'Të Njëqind Mijëtat' },
+      6: { singular: 'E Milionëta', plural: 'Të Milionëtat' },
+    },
   };
 }
 

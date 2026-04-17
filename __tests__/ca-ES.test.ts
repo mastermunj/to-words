@@ -421,3 +421,38 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleCaES: [number, string][] = [
+  [1.1, 'Un I Un Dècim'],
+  [2.5, 'Dos I Cinc Dècims'],
+  [1.01, 'Un I Un Centèsim'],
+  [1.45, 'Un I Quaranta Cinc Centèsims'],
+  [0.05, 'Zero I Cinc Centèsims'],
+  [1.001, 'Un I Un Mil·lèsim'],
+  [1.005, 'Un I Cinc Mil·lèsims'],
+  [1.0001, 'Un I Un Deu-Mil·lèsim'],
+  [1.0005, 'Un I Cinc Deu-Mil·lèsims'],
+  [1.00001, 'Un I Un Cent-Mil·lèsim'],
+  [1.00005, 'Un I Cinc Cent-Mil·lèsims'],
+  [1.000001, 'Un I Un Milionèsim'],
+  [1.000005, 'Un I Cinc Milionèsims'],
+  [123.45, 'Cent Vint-I-Tres I Quaranta Cinc Centèsims'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleCaES)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'Un Coma Un Milió Dos-Cents Trenta Quatre Mil Cinc-Cents Seixanta Set',
+    );
+    expect(toWords.convert(1.1234567)).toBe('Un Coma Un Milió Dos-Cents Trenta Quatre Mil Cinc-Cents Seixanta Set');
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('Un Coma Cinc');
+    expect(toWords.convert(0.05)).toBe('Zero Coma Zero Cinc');
+  });
+});

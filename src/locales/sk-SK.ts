@@ -160,6 +160,14 @@ export default class Locale implements LocaleInterface {
       { number: 0, value: 'Nultý' },
     ],
     ordinalExactWordsMapping: [{ number: 100, value: 'Stý' }],
+    fractionDenominatorMapping: {
+      1: { singular: 'Desatina', plural: 'Desatiny' },
+      2: { singular: 'Stotina', plural: 'Stotiny' },
+      3: { singular: 'Tisícina', plural: 'Tisíciny' },
+      4: { singular: 'Desaťtisícina', plural: 'Desaťtisíciny' },
+      5: { singular: 'Stotisícina', plural: 'Stotisíciny' },
+      6: { singular: 'Miliontina', plural: 'Miliontiny' },
+    },
   };
 }
 

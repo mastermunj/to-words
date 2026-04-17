@@ -495,3 +495,40 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleEnMM: [number, string][] = [
+  [1.1, 'One And One Tenth'],
+  [2.5, 'Two And Five Tenths'],
+  [1.01, 'One And One Hundredth'],
+  [1.45, 'One And Forty Five Hundredths'],
+  [0.05, 'Zero And Five Hundredths'],
+  [1.001, 'One And One Thousandth'],
+  [1.005, 'One And Five Thousandths'],
+  [1.0001, 'One And One Ten-Thousandth'],
+  [1.0005, 'One And Five Ten-Thousandths'],
+  [1.00001, 'One And One Hundred-Thousandth'],
+  [1.00005, 'One And Five Hundred-Thousandths'],
+  [1.000001, 'One And One Millionth'],
+  [1.000005, 'One And Five Millionths'],
+  [123.45, 'One Hundred Twenty Three And Forty Five Hundredths'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleEnMM)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'One Point One Million Two Hundred Thirty Four Thousand Five Hundred Sixty Seven',
+    );
+    expect(toWords.convert(1.1234567)).toBe(
+      'One Point One Million Two Hundred Thirty Four Thousand Five Hundred Sixty Seven',
+    );
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('One Point Five');
+    expect(toWords.convert(0.05)).toBe('Zero Point Zero Five');
+  });
+});

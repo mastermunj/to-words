@@ -489,3 +489,19 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleRuRU: [number, string][] = [
+  // Slavic singular rule: singular when fracValue % 10 === 1 && fracValue % 100 !== 11
+  [1.1, 'Один И Один Десятая'],
+  [1.5, 'Один И Пять Десятых'],
+  [1.21, 'Один И Двадцать Один Сотая'],
+  [1.11, 'Один И Одиннадцать Сотых'],
+  [123.45, 'Сто Двадцать Три И Сорок Пять Сотых'],
+  [0.001, 'Ноль И Один Тысячная'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleRuRU)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+});

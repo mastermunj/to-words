@@ -412,3 +412,38 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleHeIL: [number, string][] = [
+  [1.1, 'אחת ו אחת עשירית'],
+  [2.5, 'שתיים ו חמש עשיריות'],
+  [1.01, 'אחת ו אחת מאית'],
+  [1.45, 'אחת ו ארבעים ו חמש מאיות'],
+  [0.05, 'אפס ו חמש מאיות'],
+  [1.001, 'אחת ו אחת אלפית'],
+  [1.005, 'אחת ו חמש אלפיות'],
+  [1.0001, 'אחת ו אחת עשרת-אלפית'],
+  [1.0005, 'אחת ו חמש עשרת-אלפיות'],
+  [1.00001, 'אחת ו אחת מאה-אלפית'],
+  [1.00005, 'אחת ו חמש מאה-אלפיות'],
+  [1.000001, 'אחת ו אחת מיליונית'],
+  [1.000005, 'אחת ו חמש מיליוניות'],
+  [123.45, 'אחת מאה ו עשרים ו שלוש ו ארבעים ו חמש מאיות'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleHeIL)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'אחת נקודה מיליון ו שתיים מאה ו שלושים ו ארבע אלף ו חמש מאה ו שישים ו שבע',
+    );
+    expect(toWords.convert(1.1234567)).toBe('אחת נקודה מיליון ו שתיים מאה ו שלושים ו ארבע אלף ו חמש מאה ו שישים ו שבע');
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('אחת נקודה חמש');
+    expect(toWords.convert(0.05)).toBe('אפס נקודה אפס חמש');
+  });
+});

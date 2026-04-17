@@ -271,6 +271,7 @@ export class ToWordsCore {
             gender: options.gender ?? baseOptions?.gender,
             useAnd: options.useAnd ?? baseOptions?.useAnd,
             formal: options.formal ?? baseOptions?.formal,
+            decimalStyle: options.decimalStyle ?? baseOptions?.decimalStyle,
           };
 
     if (!this.isValidNumber(number)) {
@@ -496,20 +497,36 @@ export class ToWordsCore {
 
     const wordsWithDecimal: string[] = [];
     if (isFloat) {
-      if (!ignoreZero) {
-        wordsWithDecimal.push(localeConfig.texts.point);
-      }
-      if (fractionalPart.startsWith('0') && !localeConfig?.decimalLengthWordMapping) {
-        const zeroWords: string[] = [];
-        for (const num of fractionalPart) {
-          zeroWords.push(...this.convertInternal(BigInt(num), true, undefined, locale, gender));
+      const fracValue = Number.parseInt(fractionalPart, 10);
+      const denominator = localeConfig.fractionDenominatorMapping?.[fractionalPart.length];
+      if (options.decimalStyle === 'fraction' && denominator) {
+        // Fractional style: "One Hundred Twenty Three and Forty-Five Hundredths"
+        if (!ignoreZero) {
+          wordsWithDecimal.push(localeConfig.texts.and);
         }
-        wordsWithDecimal.push(...zeroWords);
+        wordsWithDecimal.push(...this.convertInternal(BigInt(fracValue), true, undefined, locale, gender));
+        const useSingular =
+          localeConfig.fractionSingularRule === 'slavic'
+            ? fracValue % 10 === 1 && fracValue % 100 !== 11
+            : fracValue === 1;
+        wordsWithDecimal.push(useSingular ? denominator.singular : denominator.plural);
       } else {
-        wordsWithDecimal.push(...this.convertInternal(BigInt(fractionalPart), true, undefined, locale, gender));
-        const decimalLengthWord = localeConfig?.decimalLengthWordMapping?.[fractionalPart.length];
-        if (decimalLengthWord) {
-          wordsWithDecimal.push(decimalLengthWord);
+        // Default digit-by-digit style
+        if (!ignoreZero) {
+          wordsWithDecimal.push(localeConfig.texts.point);
+        }
+        if (fractionalPart.startsWith('0') && !localeConfig?.decimalLengthWordMapping) {
+          const zeroWords: string[] = [];
+          for (const num of fractionalPart) {
+            zeroWords.push(...this.convertInternal(BigInt(num), true, undefined, locale, gender));
+          }
+          wordsWithDecimal.push(...zeroWords);
+        } else {
+          wordsWithDecimal.push(...this.convertInternal(BigInt(fractionalPart), true, undefined, locale, gender));
+          const decimalLengthWord = localeConfig?.decimalLengthWordMapping?.[fractionalPart.length];
+          if (decimalLengthWord) {
+            wordsWithDecimal.push(decimalLengthWord);
+          }
         }
       }
     }

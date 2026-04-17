@@ -399,3 +399,36 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleMrIN: [number, string][] = [
+  [1.1, 'एक आणि एक दशांश'],
+  [2.5, 'दोन आणि पाच दशांश'],
+  [1.01, 'एक आणि एक शतांश'],
+  [1.45, 'एक आणि पंचेचाळीस शतांश'],
+  [0.05, 'शून्य आणि पाच शतांश'],
+  [1.001, 'एक आणि एक सहस्रांश'],
+  [1.005, 'एक आणि पाच सहस्रांश'],
+  [1.0001, 'एक आणि एक दश-सहस्रांश'],
+  [1.0005, 'एक आणि पाच दश-सहस्रांश'],
+  [1.00001, 'एक आणि एक शत-सहस्रांश'],
+  [1.00005, 'एक आणि पाच शत-सहस्रांश'],
+  [1.000001, 'एक आणि एक दशलक्षांश'],
+  [1.000005, 'एक आणि पाच दशलक्षांश'],
+  [123.45, 'एकशे तेवीस आणि पंचेचाळीस शतांश'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleMrIN)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe('एक पूर्णांक बारा लाख चौतीस हजार पाचशे सदुसष्ठ');
+    expect(toWords.convert(1.1234567)).toBe('एक पूर्णांक बारा लाख चौतीस हजार पाचशे सदुसष्ठ');
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('एक पूर्णांक पाच');
+    expect(toWords.convert(0.05)).toBe('शून्य पूर्णांक शून्य पाच');
+  });
+});

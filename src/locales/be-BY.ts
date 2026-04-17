@@ -160,6 +160,15 @@ export default class Locale implements LocaleInterface {
       { number: 0, value: 'Нулявы' },
     ],
     ordinalExactWordsMapping: [{ number: 100, value: 'Соты' }],
+    fractionDenominatorMapping: {
+      1: { singular: 'Дзясятая', plural: 'Дзясятых' },
+      2: { singular: 'Сотая', plural: 'Сотых' },
+      3: { singular: 'Тысячная', plural: 'Тысячных' },
+      4: { singular: 'Дзесяцітысячная', plural: 'Дзесяцітысачных' },
+      5: { singular: 'Статысачная', plural: 'Статысачных' },
+      6: { singular: 'Мільённая', plural: 'Мільённых' },
+    },
+    fractionSingularRule: 'slavic',
   };
 }
 

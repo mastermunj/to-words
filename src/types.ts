@@ -23,6 +23,7 @@ export type ConverterOptions = {
   gender?: 'masculine' | 'feminine';
   useAnd?: boolean;
   formal?: boolean;
+  decimalStyle?: 'digit' | 'fraction'; // 'digit' (default): digit-by-digit after point; 'fraction': positional/fractional style (e.g. "Forty-Five Hundredths")
 };
 
 export type OrdinalOptions = {
@@ -86,6 +87,8 @@ export type LocaleConfig = {
   splitWord?: string;
   ignoreZeroInDecimals?: boolean;
   decimalLengthWordMapping?: Record<number, string>;
+  fractionDenominatorMapping?: Record<number, { singular: string; plural: string }>; // key = decimal places; used when decimalStyle = 'fraction'
+  fractionSingularRule?: 'slavic'; // if 'slavic', use singular when fractionalValue % 10 === 1 && fractionalValue % 100 !== 11
   ignoreOneForWords?: string[];
   pluralMark?: string;
   pluralWords?: string[];

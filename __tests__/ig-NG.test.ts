@@ -420,9 +420,7 @@ describe('Test All Currency Options Combinations', () => {
   const testValue = 1234;
 
   test('currency only', () => {
-    expect(toWords.convert(testValue, { currency: true })).toBe(
-      'Puku Na Nnari Abụọ Na Iri Atọ Na Anọ Naira Naanị',
-    );
+    expect(toWords.convert(testValue, { currency: true })).toBe('Puku Na Nnari Abụọ Na Iri Atọ Na Anọ Naira Naanị');
   });
 
   test('currency + doNotAddOnly', () => {

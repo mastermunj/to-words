@@ -474,3 +474,38 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleNbNO: [number, string][] = [
+  [1.1, 'En Og En Tiendedel'],
+  [2.5, 'To Og Fem Tiendedeler'],
+  [1.01, 'En Og En Hundredel'],
+  [1.45, 'En Og Førtifem Hundredeler'],
+  [0.05, 'Null Og Fem Hundredeler'],
+  [1.001, 'En Og En Tusendel'],
+  [1.005, 'En Og Fem Tusendeler'],
+  [1.0001, 'En Og En Titusendel'],
+  [1.0005, 'En Og Fem Titusendeler'],
+  [1.00001, 'En Og En Hundretusendel'],
+  [1.00005, 'En Og Fem Hundretusendeler'],
+  [1.000001, 'En Og En Milliondel'],
+  [1.000005, 'En Og Fem Milliondeler'],
+  [123.45, 'Hundre Tjuetre Og Førtifem Hundredeler'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleNbNO)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'En Komma En Million To Hundre Trettifire Tusen Fem Hundre Sekstisju',
+    );
+    expect(toWords.convert(1.1234567)).toBe('En Komma En Million To Hundre Trettifire Tusen Fem Hundre Sekstisju');
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('En Komma Fem');
+    expect(toWords.convert(0.05)).toBe('Null Komma Null Fem');
+  });
+});

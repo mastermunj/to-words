@@ -109,6 +109,14 @@ export default class Locale implements LocaleInterface {
       { number: 1000, value: 'Keseribu' },
       { number: 100, value: 'Keseratus' },
     ],
+    fractionDenominatorMapping: {
+      1: { singular: 'Persepuluh', plural: 'Persepuluh' },
+      2: { singular: 'Perseratus', plural: 'Perseratus' },
+      3: { singular: 'Perseribu', plural: 'Perseribu' },
+      4: { singular: 'Persepuluh Ribu', plural: 'Persepuluh Ribu' },
+      5: { singular: 'Perseratus Ribu', plural: 'Perseratus Ribu' },
+      6: { singular: 'Persejuta', plural: 'Persejuta' },
+    },
   };
 }
 

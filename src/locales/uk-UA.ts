@@ -160,6 +160,15 @@ export default class Locale implements LocaleInterface {
       'Трильйон',
       'Квадрильйон',
     ],
+    fractionDenominatorMapping: {
+      1: { singular: 'Десята', plural: 'Десятих' },
+      2: { singular: 'Сота', plural: 'Сотих' },
+      3: { singular: 'Тисячна', plural: 'Тисячних' },
+      4: { singular: 'Десятитисячна', plural: 'Десятитисячних' },
+      5: { singular: 'Стотисячна', plural: 'Стотисячних' },
+      6: { singular: 'Мільйонна', plural: 'Мільйонних' },
+    },
+    fractionSingularRule: 'slavic',
   };
 }
 

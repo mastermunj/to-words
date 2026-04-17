@@ -477,3 +477,40 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleNlSR: [number, string][] = [
+  [1.1, 'Een En Een Tiende'],
+  [2.5, 'Twee En Vijf Tienden'],
+  [1.01, 'Een En Een Honderdste'],
+  [1.45, 'Een En Vijfenveertig Honderdsten'],
+  [0.05, 'Nul En Vijf Honderdsten'],
+  [1.001, 'Een En Een Duizendste'],
+  [1.005, 'Een En Vijf Duizendsten'],
+  [1.0001, 'Een En Een Tienduizendste'],
+  [1.0005, 'Een En Vijf Tienduizendsten'],
+  [1.00001, 'Een En Een Honderdduizendste'],
+  [1.00005, 'Een En Vijf Honderdduizendsten'],
+  [1.000001, 'Een En Een Miljoenste'],
+  [1.000005, 'Een En Vijf Miljoensten'],
+  [123.45, 'Een Honderd Drieëntwintig En Vijfenveertig Honderdsten'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleNlSR)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'Een Punt Een Miljoen Twee Honderd Vierendertig Duizend Vijf Honderd Zevenenzestig',
+    );
+    expect(toWords.convert(1.1234567)).toBe(
+      'Een Punt Een Miljoen Twee Honderd Vierendertig Duizend Vijf Honderd Zevenenzestig',
+    );
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('Een Punt Vijf');
+    expect(toWords.convert(0.05)).toBe('Nul Punt Nul Vijf');
+  });
+});

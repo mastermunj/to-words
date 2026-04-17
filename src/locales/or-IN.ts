@@ -29,11 +29,11 @@ export default class Locale implements LocaleInterface {
       point: 'ଦଶମିକ',
     },
     numberWordsMapping: [
-      { number: 10n**17n, value: 'ପରାର୍ଦ୍ଧ' },
-      { number: 10n**15n, value: 'ଅନ୍ତ୍ୟ' },
-      { number: 10n**13n, value: 'ପଦ୍ମ' },
-      { number: 10n**11n, value: 'ଖର୍ବ' },
-      { number: 10n**9n, value: 'ଅର୍ବୁଦ' },
+      { number: 10n ** 17n, value: 'ପରାର୍ଦ୍ଧ' },
+      { number: 10n ** 15n, value: 'ଅନ୍ତ୍ୟ' },
+      { number: 10n ** 13n, value: 'ପଦ୍ମ' },
+      { number: 10n ** 11n, value: 'ଖର୍ବ' },
+      { number: 10n ** 9n, value: 'ଅର୍ବୁଦ' },
       { number: 10000000, value: 'କୋଟି' },
       { number: 100000, value: 'ଲକ୍ଷ' },
       { number: 1000, value: 'ହଜାର' },
@@ -245,6 +245,14 @@ export default class Locale implements LocaleInterface {
       { number: 1, value: 'ପ୍ରଥମ' },
       { number: 0, value: 'ଶୂନତମ' },
     ],
+    fractionDenominatorMapping: {
+      1: { singular: 'ଦଶାଂଶ', plural: 'ଦଶାଂଶ' },
+      2: { singular: 'ଶତାଂଶ', plural: 'ଶତାଂଶ' },
+      3: { singular: 'ସହସ୍ରାଂଶ', plural: 'ସହସ୍ରାଂଶ' },
+      4: { singular: 'ଦଶ-ସହସ୍ରାଂଶ', plural: 'ଦଶ-ସହସ୍ରାଂଶ' },
+      5: { singular: 'ଶତ-ସହସ୍ରାଂଶ', plural: 'ଶତ-ସହସ୍ରାଂଶ' },
+      6: { singular: 'ଦଶ-ଲକ୍ଷାଂଶ', plural: 'ଦଶ-ଲକ୍ଷାଂଶ' },
+    },
   };
 }
 

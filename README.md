@@ -47,6 +47,7 @@ Test locale behavior, currency conversion, ordinals, and large number inputs in 
   - [Class Methods](#class-methods)
   - [Functional Exports](#functional-exports)
   - [Converter Options](#converter-options)
+- [Spelled-Out Decimal (Fraction Style)](#-spelled-out-decimal-fraction-style)
 - [Bundle Sizes](#-bundle-sizes)
 - [Performance](#-performance)
 - [Browser Compatibility](#-browser-compatibility)
@@ -60,9 +61,9 @@ Test locale behavior, currency conversion, ordinals, and large number inputs in 
 ## 💼 Use Cases
 
 - **Invoicing & Billing** — Display amounts in words on invoices, receipts, and financial documents
-- **Check Printing** — Banks and financial institutions require amounts in words for check validation
+- **Check Printing** — Banks and financial institutions require amounts in words for check validation; use `decimalStyle: 'fraction'` for legal positional notation ("Forty-Five Hundredths")
 - **E-commerce** — Show order totals in words for clarity and accessibility
-- **Legal Documents** — Contracts and agreements often require written-out amounts
+- **Legal Documents** — Contracts and agreements often require written-out amounts, including spelled-out decimals
 - **Educational Apps** — Teach number pronunciation and spelling in different languages
 - **Accessibility** — Screen readers benefit from properly formatted number-to-text conversion
 - **Localization** — Support global users with region-specific number formatting
@@ -75,6 +76,7 @@ Test locale behavior, currency conversion, ordinals, and large number inputs in 
 - **Currency Formatting** — Locale-specific currency with fractional units
 - **Ordinal Numbers** — First, Second, Third, etc.
 - **Gender-Aware** — Grammatical gender for locales that require it (Spanish, Portuguese, Arabic, Hebrew, Slavic, and more)
+- **Fraction-Style Decimals** — Legal/financial positional decimals (`"Forty-Five Hundredths"`) via `decimalStyle: 'fraction'` across 94 locales
 - **Formal Numerals** — Formal/financial Chinese characters (大写/大寫) via `formal: true`
 - **Tree-Shakeable** — Import only the locales you need
 - **TypeScript Native** — Full type definitions included
@@ -200,7 +202,7 @@ toWords(123); // "One Hundred Twenty Three"
 toWords(123.45); // "One Hundred Twenty Three Point Four Five"
 ```
 
-> **Note:** When the fractional part starts with zero, digits after the decimal point are converted individually.
+> **Note:** When the fractional part starts with zero, digits after the decimal point are converted individually. For legal/financial positional notation ("Forty-Five Hundredths"), see [`decimalStyle: 'fraction'`](#-spelled-out-decimal-fraction-style).
 
 ### BigInt & Large Numbers
 
@@ -342,18 +344,18 @@ Many languages use grammatical gender for number words. Pass `gender` via conver
 ```js
 // Spanish: masculine (default) vs feminine
 const tw = new ToWords({ localeCode: 'es-ES' });
-tw.convert(1);                              // "Uno"
-tw.convert(1, { gender: 'feminine' });      // "Una"
-tw.convert(21, { gender: 'feminine' });     // "Veintiuna"
-tw.convert(200, { gender: 'feminine' });    // "Doscientas"
+tw.convert(1); // "Uno"
+tw.convert(1, { gender: 'feminine' }); // "Una"
+tw.convert(21, { gender: 'feminine' }); // "Veintiuna"
+tw.convert(200, { gender: 'feminine' }); // "Doscientas"
 
 // Portuguese
 const pt = new ToWords({ localeCode: 'pt-BR' });
-pt.convert(2, { gender: 'feminine' });      // "Duas"
+pt.convert(2, { gender: 'feminine' }); // "Duas"
 
 // Arabic
 const ar = new ToWords({ localeCode: 'ar-AE' });
-ar.convert(3, { gender: 'feminine' });      // "ثلاث"
+ar.convert(3, { gender: 'feminine' }); // "ثلاث"
 ```
 
 Gender can also be set via constructor options and overridden per call:
@@ -363,8 +365,8 @@ const tw = new ToWords({
   localeCode: 'es-ES',
   converterOptions: { gender: 'feminine' },
 });
-tw.convert(1);                             // "Una" (constructor default)
-tw.convert(1, { gender: 'masculine' });    // "Uno" (per-call override)
+tw.convert(1); // "Una" (constructor default)
+tw.convert(1, { gender: 'masculine' }); // "Uno" (per-call override)
 ```
 
 > **Supported locales:** Spanish (7), Portuguese (4), Arabic (4), Hebrew (2), Russian, Ukrainian, Polish, Czech, Croatian, Slovak, Serbian, Belarusian, Bulgarian, Catalan, Romanian, Latvian, Lithuanian, and Slovenian.
@@ -375,9 +377,9 @@ Insert the locale's "And" word before the last two digits:
 
 ```js
 const tw = new ToWords({ localeCode: 'en-US' });
-tw.convert(123);                            // "One Hundred Twenty Three"
-tw.convert(123, { useAnd: true });          // "One Hundred And Twenty Three"
-tw.convert(1023, { useAnd: true });         // "One Thousand And Twenty Three"
+tw.convert(123); // "One Hundred Twenty Three"
+tw.convert(123, { useAnd: true }); // "One Hundred And Twenty Three"
+tw.convert(1023, { useAnd: true }); // "One Thousand And Twenty Three"
 
 // Works with currency too
 tw.convert(123, { currency: true, useAnd: true });
@@ -393,15 +395,15 @@ Use formal/financial characters (大写/大寫) for Chinese locales:
 ```js
 // Simplified Chinese
 const cn = new ToWords({ localeCode: 'zh-CN' });
-cn.convert(123);                            // "百 二十 三"
-cn.convert(123, { formal: true });          // "佰 贰拾 叁"
+cn.convert(123); // "百 二十 三"
+cn.convert(123, { formal: true }); // "佰 贰拾 叁"
 cn.convert(100, { currency: true, formal: true });
 // "佰 圆 整"
 
 // Traditional Chinese
 const tw = new ToWords({ localeCode: 'zh-TW' });
-tw.convert(123, { formal: true });          // "佰 貳拾 參"
-tw.toOrdinal(5, { formal: true });          // "第伍"
+tw.convert(123, { formal: true }); // "佰 貳拾 參"
+tw.toOrdinal(5, { formal: true }); // "第伍"
 ```
 
 ### Tree-Shakeable Imports
@@ -877,17 +879,18 @@ detectLocale('en-GB'); // custom fallback if detection fails
 
 ### Converter Options
 
-| Option                  | Type    | Default   | Description                                                                                      |
-| ----------------------- | ------- | --------- | ------------------------------------------------------------------------------------------------ |
-| `currency`              | boolean | false     | Convert as currency with locale-specific formatting                                              |
-| `ignoreDecimal`         | boolean | false     | Ignore fractional part when converting                                                           |
-| `ignoreZeroCurrency`    | boolean | false     | Skip zero main currency (e.g., show only "Thirty Six Paise")                                     |
-| `doNotAddOnly`          | boolean | false     | Omit "Only" suffix in currency mode                                                              |
-| `includeZeroFractional` | boolean | false     | When input is a string like `"123.00"`, include "And Zero Paise" even though the decimal is zero |
-| `currencyOptions`       | object  | undefined | Override locale's default currency settings                                                      |
-| `gender`                | string  | undefined | Grammatical gender: `'masculine'` or `'feminine'`. Applies to locales with gendered number words |
-| `useAnd`                | boolean | undefined | Insert the locale connector before the last two digits (e.g., "One Hundred **And** Twenty Three"). No-op when locale already defines a split word or has an empty connector token |
-| `formal`                | boolean | undefined | Use formal/financial characters (currently supported for zh-CN and zh-TW)                        |
+| Option                  | Type    | Default   | Description                                                                                                                                                                                                                      |
+| ----------------------- | ------- | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `currency`              | boolean | false     | Convert as currency with locale-specific formatting                                                                                                                                                                              |
+| `ignoreDecimal`         | boolean | false     | Ignore fractional part when converting                                                                                                                                                                                           |
+| `ignoreZeroCurrency`    | boolean | false     | Skip zero main currency (e.g., show only "Thirty Six Paise")                                                                                                                                                                     |
+| `doNotAddOnly`          | boolean | false     | Omit "Only" suffix in currency mode                                                                                                                                                                                              |
+| `includeZeroFractional` | boolean | false     | When input is a string like `"123.00"`, include "And Zero Paise" even though the decimal is zero                                                                                                                                 |
+| `currencyOptions`       | object  | undefined | Override locale's default currency settings                                                                                                                                                                                      |
+| `gender`                | string  | undefined | Grammatical gender: `'masculine'` or `'feminine'`. Applies to locales with gendered number words                                                                                                                                 |
+| `useAnd`                | boolean | undefined | Insert the locale connector before the last two digits (e.g., "One Hundred **And** Twenty Three"). No-op when locale already defines a split word or has an empty connector token                                                |
+| `formal`                | boolean | undefined | Use formal/financial characters (currently supported for zh-CN and zh-TW)                                                                                                                                                        |
+| `decimalStyle`          | string  | `'digit'` | Decimal rendering style: `'digit'` (default — digit-by-digit after the point) or `'fraction'` (positional/legal style — "Forty-Five Hundredths"). See [Fraction Style](#-spelled-out-decimal-fraction-style) for locale support. |
 
 ### Common Options Example
 
@@ -902,7 +905,72 @@ toWords.convert(1234.56, {
 // "One Thousand Two Hundred Thirty Four Dollars And Fifty Six Cents"
 ```
 
-## 📏 Bundle Sizes
+## � Spelled-Out Decimal (Fraction Style)
+
+By default, decimals are rendered digit-by-digit after the point word:
+
+```js
+const tw = new ToWords({ localeCode: 'en-US' });
+tw.convert(123.45); // "One Hundred Twenty Three Point Four Five"
+```
+
+Pass `decimalStyle: 'fraction'` to use the positional/legal style used in financial
+and legal writing — the fractional part is converted as a whole number followed by
+its place-value denominator:
+
+```js
+tw.convert(123.45, { decimalStyle: 'fraction' });
+// "One Hundred Twenty Three And Forty Five Hundredths"
+
+tw.convert(1.1, { decimalStyle: 'fraction' }); // "One And One Tenth"
+tw.convert(0.05, { decimalStyle: 'fraction' }); // "Zero And Five Hundredths"
+tw.convert(0.001, { decimalStyle: 'fraction' }); // "Zero And One Thousandth"
+```
+
+The denominator is **singular when the fractional value equals 1** and **plural otherwise**.
+Russian, Ukrainian, and Belarusian follow the Slavic rule (`n % 10 === 1 && n % 100 !== 11`):
+
+```js
+const ru = new ToWords({ localeCode: 'ru-RU' });
+ru.convert(1.21, { decimalStyle: 'fraction' }); // "...Двадцать Один Сотая"   (singular)
+ru.convert(1.11, { decimalStyle: 'fraction' }); // "...Одиннадцать Сотых"     (plural)
+```
+
+**Fallback:** if the locale has no denominator word for the given decimal length (e.g., 7+
+digits), it automatically falls back to the default digit-by-digit style — no error thrown.
+
+### Supported denominator lengths
+
+| Decimal places | English denominator                      | French denominator             | German denominator |
+| -------------- | ---------------------------------------- | ------------------------------ | ------------------ |
+| 1              | Tenth / Tenths                           | Dixième / Dixièmes             | Zehntel            |
+| 2              | Hundredth / Hundredths                   | Centième / Centièmes           | Hundertstel        |
+| 3              | Thousandth / Thousandths                 | Millième / Millièmes           | Tausendstel        |
+| 4              | Ten-Thousandth / Ten-Thousandths         | Dix-Millième / Dix-Millièmes   | Zehntausendstel    |
+| 5              | Hundred-Thousandth / Hundred-Thousandths | Cent-Millième / Cent-Millièmes | Hunderttausendstel |
+| 6              | Millionth / Millionths                   | Millionième / Millionièmes     | Millionstel        |
+
+### Locale support (94 locales)
+
+| Language group                         | Locales                                                                                                                                                                                                          |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **English**                            | en-AE, en-AU, en-BD, en-CA, en-GB, en-GH, en-HK, en-IE, en-IN, en-JM, en-KE, en-LK, en-MA, en-MM, en-MU, en-MY, en-NG, en-NP, en-NZ, en-OM, en-PH, en-PK, en-SA, en-SG, en-TT, en-TZ, en-UG, en-US, en-ZA, en-ZW |
+| **German**                             | de-AT, de-CH, de-DE                                                                                                                                                                                              |
+| **French**                             | fr-BE, fr-CA, fr-CH, fr-FR, fr-MA, fr-SA                                                                                                                                                                         |
+| **Spanish**                            | es-AR, es-CL, es-CO, es-ES, es-MX, es-US, es-VE                                                                                                                                                                  |
+| **Portuguese**                         | pt-AO, pt-BR, pt-MZ, pt-PT                                                                                                                                                                                       |
+| **Italian**                            | it-IT                                                                                                                                                                                                            |
+| **Dutch**                              | nl-NL, nl-SR                                                                                                                                                                                                     |
+| **Scandinavian**                       | da-DK, nb-NO, sv-SE                                                                                                                                                                                              |
+| **Other European**                     | bg-BG, ca-ES, cs-CZ, el-GR, hr-HR, hu-HU, lv-LV, pl-PL, ro-RO, sk-SK, sl-SI, sq-AL, sr-RS                                                                                                                        |
+| **Slavic (with Slavic singular rule)** | be-BY, ru-RU, uk-UA                                                                                                                                                                                              |
+| **Indic**                              | as-IN, bn-BD, bn-IN, gu-IN, hi-IN, kn-IN, ml-IN, mr-IN, np-NP, or-IN, pa-IN, ta-IN, te-IN                                                                                                                        |
+| **Others**                             | af-ZA, fa-IR, he-IL, id-ID, ka-GE, ms-MY, ms-SG, ur-PK, vi-VN                                                                                                                                                    |
+
+> Locales not listed above (Arabic, East Asian, Turkic, etc.) do not yet support
+> `decimalStyle: 'fraction'` — passing the option silently falls back to digit-by-digit.
+
+## �📏 Bundle Sizes
 
 | Import Method             | Raw    | Gzip   |
 | ------------------------- | ------ | ------ |
@@ -1053,7 +1121,7 @@ All 124 locales with their features:
 | nl-NL  | Dutch           | Netherlands         | Euro          | Short      | ✓       |
 | nl-SR  | Dutch           | Suriname            | Dollar        | Short      | ✓       |
 | np-NP  | Nepali          | Nepal               | रुपैयाँ       | Indian     | ✓       |
-| or-IN  | Odia            | India               | ଟଙ୍କା          | Short      | ✓       |
+| or-IN  | Odia            | India               | ଟଙ୍କା         | Short      | ✓       |
 | pa-IN  | Punjabi         | India               | ਰੁਪਇਆ         | Short      | ✓       |
 | pl-PL  | Polish          | Poland              | Złoty         | Short      | ✓       |
 | pt-AO  | Portuguese      | Angola              | Kwanza        | Short      | ✓       |

@@ -473,3 +473,40 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleUkUA: [number, string][] = [
+  [1.1, 'Один І Один Десята'],
+  [2.5, "Два І П'ять Десятих"],
+  [1.01, 'Один І Один Сота'],
+  [1.45, "Один І Сорок П'ять Сотих"],
+  [0.05, "Нуль І П'ять Сотих"],
+  [1.001, 'Один І Один Тисячна'],
+  [1.005, "Один І П'ять Тисячних"],
+  [1.0001, 'Один І Один Десятитисячна'],
+  [1.0005, "Один І П'ять Десятитисячних"],
+  [1.00001, 'Один І Один Стотисячна'],
+  [1.00005, "Один І П'ять Стотисячних"],
+  [1.000001, 'Один І Один Мільйонна'],
+  [1.000005, "Один І П'ять Мільйонних"],
+  [123.45, "Сто Двадцять Три І Сорок П'ять Сотих"],
+  [1.21, 'Один І Двадцять Один Сота'],
+  [1.11, 'Один І Одинадцять Сотих'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleUkUA)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      "Один Цілих Мільйон Двісті Тридцять Чотири Тисяч П'ятсот Шістдесят Сім",
+    );
+    expect(toWords.convert(1.1234567)).toBe("Один Цілих Мільйон Двісті Тридцять Чотири Тисяч П'ятсот Шістдесят Сім");
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe("Один Цілих П'ять");
+    expect(toWords.convert(0.05)).toBe("Нуль Цілих Нуль П'ять");
+  });
+});

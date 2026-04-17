@@ -525,3 +525,40 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleRoRO: [number, string][] = [
+  [1.1, 'Unu Și Unu Zecime'],
+  [2.5, 'Două Și Cinci Zecimi'],
+  [1.01, 'Unu Și Unu Sutime'],
+  [1.45, 'Unu Și Patruzeci Cinci Sutimi'],
+  [0.05, 'Zero Și Cinci Sutimi'],
+  [1.001, 'Unu Și Unu Miime'],
+  [1.005, 'Unu Și Cinci Miimi'],
+  [1.0001, 'Unu Și Unu Zecime de Miime'],
+  [1.0005, 'Unu Și Cinci Zecimi de Miime'],
+  [1.00001, 'Unu Și Unu Sutime de Miime'],
+  [1.00005, 'Unu Și Cinci Sutimi de Miime'],
+  [1.000001, 'Unu Și Unu Milionime'],
+  [1.000005, 'Unu Și Cinci Milionime'],
+  [123.45, 'O Sută Douăzeci Trei Și Patruzeci Cinci Sutimi'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleRoRO)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'Unu Virgulă Unu Milioane Două Sute Treizeci Patru Mii Cinci Sute Șaizeci Șapte',
+    );
+    expect(toWords.convert(1.1234567)).toBe(
+      'Unu Virgulă Unu Milioane Două Sute Treizeci Patru Mii Cinci Sute Șaizeci Șapte',
+    );
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('Unu Virgulă Cinci');
+    expect(toWords.convert(0.05)).toBe('Zero Virgulă Zero Cinci');
+  });
+});
