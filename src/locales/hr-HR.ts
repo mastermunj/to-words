@@ -160,6 +160,14 @@ export default class Locale implements LocaleInterface {
       'Bilijun',
       'Bilijarda',
     ],
+    fractionDenominatorMapping: {
+      1: { singular: 'Desetinka', plural: 'Desetinke' },
+      2: { singular: 'Stotinka', plural: 'Stotinke' },
+      3: { singular: 'Tisućinka', plural: 'Tisućinke' },
+      4: { singular: 'Desetotisućinka', plural: 'Desetotisućinke' },
+      5: { singular: 'Sto-Tisućinka', plural: 'Sto-Tisućinke' },
+      6: { singular: 'Milijuntinka', plural: 'Milijuntinke' },
+    },
   };
 }
 

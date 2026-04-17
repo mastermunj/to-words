@@ -499,3 +499,38 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleBgBG: [number, string][] = [
+  [1.1, 'Едно И Едно Десетина'],
+  [2.5, 'Две И Пет Десетини'],
+  [1.01, 'Едно И Едно Стотина'],
+  [1.45, 'Едно И Четиридесет Пет Стотини'],
+  [0.05, 'Нула И Пет Стотини'],
+  [1.001, 'Едно И Едно Хилядна'],
+  [1.005, 'Едно И Пет Хиляди'],
+  [1.0001, 'Едно И Едно Десетохилядна'],
+  [1.0005, 'Едно И Пет Десетохиляди'],
+  [1.00001, 'Едно И Едно Стохилядна'],
+  [1.00005, 'Едно И Пет Стохиляди'],
+  [1.000001, 'Едно И Едно Милионна'],
+  [1.000005, 'Едно И Пет Милиони'],
+  [123.45, 'Сто Двадесет Три И Четиридесет Пет Стотини'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleBgBG)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'Едно Цяло Милион Двеста Тридесет Четири Хиляди Петстотин Шестдесет Седем',
+    );
+    expect(toWords.convert(1.1234567)).toBe('Едно Цяло Милион Двеста Тридесет Четири Хиляди Петстотин Шестдесет Седем');
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('Едно Цяло Пет');
+    expect(toWords.convert(0.05)).toBe('Нула Цяло Нула Пет');
+  });
+});

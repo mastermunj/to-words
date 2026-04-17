@@ -136,6 +136,14 @@ export default class Locale implements LocaleInterface {
       { number: 1, value: 'Primeiro' },
       { number: 0, value: 'Zero' },
     ],
+    fractionDenominatorMapping: {
+      1: { singular: 'Décimo', plural: 'Décimos' },
+      2: { singular: 'Centésimo', plural: 'Centésimos' },
+      3: { singular: 'Milésimo', plural: 'Milésimos' },
+      4: { singular: 'Décimo de Milésimo', plural: 'Décimos de Milésimo' },
+      5: { singular: 'Centésimo de Milésimo', plural: 'Centésimos de Milésimo' },
+      6: { singular: 'Milionésimo', plural: 'Milionésimos' },
+    },
   };
 }
 

@@ -29,11 +29,11 @@ export default class Locale implements LocaleInterface {
       point: 'দশমিক',
     },
     numberWordsMapping: [
-      { number: 10n**17n, value: 'শঙ্খ' },
-      { number: 10n**15n, value: 'পদ্ম' },
-      { number: 10n**13n, value: 'নীল' },
-      { number: 10n**11n, value: 'খরব' },
-      { number: 10n**9n, value: 'আরব' },
+      { number: 10n ** 17n, value: 'শঙ্খ' },
+      { number: 10n ** 15n, value: 'পদ্ম' },
+      { number: 10n ** 13n, value: 'নীল' },
+      { number: 10n ** 11n, value: 'খরব' },
+      { number: 10n ** 9n, value: 'আরব' },
       { number: 10000000, value: 'কোটি' },
       { number: 100000, value: 'লাখ' },
       { number: 1000, value: 'হাজার' },
@@ -245,6 +245,14 @@ export default class Locale implements LocaleInterface {
       { number: 1, value: 'প্রথম' },
       { number: 0, value: 'শূন্যতম' },
     ],
+    fractionDenominatorMapping: {
+      1: { singular: 'দশমাংশ', plural: 'দশমাংশ' },
+      2: { singular: 'শতাংশ', plural: 'শতাংশ' },
+      3: { singular: 'সহস্রাংশ', plural: 'সহস্রাংশ' },
+      4: { singular: 'দশ-সহস্রাংশ', plural: 'দশ-সহস্রাংশ' },
+      5: { singular: 'শত-সহস্রাংশ', plural: 'শত-সহস্রাংশ' },
+      6: { singular: 'দশলক্ষাংশ', plural: 'দশলক্ষাংশ' },
+    },
   };
 }
 

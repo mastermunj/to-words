@@ -140,6 +140,14 @@ export default class Locale implements LocaleInterface {
       { number: 1000000, value: 'Al Un Milionulea' },
       { number: 1000000000, value: 'Al Un Miliardulea' },
     ],
+    fractionDenominatorMapping: {
+      1: { singular: 'Zecime', plural: 'Zecimi' },
+      2: { singular: 'Sutime', plural: 'Sutimi' },
+      3: { singular: 'Miime', plural: 'Miimi' },
+      4: { singular: 'Zecime de Miime', plural: 'Zecimi de Miime' },
+      5: { singular: 'Sutime de Miime', plural: 'Sutimi de Miime' },
+      6: { singular: 'Milionime', plural: 'Milionime' },
+    },
   };
 }
 

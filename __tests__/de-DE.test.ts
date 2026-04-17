@@ -615,3 +615,17 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleDeDE: [number, string][] = [
+  [1.1, 'Eins Und Eins Zehntel'],
+  [1.5, 'Eins Und Fünf Zehntel'],
+  [123.45, 'Hundert Dreiundzwanzig Und Fünfundvierzig Hundertstel'],
+  [0.05, 'Null Und Fünf Hundertstel'],
+  [0.001, 'Null Und Eins Tausendstel'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleDeDE)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+});

@@ -420,3 +420,38 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleSlSI: [number, string][] = [
+  [1.1, 'Ena In Ena Desetinka'],
+  [2.5, 'Dva In Pet Desetinke'],
+  [1.01, 'Ena In Ena Stotinka'],
+  [1.45, 'Ena In Štirideset Pet Stotinke'],
+  [0.05, 'Nič In Pet Stotinke'],
+  [1.001, 'Ena In Ena Tisočinka'],
+  [1.005, 'Ena In Pet Tisočinke'],
+  [1.0001, 'Ena In Ena Desetotisočinka'],
+  [1.0005, 'Ena In Pet Desetotisočinke'],
+  [1.00001, 'Ena In Ena Sto-Tisočinka'],
+  [1.00005, 'Ena In Pet Sto-Tisočinke'],
+  [1.000001, 'Ena In Ena Milijontinka'],
+  [1.000005, 'Ena In Pet Milijontinke'],
+  [123.45, 'Sto Dvajset Tri In Štirideset Pet Stotinke'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleSlSI)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'Ena Vejica Milijon Dvesto Trideset Štiri Tisoč Petsto Šestdeset Sedem',
+    );
+    expect(toWords.convert(1.1234567)).toBe('Ena Vejica Milijon Dvesto Trideset Štiri Tisoč Petsto Šestdeset Sedem');
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('Ena Vejica Pet');
+    expect(toWords.convert(0.05)).toBe('Nič Vejica Nič Pet');
+  });
+});

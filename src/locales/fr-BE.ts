@@ -180,6 +180,14 @@ export default class Locale implements LocaleInterface {
       { number: 1, value: 'Premier' },
       { number: 0, value: 'Zéroième' },
     ],
+    fractionDenominatorMapping: {
+      1: { singular: 'Dixième', plural: 'Dixièmes' },
+      2: { singular: 'Centième', plural: 'Centièmes' },
+      3: { singular: 'Millième', plural: 'Millièmes' },
+      4: { singular: 'Dix-Millième', plural: 'Dix-Millièmes' },
+      5: { singular: 'Cent-Millième', plural: 'Cent-Millièmes' },
+      6: { singular: 'Millionième', plural: 'Millionièmes' },
+    },
   };
 }
 

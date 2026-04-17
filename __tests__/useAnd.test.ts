@@ -194,7 +194,9 @@ describe('useAnd option', () => {
     });
 
     test('1101 currency', () => {
-      expect(toWords.convert(1101, { useAnd: true, currency: true })).toBe('One Thousand One Hundred And One Dollars Only');
+      expect(toWords.convert(1101, { useAnd: true, currency: true })).toBe(
+        'One Thousand One Hundred And One Dollars Only',
+      );
     });
   });
 

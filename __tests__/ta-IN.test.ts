@@ -416,3 +416,38 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleTaIN: [number, string][] = [
+  [1.1, 'ஒன்று மற்றும் ஒன்று தசாம்சம்'],
+  [2.5, 'இரண்டு மற்றும் ஐந்து தசாம்சம்'],
+  [1.01, 'ஒன்று மற்றும் ஒன்று சதாம்சம்'],
+  [1.45, 'ஒன்று மற்றும் நாற்பத்தி ஐந்து சதாம்சம்'],
+  [0.05, 'பூஜ்ஜியம் மற்றும் ஐந்து சதாம்சம்'],
+  [1.001, 'ஒன்று மற்றும் ஒன்று ஆயிரத்தில் ஒரு பகுதி'],
+  [1.005, 'ஒன்று மற்றும் ஐந்து ஆயிரத்தில் ஒரு பகுதி'],
+  [1.0001, 'ஒன்று மற்றும் ஒன்று பத்தாயிரத்தில் ஒரு பகுதி'],
+  [1.0005, 'ஒன்று மற்றும் ஐந்து பத்தாயிரத்தில் ஒரு பகுதி'],
+  [1.00001, 'ஒன்று மற்றும் ஒன்று லட்சத்தில் ஒரு பகுதி'],
+  [1.00005, 'ஒன்று மற்றும் ஐந்து லட்சத்தில் ஒரு பகுதி'],
+  [1.000001, 'ஒன்று மற்றும் ஒன்று பத்துலட்சத்தில் ஒரு பகுதி'],
+  [1.000005, 'ஒன்று மற்றும் ஐந்து பத்துலட்சத்தில் ஒரு பகுதி'],
+  [123.45, 'ஒன்று நூறு இருபத்தி மூன்று மற்றும் நாற்பத்தி ஐந்து சதாம்சம்'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleTaIN)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'ஒன்று புள்ளி பன்னிரண்டு லட்சம் முப்பத்தி நான்கு ஆயிரம் ஐந்து நூறு அறுபத்தி ஏழு',
+    );
+    expect(toWords.convert(1.1234567)).toBe('ஒன்று புள்ளி பன்னிரண்டு லட்சம் முப்பத்தி நான்கு ஆயிரம் ஐந்து நூறு அறுபத்தி ஏழு');
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('ஒன்று புள்ளி ஐந்து');
+    expect(toWords.convert(0.05)).toBe('பூஜ்ஜியம் புள்ளி பூஜ்ஜியம் ஐந்து');
+  });
+});

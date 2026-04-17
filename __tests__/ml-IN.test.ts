@@ -416,3 +416,38 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleMlIN: [number, string][] = [
+  [1.1, 'ഒന്ന് ഉം ഒന്ന് ദശാംശം'],
+  [2.5, 'രണ്ട് ഉം അഞ്ച് ദശാംശം'],
+  [1.01, 'ഒന്ന് ഉം ഒന്ന് ശതാംശം'],
+  [1.45, 'ഒന്ന് ഉം നാൽപത്തി അഞ്ച് ശതാംശം'],
+  [0.05, 'പൂജ്യം ഉം അഞ്ച് ശതാംശം'],
+  [1.001, 'ഒന്ന് ഉം ഒന്ന് സഹസ്രാംശം'],
+  [1.005, 'ഒന്ന് ഉം അഞ്ച് സഹസ്രാംശം'],
+  [1.0001, 'ഒന്ന് ഉം ഒന്ന് ദശ-സഹസ്രാംശം'],
+  [1.0005, 'ഒന്ന് ഉം അഞ്ച് ദശ-സഹസ്രാംശം'],
+  [1.00001, 'ഒന്ന് ഉം ഒന്ന് ശത-സഹസ്രാംശം'],
+  [1.00005, 'ഒന്ന് ഉം അഞ്ച് ശത-സഹസ്രാംശം'],
+  [1.000001, 'ഒന്ന് ഉം ഒന്ന് ദശ-ലക്ഷാംശം'],
+  [1.000005, 'ഒന്ന് ഉം അഞ്ച് ദശ-ലക്ഷാംശം'],
+  [123.45, 'ഒന്ന് നൂറ് ഇരുപത്തി മൂന്ന് ഉം നാൽപത്തി അഞ്ച് ശതാംശം'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleMlIN)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'ഒന്ന് പോയിന്റ് പന്ത്രണ്ട് ലക്ഷം മുപ്പത്തി നാല് ആയിരം അഞ്ച് നൂറ് അറുപത്തി ഏഴ്',
+    );
+    expect(toWords.convert(1.1234567)).toBe('ഒന്ന് പോയിന്റ് പന്ത്രണ്ട് ലക്ഷം മുപ്പത്തി നാല് ആയിരം അഞ്ച് നൂറ് അറുപത്തി ഏഴ്');
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('ഒന്ന് പോയിന്റ് അഞ്ച്');
+    expect(toWords.convert(0.05)).toBe('പൂജ്യം പോയിന്റ് പൂജ്യം അഞ്ച്');
+  });
+});

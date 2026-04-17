@@ -486,3 +486,40 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleBeBY: [number, string][] = [
+  [1.1, 'Адзін І Адзін Дзясятая'],
+  [2.5, 'Два І Пяць Дзясятых'],
+  [1.01, 'Адзін І Адзін Сотая'],
+  [1.45, 'Адзін І Сорак Пяць Сотых'],
+  [0.05, 'Нуль І Пяць Сотых'],
+  [1.001, 'Адзін І Адзін Тысячная'],
+  [1.005, 'Адзін І Пяць Тысячных'],
+  [1.0001, 'Адзін І Адзін Дзесяцітысячная'],
+  [1.0005, 'Адзін І Пяць Дзесяцітысачных'],
+  [1.00001, 'Адзін І Адзін Статысачная'],
+  [1.00005, 'Адзін І Пяць Статысачных'],
+  [1.000001, 'Адзін І Адзін Мільённая'],
+  [1.000005, 'Адзін І Пяць Мільённых'],
+  [123.45, 'Сто Дваццаць Тры І Сорак Пяць Сотых'],
+  [1.21, 'Адзін І Дваццаць Адзін Сотая'],
+  [1.11, 'Адзін І Адзінаццаць Сотых'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleBeBY)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'Адзін Цэлых Мільён Дзвесце Трыццаць Чатыры Тысяч Пяцьсот Шэсцьдзясят Сем',
+    );
+    expect(toWords.convert(1.1234567)).toBe('Адзін Цэлых Мільён Дзвесце Трыццаць Чатыры Тысяч Пяцьсот Шэсцьдзясят Сем');
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('Адзін Цэлых Пяць');
+    expect(toWords.convert(0.05)).toBe('Нуль Цэлых Нуль Пяць');
+  });
+});

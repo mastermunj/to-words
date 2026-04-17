@@ -456,3 +456,15 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleHiIN: [number, string][] = [
+  [1.1, 'एक और एक दशांश'],
+  [1.5, 'एक और पांच दशांश'],
+  [0.001, 'शून्य और एक सहस्रांश'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleHiIN)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+});

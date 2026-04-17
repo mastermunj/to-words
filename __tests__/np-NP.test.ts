@@ -417,3 +417,36 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleNpNP: [number, string][] = [
+  [1.1, 'एक र एक दशांश'],
+  [2.5, 'दुई र पाँच दशांश'],
+  [1.01, 'एक र एक शतांश'],
+  [1.45, 'एक र पैंतालीस शतांश'],
+  [0.05, 'शून्य र पाँच शतांश'],
+  [1.001, 'एक र एक सहस्रांश'],
+  [1.005, 'एक र पाँच सहस्रांश'],
+  [1.0001, 'एक र एक दश-सहस्रांश'],
+  [1.0005, 'एक र पाँच दश-सहस्रांश'],
+  [1.00001, 'एक र एक शत-सहस्रांश'],
+  [1.00005, 'एक र पाँच शत-सहस्रांश'],
+  [1.000001, 'एक र एक दशलक्षांश'],
+  [1.000005, 'एक र पाँच दशलक्षांश'],
+  [123.45, 'एक सय तेइस र पैंतालीस शतांश'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleNpNP)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe('एक दशमलब बाह्र लाख चौँतीस हजार पाँच सय सड्सट्ठी');
+    expect(toWords.convert(1.1234567)).toBe('एक दशमलब बाह्र लाख चौँतीस हजार पाँच सय सड्सट्ठी');
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('एक दशमलब पाँच');
+    expect(toWords.convert(0.05)).toBe('शून्य दशमलब शून्य पाँच');
+  });
+});

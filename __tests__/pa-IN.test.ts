@@ -416,3 +416,36 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStylePaIN: [number, string][] = [
+  [1.1, 'ਇੱਕ ਅਤੇ ਇੱਕ ਦਸਵਾਂ'],
+  [2.5, 'ਦੋ ਅਤੇ ਪੰਜ ਦਸਵੇਂ'],
+  [1.01, 'ਇੱਕ ਅਤੇ ਇੱਕ ਸੌਵਾਂ'],
+  [1.45, 'ਇੱਕ ਅਤੇ ਪੰਤਾਲੀ ਸੌਵੇਂ'],
+  [0.05, 'ਸਿਫ਼ਰ ਅਤੇ ਪੰਜ ਸੌਵੇਂ'],
+  [1.001, 'ਇੱਕ ਅਤੇ ਇੱਕ ਹਜ਼ਾਰਵਾਂ'],
+  [1.005, 'ਇੱਕ ਅਤੇ ਪੰਜ ਹਜ਼ਾਰਵੇਂ'],
+  [1.0001, 'ਇੱਕ ਅਤੇ ਇੱਕ ਦਸ-ਹਜ਼ਾਰਵਾਂ'],
+  [1.0005, 'ਇੱਕ ਅਤੇ ਪੰਜ ਦਸ-ਹਜ਼ਾਰਵੇਂ'],
+  [1.00001, 'ਇੱਕ ਅਤੇ ਇੱਕ ਸੌ-ਹਜ਼ਾਰਵਾਂ'],
+  [1.00005, 'ਇੱਕ ਅਤੇ ਪੰਜ ਸੌ-ਹਜ਼ਾਰਵੇਂ'],
+  [1.000001, 'ਇੱਕ ਅਤੇ ਇੱਕ ਦਸ-ਲੱਖਵਾਂ'],
+  [1.000005, 'ਇੱਕ ਅਤੇ ਪੰਜ ਦਸ-ਲੱਖਵੇਂ'],
+  [123.45, 'ਇੱਕ ਸੌ ਤੇਈ ਅਤੇ ਪੰਤਾਲੀ ਸੌਵੇਂ'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStylePaIN)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe('ਇੱਕ ਦਸ਼ਮਲਵ ਬਾਰਾਂ ਲੱਖ ਚੌਂਤੀ ਹਜ਼ਾਰ ਪੰਜ ਸੌ ਸਤਾਹਟ');
+    expect(toWords.convert(1.1234567)).toBe('ਇੱਕ ਦਸ਼ਮਲਵ ਬਾਰਾਂ ਲੱਖ ਚੌਂਤੀ ਹਜ਼ਾਰ ਪੰਜ ਸੌ ਸਤਾਹਟ');
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('ਇੱਕ ਦਸ਼ਮਲਵ ਪੰਜ');
+    expect(toWords.convert(0.05)).toBe('ਸਿਫ਼ਰ ਦਸ਼ਮਲਵ ਸਿਫ਼ਰ ਪੰਜ');
+  });
+});

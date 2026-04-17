@@ -48,10 +48,7 @@ const testIntegers: [number, string][] = [
   [86429753, 'Huitante-Six Millions Quatre Cent Vingt-Neuf Mille Sept Cent Cinquante-Trois'],
   [975310864, 'Neuf Cent Septante-Cinq Millions Trois Cent Dix Mille Huit Cent Soixante-Quatre'],
   [9876543210, 'Neuf Milliards Huit Cent Septante-Six Millions Cinq Cent Quarante-Trois Mille Deux Cent Dix'],
-  [
-    98765432101,
-    'Nonante-Huit Milliards Sept Cent Soixante-Cinq Millions Quatre Cent Trente-Deux Mille Cent Un',
-  ],
+  [98765432101, 'Nonante-Huit Milliards Sept Cent Soixante-Cinq Millions Quatre Cent Trente-Deux Mille Cent Un'],
   [
     987654321012,
     'Neuf Cent Huitante-Sept Milliards Six Cent Cinquante-Quatre Millions Trois Cent Vingt Et Un Mille Douze',
@@ -213,5 +210,42 @@ describe('Test functional API', () => {
 
   test('localeToCurrency works', () => {
     expect(localeToCurrency(100)).toBe('Cent Francs');
+  });
+});
+
+const testFractionStyleFrCH: [number, string][] = [
+  [1.1, 'Un Et Un Dixième'],
+  [2.5, 'Deux Et Cinq Dixièmes'],
+  [1.01, 'Un Et Un Centième'],
+  [1.45, 'Un Et Quarante-Cinq Centièmes'],
+  [0.05, 'Zéro Et Cinq Centièmes'],
+  [1.001, 'Un Et Un Millième'],
+  [1.005, 'Un Et Cinq Millièmes'],
+  [1.0001, 'Un Et Un Dix-Millième'],
+  [1.0005, 'Un Et Cinq Dix-Millièmes'],
+  [1.00001, 'Un Et Un Cent-Millième'],
+  [1.00005, 'Un Et Cinq Cent-Millièmes'],
+  [1.000001, 'Un Et Un Millionième'],
+  [1.000005, 'Un Et Cinq Millionièmes'],
+  [123.45, 'Cent Vingt-Trois Et Quarante-Cinq Centièmes'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleFrCH)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'Un Virgule Un Million Deux Cent Trente-Quatre Mille Cinq Cent Soixante-Sept',
+    );
+    expect(toWords.convert(1.1234567)).toBe(
+      'Un Virgule Un Million Deux Cent Trente-Quatre Mille Cinq Cent Soixante-Sept',
+    );
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('Un Virgule Cinq');
+    expect(toWords.convert(0.05)).toBe('Zéro Virgule Zéro Cinq');
   });
 });

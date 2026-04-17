@@ -617,3 +617,40 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleDeCH: [number, string][] = [
+  [1.1, 'Eins Und Eins Zehntel'],
+  [2.5, 'Zwei Und Fünf Zehntel'],
+  [1.01, 'Eins Und Eins Hundertstel'],
+  [1.45, 'Eins Und Fünfundvierzig Hundertstel'],
+  [0.05, 'Null Und Fünf Hundertstel'],
+  [1.001, 'Eins Und Eins Tausendstel'],
+  [1.005, 'Eins Und Fünf Tausendstel'],
+  [1.0001, 'Eins Und Eins Zehntausendstel'],
+  [1.0005, 'Eins Und Fünf Zehntausendstel'],
+  [1.00001, 'Eins Und Eins Hunderttausendstel'],
+  [1.00005, 'Eins Und Fünf Hunderttausendstel'],
+  [1.000001, 'Eins Und Eins Millionstel'],
+  [1.000005, 'Eins Und Fünf Millionstel'],
+  [123.45, 'Hundert Dreiundzwanzig Und Fünfundvierzig Hundertstel'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleDeCH)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'Eins Komma Eins Million Zwei Hundert Vierunddreißig Tausend Fünf Hundert Siebenundsechzig',
+    );
+    expect(toWords.convert(1.1234567)).toBe(
+      'Eins Komma Eins Million Zwei Hundert Vierunddreißig Tausend Fünf Hundert Siebenundsechzig',
+    );
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('Eins Komma Fünf');
+    expect(toWords.convert(0.05)).toBe('Null Komma Null Fünf');
+  });
+});

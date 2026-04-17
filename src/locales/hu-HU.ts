@@ -148,6 +148,14 @@ export default class Locale implements LocaleInterface {
       { number: 0, value: 'Nulladik' },
     ],
     ordinalExactWordsMapping: [{ number: 100, value: 'Századik' }],
+    fractionDenominatorMapping: {
+      1: { singular: 'Tized', plural: 'Tized' },
+      2: { singular: 'Század', plural: 'Század' },
+      3: { singular: 'Ezred', plural: 'Ezred' },
+      4: { singular: 'Tízezred', plural: 'Tízezred' },
+      5: { singular: 'Százezred', plural: 'Százezred' },
+      6: { singular: 'Milliomod', plural: 'Milliomod' },
+    },
   };
 }
 

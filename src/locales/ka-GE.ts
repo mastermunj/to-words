@@ -120,6 +120,14 @@ export default class Locale implements LocaleInterface {
       { number: 300, value: 'მესამასე' },
       { number: 200, value: 'მეორასე' },
     ],
+    fractionDenominatorMapping: {
+      1: { singular: 'მეათედი', plural: 'მეათედი' },
+      2: { singular: 'მეასედი', plural: 'მეასედი' },
+      3: { singular: 'მეათასედი', plural: 'მეათასედი' },
+      4: { singular: 'მეათი-ათასედი', plural: 'მეათი-ათასედი' },
+      5: { singular: 'მეასი-ათასედი', plural: 'მეასი-ათასედი' },
+      6: { singular: 'მემილიონედი', plural: 'მემილიონედი' },
+    },
   };
 }
 

@@ -512,3 +512,40 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStylePlPL: [number, string][] = [
+  [1.1, 'Jeden I Jeden Dziesiąta'],
+  [2.5, 'Dwa I Pięć Dziesiąte'],
+  [1.01, 'Jeden I Jeden Setna'],
+  [1.45, 'Jeden I Czterdzieści Pięć Setne'],
+  [0.05, 'Zero I Pięć Setne'],
+  [1.001, 'Jeden I Jeden Tysięczna'],
+  [1.005, 'Jeden I Pięć Tysięczne'],
+  [1.0001, 'Jeden I Jeden Dziesięciotysięczna'],
+  [1.0005, 'Jeden I Pięć Dziesięciotysięczne'],
+  [1.00001, 'Jeden I Jeden Stutysięczna'],
+  [1.00005, 'Jeden I Pięć Stutysięczne'],
+  [1.000001, 'Jeden I Jeden Milionowa'],
+  [1.000005, 'Jeden I Pięć Milionowe'],
+  [123.45, 'Sto Dwadzieścia Trzy I Czterdzieści Pięć Setne'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStylePlPL)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'Jeden Przecinek Milion Dwieście Trzydzieści Cztery Tysięcy Pięćset Sześćdziesiąt Siedem',
+    );
+    expect(toWords.convert(1.1234567)).toBe(
+      'Jeden Przecinek Milion Dwieście Trzydzieści Cztery Tysięcy Pięćset Sześćdziesiąt Siedem',
+    );
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('Jeden Przecinek Pięć');
+    expect(toWords.convert(0.05)).toBe('Zero Przecinek Zero Pięć');
+  });
+});

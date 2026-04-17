@@ -262,6 +262,14 @@ export default class Locale implements LocaleInterface {
       { number: 0, value: 'शून्यावा' },
     ],
     namedLessThan1000: true,
+    fractionDenominatorMapping: {
+      1: { singular: 'दशांश', plural: 'दशांश' },
+      2: { singular: 'शतांश', plural: 'शतांश' },
+      3: { singular: 'सहस्रांश', plural: 'सहस्रांश' },
+      4: { singular: 'दश-सहस्रांश', plural: 'दश-सहस्रांश' },
+      5: { singular: 'शत-सहस्रांश', plural: 'शत-सहस्रांश' },
+      6: { singular: 'दशलक्षांश', plural: 'दशलक्षांश' },
+    },
   };
 }
 

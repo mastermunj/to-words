@@ -246,6 +246,14 @@ export default class Locale implements LocaleInterface {
       { number: 1, value: 'Første' },
       { number: 0, value: 'Nullte' },
     ],
+    fractionDenominatorMapping: {
+      1: { singular: 'Tiendedel', plural: 'Tiendedeler' },
+      2: { singular: 'Hundredel', plural: 'Hundredeler' },
+      3: { singular: 'Tusendel', plural: 'Tusendeler' },
+      4: { singular: 'Titusendel', plural: 'Titusendeler' },
+      5: { singular: 'Hundretusendel', plural: 'Hundretusendeler' },
+      6: { singular: 'Milliondel', plural: 'Milliondeler' },
+    },
   };
 }
 

@@ -410,3 +410,36 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleBnBD: [number, string][] = [
+  [1.1, 'এক এবং এক দশমাংশ'],
+  [2.5, 'দুই এবং পাঁচ দশমাংশ'],
+  [1.01, 'এক এবং এক শতাংশ'],
+  [1.45, 'এক এবং পঁইঁতাল্লিশ শতাংশ'],
+  [0.05, 'শূন্য এবং পাঁচ শতাংশ'],
+  [1.001, 'এক এবং এক সহস্রাংশ'],
+  [1.005, 'এক এবং পাঁচ সহস্রাংশ'],
+  [1.0001, 'এক এবং এক দশ-সহস্রাংশ'],
+  [1.0005, 'এক এবং পাঁচ দশ-সহস্রাংশ'],
+  [1.00001, 'এক এবং এক শত-সহস্রাংশ'],
+  [1.00005, 'এক এবং পাঁচ শত-সহস্রাংশ'],
+  [1.000001, 'এক এবং এক দশলক্ষাংশ'],
+  [1.000005, 'এক এবং পাঁচ দশলক্ষাংশ'],
+  [123.45, 'এক শত তেইশ এবং পঁইঁতাল্লিশ শতাংশ'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleBnBD)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe('এক দশমিক বারো লাখ চৌত্রিশ হাজার পাঁচ শত সাতষষ্টি');
+    expect(toWords.convert(1.1234567)).toBe('এক দশমিক বারো লাখ চৌত্রিশ হাজার পাঁচ শত সাতষষ্টি');
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('এক দশমিক পাঁচ');
+    expect(toWords.convert(0.05)).toBe('শূন্য দশমিক শূন্য পাঁচ');
+  });
+});

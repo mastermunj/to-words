@@ -112,6 +112,14 @@ export default class Locale implements LocaleInterface {
       { number: 200, value: 'המאתיים' },
       { number: 100, value: 'המאה' },
     ],
+    fractionDenominatorMapping: {
+      1: { singular: 'עשירית', plural: 'עשיריות' },
+      2: { singular: 'מאית', plural: 'מאיות' },
+      3: { singular: 'אלפית', plural: 'אלפיות' },
+      4: { singular: 'עשרת-אלפית', plural: 'עשרת-אלפיות' },
+      5: { singular: 'מאה-אלפית', plural: 'מאה-אלפיות' },
+      6: { singular: 'מיליונית', plural: 'מיליוניות' },
+    },
   };
 }
 

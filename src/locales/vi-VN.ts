@@ -102,6 +102,14 @@ export default class Locale implements LocaleInterface {
       { number: 0, value: 'Thứ Không' },
     ],
     ordinalExactWordsMapping: [{ number: 100, value: 'Một Trăm' }],
+    fractionDenominatorMapping: {
+      1: { singular: 'Phần Mười', plural: 'Phần Mười' },
+      2: { singular: 'Phần Trăm', plural: 'Phần Trăm' },
+      3: { singular: 'Phần Nghìn', plural: 'Phần Nghìn' },
+      4: { singular: 'Phần Mười Nghìn', plural: 'Phần Mười Nghìn' },
+      5: { singular: 'Phần Trăm Nghìn', plural: 'Phần Trăm Nghìn' },
+      6: { singular: 'Phần Triệu', plural: 'Phần Triệu' },
+    },
   };
 }
 

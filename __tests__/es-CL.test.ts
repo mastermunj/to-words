@@ -542,3 +542,40 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleEsCL: [number, string][] = [
+  [1.1, 'Uno Y Uno Décimo'],
+  [2.5, 'Dos Y Cinco Décimos'],
+  [1.01, 'Uno Y Uno Centésimo'],
+  [1.45, 'Uno Y Cuarenta Y Cinco Centésimos'],
+  [0.05, 'Cero Y Cinco Centésimos'],
+  [1.001, 'Uno Y Uno Milésimo'],
+  [1.005, 'Uno Y Cinco Milésimos'],
+  [1.0001, 'Uno Y Uno Diezmilésimo'],
+  [1.0005, 'Uno Y Cinco Diezmilésimos'],
+  [1.00001, 'Uno Y Uno Cienmilésimo'],
+  [1.00005, 'Uno Y Cinco Cienmilésimos'],
+  [1.000001, 'Uno Y Uno Millonésimo'],
+  [1.000005, 'Uno Y Cinco Millonésimos'],
+  [123.45, 'Ciento Veintitrés Y Cuarenta Y Cinco Centésimos'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleEsCL)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'Uno Coma Un Millon Doscientos Treinta Y Cuatro Mil Quinientos Sesenta Y Siete',
+    );
+    expect(toWords.convert(1.1234567)).toBe(
+      'Uno Coma Un Millon Doscientos Treinta Y Cuatro Mil Quinientos Sesenta Y Siete',
+    );
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('Uno Coma Cinco');
+    expect(toWords.convert(0.05)).toBe('Cero Coma Cero Cinco');
+  });
+});

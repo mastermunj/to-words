@@ -725,3 +725,40 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleItIT: [number, string][] = [
+  [1.1, 'Uno E Uno Decimo'],
+  [2.5, 'Due E Cinque Decimi'],
+  [1.01, 'Uno E Uno Centesimo'],
+  [1.45, 'Uno E Quarantacinque Centesimi'],
+  [0.05, 'Zero E Cinque Centesimi'],
+  [1.001, 'Uno E Uno Millesimo'],
+  [1.005, 'Uno E Cinque Millesimi'],
+  [1.0001, 'Uno E Uno Diecimillesimo'],
+  [1.0005, 'Uno E Cinque Diecimillesimi'],
+  [1.00001, 'Uno E Uno Centomillesimo'],
+  [1.00005, 'Uno E Cinque Centomillesimi'],
+  [1.000001, 'Uno E Uno Milionesimo'],
+  [1.000005, 'Uno E Cinque Milionesimi'],
+  [123.45, 'Cento Ventitré E Quarantacinque Centesimi'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleItIT)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'Uno Virgola Un Milione Due Cento Trentaquattro Mila Cinque Cento Sessantasette',
+    );
+    expect(toWords.convert(1.1234567)).toBe(
+      'Uno Virgola Un Milione Due Cento Trentaquattro Mila Cinque Cento Sessantasette',
+    );
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('Uno Virgola Cinque');
+    expect(toWords.convert(0.05)).toBe('Zero Virgola Zero Cinque');
+  });
+});

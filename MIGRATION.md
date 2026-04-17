@@ -275,8 +275,10 @@ es.convert(42);
 
 1. **Install** `npm install to-words` (requires Node ≥ 20).
 2. **Choose an import style:**
-  - Full bundle: `import { toWords } from 'to-words'` (all 124 locales, ~60 KB gzipped).
-  - Per-locale: `import { toWords } from 'to-words/en-US'` (~3–4 KB gzipped).
+
+- Full bundle: `import { toWords } from 'to-words'` (all 124 locales, ~60 KB gzipped).
+- Per-locale: `import { toWords } from 'to-words/en-US'` (~3–4 KB gzipped).
+
 3. **Pick a locale code** per market (`en-US`, `en-IN`, `es-MX`, `fr-FR`, …).
 4. **Update call sites** — use `toWords()` / `toOrdinal()` / `toCurrency()` for functional style, or `tw.convert()` / `tw.toOrdinal()` for the class-based style.
 5. **Handle locale on the server** — call `setLocaleDetector(() => ...)` once at request time so the functional helpers pick up the right locale without requiring an explicit `localeCode` on every call.

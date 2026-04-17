@@ -425,3 +425,38 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleTeIN: [number, string][] = [
+  [1.1, 'ఒకటి మరియు ఒకటి దశాంశం'],
+  [2.5, 'రెండు మరియు ఐదు దశాంశం'],
+  [1.01, 'ఒకటి మరియు ఒకటి శతాంశం'],
+  [1.45, 'ఒకటి మరియు నలభై ఐదు శతాంశం'],
+  [0.05, 'సున్నా మరియు ఐదు శతాంశం'],
+  [1.001, 'ఒకటి మరియు ఒకటి సహస్రాంశం'],
+  [1.005, 'ఒకటి మరియు ఐదు సహస్రాంశం'],
+  [1.0001, 'ఒకటి మరియు ఒకటి దశ-సహస్రాంశం'],
+  [1.0005, 'ఒకటి మరియు ఐదు దశ-సహస్రాంశం'],
+  [1.00001, 'ఒకటి మరియు ఒకటి శత-సహస్రాంశం'],
+  [1.00005, 'ఒకటి మరియు ఐదు శత-సహస్రాంశం'],
+  [1.000001, 'ఒకటి మరియు ఒకటి దశ-లక్షాంశం'],
+  [1.000005, 'ఒకటి మరియు ఐదు దశ-లక్షాంశం'],
+  [123.45, 'ఒకటి వంద ఇరవై మూడు మరియు నలభై ఐదు శతాంశం'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleTeIN)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'ఒకటి బిందువు పన్నెండు లక్ష ముప్పై నాలుగు వెయ్యి ఐదు వంద అరవై ఏడు',
+    );
+    expect(toWords.convert(1.1234567)).toBe('ఒకటి బిందువు పన్నెండు లక్ష ముప్పై నాలుగు వెయ్యి ఐదు వంద అరవై ఏడు');
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('ఒకటి బిందువు ఐదు');
+    expect(toWords.convert(0.05)).toBe('సున్నా బిందువు సున్నా ఐదు');
+  });
+});

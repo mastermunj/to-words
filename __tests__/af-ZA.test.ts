@@ -517,3 +517,40 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleAfZA: [number, string][] = [
+  [1.1, 'Een En Een Tiende'],
+  [2.5, 'Twee En Vyf Tiende'],
+  [1.01, 'Een En Een Honderdste'],
+  [1.45, 'Een En Vyf En Veertig Honderdste'],
+  [0.05, 'Nul En Vyf Honderdste'],
+  [1.001, 'Een En Een Duisendste'],
+  [1.005, 'Een En Vyf Duisendste'],
+  [1.0001, 'Een En Een Tienduisendste'],
+  [1.0005, 'Een En Vyf Tienduisendste'],
+  [1.00001, 'Een En Een Honderdduisendste'],
+  [1.00005, 'Een En Vyf Honderdduisendste'],
+  [1.000001, 'Een En Een Miljoenste'],
+  [1.000005, 'Een En Vyf Miljoenste'],
+  [123.45, 'Een Honderd Drie En Twintig En Vyf En Veertig Honderdste'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleAfZA)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'Een Punt Een Miljoen Twee Honderd Vier En Dertig Duisend Vyf Honderd Sewe En Sestig',
+    );
+    expect(toWords.convert(1.1234567)).toBe(
+      'Een Punt Een Miljoen Twee Honderd Vier En Dertig Duisend Vyf Honderd Sewe En Sestig',
+    );
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('Een Punt Vyf');
+    expect(toWords.convert(0.05)).toBe('Nul Punt Nul Vyf');
+  });
+});

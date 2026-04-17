@@ -246,6 +246,14 @@ export default class Locale implements LocaleInterface {
       { number: 1, value: 'પહેલું' },
       { number: 0, value: 'શૂન્યમું' },
     ],
+    fractionDenominatorMapping: {
+      1: { singular: 'દશાંશ', plural: 'દશાંશ' },
+      2: { singular: 'શતાંશ', plural: 'શતાંશ' },
+      3: { singular: 'સહસ્રાંશ', plural: 'સહસ્રાંશ' },
+      4: { singular: 'દશ-સહસ્રાંશ', plural: 'દશ-સહસ્રાંશ' },
+      5: { singular: 'શત-સહસ્રાંશ', plural: 'શત-સહસ્રાંશ' },
+      6: { singular: 'દશ-લક્ષાંશ', plural: 'દશ-લક્ષાંશ' },
+    },
   };
 }
 

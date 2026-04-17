@@ -520,3 +520,40 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleMsMY: [number, string][] = [
+  [1.1, 'Satu Dan Satu Persepuluh'],
+  [2.5, 'Dua Dan Lima Persepuluh'],
+  [1.01, 'Satu Dan Satu Perseratus'],
+  [1.45, 'Satu Dan Empat Puluh Lima Perseratus'],
+  [0.05, 'Sifar Dan Lima Perseratus'],
+  [1.001, 'Satu Dan Satu Perseribu'],
+  [1.005, 'Satu Dan Lima Perseribu'],
+  [1.0001, 'Satu Dan Satu Persepuluh Ribu'],
+  [1.0005, 'Satu Dan Lima Persepuluh Ribu'],
+  [1.00001, 'Satu Dan Satu Perseratus Ribu'],
+  [1.00005, 'Satu Dan Lima Perseratus Ribu'],
+  [1.000001, 'Satu Dan Satu Persejuta'],
+  [1.000005, 'Satu Dan Lima Persejuta'],
+  [123.45, 'Seratus Dua Puluh Tiga Dan Empat Puluh Lima Perseratus'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleMsMY)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'Satu Perpuluhan Satu Juta Dua Ratus Tiga Puluh Empat Ribu Lima Ratus Enam Puluh Tujuh',
+    );
+    expect(toWords.convert(1.1234567)).toBe(
+      'Satu Perpuluhan Satu Juta Dua Ratus Tiga Puluh Empat Ribu Lima Ratus Enam Puluh Tujuh',
+    );
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('Satu Perpuluhan Lima');
+    expect(toWords.convert(0.05)).toBe('Sifar Perpuluhan Sifar Lima');
+  });
+});

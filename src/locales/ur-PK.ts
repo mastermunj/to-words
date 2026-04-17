@@ -240,6 +240,14 @@ export default class Locale implements LocaleInterface {
       { number: 1, value: 'پہلا' },
     ],
     exactWordsMapping: [{ number: 100, value: 'ایک سو' }],
+    fractionDenominatorMapping: {
+      1: { singular: 'دسواں', plural: 'دسویں' },
+      2: { singular: 'سوواں', plural: 'سویں' },
+      3: { singular: 'ہزارواں', plural: 'ہزاروی' },
+      4: { singular: 'دس-ہزارواں', plural: 'دس-ہزاروی' },
+      5: { singular: 'لاکھواں', plural: 'لاکھوی' },
+      6: { singular: 'دس-لاکھواں', plural: 'دس-لاکھوی' },
+    },
   };
 }
 

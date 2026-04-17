@@ -479,3 +479,38 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleSrRS: [number, string][] = [
+  [1.1, 'Jedan I Jedan Десетинка'],
+  [2.5, 'Dva I Pet Десетинке'],
+  [1.01, 'Jedan I Jedan Стотинка'],
+  [1.45, 'Jedan I Četrdeset Pet Стотинке'],
+  [0.05, 'Nula I Pet Стотинке'],
+  [1.001, 'Jedan I Jedan Хиљадинка'],
+  [1.005, 'Jedan I Pet Хиљадинке'],
+  [1.0001, 'Jedan I Jedan Десетохиљадинка'],
+  [1.0005, 'Jedan I Pet Десетохиљадинке'],
+  [1.00001, 'Jedan I Jedan Стохиљадинка'],
+  [1.00005, 'Jedan I Pet Стохиљадинке'],
+  [1.000001, 'Jedan I Jedan Милионинка'],
+  [1.000005, 'Jedan I Pet Милионинке'],
+  [123.45, 'Sto Dvadeset Tri I Četrdeset Pet Стотинке'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleSrRS)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'Jedan Zarez Milion Dvesta Trideset Četiri Hiljada Petsto Šezdeset Sedam',
+    );
+    expect(toWords.convert(1.1234567)).toBe('Jedan Zarez Milion Dvesta Trideset Četiri Hiljada Petsto Šezdeset Sedam');
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('Jedan Zarez Pet');
+    expect(toWords.convert(0.05)).toBe('Nula Zarez Nula Pet');
+  });
+});

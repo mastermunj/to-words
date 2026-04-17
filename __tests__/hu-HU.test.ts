@@ -489,3 +489,38 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStyleHuHU: [number, string][] = [
+  [1.1, 'Egy És Egy Tized'],
+  [2.5, 'Kettő És Öt Tized'],
+  [1.01, 'Egy És Egy Század'],
+  [1.45, 'Egy És Negyven Öt Század'],
+  [0.05, 'Nulla És Öt Század'],
+  [1.001, 'Egy És Egy Ezred'],
+  [1.005, 'Egy És Öt Ezred'],
+  [1.0001, 'Egy És Egy Tízezred'],
+  [1.0005, 'Egy És Öt Tízezred'],
+  [1.00001, 'Egy És Egy Százezred'],
+  [1.00005, 'Egy És Öt Százezred'],
+  [1.000001, 'Egy És Egy Milliomod'],
+  [1.000005, 'Egy És Öt Milliomod'],
+  [123.45, 'Száz Huszonhárom És Negyven Öt Század'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleHuHU)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'Egy Egész Egy Millió Kétszáz Harminc Négy Ezer Ötszáz Hatvan Hét',
+    );
+    expect(toWords.convert(1.1234567)).toBe('Egy Egész Egy Millió Kétszáz Harminc Négy Ezer Ötszáz Hatvan Hét');
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('Egy Egész Öt');
+    expect(toWords.convert(0.05)).toBe('Nulla Egész Nulla Öt');
+  });
+});

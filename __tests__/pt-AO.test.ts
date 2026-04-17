@@ -428,3 +428,40 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+const testFractionStylePtAO: [number, string][] = [
+  [1.1, 'Um E Um Décimo'],
+  [2.5, 'Dois E Cinco Décimos'],
+  [1.01, 'Um E Um Centésimo'],
+  [1.45, 'Um E Quarenta E Cinco Centésimos'],
+  [0.05, 'Zero E Cinco Centésimos'],
+  [1.001, 'Um E Um Milésimo'],
+  [1.005, 'Um E Cinco Milésimos'],
+  [1.0001, 'Um E Um Décimo de Milésimo'],
+  [1.0005, 'Um E Cinco Décimos de Milésimo'],
+  [1.00001, 'Um E Um Centésimo de Milésimo'],
+  [1.00005, 'Um E Cinco Centésimos de Milésimo'],
+  [1.000001, 'Um E Um Milionésimo'],
+  [1.000005, 'Um E Cinco Milionésimos'],
+  [123.45, 'Cento E Vinte E Três E Quarenta E Cinco Centésimos'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStylePtAO)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'Um Vírgula Um Milhões Duzentos E Trinta E Quatro Mil Quinhentos E Sessenta E Sete',
+    );
+    expect(toWords.convert(1.1234567)).toBe(
+      'Um Vírgula Um Milhões Duzentos E Trinta E Quatro Mil Quinhentos E Sessenta E Sete',
+    );
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('Um Vírgula Cinco');
+    expect(toWords.convert(0.05)).toBe('Zero Vírgula Zero Cinco');
+  });
+});
