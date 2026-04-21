@@ -365,19 +365,19 @@ describe('Test Ordinal Error Cases', () => {
 
 describe('Test Invalid Inputs', () => {
   test('should throw error for invalid input type', () => {
-    expect(() => toWords.convert('abc' as unknown as number)).toThrow();
+    expect(() => toWords.convert('abc' as unknown as number)).toThrow(/Invalid Number/);
   });
 
   test('should throw error for NaN', () => {
-    expect(() => toWords.convert(Number.NaN)).toThrow();
+    expect(() => toWords.convert(Number.NaN)).toThrow(/Invalid Number/);
   });
 
   test('should throw error for Infinity', () => {
-    expect(() => toWords.convert(Infinity)).toThrow();
+    expect(() => toWords.convert(Infinity)).toThrow(/Invalid Number/);
   });
 
   test('should throw error for negative Infinity', () => {
-    expect(() => toWords.convert(-Infinity)).toThrow();
+    expect(() => toWords.convert(-Infinity)).toThrow(/Invalid Number/);
   });
 });
 
@@ -470,7 +470,7 @@ describe('Test Invalid Input Errors', () => {
   ];
 
   test.concurrent.each(invalidInputCases)('convert %s throws error', (input) => {
-    expect(() => toWords.convert(input as number)).toThrow();
+    expect(() => toWords.convert(input as number)).toThrow(/Invalid Number/);
   });
 });
 

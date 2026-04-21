@@ -41,6 +41,10 @@
     "type": "git",
     "url": "https://github.com/mastermunj/to-words.git"
   },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/mastermunj"
+  },
   "bin": {
     "to-words": "./dist/cjs/cli.js"
   },
@@ -113,21 +117,21 @@
     "@commitlint/config-conventional": "^20.5.0",
     "@mastermunj/oxc-config": "^0.0.4",
     "@types/lodash": "^4.17.24",
-    "@types/node": "^25.5.0",
+    "@types/node": "^25.6.0",
     "@types/source-map-support": "^0.5.10",
-    "@vitest/coverage-v8": "^4.1.2",
+    "@vitest/coverage-v8": "^4.1.5",
     "cz-conventional-changelog": "^3.3.0",
     "esbuild": "^0.28.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
-    "lodash": "^4.17.23",
+    "lodash": "^4.18.1",
     "oxfmt": "^0.46.0",
-    "oxlint": "^1.57.0",
+    "oxlint": "^1.61.0",
     "oxlint-tsgolint": "^0.21.1",
     "rimraf": "^6.1.3",
     "source-map-support": "^0.5.21",
-    "typescript": "^6.0.2",
-    "vitest": "^4.1.2"
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5"
   },
   "overrides": {
     "commitizen": {

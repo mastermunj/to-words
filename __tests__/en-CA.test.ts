@@ -439,7 +439,7 @@ describe('Test Ordinal Error Cases', () => {
 
 describe('Test Error Handling', () => {
   test('should throw error for invalid number input', () => {
-    expect(() => toWords.convert(Number.NaN)).toThrow();
+    expect(() => toWords.convert(Number.NaN)).toThrow(/Invalid Number/);
   });
 
   test('should handle maximum safe integer', () => {

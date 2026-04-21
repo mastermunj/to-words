@@ -240,7 +240,7 @@ This launches an interactive prompt via Commitizen. Manual commit messages must 
 [optional footer(s)]
 ```
 
-**Types:** `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`, `revert`
+**Types:** `build`, `ci`, `chore`, `docs`, `feat`, `fix`, `perf`, `refactor`, `revert`, `style`, `test`
 
 **Examples:**
 
@@ -249,6 +249,7 @@ feat(locales): add sw-TZ (Swahili Tanzania) locale
 fix(en-IN): correct ordinal for 11th
 docs: update README bundle size figures
 test(fr-FR): add decimal currency edge cases
+init: bootstrap repository metadata
 ```
 
 ---

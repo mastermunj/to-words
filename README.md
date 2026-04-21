@@ -15,6 +15,8 @@
 
 Convert numbers and currency amounts into words across 124 locales with production-ready BigInt, ordinal, and TypeScript support.
 
+> Need the reverse conversion too? Use the companion package [to-numbers](https://www.npmjs.com/package/to-numbers) to parse spelled-out numbers back into numeric values across the same 124 locales.
+
 ## 🎮 Live Demo
 
 **Try it now:** **[Open Interactive Demo](https://mastermunj.github.io/to-words/)**
@@ -53,6 +55,7 @@ Test locale behavior, currency conversion, ordinals, and large number inputs in 
 - [Browser Compatibility](#-browser-compatibility)
 - [Supported Locales](#%EF%B8%8F-supported-locales)
 - [Error Handling](#%EF%B8%8F-error-handling)
+- [Support](#-support)
 - [Contributing](#-contributing)
 - [FAQ](#-faq)
 - [Changelog](#-changelog)
@@ -1221,6 +1224,12 @@ try {
   console.error('Conversion failed:', error.message);
 }
 ```
+
+## 💖 Support
+
+If `to-words` is useful in your work, consider supporting ongoing maintenance through [GitHub Sponsors](https://github.com/sponsors/mastermunj).
+
+After installation, `npm fund to-words` surfaces the same funding link from npm metadata.
 
 ## 🤝 Contributing
 

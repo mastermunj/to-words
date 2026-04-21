@@ -65,33 +65,45 @@ describe('Gender mapping invariants', () => {
       for (const entry of mode.entries) {
         const input = toTestInput(entry.number);
         const defaultOutput = toWords.convert(input, mode.options);
+        const assertions: Array<{ label: string; actual: string; expected: string }> = [];
 
         if (entry.feminineValue) {
-          expect(
-            toWords.convert(input, { ...mode.options, gender: 'feminine' }),
-            `${localeCode} ${mode.name} feminine number=${String(entry.number)}`,
-          ).toBe(entry.feminineValue);
+          assertions.push({
+            label: `${localeCode} ${mode.name} feminine number=${String(entry.number)}`,
+            actual: toWords.convert(input, { ...mode.options, gender: 'feminine' }),
+            expected: entry.feminineValue,
+          });
 
           if (!entry.masculineValue) {
-            expect(
-              toWords.convert(input, { ...mode.options, gender: 'masculine' }),
-              `${localeCode} ${mode.name} masculine fallback number=${String(entry.number)}`,
-            ).toBe(defaultOutput);
+            assertions.push({
+              label: `${localeCode} ${mode.name} masculine fallback number=${String(entry.number)}`,
+              actual: toWords.convert(input, { ...mode.options, gender: 'masculine' }),
+              expected: defaultOutput,
+            });
           }
         }
 
         if (entry.masculineValue) {
-          expect(
-            toWords.convert(input, { ...mode.options, gender: 'masculine' }),
-            `${localeCode} ${mode.name} masculine number=${String(entry.number)}`,
-          ).toBe(entry.masculineValue);
+          assertions.push({
+            label: `${localeCode} ${mode.name} masculine number=${String(entry.number)}`,
+            actual: toWords.convert(input, { ...mode.options, gender: 'masculine' }),
+            expected: entry.masculineValue,
+          });
 
           if (!entry.feminineValue) {
-            expect(
-              toWords.convert(input, { ...mode.options, gender: 'feminine' }),
-              `${localeCode} ${mode.name} feminine fallback number=${String(entry.number)}`,
-            ).toBe(defaultOutput);
+            assertions.push({
+              label: `${localeCode} ${mode.name} feminine fallback number=${String(entry.number)}`,
+              actual: toWords.convert(input, { ...mode.options, gender: 'feminine' }),
+              expected: defaultOutput,
+            });
           }
+        }
+
+        for (const assertion of assertions) {
+          expect({ label: assertion.label, actual: assertion.actual }).toEqual({
+            label: assertion.label,
+            actual: assertion.expected,
+          });
         }
       }
     }

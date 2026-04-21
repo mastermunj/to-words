@@ -385,23 +385,23 @@ describe('Test Ordinal Numbers', () => {
 
 describe('Test Ordinal Error Cases', () => {
   test.concurrent('should throw error for negative numbers', () => {
-    expect(() => toWords.toOrdinal(-1)).toThrow();
+    expect(() => toWords.toOrdinal(-1)).toThrow(/Ordinal numbers must be non-negative integers/);
   });
 
   test.concurrent('should throw error for negative large numbers', () => {
-    expect(() => toWords.toOrdinal(-100)).toThrow();
+    expect(() => toWords.toOrdinal(-100)).toThrow(/Ordinal numbers must be non-negative integers/);
   });
 
   test.concurrent('should throw error for decimal numbers', () => {
-    expect(() => toWords.toOrdinal(1.5)).toThrow();
+    expect(() => toWords.toOrdinal(1.5)).toThrow(/Ordinal numbers must be non-negative integers/);
   });
 
   test.concurrent('should throw error for decimal numbers with small fraction', () => {
-    expect(() => toWords.toOrdinal(0.1)).toThrow();
+    expect(() => toWords.toOrdinal(0.1)).toThrow(/Ordinal numbers must be non-negative integers/);
   });
 
   test.concurrent('should throw error for decimal numbers with large fraction', () => {
-    expect(() => toWords.toOrdinal(10.5)).toThrow();
+    expect(() => toWords.toOrdinal(10.5)).toThrow(/Ordinal numbers must be non-negative integers/);
   });
 });
 

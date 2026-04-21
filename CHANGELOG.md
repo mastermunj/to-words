@@ -4,11 +4,10 @@ All notable changes to this project will be documented in this file. See [commit
 
 ## [5.5.0](https://github.com/mastermunj/to-words/compare/v5.4.0...v5.5.0) (2026-04-17)
 
-
 ### Features
 
-* add support for spelld-out decimal ([cb2adc6](https://github.com/mastermunj/to-words/commit/cb2adc68e3af73a1544a43a783ae4e9098dc73c6))
-* add support for spelld-out decimal ([01a09fa](https://github.com/mastermunj/to-words/commit/01a09fa5ca9cdfec2d711c222790697fad936ca7))
+- add support for spelld-out decimal ([cb2adc6](https://github.com/mastermunj/to-words/commit/cb2adc68e3af73a1544a43a783ae4e9098dc73c6))
+- add support for spelld-out decimal ([01a09fa](https://github.com/mastermunj/to-words/commit/01a09fa5ca9cdfec2d711c222790697fad936ca7))
 
 ## [5.4.0](https://github.com/mastermunj/to-words/compare/v5.3.0...v5.4.0) (2026-04-03)
 

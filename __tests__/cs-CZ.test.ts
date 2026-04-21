@@ -452,23 +452,23 @@ describe('Test Zero Variants', () => {
 // Invalid Input Tests
 describe('Test Invalid Inputs', () => {
   test('convert NaN should throw error', () => {
-    expect(() => toWords.convert(Number.NaN)).toThrow();
+    expect(() => toWords.convert(Number.NaN)).toThrow(/Invalid Number/);
   });
 
   test('convert Infinity should throw error', () => {
-    expect(() => toWords.convert(Infinity)).toThrow();
+    expect(() => toWords.convert(Infinity)).toThrow(/Invalid Number/);
   });
 
   test('convert -Infinity should throw error', () => {
-    expect(() => toWords.convert(-Infinity)).toThrow();
+    expect(() => toWords.convert(-Infinity)).toThrow(/Invalid Number/);
   });
 
   test('convert empty string should throw error', () => {
-    expect(() => toWords.convert('')).toThrow();
+    expect(() => toWords.convert('')).toThrow(/Invalid Number/);
   });
 
   test('convert "abc" should throw error', () => {
-    expect(() => toWords.convert('abc')).toThrow();
+    expect(() => toWords.convert('abc')).toThrow(/Invalid Number/);
   });
 });
 

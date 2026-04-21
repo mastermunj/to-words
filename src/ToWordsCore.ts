@@ -275,7 +275,7 @@ export class ToWordsCore {
           };
 
     if (!this.isValidNumber(number)) {
-      throw new Error(`Invalid Number "${number}"`);
+      throw new Error(`Invalid Number "${String(number)}"`);
     }
 
     const isBigInt = typeof number === 'bigint';
@@ -312,7 +312,7 @@ export class ToWordsCore {
 
   public toOrdinal(number: NumberInput, options: OrdinalOptions = {}): string {
     if (!this.isValidNumber(number)) {
-      throw new Error(`Invalid Number "${number}"`);
+      throw new Error(`Invalid Number "${String(number)}"`);
     }
 
     const locale = this.resolveLocale(options.formal);
@@ -666,7 +666,7 @@ export class ToWordsCore {
   protected convertInternal(
     number: bigint,
     trailing: boolean = false,
-    overrides: Record<number, string> | undefined = undefined,
+    overrides?: Record<number, string>,
     localeInstance?: InstanceType<ConstructorOf<LocaleInterface>>,
     gender?: 'masculine' | 'feminine',
     useAnd?: boolean,
@@ -863,12 +863,16 @@ export class ToWordsCore {
     }
     // String case - reject empty/whitespace strings, then check if valid number
     // Empty string converts to 0 via Number() but should be invalid
-    const str = number as string;
-    if (str.trim() === '') {
-      return false;
+    if (type === 'string') {
+      const str = number as string;
+      if (str.trim() === '') {
+        return false;
+      }
+      const converted = Number(str);
+      return !Number.isNaN(converted) && Number.isFinite(converted);
     }
-    const converted = Number(str);
-    return !Number.isNaN(converted) && Number.isFinite(converted);
+
+    return false;
   }
 
   public isNumberZero(number: number | bigint): boolean {

@@ -378,19 +378,19 @@ describe('Test Ordinal Error Cases', () => {
 
 describe('Test Invalid Inputs', () => {
   test('should throw error for NaN', () => {
-    expect(() => toWords.convert(Number.NaN)).toThrow();
+    expect(() => toWords.convert(Number.NaN)).toThrow(/Invalid Number/);
   });
 
   test('should throw error for Infinity', () => {
-    expect(() => toWords.convert(Infinity)).toThrow();
+    expect(() => toWords.convert(Infinity)).toThrow(/Invalid Number/);
   });
 
   test('should throw error for -Infinity', () => {
-    expect(() => toWords.convert(-Infinity)).toThrow();
+    expect(() => toWords.convert(-Infinity)).toThrow(/Invalid Number/);
   });
 
   test('should throw error for invalid string input', () => {
-    expect(() => toWords.convert('abc' as unknown as number)).toThrow();
+    expect(() => toWords.convert('abc' as unknown as number)).toThrow(/Invalid Number/);
   });
 });
 
@@ -475,23 +475,23 @@ describe('Test Zero Variants', () => {
 
 describe('Test Invalid Inputs - Extended', () => {
   test('should throw error for NaN', () => {
-    expect(() => toWords.convert(Number.NaN)).toThrow();
+    expect(() => toWords.convert(Number.NaN)).toThrow(/Invalid Number/);
   });
 
   test('should throw error for Infinity', () => {
-    expect(() => toWords.convert(Infinity)).toThrow();
+    expect(() => toWords.convert(Infinity)).toThrow(/Invalid Number/);
   });
 
   test('should throw error for -Infinity', () => {
-    expect(() => toWords.convert(-Infinity)).toThrow();
+    expect(() => toWords.convert(-Infinity)).toThrow(/Invalid Number/);
   });
 
   test('should throw error for empty string', () => {
-    expect(() => toWords.convert('' as unknown as number)).toThrow();
+    expect(() => toWords.convert('' as unknown as number)).toThrow(/Invalid Number/);
   });
 
   test('should throw error for non-numeric string', () => {
-    expect(() => toWords.convert('abc' as unknown as number)).toThrow();
+    expect(() => toWords.convert('abc' as unknown as number)).toThrow(/Invalid Number/);
   });
 });
 

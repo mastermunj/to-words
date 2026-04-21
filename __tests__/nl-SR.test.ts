@@ -439,23 +439,23 @@ describe('Test Zero Variants', () => {
 
 describe('Test Invalid Input', () => {
   test('should throw error for NaN', () => {
-    expect(() => toWords.convert(Number.NaN)).toThrow();
+    expect(() => toWords.convert(Number.NaN)).toThrow(/Invalid Number/);
   });
 
   test('should throw error for Infinity', () => {
-    expect(() => toWords.convert(Infinity)).toThrow();
+    expect(() => toWords.convert(Infinity)).toThrow(/Invalid Number/);
   });
 
   test('should throw error for -Infinity', () => {
-    expect(() => toWords.convert(-Infinity)).toThrow();
+    expect(() => toWords.convert(-Infinity)).toThrow(/Invalid Number/);
   });
 
   test('should throw error for empty string', () => {
-    expect(() => toWords.convert('')).toThrow();
+    expect(() => toWords.convert('')).toThrow(/Invalid Number/);
   });
 
   test('should throw error for non-numeric string', () => {
-    expect(() => toWords.convert('abc')).toThrow();
+    expect(() => toWords.convert('abc')).toThrow(/Invalid Number/);
   });
 });
 

@@ -387,23 +387,23 @@ describe('Test Zero Variants', () => {
 
 describe('Test Invalid Input', () => {
   test('convert NaN throws error', () => {
-    expect(() => toWords.convert(Number.NaN)).toThrow();
+    expect(() => toWords.convert(Number.NaN)).toThrow(/Invalid Number/);
   });
 
   test('convert Infinity throws error', () => {
-    expect(() => toWords.convert(Infinity)).toThrow();
+    expect(() => toWords.convert(Infinity)).toThrow(/Invalid Number/);
   });
 
   test('convert -Infinity throws error', () => {
-    expect(() => toWords.convert(-Infinity)).toThrow();
+    expect(() => toWords.convert(-Infinity)).toThrow(/Invalid Number/);
   });
 
   test('convert "" throws error', () => {
-    expect(() => toWords.convert('')).toThrow();
+    expect(() => toWords.convert('')).toThrow(/Invalid Number/);
   });
 
   test('convert "abc" throws error', () => {
-    expect(() => toWords.convert('abc')).toThrow();
+    expect(() => toWords.convert('abc')).toThrow(/Invalid Number/);
   });
 });
 

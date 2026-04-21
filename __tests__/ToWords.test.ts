@@ -162,35 +162,35 @@ describe('Comprehensive Input Validation', () => {
 
   describe('Invalid Input Types', () => {
     test('should throw error for null input', () => {
-      expect(() => toWords.convert(null as unknown as number)).toThrow();
+      expect(() => toWords.convert(null as unknown as number)).toThrow(/Invalid Number/);
     });
 
     test('should throw error for undefined input', () => {
-      expect(() => toWords.convert(undefined as unknown as number)).toThrow();
+      expect(() => toWords.convert(undefined as unknown as number)).toThrow(/Invalid Number/);
     });
 
     test('should throw error for array input', () => {
-      expect(() => toWords.convert([1, 2, 3] as unknown as number)).toThrow();
+      expect(() => toWords.convert([1, 2, 3] as unknown as number)).toThrow(/Invalid Number/);
     });
 
     test('should throw error for object input', () => {
-      expect(() => toWords.convert({} as unknown as number)).toThrow();
+      expect(() => toWords.convert({} as unknown as number)).toThrow(/Invalid Number/);
     });
 
     test('should throw error for function input', () => {
-      expect(() => toWords.convert((() => 1) as unknown as number)).toThrow();
+      expect(() => toWords.convert((() => 1) as unknown as number)).toThrow(/Invalid Number/);
     });
 
     test('should throw error for boolean true', () => {
-      expect(() => toWords.convert(true as unknown as number)).toThrow();
+      expect(() => toWords.convert(true as unknown as number)).toThrow(/Invalid Number/);
     });
 
     test('should throw error for boolean false', () => {
-      expect(() => toWords.convert(false as unknown as number)).toThrow();
+      expect(() => toWords.convert(false as unknown as number)).toThrow(/Invalid Number/);
     });
 
     test('should throw error for Symbol', () => {
-      expect(() => toWords.convert(Symbol('test') as unknown as number)).toThrow();
+      expect(() => toWords.convert(Symbol('test') as unknown as number)).toThrow(/Invalid Number/);
     });
   });
 
@@ -833,12 +833,12 @@ describe('isValidNumber Method Tests', () => {
       expect(toWords.isValidNumber('abc')).toBe(false);
     });
 
-    test('throws for null (not a valid input type)', () => {
-      expect(() => toWords.isValidNumber(null as unknown as number)).toThrow();
+    test('returns false for null (not a valid input type)', () => {
+      expect(toWords.isValidNumber(null as unknown as number)).toBe(false);
     });
 
-    test('throws for undefined (not a valid input type)', () => {
-      expect(() => toWords.isValidNumber(undefined as unknown as number)).toThrow();
+    test('returns false for undefined (not a valid input type)', () => {
+      expect(toWords.isValidNumber(undefined as unknown as number)).toBe(false);
     });
   });
 });
