@@ -285,7 +285,7 @@ npm run build
 
 This runs (in order): clean → CJS build → ESM build → UMD build → package.json injection → CLI chmod.
 
-The UMD bundles in `dist/umd/` are generated per-locale via [esbuild](https://esbuild.github.io/) — one bundle for the full package (`to-words.min.js`) and one per locale (`en-US.min.js`, etc.).
+The UMD bundles in `dist/umd/` are generated per-locale via [Rolldown](https://rolldown.rs/) — one bundle for the full package (`to-words.min.js`) and one per locale (`en-US.min.js`, etc.).
 
 ---
 
