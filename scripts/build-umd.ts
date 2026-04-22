@@ -1,14 +1,15 @@
 #!/usr/bin/env node --experimental-strip-types
+/// <reference types="node" />
 
 /**
- * UMD Bundle Build Script (using esbuild)
+ * UMD Bundle Build Script (using Rolldown)
  *
  * Generates browser-ready bundles:
  * 1. Full package with all locales
- * 2. Individual locale bundles for tree-shaking
+ * 2. Individual locale bundles
  */
 
-import * as esbuild from 'esbuild';
+import { build, type BuildOptions, type OutputChunk, type RolldownOutput } from 'rolldown';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -24,8 +25,8 @@ const LOCALES_DIR = path.join(SRC_DIR, 'locales');
 function getLocaleCodes(): string[] {
   return fs
     .readdirSync(LOCALES_DIR)
-    .filter((f) => f.endsWith('.ts') && f !== 'index.ts')
-    .map((f) => f.replace('.ts', ''));
+    .filter((fileName: string) => fileName.endsWith('.ts') && fileName !== 'index.ts')
+    .map((fileName: string) => fileName.replace('.ts', ''));
 }
 
 function formatBytes(bytes: number): string {
@@ -35,42 +36,43 @@ function formatBytes(bytes: number): string {
   return (bytes / 1024).toFixed(2) + ' KB';
 }
 
-async function buildBundle(
-  entryPoint: string,
-  outfile: string,
-  minify: boolean,
-): Promise<{ raw: number; gzipped: number }> {
-  // Use ESM format (smaller, no CJS compat boilerplate) then wrap for browser
-  const result = await esbuild.build({
-    entryPoints: [entryPoint],
-    bundle: true,
-    minify,
-    write: false,
-    format: 'esm',
-    platform: 'browser',
-    target: ['es2022'],
-    logLevel: 'silent',
-  });
+type BuildRequest = {
+  input: string;
+  outfile: string;
+  minify: boolean;
+  resultName: string | null;
+};
 
-  // Wrap ESM in IIFE for browser global
-  let code = result.outputFiles[0].text;
-
-  // ESM export looks like: export{L as ToWords,W as default};
-  // We need to find the ToWords export and return it
-  // Match pattern: SomeVar as ToWords
+function toBrowserGlobal(code: string): string {
   const exportMatch = code.match(/export\s*\{([^}]+)\}\s*;?\s*$/);
-  if (exportMatch) {
-    const exports = exportMatch[1];
-    // Find "X as ToWords" pattern
-    const toWordsMatch = exports.match(/(\w+)\s+as\s+ToWords/);
-    if (toWordsMatch) {
-      const varName = toWordsMatch[1];
-      // Remove the export statement and add return
-      code = code.replace(/export\s*\{[^}]+\}\s*;?\s*$/, `return ${varName};`);
-    }
+  if (!exportMatch) {
+    throw new Error('Unable to find ToWords export in Rolldown output');
   }
 
-  const wrapped = `"use strict";var ToWords=(()=>{${code}})();`;
+  const exports = exportMatch[1];
+  const directExport = exports
+    .split(',')
+    .map((name) => name.trim())
+    .find((name) => name === 'ToWords');
+  const aliasedExport = exports.match(/(\w+)\s+as\s+ToWords/);
+  const varName = directExport ?? aliasedExport?.[1];
+
+  if (!varName) {
+    throw new Error('Unable to find ToWords symbol in Rolldown output');
+  }
+
+  const executableCode = code.replace(/export\s*\{[^}]+\}\s*;?\s*$/, `return ${varName};`);
+
+  return `"use strict";var ToWords=(()=>{${executableCode}})();`;
+}
+
+async function buildBundle(output: RolldownOutput, outfile: string): Promise<{ raw: number; gzipped: number }> {
+  const entryChunk = output.output.find((item): item is OutputChunk => item.type === 'chunk' && item.isEntry);
+  if (!entryChunk) {
+    throw new Error(`Unable to find entry chunk for ${outfile}`);
+  }
+
+  const wrapped = toBrowserGlobal(entryChunk.code);
 
   fs.writeFileSync(outfile, wrapped);
 
@@ -85,7 +87,7 @@ const verbose = process.argv.includes('--verbose') || process.argv.includes('-v'
 
 async function main(): Promise<void> {
   if (verbose) {
-    console.log('\n🔨 Building UMD bundles (esbuild)...\n');
+    console.log('\n🔨 Building UMD bundles (Rolldown)...\n');
   }
 
   // Ensure dist directory exists
@@ -95,36 +97,50 @@ async function main(): Promise<void> {
 
   const locales = getLocaleCodes();
   const results: { name: string; raw: number; gzipped: number }[] = [];
+  const buildRequests: BuildRequest[] = [
+    {
+      input: path.join(SRC_DIR, 'ToWords.ts'),
+      outfile: path.join(DIST_DIR, 'to-words.js'),
+      minify: false,
+      resultName: null,
+    },
+    {
+      input: path.join(SRC_DIR, 'ToWords.ts'),
+      outfile: path.join(DIST_DIR, 'to-words.min.js'),
+      minify: true,
+      resultName: 'to-words.min.js (full)',
+    },
+    ...locales.map((locale) => ({
+      input: path.join(LOCALES_DIR, `${locale}.ts`),
+      outfile: path.join(DIST_DIR, `${locale}.min.js`),
+      minify: true,
+      resultName: `${locale}.min.js`,
+    })),
+  ];
 
-  // Build full package (minified and unminified)
   if (verbose) {
-    console.log('Building full package...');
+    console.log(`Building ${buildRequests.length} bundles in one Rolldown build call...`);
   }
-  const fullEntry = path.join(SRC_DIR, 'ToWords.ts');
 
-  await buildBundle(fullEntry, path.join(DIST_DIR, 'to-words.js'), false);
+  const buildOptions: BuildOptions[] = buildRequests.map((request) => ({
+    input: request.input,
+    platform: 'browser',
+    logLevel: 'silent',
+    output: {
+      format: 'es',
+      codeSplitting: false,
+      minify: request.minify,
+    },
+  }));
+  const buildOutputs = await build(buildOptions);
 
-  const fullResult = await buildBundle(fullEntry, path.join(DIST_DIR, 'to-words.min.js'), true);
-  results.push({ name: 'to-words.min.js (full)', ...fullResult });
-
-  // Build individual locale bundles
-  if (verbose) {
-    console.log(`Building ${locales.length} locale bundles...`);
-  }
-  let completed = 0;
-
-  for (const locale of locales) {
-    const localeEntry = path.join(LOCALES_DIR, `${locale}.ts`);
-
-    // Minified only for locales (saves build time)
-    const result = await buildBundle(localeEntry, path.join(DIST_DIR, `${locale}.min.js`), true);
-    results.push({ name: `${locale}.min.js`, ...result });
-
-    completed++;
-    if (verbose) {
-      process.stdout.write(`\rProgress: ${completed}/${locales.length} locales...`);
+  for (const [index, request] of buildRequests.entries()) {
+    const result = await buildBundle(buildOutputs[index], request.outfile);
+    if (request.resultName) {
+      results.push({ name: request.resultName, ...result });
     }
   }
+
   if (verbose) {
     console.log('\n');
   }
