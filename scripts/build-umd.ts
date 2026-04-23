@@ -19,8 +19,15 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const SRC_DIR = path.join(__dirname, '../src');
-const DIST_DIR = path.join(__dirname, '../dist/umd');
 const LOCALES_DIR = path.join(SRC_DIR, 'locales');
+
+function getOutDir(): string {
+  const outDirArgIndex = process.argv.findIndex((arg) => arg === '--out-dir');
+  const outDirArg = outDirArgIndex >= 0 ? process.argv[outDirArgIndex + 1] : null;
+  const outDir = outDirArg ?? 'dist/umd';
+
+  return path.isAbsolute(outDir) ? outDir : path.join(__dirname, '..', outDir);
+}
 
 function getLocaleCodes(): string[] {
   return fs
@@ -86,13 +93,16 @@ async function buildBundle(output: RolldownOutput, outfile: string): Promise<{ r
 const verbose = process.argv.includes('--verbose') || process.argv.includes('-v');
 
 async function main(): Promise<void> {
+  const distDir = getOutDir();
+  const displayDir = path.relative(path.join(__dirname, '..'), distDir) || 'dist/umd';
+
   if (verbose) {
     console.log('\n🔨 Building UMD bundles (Rolldown)...\n');
   }
 
   // Ensure dist directory exists
-  if (!fs.existsSync(DIST_DIR)) {
-    fs.mkdirSync(DIST_DIR, { recursive: true });
+  if (!fs.existsSync(distDir)) {
+    fs.mkdirSync(distDir, { recursive: true });
   }
 
   const locales = getLocaleCodes();
@@ -100,19 +110,19 @@ async function main(): Promise<void> {
   const buildRequests: BuildRequest[] = [
     {
       input: path.join(SRC_DIR, 'ToWords.ts'),
-      outfile: path.join(DIST_DIR, 'to-words.js'),
+      outfile: path.join(distDir, 'to-words.js'),
       minify: false,
       resultName: null,
     },
     {
       input: path.join(SRC_DIR, 'ToWords.ts'),
-      outfile: path.join(DIST_DIR, 'to-words.min.js'),
+      outfile: path.join(distDir, 'to-words.min.js'),
       minify: true,
       resultName: 'to-words.min.js (full)',
     },
     ...locales.map((locale) => ({
       input: path.join(LOCALES_DIR, `${locale}.ts`),
-      outfile: path.join(DIST_DIR, `${locale}.min.js`),
+      outfile: path.join(distDir, `${locale}.min.js`),
       minify: true,
       resultName: `${locale}.min.js`,
     })),
@@ -126,6 +136,7 @@ async function main(): Promise<void> {
     input: request.input,
     platform: 'browser',
     logLevel: 'silent',
+    write: false,
     output: {
       format: 'es',
       codeSplitting: false,
@@ -172,7 +183,7 @@ async function main(): Promise<void> {
     console.log(`│ ${'Average locale'.padEnd(34)} │ ${'—'.padStart(10)} │ ${formatBytes(avgGzipped).padStart(10)} │`);
     console.log('└────────────────────────────────────┴────────────┴────────────┘');
 
-    console.log(`\n✅ Built ${results.length} UMD bundles to dist/umd/`);
+    console.log(`\n✅ Built ${results.length} UMD bundles to ${displayDir}/`);
 
     console.log('\n📝 Usage:');
     console.log('   <!-- Full package (all locales) -->');

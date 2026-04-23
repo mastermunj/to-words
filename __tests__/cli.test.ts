@@ -5,7 +5,7 @@ import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest';
 async function runCli(...args: string[]): Promise<void> {
   vi.resetModules();
   process.argv = ['node', 'cli.ts', ...args];
-  await import('../src/cli.ts');
+  await import('../src/cli');
 }
 
 describe('CLI', () => {

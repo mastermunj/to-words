@@ -169,7 +169,7 @@ describe('Test Floats with options = {}', () => {
   });
 });
 
-const testFloatsWithCurrency = [
+const testFloatsWithCurrency: [number, string][] = [
   [0.0, `nulle eiro`],
   [0.04, `nulle eiro un četri centi`],
   [0.0468, `nulle eiro un pieci centi`],

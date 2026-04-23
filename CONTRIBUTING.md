@@ -49,15 +49,15 @@ This project follows the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.
 
 ## Development Setup
 
-| Command                          | Purpose                                       |
-| -------------------------------- | --------------------------------------------- |
-| `npm test`                       | Run the full test suite in watch mode         |
-| `npm run test -- run`            | Run tests once (CI mode)                      |
-| `npm run test -- run --coverage` | Run tests with coverage report                |
-| `npm run lint`                   | Check for linting errors                      |
-| `npm run lint:fix`               | Auto-fix linting errors                       |
-| `npm run build`                  | Full production build (CJS + ESM + UMD + CLI) |
-| `npm run commit`                 | Interactive commit with Commitizen            |
+| Command                          | Purpose                                                   |
+| -------------------------------- | --------------------------------------------------------- |
+| `npm test`                       | Run the full test suite in watch mode                     |
+| `npm run test -- run`            | Run tests once (CI mode)                                  |
+| `npm run test -- run --coverage` | Run tests with coverage report                            |
+| `npm run lint`                   | Check for linting errors                                  |
+| `npm run lint:fix`               | Auto-fix linting errors                                   |
+| `npm run build`                  | Full production build (tsgo CJS/ESM + Rolldown UMD + CLI) |
+| `npm run commit`                 | Interactive commit with Commitizen                        |
 
 > **Tip:** Run `npm run lint:fix` before committing — the pre-commit hook will block if there are lint errors.
 
