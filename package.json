@@ -113,7 +113,7 @@
     "test:watch": "npm run test -- --watch"
   },
   "devDependencies": {
-    "@commitlint/cli": "^20.5.0",
+    "@commitlint/cli": "^21.0.0",
     "@commitlint/config-conventional": "^20.5.0",
     "@mastermunj/oxc-config": "^0.0.4",
     "@types/lodash": "^4.17.24",
