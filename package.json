@@ -114,7 +114,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^21.0.0",
-    "@commitlint/config-conventional": "^20.5.0",
+    "@commitlint/config-conventional": "^21.0.0",
     "@mastermunj/oxc-config": "^0.0.4",
     "@types/lodash": "^4.17.24",
     "@types/node": "^25.6.0",
