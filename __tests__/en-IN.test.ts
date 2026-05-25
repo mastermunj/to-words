@@ -198,6 +198,58 @@ describe('Test Floats with options = { currency: true }', () => {
   });
 });
 
+describe('Test String inputs with default 2-decimal precision { currency: true }', () => {
+  const testStringWith2DecimalCurrency: [string, string][] = [
+    ['452.30', `Four Hundred Fifty Two Rupees And Thirty Paise Only`],
+    ['452.3', `Four Hundred Fifty Two Rupees And Thirty Paise Only`],
+    ['0.09', `Zero Rupees And Nine Paise Only`],
+    ['100.10', `One Hundred Rupees And Ten Paise Only`],
+    ['37.68', `Thirty Seven Rupees And Sixty Eight Paise Only`],
+    // 1-digit fraction scaled by decimalBase=10
+    ['1.5', `One Rupee And Fifty Paise Only`],
+    // 3-decimal string rounds up to integer at 2dp
+    ['0.999', `One Rupee Only`],
+    // negative string inputs
+    ['-0.50', `Minus Zero Rupees And Fifty Paise Only`],
+    ['-99.99', `Minus Ninety Nine Rupees And Ninety Nine Paise Only`],
+  ];
+
+  test.concurrent.each(testStringWith2DecimalCurrency)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input, { currency: true })).toBe(expected);
+  });
+});
+
+describe('Test custom currencyOptions with precision: 3 on en-IN locale { currency: true }', () => {
+  const kwdOptions = {
+    currency: true as const,
+    currencyOptions: {
+      name: 'Kuwaiti Dinar',
+      plural: 'Kuwaiti Dinars',
+      singular: 'Kuwaiti Dinar',
+      symbol: 'KWD',
+      precision: 3,
+      fractionalUnit: {
+        name: 'Fils',
+        plural: 'Fils',
+        singular: 'Fils',
+        symbol: '',
+      },
+    },
+  };
+
+  const testCustomPrecision3: [number | string, string][] = [
+    [1.5, `One Kuwaiti Dinar And Five Hundred Fils Only`],
+    [0.001, `Zero Kuwaiti Dinars And One Fils Only`],
+    ['2.500', `Two Kuwaiti Dinars And Five Hundred Fils Only`],
+    ['0.010', `Zero Kuwaiti Dinars And Ten Fils Only`],
+    [-1.001, `Minus One Kuwaiti Dinar And One Fils Only`],
+  ];
+
+  test.concurrent.each(testCustomPrecision3)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input, kwdOptions)).toBe(expected);
+  });
+});
+
 describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true }', () => {
   const testFloatsWithCurrencyAndIgnoreZeroCurrency = cloneDeep(testFloatsWithCurrency);
   testFloatsWithCurrencyAndIgnoreZeroCurrency[0][1] = '';

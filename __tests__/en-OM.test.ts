@@ -164,7 +164,7 @@ describe('Test with options = { currency: true, includeZeroFractional: true }', 
     ['123.00', `One Hundred Twenty Three Omani Rials And Zero Baisa Only`],
     ['0.00', `Zero Omani Rials And Zero Baisa Only`],
     ['-123.00', `Minus One Hundred Twenty Three Omani Rials And Zero Baisa Only`],
-    ['37.68', `Thirty Seven Omani Rials And Sixty Eight Baisa Only`],
+    ['37.68', `Thirty Seven Omani Rials And Six Hundred Eighty Baisa Only`],
   ];
 
   test.concurrent.each(testIncludeZeroFractional)('convert %s => %s', (input, expected) => {
@@ -185,16 +185,16 @@ describe('Test Floats with options = {}', () => {
 
 const testFloatsWithCurrency: [number, string][] = [
   [0.0, `Zero Omani Rials Only`],
-  [0.04, `Zero Omani Rials And Four Baisa Only`],
-  [0.0468, `Zero Omani Rials And Five Baisa Only`],
-  [0.4, `Zero Omani Rials And Forty Baisa Only`],
-  [0.63, `Zero Omani Rials And Sixty Three Baisa Only`],
-  [0.973, `Zero Omani Rials And Ninety Seven Baisa Only`],
-  [0.999, `One Omani Rial Only`],
-  [37.06, `Thirty Seven Omani Rials And Six Baisa Only`],
-  [37.068, `Thirty Seven Omani Rials And Seven Baisa Only`],
-  [37.68, `Thirty Seven Omani Rials And Sixty Eight Baisa Only`],
-  [37.683, `Thirty Seven Omani Rials And Sixty Eight Baisa Only`],
+  [0.04, `Zero Omani Rials And Forty Baisa Only`],
+  [0.0468, `Zero Omani Rials And Forty Seven Baisa Only`],
+  [0.4, `Zero Omani Rials And Four Hundred Baisa Only`],
+  [0.63, `Zero Omani Rials And Six Hundred Thirty Baisa Only`],
+  [0.973, `Zero Omani Rials And Nine Hundred Seventy Three Baisa Only`],
+  [0.999, `Zero Omani Rials And Nine Hundred Ninety Nine Baisa Only`],
+  [37.06, `Thirty Seven Omani Rials And Sixty Baisa Only`],
+  [37.068, `Thirty Seven Omani Rials And Sixty Eight Baisa Only`],
+  [37.68, `Thirty Seven Omani Rials And Six Hundred Eighty Baisa Only`],
+  [37.683, `Thirty Seven Omani Rials And Six Hundred Eighty Three Baisa Only`],
 ];
 
 describe('Test Floats with options = { currency: true }', () => {
@@ -229,11 +229,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true 
 describe('Test Floats with options = { currency: true, ignoreDecimal: true }', () => {
   const testFloatsWithCurrencyAndIgnoreDecimal = cloneDeep(testFloatsWithCurrency);
   testFloatsWithCurrencyAndIgnoreDecimal.map((row) => {
-    if (row[0] === 0.999) {
-      row[1] = `Zero Omani Rials Only`;
-    } else {
-      row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ Baisa`), '');
-    }
+    row[1] = (row[1] as string).replace(new RegExp(` And [\\w ]+ Baisa`), '');
   });
 
   test.concurrent.each(testFloatsWithCurrencyAndIgnoreDecimal)('convert %d => %s', (input, expected) => {
@@ -268,6 +264,168 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
       ).toBe(expected);
     },
   );
+});
+
+describe('Test String inputs with 3-decimal precision { currency: true }', () => {
+  const testStringWith3DecimalCurrency: [string, string][] = [
+    ['500.500', `Five Hundred Omani Rials And Five Hundred Baisa Only`],
+    ['2.010', `Two Omani Rials And Ten Baisa Only`],
+    ['2.100', `Two Omani Rials And One Hundred Baisa Only`],
+    ['0.001', `Zero Omani Rials And One Baisa Only`],
+    ['-2.010', `Minus Two Omani Rials And Ten Baisa Only`],
+    ['37.500', `Thirty Seven Omani Rials And Five Hundred Baisa Only`],
+  ];
+
+  test.concurrent.each(testStringWith3DecimalCurrency)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input, { currency: true })).toBe(expected);
+  });
+});
+
+describe('Test number inputs with 1 and 2-digit fractional parts scaled to 3-decimal { currency: true }', () => {
+  const testScaledFractional: [number, string][] = [
+    [0.1, `Zero Omani Rials And One Hundred Baisa Only`],
+    [0.5, `Zero Omani Rials And Five Hundred Baisa Only`],
+    [0.05, `Zero Omani Rials And Fifty Baisa Only`],
+    [0.001, `Zero Omani Rials And One Baisa Only`],
+    [1.1, `One Omani Rial And One Hundred Baisa Only`],
+    [1.05, `One Omani Rial And Fifty Baisa Only`],
+    [5.5, `Five Omani Rials And Five Hundred Baisa Only`],
+    [999.999, `Nine Hundred Ninety Nine Omani Rials And Nine Hundred Ninety Nine Baisa Only`],
+    [1000.5, `One Thousand Omani Rials And Five Hundred Baisa Only`],
+  ];
+
+  test.concurrent.each(testScaledFractional)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { currency: true })).toBe(expected);
+  });
+});
+
+describe('Test 3-decimal precision rounding for 4+ decimal inputs { currency: true }', () => {
+  const testRounding: [number, string][] = [
+    // 4th decimal < 5 rounds down to zero fractional → integer result
+    [0.0001, `Zero Omani Rials Only`],
+    // 4th decimal < 5 keeps 3rd decimal as-is
+    [1.9994, `One Omani Rial And Nine Hundred Ninety Nine Baisa Only`],
+  ];
+
+  test.concurrent.each(testRounding)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { currency: true })).toBe(expected);
+  });
+});
+
+describe('Test negative float inputs with 3-decimal precision { currency: true }', () => {
+  const testNegativeFloats: [number | string, string][] = [
+    [-0.5, `Minus Zero Omani Rials And Five Hundred Baisa Only`],
+    [-0.001, `Minus Zero Omani Rials And One Baisa Only`],
+    [-37.001, `Minus Thirty Seven Omani Rials And One Baisa Only`],
+    [-100.5, `Minus One Hundred Omani Rials And Five Hundred Baisa Only`],
+    ['-0.500', `Minus Zero Omani Rials And Five Hundred Baisa Only`],
+    ['-37.010', `Minus Thirty Seven Omani Rials And Ten Baisa Only`],
+    ['-999.999', `Minus Nine Hundred Ninety Nine Omani Rials And Nine Hundred Ninety Nine Baisa Only`],
+  ];
+
+  test.concurrent.each(testNegativeFloats)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input, { currency: true })).toBe(expected);
+  });
+});
+
+describe('Test { currency: true, includeZeroFractional: true } with 3-digit zero fractional strings', () => {
+  const testZeroFractional3Decimal: [string, string][] = [
+    ['1.000', `One Omani Rial And Zero Baisa Only`],
+    ['100.000', `One Hundred Omani Rials And Zero Baisa Only`],
+    ['0.000', `Zero Omani Rials And Zero Baisa Only`],
+  ];
+
+  test.concurrent.each(testZeroFractional3Decimal)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input, { currency: true, includeZeroFractional: true })).toBe(expected);
+  });
+});
+
+describe('Test { currency: true, ignoreZeroCurrency: true } with 3-decimal amounts', () => {
+  const testIgnoreZeroCurrency3Decimal: [number | string, string][] = [
+    [0.001, `One Baisa Only`],
+    [0.5, `Five Hundred Baisa Only`],
+    ['0.010', `Ten Baisa Only`],
+    ['0.500', `Five Hundred Baisa Only`],
+    [0.0, ``],
+    [1.5, `One Omani Rial And Five Hundred Baisa Only`],
+  ];
+
+  test.concurrent.each(testIgnoreZeroCurrency3Decimal)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input, { currency: true, ignoreZeroCurrency: true })).toBe(expected);
+  });
+});
+
+describe('Test { currency: true, doNotAddOnly: true } with 3-decimal amounts', () => {
+  const testDoNotAddOnly3Decimal: [number | string, string][] = [
+    [2.5, `Two Omani Rials And Five Hundred Baisa`],
+    [0.001, `Zero Omani Rials And One Baisa`],
+    ['37.500', `Thirty Seven Omani Rials And Five Hundred Baisa`],
+    [100, `One Hundred Omani Rials`],
+  ];
+
+  test.concurrent.each(testDoNotAddOnly3Decimal)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input, { currency: true, doNotAddOnly: true })).toBe(expected);
+  });
+});
+
+describe('Test custom currencyOptions override with precision: 3 { currency: true }', () => {
+  const kwdOptions = {
+    currency: true as const,
+    currencyOptions: {
+      name: 'Kuwaiti Dinar',
+      plural: 'Kuwaiti Dinars',
+      singular: 'Kuwaiti Dinar',
+      symbol: 'KWD',
+      precision: 3,
+      fractionalUnit: {
+        name: 'Fils',
+        plural: 'Fils',
+        singular: 'Fils',
+        symbol: '',
+      },
+    },
+  };
+
+  const testCustomPrecision3: [number | string, string][] = [
+    [1.5, `One Kuwaiti Dinar And Five Hundred Fils Only`],
+    [0.001, `Zero Kuwaiti Dinars And One Fils Only`],
+    ['2.500', `Two Kuwaiti Dinars And Five Hundred Fils Only`],
+    ['0.100', `Zero Kuwaiti Dinars And One Hundred Fils Only`],
+    [-1.001, `Minus One Kuwaiti Dinar And One Fils Only`],
+  ];
+
+  test.concurrent.each(testCustomPrecision3)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input, kwdOptions)).toBe(expected);
+  });
+});
+
+describe('Test currencyOptions override with precision: 2 overrides locale precision: 3 { currency: true }', () => {
+  const twoPrecisionOverride = {
+    currency: true as const,
+    currencyOptions: {
+      name: 'Omani Rial',
+      plural: 'Omani Rials',
+      singular: 'Omani Rial',
+      symbol: 'OMR',
+      precision: 2,
+      fractionalUnit: {
+        name: 'Baisa',
+        plural: 'Baisa',
+        singular: 'Baisa',
+        symbol: '',
+      },
+    },
+  };
+
+  const testPrecision2Override: [number, string][] = [
+    [0.04, `Zero Omani Rials And Four Baisa Only`],
+    [0.4, `Zero Omani Rials And Forty Baisa Only`],
+    [37.68, `Thirty Seven Omani Rials And Sixty Eight Baisa Only`],
+  ];
+
+  test.concurrent.each(testPrecision2Override)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, twoPrecisionOverride)).toBe(expected);
+  });
 });
 
 // Comprehensive Ordinal Tests

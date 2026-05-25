@@ -1,9 +1,8 @@
 /**
- * Runtime smoke test — executed by Deno and Bun CI jobs against the compiled ESM output.
- * Proves the package works outside Node.js without the source TypeScript toolchain.
- *
- * Also runnable locally after a build:
+ * Runtime smoke test — run locally after a build to verify the compiled ESM output:
  *   node scripts/runtime-smoke.mjs
+ *   bun run scripts/runtime-smoke.mjs
+ *   deno run --allow-read --allow-env scripts/runtime-smoke.mjs
  */
 import { toWords, toOrdinal, toCurrency } from '../dist/esm/ToWords.js';
 

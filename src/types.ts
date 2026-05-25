@@ -3,6 +3,7 @@ export interface CurrencyOptions {
   plural: string;
   symbol: string;
   singular?: string;
+  precision?: number; // Number of decimal places for the fractional unit. Defaults to 2. Set to 3 for 3-decimal currencies (e.g. OMR, KWD, BHD).
   numberSpecificForms?: Record<number, string>;
   fractionalUnit: {
     name: string;
