@@ -102,7 +102,7 @@
     "build:pkgjson": "echo '{\"type\":\"commonjs\"}' > dist/cjs/package.json",
     "build:umd": "node --experimental-strip-types scripts/build-umd.ts",
     "build:watch": "npm run build -- --watch",
-    "clean": "rimraf dist dist-tsgo coverage",
+    "clean": "rimraf dist coverage",
     "commit": "git-cz",
     "format": "oxfmt --check --config ./node_modules/@mastermunj/oxc-config/.oxfmtrc.json .",
     "format:fix": "oxfmt --write --config ./node_modules/@mastermunj/oxc-config/.oxfmtrc.json .",
@@ -113,25 +113,25 @@
     "test:watch": "npm run test -- --watch"
   },
   "devDependencies": {
-    "@commitlint/cli": "^21.0.0",
-    "@commitlint/config-conventional": "^21.0.0",
+    "@commitlint/cli": "^21.0.1",
+    "@commitlint/config-conventional": "^21.0.1",
     "@mastermunj/oxc-config": "^0.0.4",
     "@types/lodash": "^4.17.24",
-    "@types/node": "^25.6.0",
+    "@types/node": "^25.9.1",
     "@types/source-map-support": "^0.5.10",
-    "@typescript/native-preview": "7.0.0-dev.20260421.2",
-    "@vitest/coverage-v8": "^4.1.5",
+    "@typescript/native-preview": "7.0.0-dev.20260525.1",
+    "@vitest/coverage-v8": "^4.1.7",
     "cz-conventional-changelog": "^3.3.0",
     "husky": "^9.1.7",
-    "lint-staged": "^17.0.2",
+    "lint-staged": "^17.0.5",
     "lodash": "^4.18.1",
     "oxfmt": "^0.51.0",
-    "oxlint": "^1.61.0",
+    "oxlint": "^1.66.0",
     "oxlint-tsgolint": "^0.23.0",
     "rimraf": "^6.1.3",
-    "rolldown": "^1.0.0-rc.16",
+    "rolldown": "^1.0.2",
     "source-map-support": "^0.5.21",
-    "vitest": "^4.1.5"
+    "vitest": "^4.1.7"
   },
   "overrides": {
     "commitizen": {
