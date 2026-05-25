@@ -550,6 +550,7 @@ export class ToWordsCore {
     const useAnd = options.useAnd;
 
     const currencyOptions = options.currencyOptions ?? localeConfig.currency;
+    const precision = currencyOptions.precision ?? 2;
 
     const isNegativeNumber = number < 0 || (typeof number === 'bigint' && number < 0n);
     if (isNegativeNumber) {
@@ -558,7 +559,7 @@ export class ToWordsCore {
 
     const isBigInt = typeof number === 'bigint';
     if (!isBigInt) {
-      number = this.toFixed(number as number);
+      number = this.toFixed(number as number, precision);
     }
     // Extra check for isFloat to overcome 1.999 rounding off to 2
     const isFloat = !isBigInt && this.isFloat(number as number);
@@ -608,7 +609,7 @@ export class ToWordsCore {
       }
       const decimalBase =
         !localeConfig.decimalLengthWordMapping && fractionalPart.length
-          ? Math.pow(10, Math.max(0, 2 - fractionalPart.length))
+          ? Math.pow(10, Math.max(0, precision - fractionalPart.length))
           : 1;
       const decimalPart = Number(fractionalPart) * decimalBase;
 

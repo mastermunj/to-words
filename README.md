@@ -9,9 +9,6 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue)](https://www.typescriptlang.org/)
 [![license](https://img.shields.io/npm/l/to-words)](https://github.com/mastermunj/to-words/blob/main/LICENSE)
 [![node](https://img.shields.io/node/v/to-words)](https://www.npmjs.com/package/to-words)
-[![Bun](https://github.com/mastermunj/to-words/actions/workflows/bun.yml/badge.svg?branch=main)](https://github.com/mastermunj/to-words/actions/workflows/bun.yml)
-[![Deno](https://github.com/mastermunj/to-words/actions/workflows/deno.yml/badge.svg?branch=main)](https://github.com/mastermunj/to-words/actions/workflows/deno.yml)
-[![CF Workers](https://img.shields.io/badge/CF_Workers-compatible-F38020)](https://workers.cloudflare.com)
 
 Convert numbers and currency amounts into words across 124 locales with production-ready BigInt, ordinal, and TypeScript support.
 
@@ -28,7 +25,7 @@ Test locale behavior, currency conversion, ordinals, and large number inputs in 
 - **124 locale implementations** with region-specific numbering and currency conventions
 - **Built for real financial flows**: amount in words, decimals, currency units, and negatives
 - **Large number safe** with `BigInt` and string input support
-- **Run anywhere**: Node.js, Deno, Bun, Cloudflare Workers, and all modern browsers
+- **Run anywhere**: Node.js and all modern browsers — compatible by architecture with Deno, Bun, and Cloudflare Workers
 - **Functional API** — `toWords(42, { localeCode: 'en-US' })` for one-liners, or class-based for high-volume workloads
 - **Strong developer ergonomics**: TypeScript types, ESM/CJS/UMD, and per-locale imports
 - **Performance focused** for high-volume conversion workloads
@@ -89,7 +86,7 @@ Test locale behavior, currency conversion, ordinals, and large number inputs in 
 - **Functional API** — `toWords()`, `toOrdinal()`, `toCurrency()` named exports for ergonomic one-liners
 - **Auto Locale Detection** — `detectLocale()` reads `navigator.language` or `Intl` in any runtime
 - **CLI** — `npx to-words 12345 --locale en-US` for shell scripts and quick conversions
-- **Wide Compatibility** — All modern browsers, Node.js 20+, Deno, Bun, and Cloudflare Workers
+- **Wide Compatibility** — All modern browsers and Node.js 20+; compatible by architecture with Deno, Bun, and Cloudflare Workers (zero Node.js-specific APIs)
 
 ## 🚀 Quick Start
 
@@ -307,6 +304,43 @@ toWords.convert(100.5);
 // "One Hundred Euros And Fifty Cents Only"
 ```
 
+### 3-Decimal Currencies
+
+Currencies like **OMR** (Omani Rial), **KWD** (Kuwaiti Dinar), and **BHD** (Bahraini Dinar) use 1000 minor units per major unit (3 decimal places). The `en-OM` locale has `precision: 3` built in:
+
+```js
+const toWords = new ToWords({ localeCode: 'en-OM' });
+
+toWords.convert('500.500', { currency: true });
+// "Five Hundred Omani Rials And Five Hundred Baisa Only"
+
+toWords.convert('2.010', { currency: true });
+// "Two Omani Rials And Ten Baisa Only"
+
+toWords.convert('2.100', { currency: true });
+// "Two Omani Rials And One Hundred Baisa Only"
+```
+
+For a **custom 3-decimal currency**, pass `precision: 3` in `currencyOptions`:
+
+```js
+const toWords = new ToWords({ localeCode: 'en-US' });
+
+toWords.convert('1.500', {
+  currency: true,
+  currencyOptions: {
+    name: 'Kuwaiti Dinar',
+    plural: 'Kuwaiti Dinars',
+    symbol: 'KWD',
+    precision: 3,
+    fractionalUnit: { name: 'Fils', plural: 'Fils', symbol: '' },
+  },
+});
+// "One Kuwaiti Dinar And Five Hundred Fils Only"
+```
+
+> **Note:** JavaScript `number` literals cannot express trailing zeros (`500.500 === 500.5` in JS). For 3-decimal currencies, always pass the value as a **string** (`'500.500'`) to preserve the intended precision.
+
 ### Ordinal Numbers
 
 **Class-based:**
@@ -515,7 +549,7 @@ const tw = new ToWords({ localeCode: locale });
 tw.convert(1000);
 ```
 
-> Reads `navigator.language` in browsers, `Intl.DateTimeFormat().resolvedOptions().locale` in Node.js / Deno / Bun / CF Workers. Falls back to `'en-IN'` (or your custom fallback) if the detected value cannot be matched to a supported locale.
+> Reads `navigator.language` in browsers, `Intl.DateTimeFormat().resolvedOptions().locale` in Node.js (and compatible runtimes). Falls back to `'en-IN'` (or your custom fallback) if the detected value cannot be matched to a supported locale.
 
 ## 🔄 Migration Guide
 
@@ -774,6 +808,7 @@ interface ToWordsOptions {
       name: string;
       plural: string;
       symbol: string;
+      precision?: number; // decimal places for fractional unit; defaults to 2
       fractionalUnit: {
         name: string;
         plural: string;
@@ -865,7 +900,7 @@ toCurrency(1234.56); // locale baked in
 Reads the current runtime locale.
 
 - In **browsers**: reads `navigator.language`
-- In **Node.js / Deno / Bun / CF Workers**: reads `Intl.DateTimeFormat().resolvedOptions().locale`
+- In **Node.js** (and compatible runtimes): reads `Intl.DateTimeFormat().resolvedOptions().locale`
 - Normalises BCP 47 tags (e.g. `zh-Hant-TW` → `zh-TW`) and falls back to a language-prefix match
 
 - **fallback** _(optional)_: `string` — Returned when no supported locale can be matched. Default: `'en-IN'`
@@ -1015,14 +1050,14 @@ npm run bench
 
 ### Runtime Compatibility
 
-| Runtime            | Support |
-| ------------------ | ------- |
-| Node.js            | 20+     |
-| Deno               | 1.28+   |
-| Bun                | 1.0+    |
-| Cloudflare Workers | ✅      |
+| Runtime            | Support                       |
+| ------------------ | ----------------------------- |
+| Node.js            | 20+ (CI-verified)             |
+| Deno               | ✅ compatible by architecture |
+| Bun                | ✅ compatible by architecture |
+| Cloudflare Workers | ✅ compatible by architecture |
 
-The library uses only standard ECMAScript features (BigInt, Intl, Map) with zero Node.js-specific APIs, making it compatible with any modern JavaScript runtime.
+Deno, Bun, and Cloudflare Workers are compatible by architecture: the library uses only standard ECMAScript features (BigInt, Intl, Map, `globalThis`) with zero Node.js-specific APIs. Only Node.js is covered by CI.
 
 ## 🗺️ Supported Locales
 

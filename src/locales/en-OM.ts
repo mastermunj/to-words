@@ -15,6 +15,7 @@ export default class Locale implements LocaleInterface {
       plural: 'Omani Rials',
       singular: 'Omani Rial',
       symbol: 'OMR',
+      precision: 3,
       fractionalUnit: {
         name: 'Baisa',
         singular: 'Baisa',
