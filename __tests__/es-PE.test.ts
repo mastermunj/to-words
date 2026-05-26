@@ -222,6 +222,62 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true 
   });
 });
 
+describe('Test Floats with options = { currency: true, ignoreDecimal: true }', () => {
+  const testFloatsWithCurrencyAndIgnoreDecimal = cloneDeep(testFloatsWithCurrency).map((row) => {
+    const value = row[0];
+
+    switch (true) {
+      case value >= 0 && value < 1:
+        return [value, 'Cero Soles'];
+      case value >= 0.999 && value < 1:
+        return [value, 'Un Sol'];
+      case value >= 37 && value < 38:
+        return [value, 'Treinta Y Siete Soles'];
+      default:
+        return row;
+    }
+  });
+
+  test.concurrent.each(testFloatsWithCurrencyAndIgnoreDecimal)('convert %d => %s', (input, expected) => {
+    expect(
+      toWords.convert(input as number, {
+        currency: true,
+        ignoreDecimal: true,
+      }),
+    ).toBe(expected);
+  });
+});
+
+describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true, ignoreDecimal: true }', () => {
+  const testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals = cloneDeep(testFloatsWithCurrency).map((row) => {
+    const value = row[0];
+
+    switch (true) {
+      case value >= 0 && value < 1:
+        return [value, ''];
+      case value >= 0.999 && value < 1:
+        return [value, 'Un Sol'];
+      case value >= 37 && value < 38:
+        return [value, 'Treinta Y Siete Soles'];
+      default:
+        return row;
+    }
+  });
+
+  test.concurrent.each(testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals)(
+    'convert %d => %s',
+    (input, expected) => {
+      expect(
+        toWords.convert(input as number, {
+          currency: true,
+          ignoreZeroCurrency: true,
+          ignoreDecimal: true,
+        }),
+      ).toBe(expected);
+    },
+  );
+});
+
 describe('Test Locale functional exports', () => {
   test('localeToWords works', () => {
     expect(localeToWords(1)).toBe('Uno');

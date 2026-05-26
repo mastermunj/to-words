@@ -188,6 +188,73 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true 
   });
 });
 
+describe('Test Floats with options = { currency: true, ignoreDecimal: true }', () => {
+  const testFloatsWithCurrencyAndIgnoreDecimal = cloneDeep(testFloatsWithCurrency).map((row) => {
+    const value = row[0];
+
+    switch (true) {
+      case value >= 0 && value < 1:
+        return [value, 'Zero Iraqi Dinars Only'];
+      case value >= 37 && value < 38:
+        return [value, 'Thirty Seven Iraqi Dinars Only'];
+      default:
+        return row;
+    }
+  });
+
+  test.concurrent.each(testFloatsWithCurrencyAndIgnoreDecimal)('convert %d => %s', (input, expected) => {
+    expect(
+      toWords.convert(input as number, {
+        currency: true,
+        ignoreDecimal: true,
+      }),
+    ).toBe(expected);
+  });
+});
+
+describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true, ignoreDecimal: true }', () => {
+  const testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals = cloneDeep(testFloatsWithCurrency).map((row) => {
+    const value = row[0];
+
+    switch (true) {
+      case value >= 0 && value < 1:
+        return [value, ''];
+      case value >= 37 && value < 38:
+        return [value, 'Thirty Seven Iraqi Dinars Only'];
+      default:
+        return row;
+    }
+  });
+
+  test.concurrent.each(testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals)(
+    'convert %d => %s',
+    (input, expected) => {
+      expect(
+        toWords.convert(input as number, {
+          currency: true,
+          ignoreZeroCurrency: true,
+          ignoreDecimal: true,
+        }),
+      ).toBe(expected);
+    },
+  );
+});
+
+const testFloats: [number, string][] = [
+  [0.0, 'Zero'],
+  [0.4, 'Zero Point Four'],
+  [0.04, 'Zero Point Zero Four'],
+  [0.63, 'Zero Point Sixty Three'],
+  [37.06, 'Thirty Seven Point Zero Six'],
+  [37.68, 'Thirty Seven Point Sixty Eight'],
+];
+
+describe('Test Floats with options = {}', () => {
+  test.concurrent.each(testFloats)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number)).toBe(expected);
+  });
+});
+
 describe('Test Locale functional exports', () => {
   test('localeToWords works', () => {
     expect(localeToWords(1)).toBe('One');

@@ -120,6 +120,154 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true 
   });
 });
 
+describe('Test Floats with options = { currency: true, ignoreDecimal: true }', () => {
+  const testFloatsWithCurrencyAndIgnoreDecimal = cloneDeep(testFloatsWithCurrency).map((row) => {
+    const value = row[0];
+
+    switch (true) {
+      case value >= 0 && value < 1:
+        return [value, 'صفر جنيه مصري فقط لا غير'];
+      case value >= 1 && value < 2:
+        return [value, 'جنيه واحد فقط لا غير'];
+      case value >= 2 && value < 3:
+        return [value, 'جنيهان فقط لا غير'];
+      case value >= 3 && value < 4:
+        return [value, 'ثلاثة جنيهات فقط لا غير'];
+      case value >= 37 && value < 38:
+        return [value, 'سبعة و ثلاثون جنيه مصري فقط لا غير'];
+      case value >= 100 && value < 101:
+        return [value, 'مائة جنيه مصري فقط لا غير'];
+      case value >= 500 && value < 501:
+        return [value, 'خمسمائة جنيه مصري فقط لا غير'];
+      default:
+        return row;
+    }
+  });
+
+  test.each(testFloatsWithCurrencyAndIgnoreDecimal)('convert %d => %s', (input, expected) => {
+    expect(
+      toWords.convert(input as number, {
+        currency: true,
+        ignoreDecimal: true,
+      }),
+    ).toBe(expected);
+  });
+});
+
+describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true, ignoreDecimal: true }', () => {
+  const testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals = cloneDeep(testFloatsWithCurrency).map((row) => {
+    const value = row[0];
+
+    switch (true) {
+      case value >= 0 && value < 1:
+        return [value, ''];
+      case value >= 1 && value < 2:
+        return [value, 'جنيه واحد فقط لا غير'];
+      case value >= 2 && value < 3:
+        return [value, 'جنيهان فقط لا غير'];
+      case value >= 3 && value < 4:
+        return [value, 'ثلاثة جنيهات فقط لا غير'];
+      case value >= 37 && value < 38:
+        return [value, 'سبعة و ثلاثون جنيه مصري فقط لا غير'];
+      case value >= 100 && value < 101:
+        return [value, 'مائة جنيه مصري فقط لا غير'];
+      case value >= 500 && value < 501:
+        return [value, 'خمسمائة جنيه مصري فقط لا غير'];
+      default:
+        return row;
+    }
+  });
+
+  test.each(testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals)('convert %d => %s', (input, expected) => {
+    expect(
+      toWords.convert(input as number, {
+        currency: true,
+        ignoreZeroCurrency: true,
+        ignoreDecimal: true,
+      }),
+    ).toBe(expected);
+  });
+});
+
+describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
+  const testIncludeZeroFractional: [number | string, string][] = [
+    [123, `مائة و ثلاثة و عشرون جنيه مصري فقط لا غير`],
+    ['123', `مائة و ثلاثة و عشرون جنيه مصري فقط لا غير`],
+    ['123.0', `مائة و ثلاثة و عشرون جنيه مصري و صفر قرش فقط لا غير`],
+    ['123.00', `مائة و ثلاثة و عشرون جنيه مصري و صفر قرش فقط لا غير`],
+    ['0.00', `صفر جنيه مصري و صفر قرش فقط لا غير`],
+    ['-123.00', `سالب مائة و ثلاثة و عشرون جنيه مصري و صفر قرش فقط لا غير`],
+    ['37.68', `سبعة و ثلاثون جنيه مصري و ثمانية و ستون قرش فقط لا غير`],
+  ];
+
+  test.concurrent.each(testIncludeZeroFractional)('convert %s => %s', (input, expected) => {
+    expect(
+      toWords.convert(input, {
+        currency: true,
+        includeZeroFractional: true,
+      }),
+    ).toBe(expected);
+  });
+});
+
+const testFloats: [number, string][] = [
+  [0.0, 'صفر'],
+  [0.4, 'صفر فاصلة أربعة'],
+  [0.04, 'صفر فاصلة صفر أربعة'],
+  [0.63, 'صفر فاصلة ثلاثة و ستون'],
+  [0.973, 'صفر فاصلة تسعمائة و ثلاثة و سبعون'],
+  [37.06, 'سبعة و ثلاثون فاصلة صفر ستة'],
+  [37.68, 'سبعة و ثلاثون فاصلة ثمانية و ستون'],
+];
+
+describe('Test Floats with options = {}', () => {
+  test.each(testFloats)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number)).toBe(expected);
+  });
+});
+
+describe('Ordinal Tests', () => {
+  const toWordsOrdinal = new ToWords({
+    localeCode: 'ar-EG',
+  });
+
+  const testOrdinals: [number, string][] = [
+    [1, 'الأول'],
+    [2, 'الثاني'],
+    [3, 'الثالث'],
+    [4, 'الرابع'],
+    [5, 'الخامس'],
+    [6, 'السادس'],
+    [7, 'السابع'],
+    [8, 'الثامن'],
+    [9, 'التاسع'],
+    [10, 'العاشر'],
+    [11, 'الحادي عشر'],
+    [12, 'الثاني عشر'],
+    [13, 'الثالث عشر'],
+    [14, 'الرابع عشر'],
+    [15, 'الخامس عشر'],
+    [20, 'العشرون'],
+    [30, 'الثلاثون'],
+    [50, 'الخمسون'],
+    [100, 'المائة'],
+    [1000, 'الألف'],
+    [1000000, 'المليون'],
+  ];
+
+  test.each(testOrdinals)('Number: %d => %s', (input, expected) => {
+    expect(toWordsOrdinal.toOrdinal(input as number)).toBe(expected);
+  });
+
+  test('should throw error for negative numbers', () => {
+    expect(() => toWordsOrdinal.toOrdinal(-1)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+
+  test('should throw error for decimal numbers', () => {
+    expect(() => toWordsOrdinal.toOrdinal(1.5)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+});
+
 describe('Test Locale functional exports', () => {
   test('localeToWords works', () => {
     expect(localeToWords(1)).toBe('واحد');
