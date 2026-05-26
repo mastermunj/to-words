@@ -103,7 +103,7 @@ tw.convert(100, { currency: true }); // "One Hundred Dollars Only"
 tw.toOrdinal(3); // "Third"
 ```
 
-**2. Functional (full bundle)** — one-liners with a `localeCode` option, all 124 locales available:
+**2. Functional (full bundle)** — one-liners with a `localeCode` option, all 132 locales available:
 
 ```js
 import { toWords, toOrdinal, toCurrency } from 'to-words';
