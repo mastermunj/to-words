@@ -1,0 +1,278 @@
+import {
+  type ConverterOptions,
+  type LocaleConfig,
+  type LocaleInterface,
+  type NumberInput,
+  type OrdinalOptions,
+  type ToWordsOptions,
+} from '../types.js';
+import { ToWordsCore } from '../ToWordsCore.js';
+
+export default class Locale implements LocaleInterface {
+  public config: LocaleConfig = {
+    currency: {
+      name: 'ريال يمني',
+      plural: 'ريال يمني',
+      singular: 'ريال يمني',
+      symbol: 'ر.ي',
+      numberSpecificForms: {
+        1: 'ريال واحد',
+        2: 'ريالان',
+        3: 'ثلاثة ريالات',
+        4: 'أربعة ريالات',
+        5: 'خمسة ريالات',
+        6: 'ستة ريالات',
+        7: 'سبعة ريالات',
+        8: 'ثمانية ريالات',
+        9: 'تسعة ريالات',
+        10: 'عشرة ريالات',
+      },
+      fractionalUnit: {
+        name: 'فلس',
+        plural: 'فلس',
+        singular: 'فلس',
+        numberSpecificForms: {
+          1: 'فلس واحد',
+          2: 'فلسان',
+          3: 'ثلاثة فلوس',
+          4: 'أربعة فلوس',
+          5: 'خمسة فلوس',
+          6: 'ستة فلوس',
+          7: 'سبعة فلوس',
+          8: 'ثمانية فلوس',
+          9: 'تسعة فلوس',
+          10: 'عشرة فلوس',
+        },
+        symbol: '',
+      },
+    },
+    texts: {
+      and: 'و',
+      minus: 'سالب',
+      only: 'فقط لا غير',
+      point: 'فاصلة',
+    },
+    numberWordsMapping: [
+      { number: 1000000000000000, value: 'كوادريليون' },
+      { number: 1000000000000, value: 'تريليون' },
+      { number: 1000000000, value: 'مليار' },
+      { number: 1000000, value: 'مليون' },
+      { number: 1000, value: 'ألف' },
+      { number: 900, value: 'تسعمائة' },
+      { number: 800, value: 'ثمانمائة' },
+      { number: 700, value: 'سبعمائة' },
+      { number: 600, value: 'ستمائة' },
+      { number: 500, value: 'خمسمائة' },
+      { number: 400, value: 'أربعمائة' },
+      { number: 300, value: 'ثلاثمائة' },
+      { number: 200, value: 'مائتان' },
+      { number: 100, value: 'مائة' },
+      { number: 99, value: 'تسعة و تسعون' },
+      { number: 98, value: 'ثمانية و تسعون' },
+      { number: 97, value: 'سبعة و تسعون' },
+      { number: 96, value: 'ستة و تسعون' },
+      { number: 95, value: 'خمسة و تسعون' },
+      { number: 94, value: 'أربعة و تسعون' },
+      { number: 93, value: 'ثلاثة و تسعون' },
+      { number: 92, value: 'اثنان و تسعون' },
+      { number: 91, value: 'واحد و تسعون' },
+      { number: 90, value: 'تسعون' },
+      { number: 89, value: 'تسعة و ثمانون' },
+      { number: 88, value: 'ثمانية و ثمانون' },
+      { number: 87, value: 'سبعة و ثمانون' },
+      { number: 86, value: 'ستة و ثمانون' },
+      { number: 85, value: 'خمسة و ثمانون' },
+      { number: 84, value: 'أربعة و ثمانون' },
+      { number: 83, value: 'ثلاثة و ثمانون' },
+      { number: 82, value: 'اثنان و ثمانون' },
+      { number: 81, value: 'واحد و ثمانون' },
+      { number: 80, value: 'ثمانون' },
+      { number: 79, value: 'تسعة و سبعون' },
+      { number: 78, value: 'ثمانية و سبعون' },
+      { number: 77, value: 'سبعة و سبعون' },
+      { number: 76, value: 'ستة و سبعون' },
+      { number: 75, value: 'خمسة و سبعون' },
+      { number: 74, value: 'أربعة و سبعون' },
+      { number: 73, value: 'ثلاثة و سبعون' },
+      { number: 72, value: 'اثنان و سبعون' },
+      { number: 71, value: 'واحد و سبعون' },
+      { number: 70, value: 'سبعون' },
+      { number: 69, value: 'تسعة و ستون' },
+      { number: 68, value: 'ثمانية و ستون' },
+      { number: 67, value: 'سبعة و ستون' },
+      { number: 66, value: 'ستة و ستون' },
+      { number: 65, value: 'خمسة و ستون' },
+      { number: 64, value: 'أربعة و ستون' },
+      { number: 63, value: 'ثلاثة و ستون' },
+      { number: 62, value: 'اثنان و ستون' },
+      { number: 61, value: 'واحد و ستون' },
+      { number: 60, value: 'ستون' },
+      { number: 59, value: 'تسعة و خمسون' },
+      { number: 58, value: 'ثمانية و خمسون' },
+      { number: 57, value: 'سبعة و خمسون' },
+      { number: 56, value: 'ستة و خمسون' },
+      { number: 55, value: 'خمسة و خمسون' },
+      { number: 54, value: 'أربعة و خمسون' },
+      { number: 53, value: 'ثلاثة و خمسون' },
+      { number: 52, value: 'اثنان و خمسون' },
+      { number: 51, value: 'واحد و خمسون' },
+      { number: 50, value: 'خمسون' },
+      { number: 49, value: 'تسعة و أربعون' },
+      { number: 48, value: 'ثمانية و أربعون' },
+      { number: 47, value: 'سبعة و أربعون' },
+      { number: 46, value: 'ستة و أربعون' },
+      { number: 45, value: 'خمسة و أربعون' },
+      { number: 44, value: 'أربعة و أربعون' },
+      { number: 43, value: 'ثلاثة و أربعون' },
+      { number: 42, value: 'اثنان و أربعون' },
+      { number: 41, value: 'واحد و أربعون' },
+      { number: 40, value: 'أربعون' },
+      { number: 39, value: 'تسعة و ثلاثون' },
+      { number: 38, value: 'ثمانية و ثلاثون' },
+      { number: 37, value: 'سبعة و ثلاثون' },
+      { number: 36, value: 'ستة و ثلاثون' },
+      { number: 35, value: 'خمسة و ثلاثون' },
+      { number: 34, value: 'أربعة و ثلاثون' },
+      { number: 33, value: 'ثلاثة و ثلاثون' },
+      { number: 32, value: 'اثنان و ثلاثون' },
+      { number: 31, value: 'واحد و ثلاثون' },
+      { number: 30, value: 'ثلاثون' },
+      { number: 29, value: 'تسعة و عشرون' },
+      { number: 28, value: 'ثمانية و عشرون' },
+      { number: 27, value: 'سبعة و عشرون' },
+      { number: 26, value: 'ستة و عشرون' },
+      { number: 25, value: 'خمسة و عشرون' },
+      { number: 24, value: 'أربعة و عشرون' },
+      { number: 23, value: 'ثلاثة و عشرون' },
+      { number: 22, value: 'اثنان و عشرون' },
+      { number: 21, value: 'واحد و عشرون', feminineValue: 'واحدة و عشرون' },
+      { number: 20, value: 'عشرون' },
+      { number: 19, value: 'تسعة عشر', feminineValue: 'تسع عشرة' },
+      { number: 18, value: 'ثمانية عشر', feminineValue: 'ثماني عشرة' },
+      { number: 17, value: 'سبعة عشر', feminineValue: 'سبع عشرة' },
+      { number: 16, value: 'ستة عشر', feminineValue: 'ست عشرة' },
+      { number: 15, value: 'خمسة عشر', feminineValue: 'خمس عشرة' },
+      { number: 14, value: 'أربعة عشر', feminineValue: 'أربع عشرة' },
+      { number: 13, value: 'ثلاثة عشر', feminineValue: 'ثلاث عشرة' },
+      { number: 12, value: 'اثنا عشر', feminineValue: 'اثنتا عشرة' },
+      { number: 11, value: 'أحد عشر', feminineValue: 'إحدى عشرة' },
+      { number: 10, value: 'عشرة', feminineValue: 'عشر' },
+      { number: 9, value: 'تسعة', feminineValue: 'تسع' },
+      { number: 8, value: 'ثمانية', feminineValue: 'ثماني' },
+      { number: 7, value: 'سبعة', feminineValue: 'سبع' },
+      { number: 6, value: 'ستة', feminineValue: 'ست' },
+      { number: 5, value: 'خمسة', feminineValue: 'خمس' },
+      { number: 4, value: 'أربعة', feminineValue: 'أربع' },
+      { number: 3, value: 'ثلاثة', feminineValue: 'ثلاث' },
+      { number: 2, value: 'اثنان', feminineValue: 'اثنتان' },
+      { number: 1, value: 'واحد', feminineValue: 'واحدة' },
+      { number: 0, value: 'صفر' },
+    ],
+    pluralForms: {
+      1000: {
+        dual: 'ألفان',
+        paucal: 'آلاف',
+        plural: 'ألف',
+      },
+      1000000: {
+        dual: 'مليونان',
+        paucal: 'ملايين',
+        plural: 'مليون',
+      },
+      1000000000: {
+        dual: 'ملياران',
+        paucal: 'مليارات',
+        plural: 'مليار',
+      },
+      1000000000000: {
+        dual: 'تريليونان',
+        paucal: 'تريليونات',
+        plural: 'تريليون',
+      },
+    },
+    paucalConfig: {
+      min: 3,
+      max: 10,
+    },
+    ignoreOneForWords: ['ألف', 'مائة', 'مليون', 'مليار', 'تريليون', 'كوادريليون'],
+    namedLessThan1000: true,
+    splitWord: 'و',
+    ordinalWordsMapping: [
+      { number: 1000000000000000, value: 'الكوادريليون' },
+      { number: 1000000000000, value: 'التريليون' },
+      { number: 1000000000, value: 'المليار' },
+      { number: 1000000, value: 'المليون' },
+      { number: 1000, value: 'الألف' },
+      { number: 100, value: 'المائة' },
+      { number: 90, value: 'التسعون' },
+      { number: 80, value: 'الثمانون' },
+      { number: 70, value: 'السبعون' },
+      { number: 60, value: 'الستون' },
+      { number: 50, value: 'الخمسون' },
+      { number: 40, value: 'الأربعون' },
+      { number: 30, value: 'الثلاثون' },
+      { number: 20, value: 'العشرون' },
+      { number: 19, value: 'التاسع عشر' },
+      { number: 18, value: 'الثامن عشر' },
+      { number: 17, value: 'السابع عشر' },
+      { number: 16, value: 'السادس عشر' },
+      { number: 15, value: 'الخامس عشر' },
+      { number: 14, value: 'الرابع عشر' },
+      { number: 13, value: 'الثالث عشر' },
+      { number: 12, value: 'الثاني عشر' },
+      { number: 11, value: 'الحادي عشر' },
+      { number: 10, value: 'العاشر' },
+      { number: 9, value: 'التاسع' },
+      { number: 8, value: 'الثامن' },
+      { number: 7, value: 'السابع' },
+      { number: 6, value: 'السادس' },
+      { number: 5, value: 'الخامس' },
+      { number: 4, value: 'الرابع' },
+      { number: 3, value: 'الثالث' },
+      { number: 2, value: 'الثاني' },
+      { number: 1, value: 'الأول' },
+      { number: 0, value: 'الصفر' },
+    ],
+  };
+}
+
+/**
+ * ToWords class pre-configured for this locale.
+ * This is a lightweight version that only bundles this specific locale.
+ *
+ * @example
+ * import { ToWords } from 'to-words/ar-YE';
+ * const tw = new ToWords();
+ * tw.convert(1234);
+ */
+export class ToWords extends ToWordsCore {
+  constructor(options: ToWordsOptions = {}) {
+    super(options);
+    this.setLocale(Locale);
+  }
+}
+
+// Module-level singleton — reused across calls to avoid per-call instance creation
+const instance = new ToWords();
+
+/**
+ * Convert a number to words for this locale (functional style).
+ */
+export function toWords(number: NumberInput, options?: ConverterOptions): string {
+  return instance.convert(number, options);
+}
+
+/**
+ * Convert a number to ordinal words for this locale (functional style).
+ */
+export function toOrdinal(number: NumberInput, options?: OrdinalOptions): string {
+  return instance.toOrdinal(number, options);
+}
+
+/**
+ * Convert a number to currency words for this locale (functional style).
+ * Shorthand for toWords(number, { currency: true, ...options }).
+ */
+export function toCurrency(number: NumberInput, options?: ConverterOptions): string {
+  return instance.convert(number, { ...options, currency: true });
+}

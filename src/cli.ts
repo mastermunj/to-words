@@ -21,50 +21,61 @@ Examples:
 `);
 }
 
-const args = process.argv.slice(2);
+export function runCli(args: string[]): void {
+  if (args.length === 0 || args.includes('-h') || args.includes('--help')) {
+    printHelp();
+    process.exit(0);
+    return;
+  }
 
-if (args.length === 0 || args.includes('-h') || args.includes('--help')) {
-  printHelp();
-  process.exit(0);
-}
+  if (args.includes('--detect-locale')) {
+    console.log(detectLocale());
+    process.exit(0);
+    return;
+  }
 
-if (args.includes('--detect-locale')) {
-  console.log(detectLocale());
-  process.exit(0);
-}
+  const isCurrency = args.includes('--currency');
+  const isOrdinal = args.includes('--ordinal');
+  const numberArg = args.find((a) => !a.startsWith('-'));
 
-const isCurrency = args.includes('--currency');
-const isOrdinal = args.includes('--ordinal');
-const numberArg = args.find((a) => !a.startsWith('-'));
+  if (!numberArg) {
+    console.error('Error: No number provided.\n');
+    printHelp();
+    process.exit(1);
+    return;
+  }
 
-if (!numberArg) {
-  console.error('Error: No number provided.\n');
-  printHelp();
-  process.exit(1);
-}
+  const localeIdx = args.indexOf('--locale');
+  let localeCode: string;
 
-const localeIdx = args.indexOf('--locale');
-let localeCode: string;
+  if (localeIdx !== -1) {
+    const provided = args[localeIdx + 1];
+    if (!provided || provided.startsWith('-')) {
+      console.error('Error: --locale requires a locale code (e.g. --locale en-US)\n');
+      process.exit(1);
+      return;
+    }
+    localeCode = provided;
+  } else {
+    localeCode = detectLocale();
+  }
 
-if (localeIdx !== -1) {
-  const provided = args[localeIdx + 1];
-  if (!provided || provided.startsWith('-')) {
-    console.error('Error: --locale requires a locale code (e.g. --locale en-US)\n');
+  try {
+    const tw = new ToWords({ localeCode });
+    if (isOrdinal) {
+      console.log(tw.toOrdinal(Number.parseInt(numberArg, 10)));
+    } else {
+      console.log(tw.convert(numberArg, { currency: isCurrency }));
+    }
+  } catch (e) {
+    console.error(`Error: ${(e as Error).message}`);
     process.exit(1);
   }
-  localeCode = provided;
-} else {
-  localeCode = detectLocale();
 }
 
-try {
-  const tw = new ToWords({ localeCode });
-  if (isOrdinal) {
-    console.log(tw.toOrdinal(Number.parseInt(numberArg, 10)));
-  } else {
-    console.log(tw.convert(numberArg, { currency: isCurrency }));
-  }
-} catch (e) {
-  console.error(`Error: ${(e as Error).message}`);
-  process.exit(1);
+// Only run when executed directly (not when imported in tests)
+// require.main === module works in CJS; the compiled CLI is always CJS.
+/* c8 ignore next 3 */
+if (require.main === module) {
+  runCli(process.argv.slice(2));
 }

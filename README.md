@@ -10,9 +10,9 @@
 [![license](https://img.shields.io/npm/l/to-words)](https://github.com/mastermunj/to-words/blob/main/LICENSE)
 [![node](https://img.shields.io/node/v/to-words)](https://www.npmjs.com/package/to-words)
 
-Convert numbers and currency amounts into words across 124 locales with production-ready BigInt, ordinal, and TypeScript support.
+Convert numbers and currency amounts into words across 132 locales with production-ready BigInt, ordinal, and TypeScript support.
 
-> Need the reverse conversion too? Use the companion package [to-numbers](https://www.npmjs.com/package/to-numbers) to parse spelled-out numbers back into numeric values across the same 124 locales.
+> Need the reverse conversion too? Use the companion package [to-numbers](https://www.npmjs.com/package/to-numbers) to parse spelled-out numbers back into numeric values across the same locales.
 
 ## 🎮 Live Demo
 
@@ -22,7 +22,7 @@ Test locale behavior, currency conversion, ordinals, and large number inputs in 
 
 ## 🏆 Why to-words
 
-- **124 locale implementations** with region-specific numbering and currency conventions
+- **132 locale implementations** with region-specific numbering and currency conventions
 - **Built for real financial flows**: amount in words, decimals, currency units, and negatives
 - **Large number safe** with `BigInt` and string input support
 - **Run anywhere**: Node.js and all modern browsers — compatible by architecture with Deno, Bun, and Cloudflare Workers
@@ -70,7 +70,7 @@ Test locale behavior, currency conversion, ordinals, and large number inputs in 
 
 ## ✨ Features
 
-- **124 Locales** — The most comprehensive locale coverage available
+- **132 Locales** — The most comprehensive locale coverage available
 - **BigInt Support** — Handle numbers up to 10^63 (Vigintillion) and beyond
 - **Multiple Numbering Systems** — Short scale, Long scale, Indian, and East Asian
 - **Currency Formatting** — Locale-specific currency with fractional units
@@ -306,7 +306,7 @@ toWords.convert(100.5);
 
 ### 3-Decimal Currencies
 
-Currencies like **OMR** (Omani Rial), **KWD** (Kuwaiti Dinar), and **BHD** (Bahraini Dinar) use 1000 minor units per major unit (3 decimal places). The `en-OM` locale has `precision: 3` built in:
+Currencies like **OMR** (Omani Rial), **IQD** (Iraqi Dinar), **KWD** (Kuwaiti Dinar), and **BHD** (Bahraini Dinar) use 1000 minor units per major unit (3 decimal places). The `en-OM`, `en-IQ`, and `ar-IQ` locales have `precision: 3` built in:
 
 ```js
 const toWords = new ToWords({ localeCode: 'en-OM' });
@@ -988,22 +988,22 @@ digits), it automatically falls back to the default digit-by-digit style — no 
 | 5              | Hundred-Thousandth / Hundred-Thousandths | Cent-Millième / Cent-Millièmes | Hunderttausendstel |
 | 6              | Millionth / Millionths                   | Millionième / Millionièmes     | Millionstel        |
 
-### Locale support (94 locales)
+### Locale support (97 locales)
 
-| Language group                         | Locales                                                                                                                                                                                                          |
-| -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **English**                            | en-AE, en-AU, en-BD, en-CA, en-GB, en-GH, en-HK, en-IE, en-IN, en-JM, en-KE, en-LK, en-MA, en-MM, en-MU, en-MY, en-NG, en-NP, en-NZ, en-OM, en-PH, en-PK, en-SA, en-SG, en-TT, en-TZ, en-UG, en-US, en-ZA, en-ZW |
-| **German**                             | de-AT, de-CH, de-DE                                                                                                                                                                                              |
-| **French**                             | fr-BE, fr-CA, fr-CH, fr-FR, fr-MA, fr-SA                                                                                                                                                                         |
-| **Spanish**                            | es-AR, es-CL, es-CO, es-ES, es-MX, es-US, es-VE                                                                                                                                                                  |
-| **Portuguese**                         | pt-AO, pt-BR, pt-MZ, pt-PT                                                                                                                                                                                       |
-| **Italian**                            | it-IT                                                                                                                                                                                                            |
-| **Dutch**                              | nl-NL, nl-SR                                                                                                                                                                                                     |
-| **Scandinavian**                       | da-DK, nb-NO, sv-SE                                                                                                                                                                                              |
-| **Other European**                     | bg-BG, ca-ES, cs-CZ, el-GR, hr-HR, hu-HU, lv-LV, pl-PL, ro-RO, sk-SK, sl-SI, sq-AL, sr-RS                                                                                                                        |
-| **Slavic (with Slavic singular rule)** | be-BY, ru-RU, uk-UA                                                                                                                                                                                              |
-| **Indic**                              | as-IN, bn-BD, bn-IN, gu-IN, hi-IN, kn-IN, ml-IN, mr-IN, np-NP, or-IN, pa-IN, ta-IN, te-IN                                                                                                                        |
-| **Others**                             | af-ZA, fa-IR, he-IL, id-ID, ka-GE, ms-MY, ms-SG, ur-PK, vi-VN                                                                                                                                                    |
+| Language group                         | Locales                                                                                                                                                                                                                 |
+| -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **English**                            | en-AE, en-AU, en-BD, en-CA, en-GB, en-GH, en-HK, en-IE, en-IN, en-IQ, en-JM, en-KE, en-LK, en-MA, en-MM, en-MU, en-MY, en-NG, en-NP, en-NZ, en-OM, en-PH, en-PK, en-SA, en-SG, en-TT, en-TZ, en-UG, en-US, en-ZA, en-ZW |
+| **German**                             | de-AT, de-CH, de-DE                                                                                                                                                                                                     |
+| **French**                             | fr-BE, fr-CA, fr-CH, fr-DZ, fr-FR, fr-MA, fr-SA                                                                                                                                                                         |
+| **Spanish**                            | es-AR, es-CL, es-CO, es-ES, es-MX, es-PE, es-US, es-VE                                                                                                                                                                  |
+| **Portuguese**                         | pt-AO, pt-BR, pt-MZ, pt-PT                                                                                                                                                                                              |
+| **Italian**                            | it-IT                                                                                                                                                                                                                   |
+| **Dutch**                              | nl-NL, nl-SR                                                                                                                                                                                                            |
+| **Scandinavian**                       | da-DK, nb-NO, sv-SE                                                                                                                                                                                                     |
+| **Other European**                     | bg-BG, ca-ES, cs-CZ, el-GR, hr-HR, hu-HU, lv-LV, pl-PL, ro-RO, sk-SK, sl-SI, sq-AL, sr-RS                                                                                                                               |
+| **Slavic (with Slavic singular rule)** | be-BY, ru-RU, uk-UA                                                                                                                                                                                                     |
+| **Indic**                              | as-IN, bn-BD, bn-IN, gu-IN, hi-IN, kn-IN, ml-IN, mr-IN, np-NP, or-IN, pa-IN, ta-IN, te-IN                                                                                                                               |
+| **Others**                             | af-ZA, fa-IR, he-IL, id-ID, ka-GE, ms-MY, ms-SG, ur-PK, vi-VN                                                                                                                                                           |
 
 > Locales not listed above (Arabic, East Asian, Turkic, etc.) do not yet support
 > `decimalStyle: 'fraction'` — passing the option silently falls back to digit-by-digit.
@@ -1012,9 +1012,9 @@ digits), it automatically falls back to the default digit-by-digit style — no 
 
 | Import Method             | Raw    | Gzip   |
 | ------------------------- | ------ | ------ |
-| Full bundle (all locales) | 654 KB | 60 KB  |
-| Single locale (en-US)     | 12 KB  | 3.5 KB |
-| Single locale (en-IN)     | 10 KB  | 3.4 KB |
+| Full bundle (all locales) | 704 KB | 68 KB  |
+| Single locale (en-US)     | 15 KB  | 4.1 KB |
+| Single locale (en-IN)     | 13 KB  | 4.0 KB |
 
 > **Tip:** Use tree-shakeable imports or single-locale UMD bundles for the smallest bundle size.
 
@@ -1061,16 +1061,21 @@ Deno, Bun, and Cloudflare Workers are compatible by architecture: the library us
 
 ## 🗺️ Supported Locales
 
-All 124 locales with their features:
+All 132 locales with their features:
 
 | Locale | Language        | Country             | Currency      | Scale      | Ordinal |
 | ------ | --------------- | ------------------- | ------------- | ---------- | ------- |
 | af-ZA  | Afrikaans       | South Africa        | Rand          | Short      | ✓       |
 | am-ET  | Amharic         | Ethiopia            | ብር            | Short      | ✓       |
 | ar-AE  | Arabic          | UAE                 | درهم          | Short      | ✓       |
+| ar-DZ  | Arabic          | Algeria             | دينار         | Short      | ✓       |
+| ar-EG  | Arabic          | Egypt               | جنيه          | Short      | ✓       |
+| ar-IQ  | Arabic          | Iraq                | دينار         | Short      | ✓       |
 | ar-LB  | Arabic          | Lebanon             | ليرة          | Short      | ✓       |
 | ar-MA  | Arabic          | Morocco             | درهم          | Short      | ✓       |
 | ar-SA  | Arabic          | Saudi Arabia        | ريال          | Short      | ✓       |
+| ar-SD  | Arabic          | Sudan               | جنيه          | Short      | ✓       |
+| ar-YE  | Arabic          | Yemen               | ريال          | Short      | ✓       |
 | as-IN  | Assamese        | India               | টকা           | Indian     | ✓       |
 | az-AZ  | Azerbaijani     | Azerbaijan          | Manat         | Short      | ✓       |
 | be-BY  | Belarusian      | Belarus             | Рубель        | Short      | ✓       |
@@ -1094,6 +1099,7 @@ All 124 locales with their features:
 | en-HK  | English         | Hong Kong           | Dollar        | Short      | ✓       |
 | en-IE  | English         | Ireland             | Euro          | Short      | ✓       |
 | en-IN  | English         | India               | Rupee         | Indian     | ✓       |
+| en-IQ  | English         | Iraq                | Dinar         | Short      | ✓       |
 | en-JM  | English         | Jamaica             | Dollar        | Short      | ✓       |
 | en-KE  | English         | Kenya               | Shilling      | Short      | ✓       |
 | en-LK  | English         | Sri Lanka           | Rupee         | Short      | ✓       |
@@ -1120,6 +1126,7 @@ All 124 locales with their features:
 | es-CO  | Spanish         | Colombia            | Peso          | Short      | ✓       |
 | es-ES  | Spanish         | Spain               | Euro          | Short      | ✓       |
 | es-MX  | Spanish         | Mexico              | Peso          | Short      | ✓       |
+| es-PE  | Spanish         | Peru                | Sol           | Short      | ✓       |
 | es-US  | Spanish         | USA                 | Dólar         | Short      | ✓       |
 | es-VE  | Spanish         | Venezuela           | Bolívar       | Short      | ✓       |
 | fa-IR  | Persian         | Iran                | تومان         | Short      | ✓       |
@@ -1128,6 +1135,7 @@ All 124 locales with their features:
 | fr-BE  | French          | Belgium             | Euro          | Long       | ✓       |
 | fr-CA  | French          | Canada              | Dollar        | Long       | ✓       |
 | fr-CH  | French          | Switzerland         | Franc         | Long       | ✓       |
+| fr-DZ  | French          | Algeria             | Dinar         | Long       | ✓       |
 | fr-FR  | French          | France              | Euro          | Long       | ✓       |
 | fr-MA  | French          | Morocco             | Dirham        | Long       | ✓       |
 | fr-SA  | French          | Saudi Arabia        | Riyal         | Long       | ✓       |
@@ -1205,7 +1213,7 @@ The following locales support grammatical gender via `{ gender: 'feminine' }` or
 
 - **Spanish:** es-ES, es-MX, es-CO, es-CL, es-AR, es-VE, es-US
 - **Portuguese:** pt-BR, pt-PT, pt-AO, pt-MZ
-- **Arabic:** ar-AE, ar-LB, ar-MA, ar-SA
+- **Arabic:** ar-AE, ar-DZ, ar-EG, ar-IQ, ar-LB, ar-MA, ar-SA, ar-SD, ar-YE
 - **Hebrew:** he-IL, hbo-IL
 - **Slavic:** ru-RU, uk-UA, pl-PL, cs-CZ, hr-HR, sk-SK, sr-RS, be-BY, bg-BG
 - **Other:** ca-ES, ro-RO, lv-LV, lt-LT, sl-SI
