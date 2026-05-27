@@ -4,10 +4,9 @@ All notable changes to this project will be documented in this file. See [commit
 
 ## [5.5.1](https://github.com/mastermunj/to-words/compare/v5.5.0...v5.5.1) (2026-05-25)
 
-
 ### Bug Fixes
 
-* correct 3-decimal currency conversion for OMR ([#2304](https://github.com/mastermunj/to-words/issues/2304)) ([a64560b](https://github.com/mastermunj/to-words/commit/a64560b8f0f305d710818473f80c9d494f66d6f1))
+- correct 3-decimal currency conversion for OMR ([#2304](https://github.com/mastermunj/to-words/issues/2304)) ([a64560b](https://github.com/mastermunj/to-words/commit/a64560b8f0f305d710818473f80c9d494f66d6f1))
 
 ## [5.5.0](https://github.com/mastermunj/to-words/compare/v5.4.0...v5.5.0) (2026-04-17)
 

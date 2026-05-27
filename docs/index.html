@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>to-words | Convert Numbers and Currency Amounts in 116 Locales</title>
+    <title>to-words | Convert Numbers and Currency Amounts in 132 Locales</title>
     <meta
       name="description"
-      content="Convert numbers and currency amounts into words across 116 locales with BigInt and ordinal support. Try the interactive demo."
+      content="Convert numbers and currency amounts into words across 132 locales with BigInt and ordinal support. Try the interactive demo."
     />
     <link
       rel="icon"
@@ -887,9 +887,9 @@
     <div class="container">
       <header>
         <h1>🔢 to-words</h1>
-        <p class="tagline">Convert numbers and currency amounts into words across 116 locales</p>
+        <p class="tagline">Convert numbers and currency amounts into words across 132 locales</p>
         <div class="badges">
-          <span class="badge">🌍 116 Locales</span>
+          <span class="badge">🌍 132 Locales</span>
           <span class="badge">✨ BigInt Support</span>
           <span class="badge">💰 Currencies</span>
           <span class="badge">🔢 Ordinals</span>
@@ -1001,7 +1001,7 @@
       </div>
 
       <div class="stats-bar">
-        <div class="stat"><span class="stat-icon">🌍</span> 116 Locales</div>
+        <div class="stat"><span class="stat-icon">🌍</span> 132 Locales</div>
         <div class="stat"><span class="stat-icon">⚡</span> 4M+ ops/sec</div>
         <div class="stat"><span class="stat-icon">📦</span> ~3KB gzip</div>
         <div class="stat"><span class="stat-icon">🔷</span> TypeScript</div>
@@ -1024,14 +1024,19 @@
 
     <script src="https://cdn.jsdelivr.net/npm/to-words@5/dist/umd/to-words.min.js"></script>
     <script>
-      // All 116 locales with language, country, and locale code
+      // All 132 locales with language, country, and locale code
       var LOCALES = [
         { code: 'af-ZA', language: 'Afrikaans', country: 'South Africa', flag: '🇿🇦' },
         { code: 'am-ET', language: 'Amharic', country: 'Ethiopia', flag: '🇪🇹' },
         { code: 'ar-AE', language: 'Arabic', country: 'UAE', flag: '🇦🇪' },
+        { code: 'ar-DZ', language: 'Arabic', country: 'Algeria', flag: '🇩🇿' },
+        { code: 'ar-EG', language: 'Arabic', country: 'Egypt', flag: '🇪🇬' },
+        { code: 'ar-IQ', language: 'Arabic', country: 'Iraq', flag: '🇮🇶' },
         { code: 'ar-LB', language: 'Arabic', country: 'Lebanon', flag: '🇱🇧' },
         { code: 'ar-MA', language: 'Arabic', country: 'Morocco', flag: '🇲🇦' },
         { code: 'ar-SA', language: 'Arabic', country: 'Saudi Arabia', flag: '🇸🇦' },
+        { code: 'ar-SD', language: 'Arabic', country: 'Sudan', flag: '🇸🇩' },
+        { code: 'ar-YE', language: 'Arabic', country: 'Yemen', flag: '🇾🇪' },
         { code: 'as-IN', language: 'Assamese', country: 'India', flag: '🇮🇳' },
         { code: 'az-AZ', language: 'Azerbaijani', country: 'Azerbaijan', flag: '🇦🇿' },
         { code: 'be-BY', language: 'Belarusian', country: 'Belarus', flag: '🇧🇾' },
@@ -1055,6 +1060,7 @@
         { code: 'en-HK', language: 'English', country: 'Hong Kong', flag: '🇭🇰' },
         { code: 'en-IE', language: 'English', country: 'Ireland', flag: '🇮🇪' },
         { code: 'en-IN', language: 'English', country: 'India', flag: '🇮🇳' },
+        { code: 'en-IQ', language: 'English', country: 'Iraq', flag: '🇮🇶' },
         { code: 'en-JM', language: 'English', country: 'Jamaica', flag: '🇯🇲' },
         { code: 'en-KE', language: 'English', country: 'Kenya', flag: '🇰🇪' },
         { code: 'en-LK', language: 'English', country: 'Sri Lanka', flag: '🇱🇰' },
@@ -1081,6 +1087,7 @@
         { code: 'es-CO', language: 'Spanish', country: 'Colombia', flag: '🇨🇴' },
         { code: 'es-ES', language: 'Spanish', country: 'Spain', flag: '🇪🇸' },
         { code: 'es-MX', language: 'Spanish', country: 'Mexico', flag: '🇲🇽' },
+        { code: 'es-PE', language: 'Spanish', country: 'Peru', flag: '🇵🇪' },
         { code: 'es-US', language: 'Spanish', country: 'USA', flag: '🇺🇸' },
         { code: 'es-VE', language: 'Spanish', country: 'Venezuela', flag: '🇻🇪' },
         { code: 'fa-IR', language: 'Persian', country: 'Iran', flag: '🇮🇷' },
@@ -1089,6 +1096,7 @@
         { code: 'fr-BE', language: 'French', country: 'Belgium', flag: '🇧🇪' },
         { code: 'fr-CA', language: 'French', country: 'Canada', flag: '🇨🇦' },
         { code: 'fr-CH', language: 'French', country: 'Switzerland', flag: '🇨🇭' },
+        { code: 'fr-DZ', language: 'French', country: 'Algeria', flag: '🇩🇿' },
         { code: 'fr-FR', language: 'French', country: 'France', flag: '🇫🇷' },
         { code: 'fr-MA', language: 'French', country: 'Morocco', flag: '🇲🇦' },
         { code: 'fr-SA', language: 'French', country: 'Saudi Arabia', flag: '🇸🇦' },

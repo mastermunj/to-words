@@ -91,7 +91,7 @@ toCurrency(99.5); // 'Ninety Nine Dollars And Fifty Cents Only'
 
 | Package           | Scope          | Maintenance | Locales     | Currency | Ordinal           | BigInt  |
 | ----------------- | -------------- | ----------- | ----------- | -------- | ----------------- | ------- |
-| **`to-words`**    | Multi-locale   | Active      | 124 locales | Yes      | Yes               | Yes     |
+| **`to-words`**    | Multi-locale   | Active      | 132 locales | Yes      | Yes               | Yes     |
 | `number-to-words` | English only   | Inactive    | 1           | No       | Yes (suffix)      | Limited |
 | `written-number`  | Multi-language | Inactive    | Multiple    | No       | No                | No      |
 | `num-words`       | Indian English | Inactive    | 1           | No       | No                | No      |
@@ -276,7 +276,7 @@ es.convert(42);
 1. **Install** `npm install to-words` (requires Node ≥ 20).
 2. **Choose an import style:**
 
-- Full bundle: `import { toWords } from 'to-words'` (all 124 locales, ~60 KB gzipped).
+- Full bundle: `import { toWords } from 'to-words'` (all 132 locales, ~68 KB gzipped).
 - Per-locale: `import { toWords } from 'to-words/en-US'` (~3–4 KB gzipped).
 
 3. **Pick a locale code** per market (`en-US`, `en-IN`, `es-MX`, `fr-FR`, …).
