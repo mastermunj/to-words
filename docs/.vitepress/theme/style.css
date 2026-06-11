@@ -1,0 +1,11 @@
+:root {
+  --vp-c-brand-1: #667eea;
+  --vp-c-brand-2: #5a67d8;
+  --vp-c-brand-3: #764ba2;
+  --vp-c-brand-soft: rgba(102, 126, 234, 0.14);
+}
+
+/* Demo widget overrides so it sits flush in the VitePress layout */
+.demo-wrapper {
+  margin: 2rem 0;
+}

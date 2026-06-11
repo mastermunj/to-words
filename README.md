@@ -30,6 +30,21 @@ Test locale behavior, currency conversion, ordinals, and large number inputs in 
 - **Strong developer ergonomics**: TypeScript types, ESM/CJS/UMD, and per-locale imports
 - **Performance focused** for high-volume conversion workloads
 
+### Ecosystem Comparison
+
+| Capability                 | **to-words**    | number-to-words | written-number | num-words      | n2words       |
+| -------------------------- | --------------- | --------------- | -------------- | -------------- | ------------- |
+| Locale / language coverage | **132 locales** | English-focused | Multi-language | Indian English | 70+ languages |
+| TypeScript declarations    | ✅              | ❌              | ❌             | ✅             | ✅            |
+| ESM-ready package          | ✅              | ❌              | ❌             | ❌             | ✅            |
+| Package `exports` map      | ✅              | ❌              | ❌             | ❌             | ✅            |
+| BigInt support             | ✅              | ❌              | ❌             | ❌             | ✅            |
+| Currency conversion mode   | ✅              | ❌              | ❌             | ❌             | ✅            |
+| Ordinal conversion         | ✅              | ✅              | ❌             | ❌             | ✅            |
+| Subpath locale imports     | ✅              | ❌              | ❌             | ❌             | ✅            |
+
+For migration guidance and a deeper breakdown, see [MIGRATION.md](MIGRATION.md) and the docs [comparison page](https://mastermunj.github.io/to-words/compare/number-to-words-alternatives).
+
 ## 📑 Table of Contents
 
 - [Use Cases](#-use-cases)

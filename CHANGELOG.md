@@ -4,10 +4,9 @@ All notable changes to this project will be documented in this file. See [commit
 
 ## [5.6.0](https://github.com/mastermunj/to-words/compare/v5.5.1...v5.6.0) (2026-05-27)
 
-
 ### Features
 
-* add ar-EG, ar-SD, ar-DZ, ar-IQ, ar-YE, en-IQ, fr-DZ, es-PE ([#2306](https://github.com/mastermunj/to-words/issues/2306)) ([bc0a491](https://github.com/mastermunj/to-words/commit/bc0a49199987fc5ac9da702e62693d741fd79d3b))
+- add ar-EG, ar-SD, ar-DZ, ar-IQ, ar-YE, en-IQ, fr-DZ, es-PE ([#2306](https://github.com/mastermunj/to-words/issues/2306)) ([bc0a491](https://github.com/mastermunj/to-words/commit/bc0a49199987fc5ac9da702e62693d741fd79d3b))
 
 ## [5.5.1](https://github.com/mastermunj/to-words/compare/v5.5.0...v5.5.1) (2026-05-25)
 

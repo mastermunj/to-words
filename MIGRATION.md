@@ -89,13 +89,15 @@ toCurrency(99.5); // 'Ninety Nine Dollars And Fifty Cents Only'
 
 ## Quick Comparison: `to-words` vs alternatives
 
-| Package           | Scope          | Maintenance | Locales     | Currency | Ordinal           | BigInt  |
-| ----------------- | -------------- | ----------- | ----------- | -------- | ----------------- | ------- |
-| **`to-words`**    | Multi-locale   | Active      | 132 locales | Yes      | Yes               | Yes     |
-| `number-to-words` | English only   | Inactive    | 1           | No       | Yes (suffix)      | Limited |
-| `written-number`  | Multi-language | Inactive    | Multiple    | No       | No                | No      |
-| `num-words`       | Indian English | Inactive    | 1           | No       | No                | No      |
-| `n2words`         | Multi-language | Active      | 52          | No       | Language-specific | Yes     |
+Snapshot verified on 2026-05-30 from published package metadata, package exports, and npm download API.
+
+| Package           | Maintenance | Locales  | TS types | Currency | Ordinal | BigInt |
+| ----------------- | ----------- | -------- | -------- | -------- | ------- | ------ |
+| **`to-words`**    | Active      | 132      | Yes      | Yes      | Yes     | Yes    |
+| `number-to-words` | Inactive    | 1        | No       | No       | Yes     | No     |
+| `written-number`  | Inactive    | Multiple | No       | No       | No      | No     |
+| `num-words`       | Inactive    | 1        | Yes      | No       | No      | No     |
+| `n2words`         | Active      | 70       | Yes      | Yes      | Yes     | Yes    |
 
 ---
 
