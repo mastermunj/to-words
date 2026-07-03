@@ -122,7 +122,7 @@
     "@types/lodash": "^4.17.24",
     "@types/node": "^25.9.3",
     "@types/source-map-support": "^0.5.10",
-    "@typescript/native-preview": "7.0.0-dev.20260611.2",
+    "@typescript/native-preview": "7.0.0-dev.20260702.3",
     "@vitest/coverage-v8": "^4.1.8",
     "cz-conventional-changelog": "^3.3.0",
     "husky": "^9.1.7",
