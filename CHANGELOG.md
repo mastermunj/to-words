@@ -4,11 +4,10 @@ All notable changes to this project will be documented in this file. See [commit
 
 ## [5.6.1](https://github.com/mastermunj/to-words/compare/v5.6.0...v5.6.1) (2026-06-11)
 
-
 ### Documentation
 
-* create docs using vitepress ([8ab2efa](https://github.com/mastermunj/to-words/commit/8ab2efa935398e3ae3b873748d7c394dafcfa276))
-* create docs using vitepress ([4243ac2](https://github.com/mastermunj/to-words/commit/4243ac23599f676897132ac38ecdfdbdbb47d41e))
+- create docs using vitepress ([8ab2efa](https://github.com/mastermunj/to-words/commit/8ab2efa935398e3ae3b873748d7c394dafcfa276))
+- create docs using vitepress ([4243ac2](https://github.com/mastermunj/to-words/commit/4243ac23599f676897132ac38ecdfdbdbb47d41e))
 
 ## [5.6.0](https://github.com/mastermunj/to-words/compare/v5.5.1...v5.6.0) (2026-05-27)
 
