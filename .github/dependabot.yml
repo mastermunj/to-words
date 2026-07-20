@@ -16,3 +16,8 @@ updates:
       time: '06:30'
       timezone: Asia/Kolkata
     open-pull-requests-limit: 10
+    groups:
+      codeql:
+        applies-to: version-updates
+        patterns:
+          - "github/codeql-action*"
