@@ -20,4 +20,4 @@ updates:
       codeql:
         applies-to: version-updates
         patterns:
-          - "github/codeql-action*"
+          - 'github/codeql-action*'

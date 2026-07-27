@@ -1,3 +1,4 @@
+import type { HeadConfig } from 'vitepress';
 import { defineConfig } from 'vitepress';
 
 const siteUrl = 'https://mastermunj.github.io/to-words/';
@@ -50,12 +51,11 @@ function getFaqHead(pageFaq: unknown) {
           },
         })),
       }),
-    ] as const,
+    ] as HeadConfig,
   ];
 }
 
 export default defineConfig({
-  site: siteUrl,
   title: 'to-words',
   description:
     'Convert numbers to words in 132 locales — JavaScript, TypeScript, ESM/CJS/UMD, BigInt, currency, ordinal.',
@@ -68,7 +68,7 @@ export default defineConfig({
     hostname: siteUrl,
   },
 
-  transformHead({ pageData }) {
+  transformHead({ pageData }): HeadConfig[] {
     const canonicalUrl = new URL(getCanonicalPath(pageData.relativePath), siteUrl).toString();
 
     return [
