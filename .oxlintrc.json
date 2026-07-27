@@ -1,4 +1,0 @@
-{
-  "extends": ["./node_modules/@mastermunj/oxc-config/.oxlintrc.json"],
-  "ignorePatterns": ["docs/.vitepress/cache/**", "docs/.vitepress/dist/**"]
-}
