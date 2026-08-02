@@ -1,49 +1,27 @@
 # to-words
 
 [![npm version](https://img.shields.io/npm/v/to-words.svg)](https://www.npmjs.com/package/to-words)
-[![npm downloads](https://img.shields.io/npm/dm/to-words.svg)](https://www.npmjs.com/package/to-words)
 [![build](https://img.shields.io/github/actions/workflow/status/mastermunj/to-words/ci.yml?branch=main&label=build)](https://github.com/mastermunj/to-words/actions)
-[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/mastermunj/to-words/badge)](https://securityscorecards.dev/viewer/?uri=github.com/mastermunj/to-words)
 [![coverage](https://codecov.io/gh/mastermunj/to-words/branch/main/graph/badge.svg)](https://codecov.io/gh/mastermunj/to-words)
-[![minzipped size](https://img.shields.io/bundlephobia/minzip/to-words?label=minzipped)](https://bundlephobia.com/package/to-words)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue)](https://www.typescriptlang.org/)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/mastermunj/to-words/badge)](https://securityscorecards.dev/viewer/?uri=github.com/mastermunj/to-words)
 [![license](https://img.shields.io/npm/l/to-words)](https://github.com/mastermunj/to-words/blob/main/LICENSE)
 [![node](https://img.shields.io/node/v/to-words)](https://www.npmjs.com/package/to-words)
 
-Convert numbers and currency amounts into words across 132 locales with production-ready BigInt, ordinal, and TypeScript support.
+Convert numbers and currency amounts into words across 135 locales — production-ready BigInt, ordinal, and TypeScript support.
+
+```js
+import { toWords } from 'to-words';
+
+toWords(12345, { localeCode: 'en-US' });
+// "Twelve Thousand Three Hundred Forty Five"
+
+toWords(452.36, { localeCode: 'en-IN', currency: true });
+// "Four Hundred Fifty Two Rupees And Thirty Six Paise Only"
+```
+
+**[Try the interactive demo →](https://mastermunj.github.io/to-words/)** — currency, ordinals, gender, and large numbers, live in the browser.
 
 > Need the reverse conversion too? Use the companion package [to-numbers](https://www.npmjs.com/package/to-numbers) to parse spelled-out numbers back into numeric values across the same locales.
-
-## 🎮 Live Demo
-
-**Try it now:** **[Open Interactive Demo](https://mastermunj.github.io/to-words/)**
-
-Test locale behavior, currency conversion, ordinals, and large number inputs in the browser.
-
-## 🏆 Why to-words
-
-- **132 locale implementations** with region-specific numbering and currency conventions
-- **Built for real financial flows**: amount in words, decimals, currency units, and negatives
-- **Large number safe** with `BigInt` and string input support
-- **Run anywhere**: Node.js and all modern browsers — compatible by architecture with Deno, Bun, and Cloudflare Workers
-- **Functional API** — `toWords(42, { localeCode: 'en-US' })` for one-liners, or class-based for high-volume workloads
-- **Strong developer ergonomics**: TypeScript types, ESM/CJS/UMD, and per-locale imports
-- **Performance focused** for high-volume conversion workloads
-
-### Ecosystem Comparison
-
-| Capability                 | **to-words**    | number-to-words | written-number | num-words      | n2words       |
-| -------------------------- | --------------- | --------------- | -------------- | -------------- | ------------- |
-| Locale / language coverage | **132 locales** | English-focused | Multi-language | Indian English | 70+ languages |
-| TypeScript declarations    | ✅              | ❌              | ❌             | ✅             | ✅            |
-| ESM-ready package          | ✅              | ❌              | ❌             | ❌             | ✅            |
-| Package `exports` map      | ✅              | ❌              | ❌             | ❌             | ✅            |
-| BigInt support             | ✅              | ❌              | ❌             | ❌             | ✅            |
-| Currency conversion mode   | ✅              | ❌              | ❌             | ❌             | ✅            |
-| Ordinal conversion         | ✅              | ✅              | ❌             | ❌             | ✅            |
-| Subpath locale imports     | ✅              | ❌              | ❌             | ❌             | ✅            |
-
-For migration guidance and a deeper breakdown, see [MIGRATION.md](MIGRATION.md) and the docs [comparison page](https://mastermunj.github.io/to-words/compare/number-to-words-alternatives).
 
 ## 📑 Table of Contents
 
@@ -85,13 +63,13 @@ For migration guidance and a deeper breakdown, see [MIGRATION.md](MIGRATION.md) 
 
 ## ✨ Features
 
-- **132 Locales** — The most comprehensive locale coverage available
+- **135 Locales** — The most comprehensive locale coverage available
 - **BigInt Support** — Handle numbers up to 10^63 (Vigintillion) and beyond
 - **Multiple Numbering Systems** — Short scale, Long scale, Indian, and East Asian
 - **Currency Formatting** — Locale-specific currency with fractional units
 - **Ordinal Numbers** — First, Second, Third, etc.
 - **Gender-Aware** — Grammatical gender for locales that require it (Spanish, Portuguese, Arabic, Hebrew, Slavic, and more)
-- **Fraction-Style Decimals** — Legal/financial positional decimals (`"Forty-Five Hundredths"`) via `decimalStyle: 'fraction'` across 94 locales
+- **Fraction-Style Decimals** — Legal/financial positional decimals (`"Forty-Five Hundredths"`) via `decimalStyle: 'fraction'` across 100 locales
 - **Formal Numerals** — Formal/financial Chinese characters (大写/大寫) via `formal: true`
 - **Tree-Shakeable** — Import only the locales you need
 - **TypeScript Native** — Full type definitions included
@@ -118,7 +96,7 @@ tw.convert(100, { currency: true }); // "One Hundred Dollars Only"
 tw.toOrdinal(3); // "Third"
 ```
 
-**2. Functional (full bundle)** — one-liners with a `localeCode` option, all 132 locales available:
+**2. Functional (full bundle)** — one-liners with a `localeCode` option, all 135 locales available:
 
 ```js
 import { toWords, toOrdinal, toCurrency } from 'to-words';
@@ -568,10 +546,22 @@ tw.convert(1000);
 
 ## 🔄 Migration Guide
 
-Migrating from `number-to-words`, `written-number`, `num-words`, or `n2words`?
+Migrating from `number-to-words`, `written-number`, `num-words`, or `n2words`? Here's how `to-words` compares:
+
+| Capability                 | **to-words**    | number-to-words | written-number | num-words      | n2words       |
+| -------------------------- | --------------- | --------------- | -------------- | -------------- | ------------- |
+| Locale / language coverage | **135 locales** | English-focused | Multi-language | Indian English | 70+ languages |
+| TypeScript declarations    | ✅              | ❌              | ❌             | ✅             | ✅            |
+| ESM-ready package          | ✅              | ❌              | ❌             | ❌             | ✅            |
+| Package `exports` map      | ✅              | ❌              | ❌             | ❌             | ✅            |
+| BigInt support             | ✅              | ❌              | ❌             | ❌             | ✅            |
+| Currency conversion mode   | ✅              | ❌              | ❌             | ❌             | ✅            |
+| Ordinal conversion         | ✅              | ✅              | ❌             | ❌             | ✅            |
+| Subpath locale imports     | ✅              | ❌              | ❌             | ❌             | ✅            |
 
 - See [`MIGRATION.md`](MIGRATION.md) for side-by-side API mapping and migration recipes.
 - Includes package comparison, behavior notes, and a regression checklist.
+- Deeper breakdown: docs [comparison page](https://mastermunj.github.io/to-words/compare/number-to-words-alternatives).
 
 ## 🖥️ CLI
 
@@ -958,7 +948,7 @@ toWords.convert(1234.56, {
 // "One Thousand Two Hundred Thirty Four Dollars And Fifty Six Cents"
 ```
 
-## � Spelled-Out Decimal (Fraction Style)
+## 🔢 Spelled-Out Decimal (Fraction Style)
 
 By default, decimals are rendered digit-by-digit after the point word:
 
@@ -1003,13 +993,13 @@ digits), it automatically falls back to the default digit-by-digit style — no 
 | 5              | Hundred-Thousandth / Hundred-Thousandths | Cent-Millième / Cent-Millièmes | Hunderttausendstel |
 | 6              | Millionth / Millionths                   | Millionième / Millionièmes     | Millionstel        |
 
-### Locale support (97 locales)
+### Locale support (100 locales)
 
 | Language group                         | Locales                                                                                                                                                                                                                 |
 | -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **English**                            | en-AE, en-AU, en-BD, en-CA, en-GB, en-GH, en-HK, en-IE, en-IN, en-IQ, en-JM, en-KE, en-LK, en-MA, en-MM, en-MU, en-MY, en-NG, en-NP, en-NZ, en-OM, en-PH, en-PK, en-SA, en-SG, en-TT, en-TZ, en-UG, en-US, en-ZA, en-ZW |
 | **German**                             | de-AT, de-CH, de-DE                                                                                                                                                                                                     |
-| **French**                             | fr-BE, fr-CA, fr-CH, fr-DZ, fr-FR, fr-MA, fr-SA                                                                                                                                                                         |
+| **French**                             | fr-BE, fr-CA, fr-CH, fr-CI, fr-CM, fr-DZ, fr-FR, fr-MA, fr-MG, fr-SA                                                                                                                                                    |
 | **Spanish**                            | es-AR, es-CL, es-CO, es-ES, es-MX, es-PE, es-US, es-VE                                                                                                                                                                  |
 | **Portuguese**                         | pt-AO, pt-BR, pt-MZ, pt-PT                                                                                                                                                                                              |
 | **Italian**                            | it-IT                                                                                                                                                                                                                   |
@@ -1023,7 +1013,7 @@ digits), it automatically falls back to the default digit-by-digit style — no 
 > Locales not listed above (Arabic, East Asian, Turkic, etc.) do not yet support
 > `decimalStyle: 'fraction'` — passing the option silently falls back to digit-by-digit.
 
-## �📏 Bundle Sizes
+## 📏 Bundle Sizes
 
 | Import Method             | Raw    | Gzip   |
 | ------------------------- | ------ | ------ |
@@ -1076,7 +1066,7 @@ Deno, Bun, and Cloudflare Workers are compatible by architecture: the library us
 
 ## 🗺️ Supported Locales
 
-All 132 locales with their features:
+All 135 locales with their features:
 
 | Locale | Language        | Country             | Currency      | Scale      | Ordinal |
 | ------ | --------------- | ------------------- | ------------- | ---------- | ------- |
@@ -1150,9 +1140,12 @@ All 132 locales with their features:
 | fr-BE  | French          | Belgium             | Euro          | Long       | ✓       |
 | fr-CA  | French          | Canada              | Dollar        | Long       | ✓       |
 | fr-CH  | French          | Switzerland         | Franc         | Long       | ✓       |
+| fr-CI  | French          | Côte d'Ivoire       | Franc CFA     | Long       | ✓       |
+| fr-CM  | French          | Cameroon            | Franc CFA     | Long       | ✓       |
 | fr-DZ  | French          | Algeria             | Dinar         | Long       | ✓       |
 | fr-FR  | French          | France              | Euro          | Long       | ✓       |
 | fr-MA  | French          | Morocco             | Dirham        | Long       | ✓       |
+| fr-MG  | French          | Madagascar          | Ariary        | Long       | ✓       |
 | fr-SA  | French          | Saudi Arabia        | Riyal         | Long       | ✓       |
 | gu-IN  | Gujarati        | India               | રૂપિયો        | Short      | ✓       |
 | ha-NG  | Hausa           | Nigeria             | Naira         | Short      | ✓       |

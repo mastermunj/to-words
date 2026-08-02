@@ -67,9 +67,12 @@ import fiFi from './fi-FI.js';
 import frBe from './fr-BE.js';
 import frCa from './fr-CA.js';
 import frCh from './fr-CH.js';
+import frCi from './fr-CI.js';
+import frCm from './fr-CM.js';
 import frFr from './fr-FR.js';
 import frDz from './fr-DZ.js';
 import frMa from './fr-MA.js';
+import frMg from './fr-MG.js';
 import frSa from './fr-SA.js';
 import guIn from './gu-IN.js';
 import haNg from './ha-NG.js';
@@ -203,9 +206,12 @@ const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
   'fr-BE': frBe,
   'fr-CA': frCa,
   'fr-CH': frCh,
+  'fr-CI': frCi,
+  'fr-CM': frCm,
   'fr-FR': frFr,
   'fr-DZ': frDz,
   'fr-MA': frMa,
+  'fr-MG': frMg,
   'fr-SA': frSa,
   'gu-IN': guIn,
   'ha-NG': haNg,

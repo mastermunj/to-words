@@ -1,6 +1,6 @@
 ---
 title: Cheque Amount in Words JavaScript — to-words
-description: Print cheque/check amounts in words using locale-aware currency output with to-words across 132 locales. Node.js, TypeScript, npm.
+description: Print cheque/check amounts in words using locale-aware currency output with to-words across 135 locales. Node.js, TypeScript, npm.
 head:
   - - meta
     - name: keywords

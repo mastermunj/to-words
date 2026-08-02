@@ -1,6 +1,6 @@
 ---
 title: Currency Amount in Words — JavaScript | to-words
-description: Convert currency amounts to words in 132 locales. Supports 3-decimal currencies (KWD, OMR, IQD), custom currency, and ignoreDecimal. npm to-words.
+description: Convert currency amounts to words in 135 locales. Supports 3-decimal currencies (KWD, OMR, IQD), custom currency, and ignoreDecimal. npm to-words.
 head:
   - - meta
     - name: keywords

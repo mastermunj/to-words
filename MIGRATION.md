@@ -93,7 +93,7 @@ Snapshot verified on 2026-05-30 from published package metadata, package exports
 
 | Package           | Maintenance | Locales  | TS types | Currency | Ordinal | BigInt |
 | ----------------- | ----------- | -------- | -------- | -------- | ------- | ------ |
-| **`to-words`**    | Active      | 132      | Yes      | Yes      | Yes     | Yes    |
+| **`to-words`**    | Active      | 135      | Yes      | Yes      | Yes     | Yes    |
 | `number-to-words` | Inactive    | 1        | No       | No       | Yes     | No     |
 | `written-number`  | Inactive    | Multiple | No       | No       | No      | No     |
 | `num-words`       | Inactive    | 1        | Yes      | No       | No      | No     |
@@ -278,7 +278,7 @@ es.convert(42);
 1. **Install** `npm install to-words` (requires Node ≥ 20).
 2. **Choose an import style:**
 
-- Full bundle: `import { toWords } from 'to-words'` (all 132 locales, ~68 KB gzipped).
+- Full bundle: `import { toWords } from 'to-words'` (all 135 locales, ~68 KB gzipped).
 - Per-locale: `import { toWords } from 'to-words/en-US'` (~3–4 KB gzipped).
 
 3. **Pick a locale code** per market (`en-US`, `en-IN`, `es-MX`, `fr-FR`, …).

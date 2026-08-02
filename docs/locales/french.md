@@ -1,6 +1,6 @@
 ---
-title: French Number to Words in JavaScript (7 Locales) | to-words
-description: Convert numbers to French words in JavaScript for France, Canada, Belgium, Switzerland, and more. Handles long-scale wording and regional number variants. npm to-words.
+title: French Number to Words in JavaScript (10 Locales) | to-words
+description: Convert numbers to French words in JavaScript for France, Canada, Belgium, Switzerland, Cameroon, Côte d'Ivoire, Madagascar, and more. Handles long-scale wording and regional number variants. npm to-words.
 head:
   - - meta
     - name: keywords
@@ -16,17 +16,20 @@ faq:
 
 # French Number to Words JavaScript
 
-7 regional French locales with correct regional variants for 70 (_soixante-dix_ vs _septante_) and 80 (_quatre-vingts_ vs _huitante_).
+10 regional French locales with correct regional variants for 70 (_soixante-dix_ vs _septante_) and 80 (_quatre-vingts_ vs _huitante_).
 
-| Locale  | Country      | 70           | 80            |
-| ------- | ------------ | ------------ | ------------- |
-| `fr-FR` | France       | soixante-dix | quatre-vingts |
-| `fr-BE` | Belgium      | septante     | huitante      |
-| `fr-CH` | Switzerland  | septante     | huitante      |
-| `fr-CA` | Canada       | soixante-dix | quatre-vingts |
-| `fr-DZ` | Algeria      | soixante-dix | quatre-vingts |
-| `fr-MA` | Morocco      | soixante-dix | quatre-vingts |
-| `fr-SA` | Saudi Arabia | soixante-dix | quatre-vingts |
+| Locale  | Country       | 70           | 80            |
+| ------- | ------------- | ------------ | ------------- |
+| `fr-FR` | France        | soixante-dix | quatre-vingts |
+| `fr-BE` | Belgium       | septante     | huitante      |
+| `fr-CH` | Switzerland   | septante     | huitante      |
+| `fr-CA` | Canada        | soixante-dix | quatre-vingts |
+| `fr-CI` | Côte d'Ivoire | soixante-dix | quatre-vingts |
+| `fr-CM` | Cameroon      | soixante-dix | quatre-vingts |
+| `fr-DZ` | Algeria       | soixante-dix | quatre-vingts |
+| `fr-MA` | Morocco       | soixante-dix | quatre-vingts |
+| `fr-MG` | Madagascar    | soixante-dix | quatre-vingts |
+| `fr-SA` | Saudi Arabia  | soixante-dix | quatre-vingts |
 
 ## Install
 

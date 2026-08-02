@@ -1,17 +1,17 @@
 ---
-title: All 132 Locales — Number to Words | to-words
-description: Complete list of all 132 language and regional locales supported by to-words. Arabic, Chinese, Devanagari, Latin, CJK, Cyrillic scripts and more.
+title: All 135 Locales — Number to Words | to-words
+description: Complete list of all 135 language and regional locales supported by to-words. Arabic, Chinese, Devanagari, Latin, CJK, Cyrillic scripts and more.
 head:
   - - meta
     - name: keywords
-      content: number to words supported locales, number to words 132 languages, to-words all locales list
+      content: number to words supported locales, number to words 135 languages, to-words all locales list
 ---
 
 <script setup>
 import LocaleDirectory from '../.vitepress/components/LocaleDirectory.vue'
 </script>
 
-# All 132 Supported Locales
+# All 135 Supported Locales
 
 Use this directory when you need the exact locale code, currency setup, or feature coverage before wiring `to-words` into a real product. The table below is generated from the library's source locale registry, so it stays aligned with the package rather than drifting from it.
 
@@ -48,7 +48,7 @@ These are dedicated language guides covering every supported language. Each guid
 | Estonian              | [estonian](/locales/estonian)       | ee-EE                                                                                                                                                                                                                   |
 | Filipino              | [filipino](/locales/filipino)       | fil-PH                                                                                                                                                                                                                  |
 | Finnish               | [finnish](/locales/finnish)         | fi-FI                                                                                                                                                                                                                   |
-| French                | [french](/locales/french)           | fr-BE, fr-CA, fr-CH, fr-DZ, fr-FR, fr-MA, fr-SA                                                                                                                                                                         |
+| French                | [french](/locales/french)           | fr-BE, fr-CA, fr-CH, fr-CI, fr-CM, fr-DZ, fr-FR, fr-MA, fr-MG, fr-SA                                                                                                                                                    |
 | Georgian              | [georgian](/locales/georgian)       | ka-GE                                                                                                                                                                                                                   |
 | German                | [german](/locales/german)           | de-AT, de-CH, de-DE                                                                                                                                                                                                     |
 | Greek                 | [greek](/locales/greek)             | el-GR                                                                                                                                                                                                                   |
