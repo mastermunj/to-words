@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.7.0](https://github.com/mastermunj/to-words/compare/v5.6.1...v5.7.0) (2026-08-02)
+
+
+### Features
+
+* add 3 new locale, update docs ([a37ca0a](https://github.com/mastermunj/to-words/commit/a37ca0a81999af5a80f05c2d6b88a9f0e4cc55e6))
+* add 3 new locale, update docs ([51916b4](https://github.com/mastermunj/to-words/commit/51916b4e3d1a7c3a2b9c5e3d0eddfddb3ebb0eb4))
+
 ## [5.6.1](https://github.com/mastermunj/to-words/compare/v5.6.0...v5.6.1) (2026-06-11)
 
 ### Documentation
