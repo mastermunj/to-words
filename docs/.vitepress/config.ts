@@ -58,7 +58,7 @@ function getFaqHead(pageFaq: unknown) {
 export default defineConfig({
   title: 'to-words',
   description:
-    'Convert numbers to words in 132 locales — JavaScript, TypeScript, ESM/CJS/UMD, BigInt, currency, ordinal.',
+    'Convert numbers to words in 135 locales — JavaScript, TypeScript, ESM/CJS/UMD, BigInt, currency, ordinal.',
   base: '/to-words/',
   lang: 'en-US',
   cleanUrls: true,
@@ -86,7 +86,7 @@ export default defineConfig({
       {
         property: 'og:description',
         content:
-          'Convert numbers to words in 132 locales — JavaScript, TypeScript, ESM/CJS/UMD, BigInt, currency, ordinal.',
+          'Convert numbers to words in 135 locales — JavaScript, TypeScript, ESM/CJS/UMD, BigInt, currency, ordinal.',
       },
     ],
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
@@ -112,7 +112,7 @@ export default defineConfig({
       {
         text: 'Locales',
         items: [
-          { text: 'Browse All 132 Locales', link: '/locales/' },
+          { text: 'Browse All 135 Locales', link: '/locales/' },
           { text: 'Afrikaans', link: '/locales/afrikaans' },
           { text: 'Albanian', link: '/locales/albanian' },
           { text: 'Amharic', link: '/locales/amharic' },
@@ -133,7 +133,7 @@ export default defineConfig({
           { text: 'Estonian', link: '/locales/estonian' },
           { text: 'Filipino', link: '/locales/filipino' },
           { text: 'Finnish', link: '/locales/finnish' },
-          { text: 'French (7 locales)', link: '/locales/french' },
+          { text: 'French (10 locales)', link: '/locales/french' },
           { text: 'Georgian', link: '/locales/georgian' },
           { text: 'German (3 locales)', link: '/locales/german' },
           { text: 'Greek', link: '/locales/greek' },
@@ -222,7 +222,7 @@ export default defineConfig({
       '/locales/': [
         {
           text: 'Locale Directory',
-          items: [{ text: 'Browse All 132 Locales', link: '/locales/' }],
+          items: [{ text: 'Browse All 135 Locales', link: '/locales/' }],
         },
         {
           text: 'Language Guides',

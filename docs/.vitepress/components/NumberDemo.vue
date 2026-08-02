@@ -102,7 +102,7 @@
 
     <!-- Stats bar -->
     <div class="demo-stats-bar">
-      <span class="demo-stat">🌍 132 Locales</span>
+      <span class="demo-stat">🌍 135 Locales</span>
       <span class="demo-stat">⚡ 4M+ ops/sec</span>
       <span class="demo-stat">📦 ~3 KB gzip</span>
       <span class="demo-stat">🔷 TypeScript</span>

@@ -47,7 +47,7 @@ tw.toOrdinal(3); // "Third"
 
 Use this when you want to instantiate once and convert many values with the same locale or default options.
 
-**2. Functional (full bundle)** — one-liners with all 132 locales:
+**2. Functional (full bundle)** — one-liners with all 135 locales:
 
 ```js
 import { detectLocale, toWords, toOrdinal, toCurrency } from 'to-words';

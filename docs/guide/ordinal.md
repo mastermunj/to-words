@@ -1,6 +1,6 @@
 ---
 title: Ordinal Numbers in JavaScript — First, Second, Third | to-words
-description: Generate ordinal numbers in 132 locales. First, Second, Première, Primero, and more. TypeScript, ESM. npm install to-words.
+description: Generate ordinal numbers in 135 locales. First, Second, Première, Primero, and more. TypeScript, ESM. npm install to-words.
 head:
   - - meta
     - name: keywords
