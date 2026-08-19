@@ -157,6 +157,10 @@ describe('Test Floats with options = {}', () => {
   test.each(testFloats)('convert %d => %s', (input, expected) => {
     expect(toWords.convert(input as number)).toBe(expected);
   });
+
+  test.each([-0.5, '-0.5'])('preserves the sign for negative sub-unit input %s', (input) => {
+    expect(toWords.convert(input)).toBe('منفی پنج دهم');
+  });
 });
 
 const testFloatsWithCurrency: [number, string][] = [
