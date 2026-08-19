@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.7.1](https://github.com/mastermunj/to-words/compare/v5.7.0...v5.7.1) (2026-08-19)
+
+
+### Bug Fixes
+
+* preserve numeric precision without slowing hot paths ([#2432](https://github.com/mastermunj/to-words/issues/2432)) ([4a37512](https://github.com/mastermunj/to-words/commit/4a375123ef1e3f4f3bcdcb52b16128fc47882bc8))
+* reset formal locale and preserve decimal signs ([#2434](https://github.com/mastermunj/to-words/issues/2434)) ([552d4bd](https://github.com/mastermunj/to-words/commit/552d4bd86eec68415613f24c8f82caffe288d260))
+
 ## [5.7.0](https://github.com/mastermunj/to-words/compare/v5.6.1...v5.7.0) (2026-08-02)
 
 
