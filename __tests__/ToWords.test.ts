@@ -300,6 +300,34 @@ describe('Valid String Number Inputs', () => {
     test('should convert string with multiple leading zeros in decimal', () => {
       expect(toWords.convert('0.005')).toBe('Zero Point Zero Zero Five');
     });
+
+    test('should preserve integer strings beyond Number.MAX_SAFE_INTEGER', () => {
+      const input = '9007199254740993';
+      expect(toWords.convert(input)).toBe(toWords.convert(BigInt(input)));
+      expect(toWords.convert(input, { currency: true })).toBe(toWords.convert(BigInt(input), { currency: true }));
+      expect(toWords.toOrdinal(input)).toBe(toWords.toOrdinal(BigInt(input)));
+    });
+
+    test('should expand scientific notation without losing decimal places', () => {
+      expect(toWords.convert('1e-7')).toBe('Zero Point Zero Zero Zero Zero Zero Zero One');
+      expect(toWords.convert('1e3')).toBe('One Thousand');
+    });
+
+    test('should expand numeric scientific notation without losing decimal places', () => {
+      expect(toWords.convert(1e-7)).toBe('Zero Point Zero Zero Zero Zero Zero Zero One');
+    });
+
+    test('should ignore decimals in string inputs when requested', () => {
+      expect(toWords.convert('123.45', { ignoreDecimal: true })).toBe('One Hundred Twenty Three');
+    });
+
+    test('should retain supported JavaScript non-decimal integer syntax', () => {
+      expect(toWords.convert('0x10')).toBe('Sixteen');
+    });
+
+    test('should reject scientific notation that cannot be expanded safely', () => {
+      expect(() => toWords.convert('1e-10002')).toThrow('Invalid Number');
+    });
   });
 
   describe('String Numbers with Whitespace', () => {
@@ -538,6 +566,35 @@ describe('Currency Options Combinations', () => {
 
     test('converts 2 with currency (plural)', () => {
       expect(toWords.convert(2, { currency: true })).toBe('Two Rupees Only');
+    });
+
+    test.each([
+      [1.005, 'One Rupee And One Paisa Only'],
+      [2.675, 'Two Rupees And Sixty Eight Paise Only'],
+      ['1.005', 'One Rupee And One Paisa Only'],
+      ['2.675', 'Two Rupees And Sixty Eight Paise Only'],
+    ])('rounds %s to exact minor units', (input, expected) => {
+      expect(toWords.convert(input, { currency: true })).toBe(expected);
+    });
+
+    test('supports zero-decimal currencies with exact rounding', () => {
+      const currencyOptions = { ...toWords.getLocale().config.currency, precision: 0 };
+      expect(toWords.convert(1.5, { currency: true, currencyOptions })).toBe('Two Rupees Only');
+    });
+
+    test('preserves fractional minor units beyond Number.MAX_SAFE_INTEGER', () => {
+      const fractionalPart = 9007199254740992n;
+      const currencyOptions = { ...toWords.getLocale().config.currency, precision: 16 };
+      expect(toWords.convert(`0.${fractionalPart}`, { currency: true, currencyOptions })).toBe(
+        `Zero Rupees And ${toWords.convert(fractionalPart)} Paise Only`,
+      );
+    });
+
+    test.each([-1, 1.5, 101])('rejects invalid currency precision %s', (precision) => {
+      const currencyOptions = { ...toWords.getLocale().config.currency, precision };
+      expect(() => toWords.convert(1, { currency: true, currencyOptions })).toThrow(
+        'Currency precision must be an integer between 0 and 100',
+      );
     });
   });
 
