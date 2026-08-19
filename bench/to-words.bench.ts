@@ -113,6 +113,18 @@ describe('Stress: Very large BigInt', () => {
   });
 });
 
+describe('Precision-preserving inputs', () => {
+  const enIn = new ToWords({ localeCode: 'en-IN' });
+
+  bench('integer string beyond safe', () => {
+    sink = enIn.convert('9007199254740993');
+  });
+
+  bench('exact decimal currency rounding', () => {
+    sink = enIn.convert('2.675', currencyOptions);
+  });
+});
+
 // =============================================================================
 // Instance Creation Overhead
 // =============================================================================
