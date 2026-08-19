@@ -108,6 +108,18 @@ describe('ToWordsCore - setLocale', () => {
     expect(enLocale).not.toBe(frLocale);
     expect(frLocale).toBeInstanceOf(FrFrLocale);
   });
+
+  test('setLocale resets the cached formal locale', async () => {
+    const { default: ZhCnLocale } = await import('../src/locales/zh-CN');
+    const { default: ZhTwLocale } = await import('../src/locales/zh-TW');
+    const core = new ToWordsCore();
+
+    core.setLocale(ZhCnLocale);
+    expect(core.convert(2, { formal: true })).toBe('贰');
+
+    core.setLocale(ZhTwLocale);
+    expect(core.convert(2, { formal: true })).toBe('貳');
+  });
 });
 
 describe('ToWordsCore - convert', () => {

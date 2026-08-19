@@ -168,6 +168,7 @@ export class ToWordsCore {
   public setLocale(localeClass: ConstructorOf<LocaleInterface>): this {
     this.localeClass = localeClass;
     this.locale = undefined; // Reset cached locale instance
+    this.formalLocale = undefined;
     return this;
   }
 
@@ -679,8 +680,7 @@ export class ToWordsCore {
         }
       }
     }
-    const isEmpty = words.length <= 0;
-    if (!isEmpty && isNegativeNumber) {
+    if (isNegativeNumber) {
       words.unshift(localeConfig.texts.minus);
     }
     words.push(...wordsWithDecimal);
