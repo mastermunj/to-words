@@ -542,6 +542,8 @@ const tw = new ToWords({ localeCode: locale });
 tw.convert(1000);
 ```
 
+Locale matching canonicalises BCP 47 casing and aliases, ignores script subtags when matching a supported language-region pair, and uses deterministic defaults for language-only values (`en` → `en-US`, `es` → `es-ES`, `pt` → `pt-BR`). In SSR and APIs, pass the request locale explicitly; `setLocaleDetector()` changes process-wide state and is intended for tests or application-wide configuration.
+
 > Reads `navigator.language` in browsers, `Intl.DateTimeFormat().resolvedOptions().locale` in Node.js (and compatible runtimes). Falls back to `'en-IN'` (or your custom fallback) if the detected value cannot be matched to a supported locale.
 
 ## 🔄 Migration Guide
@@ -579,6 +581,9 @@ npx to-words 1234.56 --locale en-US --currency
 
 npx to-words 3 --locale en-US --ordinal
 # Third
+
+npx to-words --locale en-US -- -5
+# Minus Five
 
 npx to-words --detect-locale
 # en-US  (or whatever your system locale is)
@@ -696,13 +701,13 @@ export function CurrencyDisplay({ amount }: { amount: number }) {
 
 ```ts
 import express from 'express';
-import { toWords, toCurrency, detectLocale } from 'to-words';
+import { toWords, toCurrency } from 'to-words';
 
 const app = express();
 
 app.get('/convert', (req, res) => {
   const number = String(req.query.number ?? '');
-  const locale = String(req.query.locale ?? detectLocale());
+  const locale = String(req.query.locale ?? req.headers['accept-language']?.split(',')[0] ?? 'en-US');
   const currency = req.query.currency === 'true';
 
   try {
@@ -839,7 +844,7 @@ Converts a number to words.
 Converts a number to ordinal words.
 
 - **number**: `number | bigint | string` — The number to convert (must be a non-negative integer value)
-- **options**: `OrdinalOptions` — Optional settings (`{ formal?: boolean }`)
+- **options**: `OrdinalOptions` — Optional settings (`{ formal?: boolean; gender?: 'masculine' | 'feminine' }`)
 - **returns**: `string` — The ordinal in words (e.g., "First", "Twenty Third")
 
 ### Functional Exports
@@ -911,6 +916,8 @@ Reads the current runtime locale.
 - **fallback** _(optional)_: `string` — Returned when no supported locale can be matched. Default: `'en-IN'`
 - **returns**: `string` — A supported locale code
 
+Matching canonicalises BCP 47 casing and aliases. Language-only or unknown-region inputs use explicit defaults rather than registry order, including `en` → `en-US`, `es` → `es-ES`, `pt` → `pt-BR`, and `sw` → `sw-KE`.
+
 ```js
 import { detectLocale } from 'to-words';
 
@@ -919,6 +926,15 @@ detectLocale('en-GB'); // custom fallback if detection fails
 ```
 
 > `detectLocale` is only available from the full bundle (`to-words`), not from per-locale entry points.
+
+`setLocaleDetector()` changes a process-wide detector and is intended for tests or application-wide configuration. Do not change it per SSR/API request; pass `{ localeCode }` explicitly instead.
+
+### Utility Methods
+
+- `toFixed(number, precision?)` returns a number rounded with decimal arithmetic (`toFixed(1.005, 2) === 1.01`).
+- `isFloat(number)` returns whether a valid `number | bigint | string` has a non-zero fractional component.
+- `isNumberZero(number)` returns `true` only for exact numeric zero.
+- `getLocale().config` is available for inspection and is recursively frozen after initialization. Define custom locale data before passing its class to `setLocale()`.
 
 ### Converter Options
 
@@ -1390,7 +1406,7 @@ console.log(tw.convert(2.1, { currency: true }));
 // "Two Bitcoins And Ten Satoshis Only"
 ```
 
-The easiest starting point is to copy the nearest built-in locale from [`src/locales/`](src/locales/) and change only what differs.
+The easiest starting point is to copy the nearest built-in locale from [`src/locales/`](src/locales/) and change only what differs. Locale configuration is recursively frozen when first initialized so cached lookup tables cannot diverge; treat it as immutable and create a new locale class when configuration changes.
 
 </details>
 

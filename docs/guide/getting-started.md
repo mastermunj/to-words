@@ -92,6 +92,7 @@ Use the per-locale UMD file for the smallest browser payload. Reach for the full
 ```bash
 npx to-words 12345 --locale en-US
 npx to-words 1234.56 --locale en-US --currency
+npx to-words --locale en-US -- -5
 npx to-words --detect-locale
 ```
 

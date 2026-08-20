@@ -662,3 +662,17 @@ describe('Gender-aware cardinals', () => {
     });
   });
 });
+
+describe('Gender-aware ordinals', () => {
+  test.each(['es-AR', 'es-CL', 'es-CO', 'es-ES', 'es-MX', 'es-PE', 'es-US', 'es-VE'])(
+    '%s resolves feminine Spanish ordinal forms',
+    (localeCode) => {
+      const toWords = new ToWords({ localeCode });
+      expect(toWords.toOrdinal(1, { gender: 'masculine' })).toBe('Primero');
+      expect(toWords.toOrdinal(1, { gender: 'feminine' })).toBe('Primera');
+      expect(toWords.toOrdinal(10, { gender: 'feminine' })).toBe('Décima');
+      expect(toWords.toOrdinal(101, { gender: 'feminine' })).toBe('Ciento Primera');
+      expect(toWords.toOrdinal(0, { gender: 'feminine' })).toBe('Cero');
+    },
+  );
+});

@@ -1,11 +1,23 @@
 ---
 title: Migrate from number-to-words, written-number, n2words | to-words
-description: Side-by-side migration guide from number-to-words, written-number, num-words, and n2words to to-words, plus v4 to v5 upgrade notes.
+description: Side-by-side migration guide from number-to-words, written-number, num-words, and n2words to to-words, plus v5 to v6 upgrade notes.
 ---
 
 # Migration Guide
 
 `to-words` is designed to be low-friction if you are coming from another number-to-words package. The class API stays compatible with earlier `to-words` releases, and the functional helpers give you a modern migration path when you want less boilerplate.
+
+## Upgrading from `to-words` v5
+
+v6 corrects several public behaviors that could silently produce the wrong locale or numeric result. Most applications need no code changes, but check these cases:
+
+- Language-only and unknown-region locale tags now use explicit defaults instead of registry order: `en` → `en-US`, `es` → `es-ES`, `pt` → `pt-BR`, and `sw` → `sw-KE`. Pass a full `localeCode` if your application needs another regional variant.
+- `getLocale().config` is recursively frozen after initialization so mutation cannot invalidate internal lookup caches. Complete custom locale configuration before calling `setLocale()` or performing a conversion.
+- `toFixed()` now uses decimal-safe rounding, `isFloat()` recognizes valid numeric strings and BigInts, and `isNumberZero()` returns `true` only for exact zero. Audit code that called these public utility methods directly.
+- The CLI now rejects unknown options, repeated `--locale`, and conflicting conversion modes, and accepts an exact numeric string for ordinals. Use `--` before negative positional values when needed.
+- `setLocaleDetector()` remains process-global. In SSR and APIs, pass `{ localeCode }` per request instead of changing the detector while requests are in flight.
+
+The normal conversion API is unchanged. The release also preserves large integer strings, fixes decimal currency rounding and negative sub-unit signs, and adds Spanish ordinal gender handling.
 
 ## Upgrading from `to-words` v4
 
@@ -23,7 +35,7 @@ New in v5:
 
 - Functional helpers: `toWords()`, `toOrdinal()`, `toCurrency()`
 - Runtime locale detection: `detectLocale()`
-- Server override hook: `setLocaleDetector()`
+- Application-wide/test locale override hook: `setLocaleDetector()` (pass `localeCode` explicitly per server request)
 - Per-locale functional exports for better tree-shaking
 - BigInt and string-safe large-number handling
 

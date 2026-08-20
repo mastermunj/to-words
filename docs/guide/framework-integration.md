@@ -70,12 +70,12 @@ Use the full bundle in SSR when locale comes from request headers, cookies, or u
 
 ```ts
 import express from 'express';
-import { detectLocale, toWords } from 'to-words';
+import { toWords } from 'to-words';
 
 const app = express();
 
 app.get('/convert', (req, res) => {
-  const locale = String(req.query.locale ?? detectLocale());
+  const locale = String(req.query.locale ?? req.headers['accept-language']?.split(',')[0] ?? 'en-US');
   const number = String(req.query.number ?? '0');
   res.json({ result: toWords(number, { localeCode: locale }) });
 });
@@ -85,7 +85,7 @@ app.get('/convert', (req, res) => {
 
 - Fixed locale UI: use per-locale imports
 - User-selectable locale UI: use full-bundle helpers with explicit `localeCode`
-- SSR: derive locale from request state rather than relying on process defaults
+- SSR: derive locale from request state and pass `localeCode` explicitly; `setLocaleDetector()` is process-global
 - Finance flows: pass currency values as strings when decimal precision matters
 
 ## Related

@@ -2,10 +2,41 @@
 
 This guide covers two scenarios:
 
-1. **Upgrading within `to-words`** — moving from v4 to v5.
+1. **Upgrading within `to-words`** — moving from v5 to v6 or v4 to v5.
 2. **Migrating from another package** — `number-to-words`, `written-number`, `num-words`, `n2words`.
 
-Current as of **v5.x** — check [npm](https://www.npmjs.com/package/to-words) for the latest.
+Current as of **v6.x** — check [npm](https://www.npmjs.com/package/to-words) for the latest.
+
+---
+
+## Upgrading from `to-words` v5
+
+v6 is a correctness-focused major release. The conversion methods keep the same signatures, but a few observable contracts are intentionally stricter:
+
+| Area                           | v5                                            | v6                                                                       |
+| ------------------------------ | --------------------------------------------- | ------------------------------------------------------------------------ |
+| Language-only locale detection | First registered regional variant             | Explicit default (`en-US`, `es-ES`, `pt-BR`, `sw-KE`, and equivalents)   |
+| Locale configuration           | Publicly mutable after initialization         | Recursively frozen after initialization                                  |
+| `toFixed()`                    | Native binary floating-point rounding         | Decimal-safe rounding                                                    |
+| `isFloat()`                    | Numeric strings reported as `false`           | Any valid input with a non-zero fractional component reports `true`      |
+| `isNumberZero()`               | Positive fractions below one reported as zero | Only exact numeric zero reports as zero                                  |
+| CLI arguments                  | Unknown/conflicting options could be ignored  | Unknown options, repeated `--locale`, and conflicting modes are rejected |
+
+If you depended on a regional variant chosen from a language-only tag, pass it explicitly:
+
+```js
+toWords(100, { localeCode: 'en-AE' });
+```
+
+Define custom locale data completely before the locale is first used. `getLocale().config` remains available for inspection, but mutation is no longer supported because it could leave cached conversion data inconsistent.
+
+`setLocaleDetector()` is process-global. For request-scoped server conversion, pass the locale with each call:
+
+```js
+toWords(100, { localeCode: requestLocale });
+```
+
+The release also corrects exact large-number input, decimal currency rounding, negative sub-unit signs, locale-table invariants, and Spanish ordinal gender. Those fixes do not require migration changes unless an application relied on the previous incorrect output.
 
 ---
 
@@ -63,14 +94,13 @@ import { detectLocale, setLocaleDetector } from 'to-words';
 detectLocale(); // e.g. 'en-US' (from navigator / Intl)
 detectLocale('en-GB'); // custom fallback when nothing matches
 
-// Server / SSR: derive locale from the request, not the process
-setLocaleDetector(() => req.headers['accept-language']?.split(',')[0] ?? 'en-US');
-
 // Tests: pin to a specific locale without mocking globals
 setLocaleDetector(() => 'fr-FR');
 // … run tests …
 setLocaleDetector(null); // restore built-in detection
 ```
+
+`setLocaleDetector()` changes process-wide state. In server and SSR code, pass the request locale directly to `toWords()`, `toCurrency()`, `toOrdinal()`, or the `ToWords` constructor.
 
 ### New: per-locale functional exports (v5)
 

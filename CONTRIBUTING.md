@@ -76,7 +76,7 @@ src/
     index.ts          # LOCALES registry (maps locale code → class)
     en-US.ts          # Example locale
     en-IN.ts
-    …                 # 100 locale files total
+    …                 # 135 locale files total
 
 __tests__/
   ToWords.test.ts     # Full-bundle + functional helper tests
@@ -138,25 +138,25 @@ Your file must:
   import { type ConverterOptions, type NumberInput, type OrdinalOptions } from '../types.js';
   import { ToWordsCore } from '../ToWordsCore.js';
 
-  export default class extends ToWordsCore {
-    // … your locale config …
+  export default class Locale implements LocaleInterface {
+    public config: LocaleConfig = {
+      // … your locale config …
+    };
   }
 
-  // ----- locale-level functional helpers -----
-  import type { ToWords as ToWordsType } from '../ToWords.js'; // type-only, no runtime cost
-
-  let _instance: ToWordsType;
-  function getInstance(): ToWordsType {
-    if (!_instance) {
-      // lazy import to keep tree-shaking intact; value is assigned once
-      const { ToWords } = require('../ToWords.js') as typeof import('../ToWords.js');
-      _instance = new ToWords();
+  export class ToWords extends ToWordsCore {
+    constructor(options: ToWordsOptions = {}) {
+      super(options);
+      this.setLocale(Locale);
     }
-    return _instance;
   }
+
+  const instance = new ToWords();
   ```
 
-  In practice, copy the bottom block verbatim from any existing locale file — the pattern is already standardised across all 100 locales.
+  In practice, copy the bottom block verbatim from any existing locale file — the pattern is standardised across all 135 locales. Locale configuration is frozen on first initialization, so define it completely up front rather than mutating it after conversion starts.
+
+  `numberWordsMapping` must contain zero, use unique numeric thresholds, and be strictly descending because the core uses binary search. The cross-locale invariant test enforces these requirements.
 
 ### 2. Register the locale
 
@@ -218,7 +218,7 @@ All tests must pass and coverage must remain at 100% for the files you touched.
 - **ESM-first** — source is native ESM. Import paths must include the `.js` extension (TypeScript resolves these to `.ts` during compilation).
 - **No global state** in locale files — each locale class is stateless.
 - **Performance** — the conversion hot path is called thousands of times in invoicing apps. Do not add per-call allocations (e.g. `Array.from`, `Object.keys`) inside `convert()` without benchmarking first (`npm run bench`).
-- **Linting** — `npm run lint` must pass with zero warnings. The project uses `@mastermunj/eslint-config`.
+- **Linting** — `npm run lint` must pass with zero warnings. The project uses Oxlint with `@mastermunj/oxc-config`.
 
 ---
 
