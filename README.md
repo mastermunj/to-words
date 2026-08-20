@@ -1031,11 +1031,11 @@ digits), it automatically falls back to the default digit-by-digit style — no 
 
 ## 📏 Bundle Sizes
 
-| Import Method             | Raw    | Gzip   |
-| ------------------------- | ------ | ------ |
-| Full bundle (all locales) | 704 KB | 68 KB  |
-| Single locale (en-US)     | 15 KB  | 4.1 KB |
-| Single locale (en-IN)     | 13 KB  | 4.0 KB |
+| Import Method             | Raw      | Gzip     |
+| ------------------------- | -------- | -------- |
+| Full bundle (all locales) | 708 KiB  | 69.1 KiB |
+| Single locale (en-US)     | 17.6 KiB | 5.0 KiB  |
+| Single locale (en-IN)     | 15.3 KiB | 4.8 KiB  |
 
 > **Tip:** Use tree-shakeable imports or single-locale UMD bundles for the smallest bundle size.
 

@@ -17,6 +17,7 @@ Thank you for taking the time to contribute! This document covers everything you
 - [Commit Message Format](#commit-message-format)
 - [Running Tests](#running-tests)
 - [Building](#building)
+- [Release Process](#release-process)
 
 ---
 
@@ -49,15 +50,16 @@ This project follows the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.
 
 ## Development Setup
 
-| Command                          | Purpose                                                  |
-| -------------------------------- | -------------------------------------------------------- |
-| `npm test`                       | Run the full test suite in watch mode                    |
-| `npm run test -- run`            | Run tests once (CI mode)                                 |
-| `npm run test -- run --coverage` | Run tests with coverage report                           |
-| `npm run lint`                   | Check for linting errors                                 |
-| `npm run lint:fix`               | Auto-fix linting errors                                  |
-| `npm run build`                  | Full production build (tsc CJS/ESM + Rolldown UMD + CLI) |
-| `npm run commit`                 | Interactive commit with Commitizen                       |
+| Command                          | Purpose                                                    |
+| -------------------------------- | ---------------------------------------------------------- |
+| `npm test`                       | Run the full test suite in watch mode                      |
+| `npm run test -- run`            | Run tests once (CI mode)                                   |
+| `npm run test -- run --coverage` | Run tests with coverage report                             |
+| `npm run lint`                   | Check for linting errors                                   |
+| `npm run lint:fix`               | Auto-fix linting errors                                    |
+| `npm run build`                  | Full production build (tsc CJS/ESM + Rolldown UMD + CLI)   |
+| `npm run test:runtime`           | Smoke-test compiled ESM, CJS, locale, and CLI entry points |
+| `npm run commit`                 | Interactive commit with Commitizen                         |
 
 > **Tip:** Run `npm run lint:fix` before committing — the pre-commit hook will block if there are lint errors.
 
@@ -85,6 +87,7 @@ __tests__/
 
 scripts/
   build-umd.ts        # UMD bundle script
+  runtime-smoke.mjs   # Compiled ESM/CJS/locale/CLI release smoke test
 ```
 
 ---
@@ -205,6 +208,7 @@ Add a row for your locale in the **Supported Locales** table in [README.md](READ
 npm run lint
 npm test -- run --coverage
 npm run build
+npm run test:runtime
 ```
 
 All tests must pass and coverage must remain at 100% for the files you touched.
@@ -286,6 +290,21 @@ npm run build
 This runs (in order): clean → CJS build → ESM build → UMD build → package.json injection → CLI chmod.
 
 The UMD bundles in `dist/umd/` are generated per-locale via [Rolldown](https://rolldown.rs/) — one bundle for the full package (`to-words.min.js`) and one per locale (`en-US.min.js`, etc.).
+
+After building, run `npm run test:runtime` to verify the compiled ESM, CommonJS, per-locale, and CLI entry points rather than only the TypeScript source used by unit tests.
+
+---
+
+## Release Process
+
+Releases are automated with Release Please and npm trusted publishing:
+
+1. Merge Conventional Commits into `main`. Mark incompatible changes with `!` and a `BREAKING CHANGE:` footer.
+2. Release Please opens or updates `chore(release): <version>`. It owns the version changes in `package.json`, `package-lock.json`, `.release-please-manifest.json`, and `CHANGELOG.md`; do not edit those versions manually.
+3. Review and merge the release PR. Release Please creates the GitHub release and `v<version>` tag.
+4. The tag starts `publish.yml`, which installs cleanly, lints, tests, builds, smoke-tests compiled entry points, verifies package contents, and publishes through npm OIDC with automatic provenance.
+
+Before a release, verify that the `RELEASE_PLEASE_TOKEN` repository secret is active and that npm trusted publishing is configured for the `mastermunj/to-words` repository and `publish.yml` workflow. Do not create the tag or run `npm publish` manually.
 
 ---
 

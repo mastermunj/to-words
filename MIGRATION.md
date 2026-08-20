@@ -297,7 +297,7 @@ es.convert(42);
 
 ### Key differences
 
-- `n2words` exposes language-specific grammatical options (gender, formal register) via call-site options. `to-words` bakes regional grammar into each locale file — see [`src/locales/`](src/locales/) for locale-specific configuration.
+- `n2words` exposes language-specific grammatical options at the call site. `to-words` supports shared `gender` and `formal` options where a locale defines them, while regional grammar and currency remain in each locale file — see [`src/locales/`](src/locales/).
 - `to-words` adds built-in currency and ordinal support, which can replace custom post-processing.
 - Output is title-cased.
 
@@ -308,12 +308,12 @@ es.convert(42);
 1. **Install** `npm install to-words` (requires Node ≥ 20).
 2. **Choose an import style:**
 
-- Full bundle: `import { toWords } from 'to-words'` (all 135 locales, ~68 KB gzipped).
-- Per-locale: `import { toWords } from 'to-words/en-US'` (~3–4 KB gzipped).
+- Full bundle: `import { toWords } from 'to-words'` (all 135 locales, ~69 KiB gzipped).
+- Per-locale: `import { toWords } from 'to-words/en-US'` (~5 KiB gzipped).
 
 3. **Pick a locale code** per market (`en-US`, `en-IN`, `es-MX`, `fr-FR`, …).
 4. **Update call sites** — use `toWords()` / `toOrdinal()` / `toCurrency()` for functional style, or `tw.convert()` / `tw.toOrdinal()` for the class-based style.
-5. **Handle locale on the server** — call `setLocaleDetector(() => ...)` once at request time so the functional helpers pick up the right locale without requiring an explicit `localeCode` on every call.
+5. **Handle locale on the server** — pass `{ localeCode }` explicitly per request. `setLocaleDetector()` is process-global and should not be changed while concurrent requests are running.
 6. **Add regression tests** covering: `0`, negatives, decimals, large integers (BigInt), currency amounts, and ordinals.
 7. **Check casing expectations** — `to-words` outputs title-case; apply `.toLowerCase()` if your UI requires lower-case.
 
