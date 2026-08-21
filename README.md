@@ -78,6 +78,7 @@ toWords(452.36, { localeCode: 'en-IN', currency: true });
 - **High Performance** — Up to 4.7M ops/sec (small integers; see benchmark section for full breakdown)
 - **Functional API** — `toWords()`, `toOrdinal()`, `toCurrency()` named exports for ergonomic one-liners
 - **Auto Locale Detection** — `detectLocale()` reads `navigator.language` or `Intl` in any runtime
+- **Capability Manifest** — Query supported locales and derived feature support through `to-words/manifest`
 - **CLI** — `npx to-words 12345 --locale en-US` for shell scripts and quick conversions
 - **Wide Compatibility** — All modern browsers and Node.js 20+; compatible by architecture with Deno, Bun, and Cloudflare Workers (zero Node.js-specific APIs)
 
@@ -106,7 +107,7 @@ toCurrency(100, { localeCode: 'en-US' }); // "One Hundred Dollars Only"
 toOrdinal(3, { localeCode: 'en-US' }); // "Third"
 ```
 
-**3. Functional (per-locale import)** — locale baked in, fully tree-shakeable, smallest bundle (~3.5 KB gzip):
+**3. Functional (per-locale import)** — locale baked in, fully tree-shakeable, smallest bundle:
 
 ```js
 import { toWords, toOrdinal, toCurrency } from 'to-words/en-US';
@@ -460,12 +461,26 @@ toOrdinal(3); // "Third"
 toCurrency(100); // "One Hundred Dollars Only"
 ```
 
-> Individual imports are ~3.5 KB gzip vs ~60 KB for the full bundle.
+> Individual imports are substantially smaller than the full bundle. See the measured [bundle sizes](#-bundle-sizes).
+
+### Locale Capability Manifest
+
+Feature discovery is available through an opt-in entry point:
+
+```js
+import { getLocaleCapabilities, isSupportedLocale, SUPPORTED_LOCALES } from 'to-words/manifest';
+
+isSupportedLocale('en-US'); // true
+getLocaleCapabilities('zh-CN')?.formal; // true
+SUPPORTED_LOCALES.length; // 135
+```
+
+The manifest contains compact generated metadata and does not load locale conversion tables. Custom locale authors can validate their configuration with `assertLocaleConfig()` from `to-words/locale-contract`. See the [generated capability matrix](https://mastermunj.github.io/to-words/guide/locale-capabilities).
 
 ### Browser Usage (UMD)
 
 ```html
-<!-- Single locale (recommended, ~3.5 KB gzip) -->
+<!-- Single locale (recommended for smaller bundles) -->
 <script src="https://cdn.jsdelivr.net/npm/to-words/dist/umd/en-US.min.js"></script>
 <script>
   // ToWords is pre-configured for en-US
@@ -474,7 +489,7 @@ toCurrency(100); // "One Hundred Dollars Only"
   // "Twelve Thousand Three Hundred Forty Five"
 </script>
 
-<!-- Full bundle with all locales (~60 KB gzip) -->
+<!-- Full bundle with all locales -->
 <script src="https://cdn.jsdelivr.net/npm/to-words/dist/umd/to-words.min.js"></script>
 <script>
   // Specify locale when using full bundle
@@ -511,7 +526,7 @@ toCurrency(1234.56, { doNotAddOnly: true });
 // currency in the runtime locale, without "Only" suffix
 ```
 
-**Per-locale import** — locale baked in, no `localeCode` argument at all, fully tree-shakeable (~3.5 KB gzip):
+**Per-locale import** — locale baked in, no `localeCode` argument at all, fully tree-shakeable:
 
 ```js
 import { toWords, toOrdinal, toCurrency } from 'to-words/en-US';

@@ -195,6 +195,7 @@ export default defineConfig({
           items: [
             { text: 'Getting Started', link: '/guide/getting-started' },
             { text: 'API Reference', link: '/guide/api-reference' },
+            { text: 'Locale Capabilities', link: '/guide/locale-capabilities' },
             { text: 'Currency', link: '/guide/currency' },
             { text: 'Ordinal Numbers', link: '/guide/ordinal' },
             { text: 'BigInt & Large Numbers', link: '/guide/bigint' },

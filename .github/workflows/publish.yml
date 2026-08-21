@@ -43,6 +43,9 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Verify generated locale artifacts
+        run: npm run docs:check
+
       - name: Verify compiled runtimes
         run: npm run test:runtime
 

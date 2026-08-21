@@ -8,11 +8,11 @@
  * For tree-shaken single-locale imports, use per-locale entry points instead:
  *
  * @example
- * // Full package (all locales ~55KB gzipped)
+ * // Full package (all locales)
  * import { ToWords } from 'to-words';
  * const tw = new ToWords({ localeCode: 'en-IN' });
  *
- * // Single locale (~3-4KB gzipped) - SAME API!
+ * // Single-locale bundle - SAME API!
  * import { ToWords } from 'to-words/en-IN';
  * const tw = new ToWords();
  */

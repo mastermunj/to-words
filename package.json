@@ -66,6 +66,12 @@
       ],
       "core": [
         "dist/types/ToWordsCore"
+      ],
+      "locale-contract": [
+        "dist/types/locale-contract"
+      ],
+      "manifest": [
+        "dist/types/locale-manifest"
       ]
     }
   },
@@ -91,6 +97,16 @@
       "types": "./dist/types/ToWordsCore.d.ts",
       "import": "./dist/esm/ToWordsCore.js",
       "require": "./dist/cjs/ToWordsCore.js"
+    },
+    "./locale-contract": {
+      "types": "./dist/types/locale-contract.d.ts",
+      "import": "./dist/esm/locale-contract.js",
+      "require": "./dist/cjs/locale-contract.js"
+    },
+    "./manifest": {
+      "types": "./dist/types/locale-manifest.d.ts",
+      "import": "./dist/esm/locale-manifest.js",
+      "require": "./dist/cjs/locale-manifest.js"
     }
   },
   "scripts": {
@@ -104,8 +120,10 @@
     "build:watch": "npm run build -- --watch",
     "clean": "rimraf dist coverage",
     "commit": "git-cz",
-    "docs:build": "vitepress build docs",
+    "docs:build": "npm run docs:check && vitepress build docs",
+    "docs:check": "npm run build:esm && node scripts/generate-locale-docs.mjs --check",
     "docs:dev": "vitepress dev docs",
+    "docs:generate": "npm run build:esm && node scripts/generate-locale-docs.mjs && npm run build:esm",
     "docs:preview": "vitepress preview docs",
     "format": "oxfmt --check .",
     "format:fix": "oxfmt --write .",

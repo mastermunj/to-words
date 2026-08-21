@@ -63,7 +63,7 @@ toCurrency(100, { localeCode: locale });
 
 This is the simplest API when locale changes at runtime, for example from a user profile or a language picker.
 
-**3. Per-locale import** — fully tree-shakeable, ~3.5 KB gzip:
+**3. Per-locale import** — fully tree-shakeable and the smallest bundle option:
 
 ```js
 import { toWords, toOrdinal, toCurrency } from 'to-words/en-US';
