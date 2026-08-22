@@ -468,14 +468,16 @@ toCurrency(100); // "One Hundred Dollars Only"
 Feature discovery is available through an opt-in entry point:
 
 ```js
-import { getLocaleCapabilities, isSupportedLocale, SUPPORTED_LOCALES } from 'to-words/manifest';
+import { getLocaleCapabilities, getLocaleMetadata, isSupportedLocale, SUPPORTED_LOCALES } from 'to-words/manifest';
 
 isSupportedLocale('en-US'); // true
 getLocaleCapabilities('zh-CN')?.formal; // true
+getLocaleMetadata('hi-IN')?.numbering.grouping; // [3, 2]
+getLocaleMetadata('en-US')?.range.largestNamedMagnitude; // exact decimal string
 SUPPORTED_LOCALES.length; // 135
 ```
 
-The manifest contains compact generated metadata and does not load locale conversion tables. Custom locale authors can validate their configuration with `assertLocaleConfig()` from `to-words/locale-contract`. See the [generated capability matrix](https://mastermunj.github.io/to-words/guide/locale-capabilities).
+The manifest contains compact generated capability, numbering-system, and named-range metadata without loading locale conversion tables. Custom locale authors can validate their configuration with `assertLocaleConfig()` from `to-words/locale-contract`. See the [generated capability matrix](https://mastermunj.github.io/to-words/guide/locale-capabilities) and [locale quality gates](https://mastermunj.github.io/to-words/guide/locale-quality).
 
 ### Browser Usage (UMD)
 
@@ -1097,154 +1099,145 @@ Deno, Bun, and Cloudflare Workers are compatible by architecture: the library us
 
 ## 🗺️ Supported Locales
 
-All 135 locales with their features:
+All 135 locales with their core setup are listed below. Numbering-system, grouping, and named-range metadata is maintained in the [generated capability matrix](https://mastermunj.github.io/to-words/guide/locale-capabilities) rather than duplicated here.
 
-| Locale | Language        | Country             | Currency      | Scale      | Ordinal |
-| ------ | --------------- | ------------------- | ------------- | ---------- | ------- |
-| af-ZA  | Afrikaans       | South Africa        | Rand          | Short      | ✓       |
-| am-ET  | Amharic         | Ethiopia            | ብር            | Short      | ✓       |
-| ar-AE  | Arabic          | UAE                 | درهم          | Short      | ✓       |
-| ar-DZ  | Arabic          | Algeria             | دينار         | Short      | ✓       |
-| ar-EG  | Arabic          | Egypt               | جنيه          | Short      | ✓       |
-| ar-IQ  | Arabic          | Iraq                | دينار         | Short      | ✓       |
-| ar-LB  | Arabic          | Lebanon             | ليرة          | Short      | ✓       |
-| ar-MA  | Arabic          | Morocco             | درهم          | Short      | ✓       |
-| ar-SA  | Arabic          | Saudi Arabia        | ريال          | Short      | ✓       |
-| ar-SD  | Arabic          | Sudan               | جنيه          | Short      | ✓       |
-| ar-YE  | Arabic          | Yemen               | ريال          | Short      | ✓       |
-| as-IN  | Assamese        | India               | টকা           | Indian     | ✓       |
-| az-AZ  | Azerbaijani     | Azerbaijan          | Manat         | Short      | ✓       |
-| be-BY  | Belarusian      | Belarus             | Рубель        | Short      | ✓       |
-| bg-BG  | Bulgarian       | Bulgaria            | Лев           | Short      | ✓       |
-| bn-BD  | Bengali         | Bangladesh          | টাকা          | Short      | ✓       |
-| bn-IN  | Bengali         | India               | টাকা          | Short      | ✓       |
-| ca-ES  | Catalan         | Spain               | Euro          | Short      | ✓       |
-| cs-CZ  | Czech           | Czech Republic      | Koruna        | Short      | ✓       |
-| da-DK  | Danish          | Denmark             | Krone         | Long       | ✓       |
-| de-AT  | German          | Austria             | Euro          | Long       | ✓       |
-| de-CH  | German          | Switzerland         | Franken       | Long       | ✓       |
-| de-DE  | German          | Germany             | Euro          | Long       | ✓       |
-| ee-EE  | Estonian        | Estonia             | Euro          | Short      | ✓       |
-| el-GR  | Greek           | Greece              | Ευρώ          | Short      | ✓       |
-| en-AE  | English         | UAE                 | Dirham        | Short      | ✓       |
-| en-AU  | English         | Australia           | Dollar        | Short      | ✓       |
-| en-BD  | English         | Bangladesh          | Taka          | Indian     | ✓       |
-| en-CA  | English         | Canada              | Dollar        | Short      | ✓       |
-| en-GB  | English         | United Kingdom      | Pound         | Short      | ✓       |
-| en-GH  | English         | Ghana               | Cedi          | Short      | ✓       |
-| en-HK  | English         | Hong Kong           | Dollar        | Short      | ✓       |
-| en-IE  | English         | Ireland             | Euro          | Short      | ✓       |
-| en-IN  | English         | India               | Rupee         | Indian     | ✓       |
-| en-IQ  | English         | Iraq                | Dinar         | Short      | ✓       |
-| en-JM  | English         | Jamaica             | Dollar        | Short      | ✓       |
-| en-KE  | English         | Kenya               | Shilling      | Short      | ✓       |
-| en-LK  | English         | Sri Lanka           | Rupee         | Short      | ✓       |
-| en-MA  | English         | Morocco             | Dirham        | Short      | ✓       |
-| en-MM  | English         | Myanmar             | Kyat          | Short      | ✓       |
-| en-MU  | English         | Mauritius           | Rupee         | Indian     | ✓       |
-| en-MY  | English         | Malaysia            | Ringgit       | Short      | ✓       |
-| en-NG  | English         | Nigeria             | Naira         | Short      | ✓       |
-| en-NP  | English         | Nepal               | Rupee         | Indian     | ✓       |
-| en-NZ  | English         | New Zealand         | Dollar        | Short      | ✓       |
-| en-OM  | English         | Oman                | Rial          | Short      | ✓       |
-| en-PH  | English         | Philippines         | Peso          | Short      | ✓       |
-| en-PK  | English         | Pakistan            | Rupee         | Indian     | ✓       |
-| en-SA  | English         | Saudi Arabia        | Riyal         | Short      | ✓       |
-| en-SG  | English         | Singapore           | Dollar        | Short      | ✓       |
-| en-TT  | English         | Trinidad and Tobago | Dollar        | Short      | ✓       |
-| en-TZ  | English         | Tanzania            | Shilling      | Short      | ✓       |
-| en-UG  | English         | Uganda              | Shilling      | Short      | ✓       |
-| en-US  | English         | USA                 | Dollar        | Short      | ✓       |
-| en-ZA  | English         | South Africa        | Rand          | Short      | ✓       |
-| en-ZW  | English         | Zimbabwe            | Zimbabwe Gold | Short      | ✓       |
-| es-AR  | Spanish         | Argentina           | Peso          | Short      | ✓       |
-| es-CL  | Spanish         | Chile               | Peso          | Short      | ✓       |
-| es-CO  | Spanish         | Colombia            | Peso          | Short      | ✓       |
-| es-ES  | Spanish         | Spain               | Euro          | Short      | ✓       |
-| es-MX  | Spanish         | Mexico              | Peso          | Short      | ✓       |
-| es-PE  | Spanish         | Peru                | Sol           | Short      | ✓       |
-| es-US  | Spanish         | USA                 | Dólar         | Short      | ✓       |
-| es-VE  | Spanish         | Venezuela           | Bolívar       | Short      | ✓       |
-| fa-IR  | Persian         | Iran                | تومان         | Short      | ✓       |
-| fi-FI  | Finnish         | Finland             | Euro          | Short      | ✓       |
-| fil-PH | Filipino        | Philippines         | Piso          | Short      | ✓       |
-| fr-BE  | French          | Belgium             | Euro          | Long       | ✓       |
-| fr-CA  | French          | Canada              | Dollar        | Long       | ✓       |
-| fr-CH  | French          | Switzerland         | Franc         | Long       | ✓       |
-| fr-CI  | French          | Côte d'Ivoire       | Franc CFA     | Long       | ✓       |
-| fr-CM  | French          | Cameroon            | Franc CFA     | Long       | ✓       |
-| fr-DZ  | French          | Algeria             | Dinar         | Long       | ✓       |
-| fr-FR  | French          | France              | Euro          | Long       | ✓       |
-| fr-MA  | French          | Morocco             | Dirham        | Long       | ✓       |
-| fr-MG  | French          | Madagascar          | Ariary        | Long       | ✓       |
-| fr-SA  | French          | Saudi Arabia        | Riyal         | Long       | ✓       |
-| gu-IN  | Gujarati        | India               | રૂપિયો        | Short      | ✓       |
-| ha-NG  | Hausa           | Nigeria             | Naira         | Short      | ✓       |
-| hbo-IL | Biblical Hebrew | Israel              | שקל           | Short      | ✓       |
-| he-IL  | Hebrew          | Israel              | שקל           | Short      | ✓       |
-| hi-IN  | Hindi           | India               | रुपया         | Indian     | ✓       |
-| hr-HR  | Croatian        | Croatia             | Euro          | Short      | ✓       |
-| hu-HU  | Hungarian       | Hungary             | Forint        | Short      | ✓       |
-| id-ID  | Indonesian      | Indonesia           | Rupiah        | Short      | ✓       |
-| ig-NG  | Igbo            | Nigeria             | Naira         | Short      | ✓       |
-| is-IS  | Icelandic       | Iceland             | Króna         | Short      | ✓       |
-| it-IT  | Italian         | Italy               | Euro          | Short      | ✓       |
-| ja-JP  | Japanese        | Japan               | 円            | East Asian | ✓       |
-| jv-ID  | Javanese        | Indonesia           | Rupiah        | Short      | ✓       |
-| ka-GE  | Georgian        | Georgia             | ლარი          | Short      | ✓       |
-| km-KH  | Khmer           | Cambodia            | រៀល           | Khmer      | ✓       |
-| kn-IN  | Kannada         | India               | ರೂಪಾಯಿ        | Short      | ✓       |
-| ko-KR  | Korean          | South Korea         | 원            | Short      | ✓       |
-| lt-LT  | Lithuanian      | Lithuania           | Euras         | Short      | ✓       |
-| lv-LV  | Latvian         | Latvia              | Eiro          | Short      | ✓       |
-| ml-IN  | Malayalam       | India               | രൂപ           | Indian     | ✓       |
-| mr-IN  | Marathi         | India               | रुपया         | Indian     | ✓       |
-| ms-MY  | Malay           | Malaysia            | Ringgit       | Short      | ✓       |
-| ms-SG  | Malay           | Singapore           | Dolar         | Short      | ✓       |
-| my-MM  | Burmese         | Myanmar             | ကျပ်          | Burmese    | ✓       |
-| nb-NO  | Norwegian       | Norway              | Krone         | Long       | ✓       |
-| nl-NL  | Dutch           | Netherlands         | Euro          | Short      | ✓       |
-| nl-SR  | Dutch           | Suriname            | Dollar        | Short      | ✓       |
-| np-NP  | Nepali          | Nepal               | रुपैयाँ       | Indian     | ✓       |
-| or-IN  | Odia            | India               | ଟଙ୍କା         | Short      | ✓       |
-| pa-IN  | Punjabi         | India               | ਰੁਪਇਆ         | Short      | ✓       |
-| pl-PL  | Polish          | Poland              | Złoty         | Short      | ✓       |
-| pt-AO  | Portuguese      | Angola              | Kwanza        | Short      | ✓       |
-| pt-BR  | Portuguese      | Brazil              | Real          | Short      | ✓       |
-| pt-MZ  | Portuguese      | Mozambique          | Metical       | Short      | ✓       |
-| pt-PT  | Portuguese      | Portugal            | Euro          | Short      | ✓       |
-| ro-RO  | Romanian        | Romania             | Leu           | Short      | ✓       |
-| ru-RU  | Russian         | Russia              | Рубль         | Short      | ✓       |
-| si-LK  | Sinhala         | Sri Lanka           | රුපියල        | Indian     | ✓       |
-| sk-SK  | Slovak          | Slovakia            | Euro          | Short      | ✓       |
-| sl-SI  | Slovenian       | Slovenia            | Euro          | Short      | ✓       |
-| sq-AL  | Albanian        | Albania             | Lek           | Short      | ✓       |
-| sr-RS  | Serbian         | Serbia              | Dinar         | Short      | ✓       |
-| sv-SE  | Swedish         | Sweden              | Krona         | Short      | ✓       |
-| sw-KE  | Swahili         | Kenya               | Shilingi      | Short      | ✓       |
-| sw-TZ  | Swahili         | Tanzania            | Shilingi      | Short      | ✓       |
-| ta-IN  | Tamil           | India               | ரூபாய்        | Short      | ✓       |
-| te-IN  | Telugu          | India               | రూపాయి        | Short      | ✓       |
-| th-TH  | Thai            | Thailand            | บาท           | Short      | ✓       |
-| tr-TR  | Turkish         | Turkey              | Lira          | Short      | ✓       |
-| uk-UA  | Ukrainian       | Ukraine             | Гривня        | Short      | ✓       |
-| ur-PK  | Urdu            | Pakistan            | روپیہ         | Short      | ✓       |
-| uz-UZ  | Uzbek           | Uzbekistan          | So'm          | Short      | ✓       |
-| vi-VN  | Vietnamese      | Vietnam             | Đồng          | Short      | ✓       |
-| yo-NG  | Yoruba          | Nigeria             | Naira         | Short      | ✓       |
-| yue-HK | Cantonese       | Hong Kong           | 元            | East Asian | ✓       |
-| zh-CN  | Chinese         | China               | 元            | East Asian | ✓       |
-| zh-TW  | Chinese         | Taiwan              | 元            | East Asian | ✓       |
-| zu-ZA  | Zulu            | South Africa        | Rand          | Short      | ✓       |
-
-**Scale Legend:**
-
-- **Short** — Western short scale (Million, Billion, Trillion...)
-- **Long** — European long scale (Million, Milliard, Billion, Billiard...)
-- **Indian** — Indian numbering (Lakh, Crore, Arab, Kharab...)
-- **East Asian** — East Asian numbering (万, 億, 兆, 京...)
-- **Burmese** — Burmese traditional scale (သောင်း=10k, သိန်း=100k, သန်း=1M)
-- **Khmer** — Khmer traditional scale (មុឺន=10k, សែន=100k, លាន=1M)
+| Locale | Language        | Country             | Currency      | Ordinal |
+| ------ | --------------- | ------------------- | ------------- | ------- |
+| af-ZA  | Afrikaans       | South Africa        | Rand          | ✓       |
+| am-ET  | Amharic         | Ethiopia            | ብር            | ✓       |
+| ar-AE  | Arabic          | UAE                 | درهم          | ✓       |
+| ar-DZ  | Arabic          | Algeria             | دينار         | ✓       |
+| ar-EG  | Arabic          | Egypt               | جنيه          | ✓       |
+| ar-IQ  | Arabic          | Iraq                | دينار         | ✓       |
+| ar-LB  | Arabic          | Lebanon             | ليرة          | ✓       |
+| ar-MA  | Arabic          | Morocco             | درهم          | ✓       |
+| ar-SA  | Arabic          | Saudi Arabia        | ريال          | ✓       |
+| ar-SD  | Arabic          | Sudan               | جنيه          | ✓       |
+| ar-YE  | Arabic          | Yemen               | ريال          | ✓       |
+| as-IN  | Assamese        | India               | টকা           | ✓       |
+| az-AZ  | Azerbaijani     | Azerbaijan          | Manat         | ✓       |
+| be-BY  | Belarusian      | Belarus             | Рубель        | ✓       |
+| bg-BG  | Bulgarian       | Bulgaria            | Лев           | ✓       |
+| bn-BD  | Bengali         | Bangladesh          | টাকা          | ✓       |
+| bn-IN  | Bengali         | India               | টাকা          | ✓       |
+| ca-ES  | Catalan         | Spain               | Euro          | ✓       |
+| cs-CZ  | Czech           | Czech Republic      | Koruna        | ✓       |
+| da-DK  | Danish          | Denmark             | Krone         | ✓       |
+| de-AT  | German          | Austria             | Euro          | ✓       |
+| de-CH  | German          | Switzerland         | Franken       | ✓       |
+| de-DE  | German          | Germany             | Euro          | ✓       |
+| ee-EE  | Estonian        | Estonia             | Euro          | ✓       |
+| el-GR  | Greek           | Greece              | Ευρώ          | ✓       |
+| en-AE  | English         | UAE                 | Dirham        | ✓       |
+| en-AU  | English         | Australia           | Dollar        | ✓       |
+| en-BD  | English         | Bangladesh          | Taka          | ✓       |
+| en-CA  | English         | Canada              | Dollar        | ✓       |
+| en-GB  | English         | United Kingdom      | Pound         | ✓       |
+| en-GH  | English         | Ghana               | Cedi          | ✓       |
+| en-HK  | English         | Hong Kong           | Dollar        | ✓       |
+| en-IE  | English         | Ireland             | Euro          | ✓       |
+| en-IN  | English         | India               | Rupee         | ✓       |
+| en-IQ  | English         | Iraq                | Dinar         | ✓       |
+| en-JM  | English         | Jamaica             | Dollar        | ✓       |
+| en-KE  | English         | Kenya               | Shilling      | ✓       |
+| en-LK  | English         | Sri Lanka           | Rupee         | ✓       |
+| en-MA  | English         | Morocco             | Dirham        | ✓       |
+| en-MM  | English         | Myanmar             | Kyat          | ✓       |
+| en-MU  | English         | Mauritius           | Rupee         | ✓       |
+| en-MY  | English         | Malaysia            | Ringgit       | ✓       |
+| en-NG  | English         | Nigeria             | Naira         | ✓       |
+| en-NP  | English         | Nepal               | Rupee         | ✓       |
+| en-NZ  | English         | New Zealand         | Dollar        | ✓       |
+| en-OM  | English         | Oman                | Rial          | ✓       |
+| en-PH  | English         | Philippines         | Peso          | ✓       |
+| en-PK  | English         | Pakistan            | Rupee         | ✓       |
+| en-SA  | English         | Saudi Arabia        | Riyal         | ✓       |
+| en-SG  | English         | Singapore           | Dollar        | ✓       |
+| en-TT  | English         | Trinidad and Tobago | Dollar        | ✓       |
+| en-TZ  | English         | Tanzania            | Shilling      | ✓       |
+| en-UG  | English         | Uganda              | Shilling      | ✓       |
+| en-US  | English         | USA                 | Dollar        | ✓       |
+| en-ZA  | English         | South Africa        | Rand          | ✓       |
+| en-ZW  | English         | Zimbabwe            | Zimbabwe Gold | ✓       |
+| es-AR  | Spanish         | Argentina           | Peso          | ✓       |
+| es-CL  | Spanish         | Chile               | Peso          | ✓       |
+| es-CO  | Spanish         | Colombia            | Peso          | ✓       |
+| es-ES  | Spanish         | Spain               | Euro          | ✓       |
+| es-MX  | Spanish         | Mexico              | Peso          | ✓       |
+| es-PE  | Spanish         | Peru                | Sol           | ✓       |
+| es-US  | Spanish         | USA                 | Dólar         | ✓       |
+| es-VE  | Spanish         | Venezuela           | Bolívar       | ✓       |
+| fa-IR  | Persian         | Iran                | تومان         | ✓       |
+| fi-FI  | Finnish         | Finland             | Euro          | ✓       |
+| fil-PH | Filipino        | Philippines         | Piso          | ✓       |
+| fr-BE  | French          | Belgium             | Euro          | ✓       |
+| fr-CA  | French          | Canada              | Dollar        | ✓       |
+| fr-CH  | French          | Switzerland         | Franc         | ✓       |
+| fr-CI  | French          | Côte d'Ivoire       | Franc CFA     | ✓       |
+| fr-CM  | French          | Cameroon            | Franc CFA     | ✓       |
+| fr-DZ  | French          | Algeria             | Dinar         | ✓       |
+| fr-FR  | French          | France              | Euro          | ✓       |
+| fr-MA  | French          | Morocco             | Dirham        | ✓       |
+| fr-MG  | French          | Madagascar          | Ariary        | ✓       |
+| fr-SA  | French          | Saudi Arabia        | Riyal         | ✓       |
+| gu-IN  | Gujarati        | India               | રૂપિયો        | ✓       |
+| ha-NG  | Hausa           | Nigeria             | Naira         | ✓       |
+| hbo-IL | Biblical Hebrew | Israel              | שקל           | ✓       |
+| he-IL  | Hebrew          | Israel              | שקל           | ✓       |
+| hi-IN  | Hindi           | India               | रुपया         | ✓       |
+| hr-HR  | Croatian        | Croatia             | Euro          | ✓       |
+| hu-HU  | Hungarian       | Hungary             | Forint        | ✓       |
+| id-ID  | Indonesian      | Indonesia           | Rupiah        | ✓       |
+| ig-NG  | Igbo            | Nigeria             | Naira         | ✓       |
+| is-IS  | Icelandic       | Iceland             | Króna         | ✓       |
+| it-IT  | Italian         | Italy               | Euro          | ✓       |
+| ja-JP  | Japanese        | Japan               | 円            | ✓       |
+| jv-ID  | Javanese        | Indonesia           | Rupiah        | ✓       |
+| ka-GE  | Georgian        | Georgia             | ლარი          | ✓       |
+| km-KH  | Khmer           | Cambodia            | រៀល           | ✓       |
+| kn-IN  | Kannada         | India               | ರೂಪಾಯಿ        | ✓       |
+| ko-KR  | Korean          | South Korea         | 원            | ✓       |
+| lt-LT  | Lithuanian      | Lithuania           | Euras         | ✓       |
+| lv-LV  | Latvian         | Latvia              | Eiro          | ✓       |
+| ml-IN  | Malayalam       | India               | രൂപ           | ✓       |
+| mr-IN  | Marathi         | India               | रुपया         | ✓       |
+| ms-MY  | Malay           | Malaysia            | Ringgit       | ✓       |
+| ms-SG  | Malay           | Singapore           | Dolar         | ✓       |
+| my-MM  | Burmese         | Myanmar             | ကျပ်          | ✓       |
+| nb-NO  | Norwegian       | Norway              | Krone         | ✓       |
+| nl-NL  | Dutch           | Netherlands         | Euro          | ✓       |
+| nl-SR  | Dutch           | Suriname            | Dollar        | ✓       |
+| np-NP  | Nepali          | Nepal               | रुपैयाँ       | ✓       |
+| or-IN  | Odia            | India               | ଟଙ୍କା         | ✓       |
+| pa-IN  | Punjabi         | India               | ਰੁਪਇਆ         | ✓       |
+| pl-PL  | Polish          | Poland              | Złoty         | ✓       |
+| pt-AO  | Portuguese      | Angola              | Kwanza        | ✓       |
+| pt-BR  | Portuguese      | Brazil              | Real          | ✓       |
+| pt-MZ  | Portuguese      | Mozambique          | Metical       | ✓       |
+| pt-PT  | Portuguese      | Portugal            | Euro          | ✓       |
+| ro-RO  | Romanian        | Romania             | Leu           | ✓       |
+| ru-RU  | Russian         | Russia              | Рубль         | ✓       |
+| si-LK  | Sinhala         | Sri Lanka           | රුපියල        | ✓       |
+| sk-SK  | Slovak          | Slovakia            | Euro          | ✓       |
+| sl-SI  | Slovenian       | Slovenia            | Euro          | ✓       |
+| sq-AL  | Albanian        | Albania             | Lek           | ✓       |
+| sr-RS  | Serbian         | Serbia              | Dinar         | ✓       |
+| sv-SE  | Swedish         | Sweden              | Krona         | ✓       |
+| sw-KE  | Swahili         | Kenya               | Shilingi      | ✓       |
+| sw-TZ  | Swahili         | Tanzania            | Shilingi      | ✓       |
+| ta-IN  | Tamil           | India               | ரூபாய்        | ✓       |
+| te-IN  | Telugu          | India               | రూపాయి        | ✓       |
+| th-TH  | Thai            | Thailand            | บาท           | ✓       |
+| tr-TR  | Turkish         | Turkey              | Lira          | ✓       |
+| uk-UA  | Ukrainian       | Ukraine             | Гривня        | ✓       |
+| ur-PK  | Urdu            | Pakistan            | روپیہ         | ✓       |
+| uz-UZ  | Uzbek           | Uzbekistan          | So'm          | ✓       |
+| vi-VN  | Vietnamese      | Vietnam             | Đồng          | ✓       |
+| yo-NG  | Yoruba          | Nigeria             | Naira         | ✓       |
+| yue-HK | Cantonese       | Hong Kong           | 元            | ✓       |
+| zh-CN  | Chinese         | China               | 元            | ✓       |
+| zh-TW  | Chinese         | Taiwan              | 元            | ✓       |
+| zu-ZA  | Zulu            | South Africa        | Rand          | ✓       |
 
 **Gender Support:**
 

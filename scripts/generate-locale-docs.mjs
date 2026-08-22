@@ -3,7 +3,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { deriveLocaleCapabilities } from '../dist/esm/locale-contract.js';
+import { deriveLocaleCapabilities, deriveLocaleMetadata } from '../dist/esm/locale-contract.js';
 import LOCALES from '../dist/esm/locales/index.js';
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -12,10 +12,14 @@ const dataOutputPath = path.join(repositoryRoot, 'src/locale-manifest-data.ts');
 
 const entries = Object.keys(LOCALES)
   .sort()
-  .map((localeCode) => ({
-    localeCode,
-    capabilities: deriveLocaleCapabilities(new LOCALES[localeCode]().config),
-  }));
+  .map((localeCode) => {
+    const config = new LOCALES[localeCode]().config;
+    return {
+      localeCode,
+      capabilities: deriveLocaleCapabilities(config),
+      metadata: deriveLocaleMetadata(config),
+    };
+  });
 
 function renderTable(headers, rows) {
   const widths = headers.map((header, column) => Math.max(header.length, ...rows.map((row) => row[column].length)));
@@ -41,10 +45,27 @@ function renderFractionDigits(capabilities) {
   return capabilities.decimals.fraction ? capabilities.decimals.fractionDigits.join(', ') : '—';
 }
 
+function renderNumberingSystem(system) {
+  return {
+    'base-thousand': 'Base thousand',
+    indian: 'Indian',
+    'east-asian': 'East Asian',
+    'locale-specific': 'Locale-specific',
+  }[system];
+}
+
+function renderLargestMagnitude(range) {
+  return range.largestNamedMagnitudeExponent === null
+    ? range.largestNamedMagnitude
+    : `10^${range.largestNamedMagnitudeExponent}`;
+}
+
 function renderDocument() {
   const count = (predicate) => entries.filter(predicate).length;
-  const rows = entries.map(({ localeCode, capabilities }) => [
+  const rows = entries.map(({ localeCode, capabilities, metadata }) => [
     `\`${localeCode}\``,
+    renderNumberingSystem(metadata.numbering.system),
+    renderLargestMagnitude(metadata.range),
     capabilities.ordinal ? 'Yes' : 'No',
     renderGender(capabilities),
     capabilities.formal ? 'Yes' : 'No',
@@ -69,10 +90,12 @@ function renderDocument() {
     '## Programmatic Usage',
     '',
     '```ts',
-    "import { getLocaleCapabilities, isSupportedLocale, LOCALE_MANIFEST } from 'to-words/manifest';",
+    "import { getLocaleCapabilities, getLocaleMetadata, isSupportedLocale, LOCALE_MANIFEST } from 'to-words/manifest';",
     '',
     "isSupportedLocale('fr-FR'); // true",
     "getLocaleCapabilities('fr-FR')?.decimals.fraction; // true",
+    "getLocaleMetadata('hi-IN')?.numbering.grouping; // [3, 2]",
+    "getLocaleMetadata('en-US')?.range.largestNamedMagnitude; // exact decimal string",
     "LOCALE_MANIFEST['zh-CN'].capabilities.formal; // true",
     '```',
     '',
@@ -81,10 +104,11 @@ function renderDocument() {
     'Locale authors can validate custom configurations without importing the locale registry:',
     '',
     '```ts',
-    "import { assertLocaleConfig, deriveLocaleCapabilities } from 'to-words/locale-contract';",
+    "import { assertLocaleConfig, deriveLocaleCapabilities, deriveLocaleMetadata } from 'to-words/locale-contract';",
     '',
     "assertLocaleConfig(customLocale.config, 'my-locale');",
     'const capabilities = deriveLocaleCapabilities(customLocale.config);',
+    'const metadata = deriveLocaleMetadata(customLocale.config);',
     '```',
     '',
     '## Capability Definitions',
@@ -97,9 +121,31 @@ function renderDocument() {
     '',
     'Cardinal, currency, and digit-style decimal conversion are part of every locale contract.',
     '',
+    '## Numbering and Range Definitions',
+    '',
+    '- **Base thousand**: every configured large unit is a power of 1,000. This structural family includes locales whose words are commonly described as either short scale or long scale.',
+    '- **Indian**: the configuration contains lakh (10^5) and crore (10^7) magnitudes; grouping proceeds 3 digits, then 2 digits.',
+    '- **East Asian**: the configuration contains 10^4 and 10^8 magnitudes; grouping proceeds in 4-digit units.',
+    '- **Locale-specific**: configured large units do not match one of the structural families above. Inspect `largeUnitExponents` for the exact named powers of ten.',
+    '- **Largest named scale**: the largest magnitude with an explicit word in the locale configuration.',
+    '',
+    '`largestNamedMagnitude` is descriptive metadata, not an input ceiling. Integer strings and `bigint` values can exceed it; conversion recursively reuses the largest configured scale. The package does not claim that recursively composed output has been independently certified by native speakers beyond the named range.',
+    '',
     '## All Locales',
     '',
-    ...renderTable(['Locale', 'Ordinal', 'Gender', 'Formal', 'Fraction digits', 'Currency decimals'], rows),
+    ...renderTable(
+      [
+        'Locale',
+        'Numbering system',
+        'Largest named scale',
+        'Ordinal',
+        'Gender',
+        'Formal',
+        'Fraction digits',
+        'Currency decimals',
+      ],
+      rows,
+    ),
     '',
   ].join('\n');
 }
@@ -110,29 +156,44 @@ function renderManifestData() {
     'export type GeneratedLocaleCode =',
     ...entries.map(({ localeCode }, index) => `  | '${localeCode}'${index === entries.length - 1 ? ';' : ''}`),
     '',
-    'type LocaleCapabilityDatum = Readonly<{',
-    '  ordinal: boolean;',
-    '  formal: boolean;',
-    '  cardinalGender: boolean;',
-    '  ordinalGender: boolean;',
-    '  fractionDigits: readonly number[];',
-    '  currencyPrecision: number;',
-    '}>;',
+    'type LocaleCapabilityDatum = readonly [',
+    '  ordinal: boolean,',
+    '  formal: boolean,',
+    '  cardinalGender: boolean,',
+    '  ordinalGender: boolean,',
+    '  fractionDigits: readonly number[],',
+    '  currencyPrecision: number,',
+    "  numberingSystem: 'base-thousand' | 'indian' | 'east-asian' | 'locale-specific',",
+    '  grouping: readonly number[],',
+    '  largeUnitExponents: readonly number[],',
+    '  largestNamedMagnitude: string,',
+    '  largestNamedMagnitudeExponent: number | null,',
+    '];',
     '',
     'export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, LocaleCapabilityDatum>> = {',
   ];
 
-  for (const { localeCode, capabilities } of entries) {
-    lines.push(
-      `  '${localeCode}': {`,
-      `    ordinal: ${capabilities.ordinal},`,
-      `    formal: ${capabilities.formal},`,
-      `    cardinalGender: ${capabilities.gender.cardinal},`,
-      `    ordinalGender: ${capabilities.gender.ordinal},`,
-      `    fractionDigits: [${capabilities.decimals.fractionDigits.join(', ')}],`,
-      `    currencyPrecision: ${capabilities.currencyPrecision},`,
-      '  },',
-    );
+  for (const { localeCode, capabilities, metadata } of entries) {
+    const values = [
+      capabilities.ordinal,
+      capabilities.formal,
+      capabilities.gender.cardinal,
+      capabilities.gender.ordinal,
+      `[${capabilities.decimals.fractionDigits.join(', ')}]`,
+      capabilities.currencyPrecision,
+      `'${metadata.numbering.system}'`,
+      `[${metadata.numbering.grouping.join(', ')}]`,
+      `[${metadata.numbering.largeUnitExponents.join(', ')}]`,
+      `'${metadata.range.largestNamedMagnitude}'`,
+      String(metadata.range.largestNamedMagnitudeExponent),
+    ].map(String);
+    const compactLine = `  '${localeCode}': [${values.join(', ')}],`;
+
+    if (compactLine.length <= 120) {
+      lines.push(compactLine);
+    } else {
+      lines.push(`  '${localeCode}': [`, ...values.map((value) => `    ${value},`), '  ],');
+    }
   }
 
   lines.push('};', '');

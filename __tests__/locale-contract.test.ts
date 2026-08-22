@@ -1,5 +1,10 @@
 import { describe, expect, test } from 'vitest';
-import { assertLocaleConfig, deriveLocaleCapabilities, validateLocaleConfig } from '../src/locale-contract.js';
+import {
+  assertLocaleConfig,
+  deriveLocaleCapabilities,
+  deriveLocaleMetadata,
+  validateLocaleConfig,
+} from '../src/locale-contract.js';
 import type { LocaleConfig } from '../src/types.js';
 
 function createConfig(overrides: Partial<LocaleConfig> = {}): LocaleConfig {
@@ -80,6 +85,88 @@ describe('locale contract', () => {
       deriveLocaleCapabilities(createConfig({ ordinalGenderSuffixMapping: { masculine: 'o', feminine: 'a' } })).gender
         .ordinal,
     ).toBe(true);
+  });
+
+  test.each([
+    {
+      name: 'base-thousand',
+      mappings: [
+        { number: 1_000_000, value: 'Million' },
+        { number: 1000, value: 'Thousand' },
+        { number: 1, value: 'One' },
+        { number: 0, value: 'Zero' },
+      ],
+      grouping: [3],
+      exponents: [3, 6],
+    },
+    {
+      name: 'indian',
+      mappings: [
+        { number: 10_000_000, value: 'Crore' },
+        { number: 100_000, value: 'Lakh' },
+        { number: 1000, value: 'Thousand' },
+        { number: 1, value: 'One' },
+        { number: 0, value: 'Zero' },
+      ],
+      grouping: [3, 2],
+      exponents: [3, 5, 7],
+    },
+    {
+      name: 'east-asian',
+      mappings: [
+        { number: 100_000_000, value: 'Hundred million' },
+        { number: 10_000_000, value: 'Ten million' },
+        { number: 100_000, value: 'Hundred thousand' },
+        { number: 10_000, value: 'Ten thousand' },
+        { number: 1, value: 'One' },
+        { number: 0, value: 'Zero' },
+      ],
+      grouping: [4],
+      exponents: [4, 5, 7, 8],
+    },
+  ])('derives immutable $name numbering metadata', ({ name, mappings, grouping, exponents }) => {
+    const metadata = deriveLocaleMetadata(createConfig({ numberWordsMapping: mappings }));
+
+    expect(metadata).toEqual({
+      numbering: {
+        system: name,
+        grouping,
+        largeUnitExponents: exponents,
+      },
+      range: {
+        largestNamedMagnitude: String(mappings[0].number),
+        largestNamedMagnitudeExponent: exponents.at(-1),
+        arbitraryPrecisionInput: true,
+      },
+    });
+    expect(Object.isFrozen(metadata)).toBe(true);
+    expect(Object.isFrozen(metadata.numbering)).toBe(true);
+    expect(Object.isFrozen(metadata.numbering.grouping)).toBe(true);
+    expect(Object.isFrozen(metadata.numbering.largeUnitExponents)).toBe(true);
+    expect(Object.isFrozen(metadata.range)).toBe(true);
+  });
+
+  test('marks irregular and minimal configurations as locale-specific', () => {
+    expect(
+      deriveLocaleMetadata(
+        createConfig({
+          numberWordsMapping: [
+            { number: 1001, value: 'Irregular scale' },
+            { number: 1, value: 'One' },
+            { number: 0, value: 'Zero' },
+          ],
+        }),
+      ),
+    ).toEqual({
+      numbering: { system: 'locale-specific', grouping: [], largeUnitExponents: [] },
+      range: {
+        largestNamedMagnitude: '1001',
+        largestNamedMagnitudeExponent: null,
+        arbitraryPrecisionInput: true,
+      },
+    });
+
+    expect(deriveLocaleMetadata(createConfig()).numbering.system).toBe('locale-specific');
   });
 
   test('accepts valid base and effective formal configurations', () => {

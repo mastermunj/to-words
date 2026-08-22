@@ -19,6 +19,31 @@ export type LocaleCapabilities = Readonly<{
   currencyPrecision: number;
 }>;
 
+export type NumberingSystem = 'base-thousand' | 'indian' | 'east-asian' | 'locale-specific';
+
+export type LocaleNumberingMetadata = Readonly<{
+  /** Structural family inferred from the configured scale magnitudes. */
+  system: NumberingSystem;
+  /** Primary grouping widths, from the least-significant group outwards. */
+  grouping: readonly number[];
+  /** Powers of ten with an explicitly configured scale word. */
+  largeUnitExponents: readonly number[];
+}>;
+
+export type LocaleRangeMetadata = Readonly<{
+  /** Largest magnitude with an explicit entry in numberWordsMapping. */
+  largestNamedMagnitude: string;
+  /** Base-10 exponent when largestNamedMagnitude is an exact power of ten. */
+  largestNamedMagnitudeExponent: number | null;
+  /** bigint and integer-string inputs are not capped by the named scale list. */
+  arbitraryPrecisionInput: true;
+}>;
+
+export type LocaleMetadata = Readonly<{
+  numbering: LocaleNumberingMetadata;
+  range: LocaleRangeMetadata;
+}>;
+
 type MappingEntry = NumberWordMap | OrdinalWordMap;
 
 function hasEntries(entries: readonly MappingEntry[] | undefined): boolean {
@@ -35,6 +60,39 @@ function getFractionDigits(config: LocaleConfig): readonly number[] {
       .map(Number)
       .sort((left, right) => left - right),
   );
+}
+
+function getPowerOfTenExponent(number: bigint): number | null {
+  const digits = number.toString();
+  return /^10*$/.test(digits) ? digits.length - 1 : null;
+}
+
+function getNumberingSystem(magnitudes: readonly bigint[], exponents: readonly number[]): NumberingSystem {
+  const magnitudeSet = new Set(magnitudes);
+
+  if (magnitudeSet.has(10_000n) && magnitudeSet.has(100_000_000n)) {
+    return 'east-asian';
+  }
+  if (magnitudeSet.has(100_000n) && magnitudeSet.has(10_000_000n)) {
+    return 'indian';
+  }
+  if (magnitudes.length > 0 && magnitudes.length === exponents.length && exponents.every((value) => value % 3 === 0)) {
+    return 'base-thousand';
+  }
+  return 'locale-specific';
+}
+
+function getGrouping(system: NumberingSystem): readonly number[] {
+  switch (system) {
+    case 'base-thousand':
+      return Object.freeze([3]);
+    case 'indian':
+      return Object.freeze([3, 2]);
+    case 'east-asian':
+      return Object.freeze([4]);
+    case 'locale-specific':
+      return Object.freeze([]);
+  }
 }
 
 /** Derive public feature metadata directly from a locale configuration. */
@@ -63,6 +121,35 @@ export function deriveLocaleCapabilities(config: LocaleConfig): LocaleCapabiliti
       fractionDigits,
     }),
     currencyPrecision: config.currency.precision ?? DEFAULT_CURRENCY_PRECISION,
+  });
+}
+
+/** Derive numbering-system and named-range metadata from a locale configuration. */
+export function deriveLocaleMetadata(config: LocaleConfig): LocaleMetadata {
+  const configuredMagnitudes = config.numberWordsMapping.map(({ number }) => BigInt(number));
+  const largeMagnitudes = configuredMagnitudes.filter((number) => number >= 1000n);
+  const largeUnitExponents = Object.freeze(
+    [...new Set(largeMagnitudes.map(getPowerOfTenExponent).filter((value): value is number => value !== null))].sort(
+      (left, right) => left - right,
+    ),
+  );
+  const system = getNumberingSystem(largeMagnitudes, largeUnitExponents);
+  const largestNamedMagnitude = configuredMagnitudes.reduce(
+    (largest, current) => (current > largest ? current : largest),
+    0n,
+  );
+
+  return Object.freeze({
+    numbering: Object.freeze({
+      system,
+      grouping: getGrouping(system),
+      largeUnitExponents,
+    }),
+    range: Object.freeze({
+      largestNamedMagnitude: largestNamedMagnitude.toString(),
+      largestNamedMagnitudeExponent: getPowerOfTenExponent(largestNamedMagnitude),
+      arbitraryPrecisionInput: true as const,
+    }),
   });
 }
 

@@ -19,7 +19,7 @@
             <th>Locale</th>
             <th>Language</th>
             <th>Currency</th>
-            <th>Scale</th>
+            <th>Numbering</th>
             <th>Ordinal</th>
             <th>Gender</th>
             <th>Fraction</th>
@@ -40,7 +40,7 @@
               <div class="country">{{ row.country }}</div>
             </td>
             <td>{{ row.currency }}</td>
-            <td>{{ row.scale }}</td>
+            <td>{{ row.numberingSystem }}</td>
             <td>{{ row.ordinal ? 'Yes' : 'No' }}</td>
             <td>{{ row.gender ? 'Yes' : 'No' }}</td>
             <td>{{ row.fractionStyle ? 'Yes' : 'No' }}</td>
@@ -71,7 +71,7 @@ const filteredRows = computed(() => {
       row.language,
       row.country,
       row.currency,
-      row.scale,
+      row.numberingSystem,
       row.page ? 'documented' : 'undocumented',
       row.gender ? 'feminine masculine gender' : '',
       row.fractionStyle ? 'fraction legal decimal' : '',

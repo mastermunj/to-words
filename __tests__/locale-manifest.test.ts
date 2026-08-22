@@ -1,7 +1,8 @@
 import { describe, expect, test } from 'vitest';
-import { deriveLocaleCapabilities } from '../src/locale-contract.js';
+import { deriveLocaleCapabilities, deriveLocaleMetadata } from '../src/locale-contract.js';
 import {
   getLocaleCapabilities,
+  getLocaleMetadata,
   isSupportedLocale,
   LOCALE_MANIFEST,
   SUPPORTED_LOCALES,
@@ -24,8 +25,27 @@ describe('locale capability manifest', () => {
 
       expect(entry.localeCode).toBe(localeCode);
       expect(entry.capabilities).toEqual(deriveLocaleCapabilities(new LocaleClass().config));
+      expect(entry.metadata).toEqual(deriveLocaleMetadata(new LocaleClass().config));
       expect(Object.isFrozen(entry)).toBe(true);
     }
+  });
+
+  test('publishes verified numbering-system counts and immutable range metadata', () => {
+    const metadata = SUPPORTED_LOCALES.map((localeCode) => LOCALE_MANIFEST[localeCode].metadata);
+
+    expect(metadata.filter(({ numbering }) => numbering.system === 'base-thousand')).toHaveLength(107);
+    expect(metadata.filter(({ numbering }) => numbering.system === 'indian')).toHaveLength(19);
+    expect(metadata.filter(({ numbering }) => numbering.system === 'east-asian')).toHaveLength(5);
+    expect(metadata.filter(({ numbering }) => numbering.system === 'locale-specific')).toHaveLength(4);
+    expect(metadata.every(({ range }) => range.arbitraryPrecisionInput)).toBe(true);
+
+    const indian = LOCALE_MANIFEST['hi-IN'].metadata;
+    expect(indian.numbering.grouping).toEqual([3, 2]);
+    expect(Object.isFrozen(indian)).toBe(true);
+    expect(Object.isFrozen(indian.numbering)).toBe(true);
+    expect(Object.isFrozen(indian.numbering.grouping)).toBe(true);
+    expect(Object.isFrozen(indian.numbering.largeUnitExponents)).toBe(true);
+    expect(Object.isFrozen(indian.range)).toBe(true);
   });
 
   test('publishes verified aggregate capability counts', () => {
@@ -44,5 +64,7 @@ describe('locale capability manifest', () => {
     expect(isSupportedLocale('xx-XX')).toBe(false);
     expect(getLocaleCapabilities('en-US')).toBe(LOCALE_MANIFEST['en-US'].capabilities);
     expect(getLocaleCapabilities('xx-XX')).toBeUndefined();
+    expect(getLocaleMetadata('en-US')).toBe(LOCALE_MANIFEST['en-US'].metadata);
+    expect(getLocaleMetadata('xx-XX')).toBeUndefined();
   });
 });

@@ -131,6 +131,7 @@
     "lint:fix": "npm run lint -- --fix",
     "prepare": "husky",
     "test": "vitest",
+    "test:locale-quality": "vitest --run --coverage.enabled=false __tests__/locale-conformance.test.ts __tests__/locale-contract.test.ts __tests__/locale-invariants.test.ts __tests__/locale-manifest.test.ts",
     "test:runtime": "node scripts/runtime-smoke.mjs",
     "test:watch": "npm run test -- --watch"
   },

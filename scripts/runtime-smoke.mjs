@@ -26,11 +26,17 @@ assertEqual('ESM locale export', esmLocale.toOrdinal(21), 'Twenty First');
 assertEqual('CommonJS locale export', cjsLocale.toCurrency('1.01'), 'One Dollar And One Cent Only');
 assertEqual('ESM manifest export', esmManifest.SUPPORTED_LOCALES.length, 135);
 assertEqual('CommonJS manifest export', cjsManifest.getLocaleCapabilities('zh-CN').formal, true);
+assertEqual('ESM manifest metadata export', esmManifest.getLocaleMetadata('hi-IN').numbering.system, 'indian');
 assertEqual('ESM locale contract export', esmContract.validateLocaleConfig(new esmLocale.default().config).length, 0);
 assertEqual(
   'CommonJS locale contract export',
   cjsContract.deriveLocaleCapabilities(new esmLocale.default().config).decimals.fraction,
   true,
+);
+assertEqual(
+  'CommonJS locale contract metadata export',
+  cjsContract.deriveLocaleMetadata(new esmLocale.default().config).numbering.system,
+  'base-thousand',
 );
 
 const cliPath = fileURLToPath(new URL('../dist/cjs/cli.js', import.meta.url));

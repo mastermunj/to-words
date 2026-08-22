@@ -158,14 +158,16 @@ Per-locale imports do not accept a `localeCode` option, because the locale is pa
 Use the opt-in manifest when an application needs to discover supported locale codes or features at runtime:
 
 ```ts
-import { getLocaleCapabilities, isSupportedLocale, SUPPORTED_LOCALES } from 'to-words/manifest';
+import { getLocaleCapabilities, getLocaleMetadata, isSupportedLocale, SUPPORTED_LOCALES } from 'to-words/manifest';
 
 isSupportedLocale('en-US'); // true
 getLocaleCapabilities('zh-CN')?.formal; // true
+getLocaleMetadata('hi-IN')?.numbering.grouping; // [3, 2]
+getLocaleMetadata('en-US')?.range.largestNamedMagnitude; // exact decimal string
 SUPPORTED_LOCALES.length; // 135
 ```
 
-The manifest contains compact generated metadata and does not load locale conversion tables. Size-sensitive conversion code should still use per-locale imports.
+The manifest contains compact generated capability, numbering-system, and named-range metadata and does not load locale conversion tables. Size-sensitive conversion code should still use per-locale imports.
 
 Custom locale authors can use `assertLocaleConfig()` or `validateLocaleConfig()` from `to-words/locale-contract` to check the lookup-table invariants required by the conversion engine. See the [generated locale capability manifest](/guide/locale-capabilities) for the complete API and per-locale feature matrix.
 
@@ -193,3 +195,4 @@ Custom locale definitions must therefore be complete before their class is passe
 - [Currency guide](/guide/currency)
 - [Tree-shaking](/guide/tree-shaking)
 - [Locale capability manifest](/guide/locale-capabilities)
+- [Locale conformance and quality gates](/guide/locale-quality)

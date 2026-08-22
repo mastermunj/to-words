@@ -1,4 +1,5 @@
 import LOCALES from '../../../src/locales/index.ts';
+import { deriveLocaleCapabilities, deriveLocaleMetadata } from '../../../src/locale-contract.ts';
 
 type DirectoryRow = {
   code: string;
@@ -6,7 +7,7 @@ type DirectoryRow = {
   country: string;
   flag: string;
   currency: string;
-  scale: 'Short' | 'Long' | 'Indian' | 'East Asian';
+  numberingSystem: 'Base thousand' | 'Indian' | 'East Asian' | 'Locale-specific';
   ordinal: boolean;
   gender: boolean;
   fractionStyle: boolean;
@@ -162,39 +163,6 @@ const pageByLanguage: Record<string, string> = {
   zu: '/locales/zulu',
 };
 
-const indianScaleCodes = new Set([
-  'as-IN',
-  'bn-IN',
-  'en-IN',
-  'gu-IN',
-  'hi-IN',
-  'kn-IN',
-  'ml-IN',
-  'mr-IN',
-  'np-NP',
-  'or-IN',
-  'pa-IN',
-  'si-LK',
-  'ta-IN',
-  'te-IN',
-  'ur-PK',
-]);
-
-const eastAsianScaleCodes = new Set(['ja-JP', 'ko-KR', 'yue-HK', 'zh-CN', 'zh-TW']);
-
-const longScaleCodes = new Set([
-  'de-AT',
-  'de-CH',
-  'de-DE',
-  'fr-BE',
-  'fr-CA',
-  'fr-CH',
-  'fr-DZ',
-  'fr-FR',
-  'fr-MA',
-  'fr-SA',
-]);
-
 const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
 
 function regionToFlag(region: string): string {
@@ -211,20 +179,17 @@ function getCountryName(regionCode: string): string {
   return regionNames.of(regionCode) ?? regionCode;
 }
 
-function getScale(code: string): DirectoryRow['scale'] {
-  if (eastAsianScaleCodes.has(code)) {
-    return 'East Asian';
-  }
+function renderNumberingSystem(
+  system: ReturnType<typeof deriveLocaleMetadata>['numbering']['system'],
+): DirectoryRow['numberingSystem'] {
+  const labels = {
+    'base-thousand': 'Base thousand',
+    indian: 'Indian',
+    'east-asian': 'East Asian',
+    'locale-specific': 'Locale-specific',
+  } as const;
 
-  if (indianScaleCodes.has(code)) {
-    return 'Indian';
-  }
-
-  if (longScaleCodes.has(code)) {
-    return 'Long';
-  }
-
-  return 'Short';
+  return labels[system];
 }
 
 function getCurrencySummary(code: string): string {
@@ -235,44 +200,14 @@ function getCurrencySummary(code: string): string {
   return `${config.currency.plural}${symbol}`;
 }
 
-function supportsGender(code: string): boolean {
-  const LocaleClass = LOCALES[code];
-  const config = new LocaleClass().config;
-
-  return config.numberWordsMapping.some((entry) => Boolean(entry.feminineValue) || Boolean(entry.masculineValue));
-}
-
-function supportsOrdinal(code: string): boolean {
-  const LocaleClass = LOCALES[code];
-  const config = new LocaleClass().config;
-
-  return Boolean(
-    config.ordinalWordsMapping?.length ||
-    config.ordinalExactWordsMapping?.length ||
-    config.ordinalPrefix ||
-    config.ordinalSuffix,
-  );
-}
-
-function supportsFractionStyle(code: string): boolean {
-  const LocaleClass = LOCALES[code];
-  const config = new LocaleClass().config;
-
-  return Boolean(config.fractionDenominatorMapping);
-}
-
-function supportsFormal(code: string): boolean {
-  const LocaleClass = LOCALES[code];
-  const config = new LocaleClass().config;
-
-  return Boolean(config.formalConfig);
-}
-
 const collator = new Intl.Collator('en', { sensitivity: 'base' });
 
 export const localeDirectoryRows: DirectoryRow[] = Object.keys(LOCALES)
   .map((code) => {
     const [languageCode, regionCode] = code.split('-');
+    const config = new LOCALES[code]().config;
+    const capabilities = deriveLocaleCapabilities(config);
+    const metadata = deriveLocaleMetadata(config);
 
     return {
       code,
@@ -280,11 +215,11 @@ export const localeDirectoryRows: DirectoryRow[] = Object.keys(LOCALES)
       country: getCountryName(regionCode),
       flag: regionToFlag(regionCode),
       currency: getCurrencySummary(code),
-      scale: getScale(code),
-      ordinal: supportsOrdinal(code),
-      gender: supportsGender(code),
-      fractionStyle: supportsFractionStyle(code),
-      formal: supportsFormal(code),
+      numberingSystem: renderNumberingSystem(metadata.numbering.system),
+      ordinal: capabilities.ordinal,
+      gender: capabilities.gender.cardinal,
+      fractionStyle: capabilities.decimals.fraction,
+      formal: capabilities.formal,
       page: pageByLanguage[languageCode],
     };
   })
