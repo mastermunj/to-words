@@ -52,6 +52,8 @@ export type NumberWordMap = {
 export type OrdinalWordMap = {
   number: number | bigint;
   value: string;
+  feminineValue?: string;
+  masculineValue?: string;
 };
 
 export type NumberInput = number | bigint | string;
@@ -83,6 +85,10 @@ export type LocaleConfig = {
   ordinalSuffix?: string;
   ordinalPrefix?: string;
   ordinalExactWordsMapping?: OrdinalWordMap[];
+  ordinalGenderSuffixMapping?: {
+    masculine: string;
+    feminine: string;
+  };
   namedLessThan1000?: boolean;
   scaleFirst?: boolean;
   splitWord?: string;

@@ -28,6 +28,7 @@ export default class Locale implements LocaleInterface {
       only: '',
       point: 'Coma',
     },
+    ordinalGenderSuffixMapping: { masculine: 'o', feminine: 'a' },
     numberWordsMapping: [
       { number: 1000000000000000, value: 'Trillon' },
       { number: 1000000000000, value: 'Billon' },

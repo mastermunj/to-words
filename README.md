@@ -78,6 +78,7 @@ toWords(452.36, { localeCode: 'en-IN', currency: true });
 - **High Performance** — Up to 4.7M ops/sec (small integers; see benchmark section for full breakdown)
 - **Functional API** — `toWords()`, `toOrdinal()`, `toCurrency()` named exports for ergonomic one-liners
 - **Auto Locale Detection** — `detectLocale()` reads `navigator.language` or `Intl` in any runtime
+- **Capability Manifest** — Query supported locales and derived feature support through `to-words/manifest`
 - **CLI** — `npx to-words 12345 --locale en-US` for shell scripts and quick conversions
 - **Wide Compatibility** — All modern browsers and Node.js 20+; compatible by architecture with Deno, Bun, and Cloudflare Workers (zero Node.js-specific APIs)
 
@@ -106,7 +107,7 @@ toCurrency(100, { localeCode: 'en-US' }); // "One Hundred Dollars Only"
 toOrdinal(3, { localeCode: 'en-US' }); // "Third"
 ```
 
-**3. Functional (per-locale import)** — locale baked in, fully tree-shakeable, smallest bundle (~3.5 KB gzip):
+**3. Functional (per-locale import)** — locale baked in, fully tree-shakeable, smallest bundle:
 
 ```js
 import { toWords, toOrdinal, toCurrency } from 'to-words/en-US';
@@ -460,12 +461,26 @@ toOrdinal(3); // "Third"
 toCurrency(100); // "One Hundred Dollars Only"
 ```
 
-> Individual imports are ~3.5 KB gzip vs ~60 KB for the full bundle.
+> Individual imports are substantially smaller than the full bundle. See the measured [bundle sizes](#-bundle-sizes).
+
+### Locale Capability Manifest
+
+Feature discovery is available through an opt-in entry point:
+
+```js
+import { getLocaleCapabilities, isSupportedLocale, SUPPORTED_LOCALES } from 'to-words/manifest';
+
+isSupportedLocale('en-US'); // true
+getLocaleCapabilities('zh-CN')?.formal; // true
+SUPPORTED_LOCALES.length; // 135
+```
+
+The manifest contains compact generated metadata and does not load locale conversion tables. Custom locale authors can validate their configuration with `assertLocaleConfig()` from `to-words/locale-contract`. See the [generated capability matrix](https://mastermunj.github.io/to-words/guide/locale-capabilities).
 
 ### Browser Usage (UMD)
 
 ```html
-<!-- Single locale (recommended, ~3.5 KB gzip) -->
+<!-- Single locale (recommended for smaller bundles) -->
 <script src="https://cdn.jsdelivr.net/npm/to-words/dist/umd/en-US.min.js"></script>
 <script>
   // ToWords is pre-configured for en-US
@@ -474,7 +489,7 @@ toCurrency(100); // "One Hundred Dollars Only"
   // "Twelve Thousand Three Hundred Forty Five"
 </script>
 
-<!-- Full bundle with all locales (~60 KB gzip) -->
+<!-- Full bundle with all locales -->
 <script src="https://cdn.jsdelivr.net/npm/to-words/dist/umd/to-words.min.js"></script>
 <script>
   // Specify locale when using full bundle
@@ -511,7 +526,7 @@ toCurrency(1234.56, { doNotAddOnly: true });
 // currency in the runtime locale, without "Only" suffix
 ```
 
-**Per-locale import** — locale baked in, no `localeCode` argument at all, fully tree-shakeable (~3.5 KB gzip):
+**Per-locale import** — locale baked in, no `localeCode` argument at all, fully tree-shakeable:
 
 ```js
 import { toWords, toOrdinal, toCurrency } from 'to-words/en-US';
@@ -541,6 +556,8 @@ const locale = detectLocale('en-US'); // custom fallback if detection misses
 const tw = new ToWords({ localeCode: locale });
 tw.convert(1000);
 ```
+
+Locale matching canonicalises BCP 47 casing and aliases, ignores script subtags when matching a supported language-region pair, and uses deterministic defaults for language-only values (`en` → `en-US`, `es` → `es-ES`, `pt` → `pt-BR`). In SSR and APIs, pass the request locale explicitly; `setLocaleDetector()` changes process-wide state and is intended for tests or application-wide configuration.
 
 > Reads `navigator.language` in browsers, `Intl.DateTimeFormat().resolvedOptions().locale` in Node.js (and compatible runtimes). Falls back to `'en-IN'` (or your custom fallback) if the detected value cannot be matched to a supported locale.
 
@@ -579,6 +596,9 @@ npx to-words 1234.56 --locale en-US --currency
 
 npx to-words 3 --locale en-US --ordinal
 # Third
+
+npx to-words --locale en-US -- -5
+# Minus Five
 
 npx to-words --detect-locale
 # en-US  (or whatever your system locale is)
@@ -696,13 +716,13 @@ export function CurrencyDisplay({ amount }: { amount: number }) {
 
 ```ts
 import express from 'express';
-import { toWords, toCurrency, detectLocale } from 'to-words';
+import { toWords, toCurrency } from 'to-words';
 
 const app = express();
 
 app.get('/convert', (req, res) => {
   const number = String(req.query.number ?? '');
-  const locale = String(req.query.locale ?? detectLocale());
+  const locale = String(req.query.locale ?? req.headers['accept-language']?.split(',')[0] ?? 'en-US');
   const currency = req.query.currency === 'true';
 
   try {
@@ -839,7 +859,7 @@ Converts a number to words.
 Converts a number to ordinal words.
 
 - **number**: `number | bigint | string` — The number to convert (must be a non-negative integer value)
-- **options**: `OrdinalOptions` — Optional settings (`{ formal?: boolean }`)
+- **options**: `OrdinalOptions` — Optional settings (`{ formal?: boolean; gender?: 'masculine' | 'feminine' }`)
 - **returns**: `string` — The ordinal in words (e.g., "First", "Twenty Third")
 
 ### Functional Exports
@@ -911,6 +931,8 @@ Reads the current runtime locale.
 - **fallback** _(optional)_: `string` — Returned when no supported locale can be matched. Default: `'en-IN'`
 - **returns**: `string` — A supported locale code
 
+Matching canonicalises BCP 47 casing and aliases. Language-only or unknown-region inputs use explicit defaults rather than registry order, including `en` → `en-US`, `es` → `es-ES`, `pt` → `pt-BR`, and `sw` → `sw-KE`.
+
 ```js
 import { detectLocale } from 'to-words';
 
@@ -919,6 +941,15 @@ detectLocale('en-GB'); // custom fallback if detection fails
 ```
 
 > `detectLocale` is only available from the full bundle (`to-words`), not from per-locale entry points.
+
+`setLocaleDetector()` changes a process-wide detector and is intended for tests or application-wide configuration. Do not change it per SSR/API request; pass `{ localeCode }` explicitly instead.
+
+### Utility Methods
+
+- `toFixed(number, precision?)` returns a number rounded with decimal arithmetic (`toFixed(1.005, 2) === 1.01`).
+- `isFloat(number)` returns whether a valid `number | bigint | string` has a non-zero fractional component.
+- `isNumberZero(number)` returns `true` only for exact numeric zero.
+- `getLocale().config` is available for inspection and is recursively frozen after initialization. Define custom locale data before passing its class to `setLocale()`.
 
 ### Converter Options
 
@@ -1015,11 +1046,11 @@ digits), it automatically falls back to the default digit-by-digit style — no 
 
 ## 📏 Bundle Sizes
 
-| Import Method             | Raw    | Gzip   |
-| ------------------------- | ------ | ------ |
-| Full bundle (all locales) | 704 KB | 68 KB  |
-| Single locale (en-US)     | 15 KB  | 4.1 KB |
-| Single locale (en-IN)     | 13 KB  | 4.0 KB |
+| Import Method             | Raw      | Gzip     |
+| ------------------------- | -------- | -------- |
+| Full bundle (all locales) | 708 KiB  | 69.1 KiB |
+| Single locale (en-US)     | 17.6 KiB | 5.0 KiB  |
+| Single locale (en-IN)     | 15.3 KiB | 4.8 KiB  |
 
 > **Tip:** Use tree-shakeable imports or single-locale UMD bundles for the smallest bundle size.
 
@@ -1390,7 +1421,7 @@ console.log(tw.convert(2.1, { currency: true }));
 // "Two Bitcoins And Ten Satoshis Only"
 ```
 
-The easiest starting point is to copy the nearest built-in locale from [`src/locales/`](src/locales/) and change only what differs.
+The easiest starting point is to copy the nearest built-in locale from [`src/locales/`](src/locales/) and change only what differs. Locale configuration is recursively frozen when first initialized so cached lookup tables cannot diverge; treat it as immutable and create a new locale class when configuration changes.
 
 </details>
 

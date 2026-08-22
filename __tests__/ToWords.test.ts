@@ -925,11 +925,17 @@ describe('isFloat Method Tests', () => {
     });
 
     test('returns false for string', () => {
-      expect(toWords.isFloat('1.5')).toBe(false);
+      expect(toWords.isFloat('1.5')).toBe(true);
     });
 
     test('returns false for BigInt', () => {
       expect(toWords.isFloat(123n as unknown as number)).toBe(false);
+    });
+
+    test('handles scientific notation and invalid strings', () => {
+      expect(toWords.isFloat('1e-3')).toBe(true);
+      expect(toWords.isFloat('1e3')).toBe(false);
+      expect(toWords.isFloat('not-a-number')).toBe(false);
     });
   });
 });
@@ -950,11 +956,10 @@ describe('toFixed Method Tests', () => {
       expect(toWords.toFixed(3.14, 1)).toBe(3.1);
     });
 
-    test('rounds using standard JS behavior', () => {
-      // Note: 3.15 rounds to 3.1 due to floating point representation
-      // 3.15 is actually 3.1499999... in binary floating point
-      expect(toWords.toFixed(3.15, 1)).toBe(3.1);
-      // Use 3.25 which rounds up correctly
+    test('rounds decimal values without binary floating-point drift', () => {
+      expect(toWords.toFixed(1.005, 2)).toBe(1.01);
+      expect(toWords.toFixed(-1.005, 2)).toBe(-1.01);
+      expect(toWords.toFixed(3.15, 1)).toBe(3.2);
       expect(toWords.toFixed(3.25, 1)).toBe(3.3);
     });
 
@@ -964,6 +969,17 @@ describe('toFixed Method Tests', () => {
 
     test('handles negative numbers', () => {
       expect(toWords.toFixed(-3.14159, 2)).toBe(-3.14);
+    });
+
+    test('matches native handling for non-finite values', () => {
+      expect(toWords.toFixed(Infinity, 2)).toBe(Infinity);
+      expect(toWords.toFixed(Number.NaN, 2)).toBeNaN();
+    });
+
+    test('rejects unsupported precision', () => {
+      expect(() => toWords.toFixed(1, -1)).toThrow(RangeError);
+      expect(() => toWords.toFixed(1, 2.5)).toThrow(RangeError);
+      expect(() => toWords.toFixed(1, 101)).toThrow(RangeError);
     });
   });
 });
@@ -1040,6 +1056,11 @@ describe('toWords() functional helper', () => {
     const r2 = toWordsFn(42, { localeCode: 'en-US' });
     expect(r1).toBe(r2);
   });
+
+  test('rejects unsupported locale codes before helper caching', () => {
+    expect(() => toWordsFn(1, { localeCode: 'invalid-one' })).toThrow('Unknown Locale "invalid-one"');
+    expect(() => toWordsFn(1, { localeCode: 'invalid-two' })).toThrow('Unknown Locale "invalid-two"');
+  });
 });
 
 describe('toOrdinal() functional helper', () => {
@@ -1109,6 +1130,11 @@ describe('detectLocale()', () => {
     expect(detectLocaleFn()).toBe('en-IN');
   });
 
+  test('returns fallback when detector contains only whitespace', () => {
+    setLocaleDetectorFn(() => '   ');
+    expect(detectLocaleFn('en-GB')).toBe('en-GB');
+  });
+
   test('returns custom fallback when locale cannot be matched', () => {
     setLocaleDetectorFn(() => 'xx-XX');
     expect(detectLocaleFn('en-US')).toBe('en-US');
@@ -1131,7 +1157,34 @@ describe('detectLocale()', () => {
 
   test('handles single-part locale (lang only) via prefix match', () => {
     setLocaleDetectorFn(() => 'fr');
-    expect(detectLocaleFn()).toMatch(/^fr-/);
+    expect(detectLocaleFn()).toBe('fr-FR');
+  });
+
+  test.each([
+    ['en', 'en-US'],
+    ['EN-us', 'en-US'],
+    ['en_US', 'en-US'],
+    ['es', 'es-ES'],
+    ['pt', 'pt-BR'],
+    ['sw-ZZ', 'sw-KE'],
+  ])('canonicalises %s to deterministic locale %s', (input, expected) => {
+    setLocaleDetectorFn(() => input);
+    expect(detectLocaleFn()).toBe(expected);
+  });
+
+  test('falls back safely for a malformed locale', () => {
+    setLocaleDetectorFn(() => 'not_a_valid_locale_tag!');
+    expect(detectLocaleFn('en-GB')).toBe('en-GB');
+  });
+
+  test('uses a recoverable region from a malformed locale', () => {
+    setLocaleDetectorFn(() => 'en-@-US');
+    expect(detectLocaleFn()).toBe('en-US');
+  });
+
+  test('uses the supported locale variant when no explicit language default is needed', () => {
+    setLocaleDetectorFn(() => 'ja');
+    expect(detectLocaleFn()).toBe('ja-JP');
   });
 
   // ---- built-in env reading (readRawLocale) when no detector is set ----
@@ -1186,6 +1239,22 @@ describe('setLocaleDetector()', () => {
     setLocaleDetectorFn(() => 'en-US');
     expect(toWordsFn(1000000)).toBe('One Million'); // en-US uses millions
     expect(toCurrencyFn(100)).toBe('One Hundred Dollars Only');
+  });
+});
+
+describe('locale configuration immutability', () => {
+  test('freezes locale configuration and nested data after initialization', () => {
+    const toWords = new ToWords({ localeCode: 'en-US' });
+    const config = toWords.getLocale().config;
+
+    expect(Object.isFrozen(config)).toBe(true);
+    expect(Object.isFrozen(config.texts)).toBe(true);
+    expect(Object.isFrozen(config.currency.fractionalUnit)).toBe(true);
+    expect(Object.isFrozen(config.numberWordsMapping)).toBe(true);
+    expect(() => {
+      config.texts.and = 'Mutated';
+    }).toThrow(TypeError);
+    expect(toWords.convert(101)).toBe('One Hundred One');
   });
 });
 

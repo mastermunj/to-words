@@ -34,8 +34,6 @@ export default class Locale implements LocaleInterface {
       { number: 10000000000000n, value: 'Neel' },
       { number: 100000000000n, value: 'Kharab' },
       { number: 1000000000n, value: 'Arab' },
-      { number: 1_00_00_00_00_000, value: 'Kharab' },
-      { number: 1_00_00_00_000, value: 'Arab' },
       { number: 1_00_00_000, value: 'Crore' },
       { number: 1_00_000, value: 'Lakh' },
       { number: 1_000, value: 'Thousand' },

@@ -8,11 +8,11 @@
  * For tree-shaken single-locale imports, use per-locale entry points instead:
  *
  * @example
- * // Full package (all locales ~55KB gzipped)
+ * // Full package (all locales)
  * import { ToWords } from 'to-words';
  * const tw = new ToWords({ localeCode: 'en-IN' });
  *
- * // Single locale (~3-4KB gzipped) - SAME API!
+ * // Single-locale bundle - SAME API!
  * import { ToWords } from 'to-words/en-IN';
  * const tw = new ToWords();
  */
@@ -34,6 +34,22 @@ export { LOCALES };
 // Module-level instance cache for the functional helpers (toWords / toOrdinal / toCurrency).
 // Each locale gets one cached instance — repeated calls at the same locale are zero-overhead.
 const instanceCache = new Map<string, ToWords>();
+
+// Language-only and unknown-region inputs must not depend on registry insertion order.
+// These defaults intentionally select the package's canonical regional variant.
+const DEFAULT_LOCALE_BY_LANGUAGE: Readonly<Record<string, string>> = {
+  ar: 'ar-SA',
+  bn: 'bn-IN',
+  de: 'de-DE',
+  en: 'en-US',
+  es: 'es-ES',
+  fr: 'fr-FR',
+  ms: 'ms-MY',
+  nl: 'nl-NL',
+  pt: 'pt-BR',
+  sw: 'sw-KE',
+  zh: 'zh-CN',
+};
 
 // ---------------------------------------------------------------------------
 // Locale detection
@@ -76,13 +92,11 @@ function readRawLocale(): string {
  * When set, replaces the default `navigator.language` / Intl detection entirely.
  * Pass `null` to restore the built-in detection.
  *
- * Useful for server environments (e.g. derive locale from `Accept-Language` header)
- * or in tests where you want a fixed locale without mocking globals.
+ * Useful for application-wide configuration or tests where you want a fixed locale
+ * without mocking globals. This setting is process-global: do not change it per SSR
+ * request. Pass an explicit `localeCode` to functional helpers for request-scoped locale.
  *
  * @example
- * // Server: resolve locale from request header before handling each request
- * setLocaleDetector(() => req.headers['accept-language']?.split(',')[0] ?? 'en-US');
- *
  * // Test: pin to a specific locale
  * setLocaleDetector(() => 'fr-FR');
  * // … run tests …
@@ -121,6 +135,9 @@ export class ToWords extends ToWordsCore {
  */
 function getCachedInstance(localeCode?: string): ToWords {
   const code = localeCode ?? detectLocale();
+  if (!(code in LOCALES)) {
+    throw new Error(`Unknown Locale "${code}"`);
+  }
   let inst = instanceCache.get(code);
   if (!inst) {
     inst = new ToWords({ localeCode: code });
@@ -140,39 +157,67 @@ function getCachedInstance(localeCode?: string): ToWords {
  *
  * Once a raw locale string is obtained it is normalised and matched:
  *  1. Exact match (e.g. `fr-FR`).
- *  2. Strip BCP 47 script tag (e.g. `zh-Hant-TW` → `zh-TW`).
- *  3. Language-prefix fallback (e.g. `sw-ZZ` → first `sw-*` locale in the list).
+ *  2. Canonicalise case and aliases with `Intl.Locale`.
+ *  3. Match language and region while ignoring script tags (e.g. `zh-Hant-TW` → `zh-TW`).
+ *  4. Use an explicit language default (e.g. `en` → `en-US`, `sw-ZZ` → `sw-KE`).
  *
  * Returns `fallback` (default `'en-IN'`) when nothing matches.
  *
  * @param fallback  Locale code to return when detection yields no match.
  */
 export function detectLocale(fallback: string = DefaultToWordsOptions.localeCode!): string {
-  const candidate = _localeDetector ? _localeDetector() : readRawLocale();
-  if (!candidate) {
+  const rawCandidate = _localeDetector ? _localeDetector() : readRawLocale();
+  if (!rawCandidate) {
     return fallback;
   }
 
-  const parts = candidate.split('-');
+  const candidate = rawCandidate.trim().replaceAll('_', '-');
+  if (!candidate) {
+    return fallback;
+  }
 
   // 1. Exact match
   if (candidate in LOCALES) {
     return candidate;
   }
 
-  // 2. Normalise: strip script tag, upper-case region (e.g. zh-Hant-TW → zh-TW)
-  if (parts.length >= 2) {
-    const normalized = `${parts[0]}-${parts[parts.length - 1].toUpperCase()}`;
-    if (normalized in LOCALES) {
-      return normalized;
+  let language: string;
+  let region: string | undefined;
+  try {
+    const locale = new Intl.Locale(candidate);
+    language = locale.language.toLowerCase();
+    region = locale.region?.toUpperCase();
+
+    const canonical = locale.toString();
+    if (canonical in LOCALES) {
+      return canonical;
+    }
+  } catch {
+    const parts = candidate.split('-');
+    language = parts[0].toLowerCase();
+    const possibleRegion = parts.at(-1);
+    if (possibleRegion && /^[a-z]{2}$/i.test(possibleRegion)) {
+      region = possibleRegion.toUpperCase();
     }
   }
 
-  // 3. Language-prefix fallback (e.g. sw-ZZ → sw-KE)
-  const lang = parts[0].toLowerCase();
-  const match = Object.keys(LOCALES).find((code) => code.toLowerCase().startsWith(`${lang}-`));
-  if (match) {
-    return match;
+  // 2. Match language + region after canonicalisation, ignoring script subtags.
+  if (region) {
+    const languageRegion = `${language}-${region}`;
+    if (languageRegion in LOCALES) {
+      return languageRegion;
+    }
+  }
+
+  // 3. Explicit language default, followed by the sole/first supported variant.
+  const languageDefault = DEFAULT_LOCALE_BY_LANGUAGE[language];
+  if (languageDefault && languageDefault in LOCALES) {
+    return languageDefault;
+  }
+
+  const languageMatch = Object.keys(LOCALES).find((code) => code.startsWith(`${language}-`));
+  if (languageMatch) {
+    return languageMatch;
   }
 
   return fallback;

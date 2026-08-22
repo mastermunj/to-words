@@ -66,6 +66,12 @@
       ],
       "core": [
         "dist/types/ToWordsCore"
+      ],
+      "locale-contract": [
+        "dist/types/locale-contract"
+      ],
+      "manifest": [
+        "dist/types/locale-manifest"
       ]
     }
   },
@@ -91,6 +97,16 @@
       "types": "./dist/types/ToWordsCore.d.ts",
       "import": "./dist/esm/ToWordsCore.js",
       "require": "./dist/cjs/ToWordsCore.js"
+    },
+    "./locale-contract": {
+      "types": "./dist/types/locale-contract.d.ts",
+      "import": "./dist/esm/locale-contract.js",
+      "require": "./dist/cjs/locale-contract.js"
+    },
+    "./manifest": {
+      "types": "./dist/types/locale-manifest.d.ts",
+      "import": "./dist/esm/locale-manifest.js",
+      "require": "./dist/cjs/locale-manifest.js"
     }
   },
   "scripts": {
@@ -104,8 +120,10 @@
     "build:watch": "npm run build -- --watch",
     "clean": "rimraf dist coverage",
     "commit": "git-cz",
-    "docs:build": "vitepress build docs",
+    "docs:build": "npm run docs:check && vitepress build docs",
+    "docs:check": "npm run build:esm && node scripts/generate-locale-docs.mjs --check",
     "docs:dev": "vitepress dev docs",
+    "docs:generate": "npm run build:esm && node scripts/generate-locale-docs.mjs && npm run build:esm",
     "docs:preview": "vitepress preview docs",
     "format": "oxfmt --check .",
     "format:fix": "oxfmt --write .",
@@ -113,29 +131,30 @@
     "lint:fix": "npm run lint -- --fix",
     "prepare": "husky",
     "test": "vitest",
+    "test:runtime": "node scripts/runtime-smoke.mjs",
     "test:watch": "npm run test -- --watch"
   },
   "devDependencies": {
-    "@commitlint/cli": "^21.2.1",
-    "@commitlint/config-conventional": "^21.2.0",
+    "@commitlint/cli": "^21.2.2",
+    "@commitlint/config-conventional": "^21.2.2",
     "@mastermunj/oxc-config": "^0.0.7",
     "@types/lodash": "^4.17.25",
-    "@types/node": "^26.1.2",
+    "@types/node": "^26.2.0",
     "@types/source-map-support": "^0.5.10",
-    "@vitest/coverage-v8": "^4.1.10",
+    "@vitest/coverage-v8": "^4.1.11",
     "cz-conventional-changelog": "^3.3.0",
     "husky": "^9.1.7",
     "lint-staged": "^17.3.0",
     "lodash": "^4.18.1",
-    "oxfmt": "^0.63.0",
-    "oxlint": "^1.76.0",
+    "oxfmt": "^0.64.0",
+    "oxlint": "^1.79.0",
     "oxlint-tsgolint": "^7.0.2001",
     "rimraf": "^6.1.3",
-    "rolldown": "^1.2.1",
+    "rolldown": "^1.2.5",
     "source-map-support": "^0.5.21",
     "typescript": "^7.0.2",
     "vitepress": "^1.6.4",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.11"
   },
   "overrides": {
     "commitizen": {

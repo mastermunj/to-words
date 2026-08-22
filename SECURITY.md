@@ -4,8 +4,10 @@
 
 | Version | Supported |
 | ------- | --------- |
-| 5.x     | ✅        |
-| < 5.0   | ❌        |
+| 6.x     | ✅        |
+| < 6.0   | ❌        |
+
+Users on an unsupported major version should upgrade to the latest release to continue receiving security fixes.
 
 ## Reporting a Vulnerability
 

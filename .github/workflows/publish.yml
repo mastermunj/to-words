@@ -13,7 +13,7 @@ jobs:
     name: npm publish with provenance
     runs-on: ubuntu-latest
     permissions:
-      contents: write # required to update the GitHub Release created by release-please
+      contents: read
       id-token: write # required for npm OIDC trusted publishing + provenance
 
     steps:
@@ -27,12 +27,30 @@ jobs:
         with:
           node-version: '24.x'
           registry-url: 'https://registry.npmjs.org'
+          package-manager-cache: false
 
       - name: Install dependencies
         run: npm ci
 
+      - name: Lint
+        run: npm run lint --if-present
+
+      - name: Test
+        run: npm test
+        env:
+          CI: true
+
       - name: Build
         run: npm run build
+
+      - name: Verify generated locale artifacts
+        run: npm run docs:check
+
+      - name: Verify compiled runtimes
+        run: npm run test:runtime
+
+      - name: Verify package contents
+        run: npm pack --dry-run --ignore-scripts
 
       - name: Publish to npm
         run: npm publish

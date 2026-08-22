@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { ToWordsCore, DefaultConverterOptions, DefaultToWordsOptions } from '../src/ToWordsCore';
+import type { LocaleConfig } from '../src/types.js';
 
 describe('ToWordsCore - DefaultConverterOptions', () => {
   test('has correct default values', () => {
@@ -226,6 +227,33 @@ describe('ToWordsCore - toOrdinal', () => {
 
     expect(() => core.toOrdinal(Number.NaN)).toThrow('Invalid Number');
   });
+
+  test('uses explicit feminine and masculine ordinal mapping values', () => {
+    class GenderedOrdinalLocale {
+      public config: LocaleConfig = {
+        currency: {
+          name: 'Unit',
+          plural: 'Units',
+          symbol: '',
+          fractionalUnit: { name: 'Part', plural: 'Parts', symbol: '' },
+        },
+        texts: { and: 'And', minus: 'Minus', only: 'Only', point: 'Point' },
+        numberWordsMapping: [
+          { number: 1, value: 'One' },
+          { number: 0, value: 'Zero' },
+        ],
+        ordinalWordsMapping: [
+          { number: 1, value: 'Neutral', feminineValue: 'Feminine', masculineValue: 'Masculine' },
+          { number: 0, value: 'Zeroth' },
+        ],
+      };
+    }
+
+    const core = new ToWordsCore().setLocale(GenderedOrdinalLocale);
+    expect(core.toOrdinal(1)).toBe('Neutral');
+    expect(core.toOrdinal(1, { gender: 'feminine' })).toBe('Feminine');
+    expect(core.toOrdinal(1, { gender: 'masculine' })).toBe('Masculine');
+  });
 });
 
 describe('ToWordsCore - utility methods', () => {
@@ -248,7 +276,7 @@ describe('ToWordsCore - utility methods', () => {
     expect(core.isFloat(1)).toBe(false);
     expect(core.isFloat(0)).toBe(false);
     expect(core.isFloat(0.0)).toBe(false);
-    expect(core.isFloat('1.5')).toBe(false); // String is not detected as float
+    expect(core.isFloat('1.5')).toBe(true);
     expect(core.isFloat('1')).toBe(false);
   });
 
@@ -277,7 +305,7 @@ describe('ToWordsCore - utility methods', () => {
     expect(core.isNumberZero(0)).toBe(true);
     expect(core.isNumberZero(0n)).toBe(true);
     expect(core.isNumberZero(0.0)).toBe(true);
-    expect(core.isNumberZero(0.5)).toBe(true); // < 1 is considered "zero" for currency
+    expect(core.isNumberZero(0.5)).toBe(false);
     expect(core.isNumberZero(1)).toBe(false);
     expect(core.isNumberZero(-1)).toBe(false);
   });
@@ -645,6 +673,13 @@ describe('ToWordsCore - internal coverage via subclass', () => {
     const locale = new EnInLocale();
     const result = core.callGetLastNumberComponent(1000, locale.config);
     expect(result).toBe(1000);
+  });
+
+  test('getLastNumberComponent finds an atomic remainder without a locale cache', async () => {
+    const { default: EnInLocale } = await import('../src/locales/en-IN');
+    const core = new TestableCore();
+    const locale = new EnInLocale();
+    expect(core.callGetLastNumberComponent(111, locale.config)).toBe(11);
   });
 
   test('convertInternal applies overrides when the number matches (lines 538-540)', async () => {
