@@ -2,6 +2,58 @@
 
 All notable changes to this project are documented here. Releases and this changelog are managed by [Release Please](https://github.com/googleapis/release-please).
 
+## [6.0.0](https://github.com/mastermunj/to-words/compare/v5.7.0...v6.0.0) (2026-08-23)
+
+
+## [6.0.0](https://github.com/mastermunj/to-words/compare/v5.7.0...v6.0.0) (2026-08-23)
+
+### ⚠ BREAKING CHANGES
+
+- Language-only locale tags now resolve to explicit regional defaults, including
+  `en` → `en-US`, `es` → `es-ES`, `pt` → `pt-BR`, and `sw` → `sw-KE`.
+- Initialized locale configurations are recursively frozen. Applications can
+  inspect locale configuration, but can no longer mutate it after initialization.
+- Public numeric utilities now use stricter, decimal-safe semantics for
+  `toFixed()`, `isFloat()`, and `isNumberZero()`.
+- The CLI now rejects unknown options, repeated locale options, and conflicting
+  conversion modes.
+- `LocaleManifestEntry` now requires generated numbering-system and named-range
+  metadata.
+- Invalid custom locale configurations that violate conversion invariants are
+  now rejected.
+
+See the [v6 migration guide](https://github.com/mastermunj/to-words/blob/main/MIGRATION.md)
+for upgrade instructions.
+
+### Features
+
+- Add a compact locale capability manifest without loading conversion tables.
+- Add public locale-contract validation for custom locale authors.
+- Add generated numbering-system, grouping, named-range, and capability metadata.
+- Add executable locale conformance and quality gates.
+- Generate locale capability and quality documentation from shipped configuration.
+
+### Bug Fixes
+
+- Preserve exact large-number input and decimal precision without slowing hot paths.
+- Apply decimal-safe currency rounding and preserve negative sub-unit signs.
+- Correct Spanish ordinal gender behavior.
+- Reset formal locale state between conversions.
+- Enforce deterministic locale-table and conversion contracts.
+
+### Performance Improvements
+
+- Initialize per-locale functional helper instances lazily.
+- Mark package modules as side-effect free for better tree-shaking.
+- Reduce the full UMD bundle from 69.72 KiB to 68.46 KiB gzip.
+- Add enforced gzip size budgets for the full and per-locale bundles.
+
+### Release Quality
+
+- Verify generated documentation, ESM and CommonJS entry points, runtime behavior,
+  package contents, and bundle-size budgets before publishing.
+- Preserve 100% test coverage across the complete test suite.
+
 ## [5.7.0](https://github.com/mastermunj/to-words/compare/v5.6.1...v5.7.0) (2026-08-02)
 
 ### Features
