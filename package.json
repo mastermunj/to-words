@@ -52,6 +52,7 @@
     "dist/**/*"
   ],
   "type": "module",
+  "sideEffects": false,
   "main": "dist/cjs/ToWords.js",
   "module": "dist/esm/ToWords.js",
   "browser": "dist/umd/to-words.min.js",
@@ -130,6 +131,7 @@
     "lint": "oxlint --type-aware .",
     "lint:fix": "npm run lint -- --fix",
     "prepare": "husky",
+    "size:check": "npm run build:umd -- --verbose",
     "test": "vitest",
     "test:locale-quality": "vitest --run --coverage.enabled=false __tests__/locale-conformance.test.ts __tests__/locale-contract.test.ts __tests__/locale-invariants.test.ts __tests__/locale-manifest.test.ts",
     "test:runtime": "node scripts/runtime-smoke.mjs",

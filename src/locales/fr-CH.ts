@@ -198,16 +198,16 @@ export class ToWords extends ToWordsCore {
   }
 }
 
-const instance = new ToWords();
+let instance: ToWords | undefined;
 
 export function toWords(number: NumberInput, options?: ConverterOptions): string {
-  return instance.convert(number, options);
+  return (instance ??= new ToWords()).convert(number, options);
 }
 
 export function toOrdinal(number: NumberInput, options?: OrdinalOptions): string {
-  return instance.toOrdinal(number, options);
+  return (instance ??= new ToWords()).toOrdinal(number, options);
 }
 
 export function toCurrency(number: NumberInput, options?: ConverterOptions): string {
-  return instance.convert(number, { ...options, currency: true });
+  return (instance ??= new ToWords()).convert(number, { ...options, currency: true });
 }

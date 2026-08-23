@@ -1050,11 +1050,13 @@ digits), it automatically falls back to the default digit-by-digit style — no 
 
 | Import Method             | Raw      | Gzip     |
 | ------------------------- | -------- | -------- |
-| Full bundle (all locales) | 708 KiB  | 69.1 KiB |
-| Single locale (en-US)     | 17.6 KiB | 5.0 KiB  |
-| Single locale (en-IN)     | 15.3 KiB | 4.8 KiB  |
+| Full bundle (all locales) | 697 KiB  | 68.5 KiB |
+| Single locale (en-US)     | 17.6 KiB | 4.9 KiB  |
+| Single locale (en-IN)     | 15.4 KiB | 4.8 KiB  |
 
 > **Tip:** Use tree-shakeable imports or single-locale UMD bundles for the smallest bundle size.
+
+The build enforces gzip budgets for the full bundle, average locale, and largest locale. Run `npm run size:check` to inspect the current measurements locally.
 
 ## ⚡ Performance
 
