@@ -110,7 +110,7 @@ toCurrency(452.36, { localeCode: 'hi-IN' }); // "चार सौ बावन �
 | Fraction-style decimals     | `decimalStyle: 'fraction'`                     |
 | Gender-aware output         | `gender: 'feminine'` or `gender: 'masculine'`  |
 | Anti-fraud Chinese numerals | `formal: true`                                 |
-| Server locale from headers  | `setLocaleDetector()`                          |
+| Server locale from headers  | Pass request-scoped `localeCode` explicitly    |
 
 ## Use Cases
 

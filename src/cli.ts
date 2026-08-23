@@ -10,6 +10,7 @@ Options:
   --currency         Convert as currency amount
   --ordinal          Convert as ordinal (e.g. "Third")
   --detect-locale    Print the auto-detected locale and exit
+  --                  End options (useful before a negative number)
   -h, --help         Show this help
 
 Examples:
@@ -17,8 +18,65 @@ Examples:
   to-words 12345 --locale en-US
   to-words 1234.56 --locale en-US --currency
   to-words 3 --locale en-US --ordinal
+  to-words --locale en-US -- -5
   to-words --detect-locale
 `);
+}
+
+type CliOptions = {
+  currency: boolean;
+  localeCode?: string;
+  number?: string;
+  ordinal: boolean;
+};
+
+function parseArgs(args: string[]): CliOptions | string {
+  const options: CliOptions = { currency: false, ordinal: false };
+  const positional: string[] = [];
+  let optionsEnded = false;
+
+  for (let index = 0; index < args.length; index += 1) {
+    const arg = args[index];
+    if (optionsEnded) {
+      positional.push(arg);
+      continue;
+    }
+
+    if (arg === '--') {
+      optionsEnded = true;
+    } else if (arg === '--currency') {
+      options.currency = true;
+    } else if (arg === '--ordinal') {
+      options.ordinal = true;
+    } else if (arg === '--locale') {
+      if (options.localeCode !== undefined) {
+        return 'The --locale option may only be provided once.';
+      }
+      const provided = args[index + 1];
+      if (!provided || provided.startsWith('-')) {
+        return '--locale requires a locale code (e.g. --locale en-US)';
+      }
+      options.localeCode = provided;
+      index += 1;
+    } else if (arg.startsWith('-') && !/^-(?:\d|\.\d)/.test(arg)) {
+      return `Unknown option "${arg}".`;
+    } else {
+      positional.push(arg);
+    }
+  }
+
+  if (options.currency && options.ordinal) {
+    return '--currency and --ordinal cannot be used together.';
+  }
+  if (positional.length === 0) {
+    return 'No number provided.';
+  }
+  if (positional.length > 1) {
+    return `Expected one number, received ${positional.length}.`;
+  }
+
+  options.number = positional[0];
+  return options;
 }
 
 export function runCli(args: string[]): void {
@@ -34,38 +92,22 @@ export function runCli(args: string[]): void {
     return;
   }
 
-  const isCurrency = args.includes('--currency');
-  const isOrdinal = args.includes('--ordinal');
-  const numberArg = args.find((a) => !a.startsWith('-'));
-
-  if (!numberArg) {
-    console.error('Error: No number provided.\n');
-    printHelp();
+  const parsed = parseArgs(args);
+  if (typeof parsed === 'string') {
+    console.error(`Error: ${parsed}\n`);
+    if (parsed === 'No number provided.') {
+      printHelp();
+    }
     process.exit(1);
     return;
   }
 
-  const localeIdx = args.indexOf('--locale');
-  let localeCode: string;
-
-  if (localeIdx !== -1) {
-    const provided = args[localeIdx + 1];
-    if (!provided || provided.startsWith('-')) {
-      console.error('Error: --locale requires a locale code (e.g. --locale en-US)\n');
-      process.exit(1);
-      return;
-    }
-    localeCode = provided;
-  } else {
-    localeCode = detectLocale();
-  }
-
   try {
-    const tw = new ToWords({ localeCode });
-    if (isOrdinal) {
-      console.log(tw.toOrdinal(Number.parseInt(numberArg, 10)));
+    const tw = new ToWords({ localeCode: parsed.localeCode ?? detectLocale() });
+    if (parsed.ordinal) {
+      console.log(tw.toOrdinal(parsed.number!));
     } else {
-      console.log(tw.convert(numberArg, { currency: isCurrency }));
+      console.log(tw.convert(parsed.number!, { currency: parsed.currency }));
     }
   } catch (e) {
     console.error(`Error: ${(e as Error).message}`);

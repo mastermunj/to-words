@@ -30,9 +30,13 @@ jobs:
       - run: npm ci
       - run: npm run lint --if-present
       - run: npm run build --if-present
+      - run: npm run test:runtime
       - run: npm test
         env:
           CI: true
+      - name: Build documentation
+        if: matrix.node-version == '24.x'
+        run: npm run docs:build
       - name: Upload coverage to Codecov
         if: matrix.node-version == '24.x'
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v5

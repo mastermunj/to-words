@@ -65,6 +65,7 @@ Use the class method when you want one reusable instance with stable defaults.
 import { toOrdinal } from 'to-words';
 
 toOrdinal(21, { localeCode: 'en-US' }); // "Twenty First"
+toOrdinal(1, { localeCode: 'es-ES', gender: 'feminine' }); // "Primera"
 ```
 
 Ordinal input must represent a non-negative integer value.
@@ -90,7 +91,7 @@ detectLocale(); // e.g. 'en-US'
 detectLocale('en-GB'); // custom fallback
 ```
 
-`detectLocale()` reads `navigator.language` in browsers and `Intl.DateTimeFormat().resolvedOptions().locale` in Node.js-compatible runtimes.
+`detectLocale()` reads `navigator.language` in browsers and `Intl.DateTimeFormat().resolvedOptions().locale` in Node.js-compatible runtimes. It canonicalises BCP 47 tags and uses deterministic defaults for language-only or unknown-region inputs, including `en` → `en-US`, `es` → `es-ES`, and `pt` → `pt-BR`.
 
 ## `setLocaleDetector(fn)`
 
@@ -103,7 +104,11 @@ toWords(1000); // "Mille"
 setLocaleDetector(null); // restore built-in detection
 ```
 
-Use this in SSR or middleware when locale should come from the request instead of global process state.
+This override is process-global. Use it for tests or application-wide configuration, then restore it with `null`. Do not change it per SSR or middleware request; pass the request locale explicitly instead:
+
+```ts
+toWords(1000, { localeCode: requestLocale });
+```
 
 ## Converter Options
 
@@ -148,14 +153,46 @@ toWords(100000); // locale already baked in
 
 Per-locale imports do not accept a `localeCode` option, because the locale is part of the import path.
 
+## Locale Capabilities and Contract
+
+Use the opt-in manifest when an application needs to discover supported locale codes or features at runtime:
+
+```ts
+import { getLocaleCapabilities, getLocaleMetadata, isSupportedLocale, SUPPORTED_LOCALES } from 'to-words/manifest';
+
+isSupportedLocale('en-US'); // true
+getLocaleCapabilities('zh-CN')?.formal; // true
+getLocaleMetadata('hi-IN')?.numbering.grouping; // [3, 2]
+getLocaleMetadata('en-US')?.range.largestNamedMagnitude; // exact decimal string
+SUPPORTED_LOCALES.length; // 135
+```
+
+The manifest contains compact generated capability, numbering-system, and named-range metadata and does not load locale conversion tables. Size-sensitive conversion code should still use per-locale imports.
+
+Custom locale authors can use `assertLocaleConfig()` or `validateLocaleConfig()` from `to-words/locale-contract` to check the lookup-table invariants required by the conversion engine. See the [generated locale capability manifest](/guide/locale-capabilities) for the complete API and per-locale feature matrix.
+
+## Utility Methods and Locale Inspection
+
+The class also exposes:
+
+- `toFixed(number, precision?)` — decimal-safe numeric rounding, including `toFixed(1.005, 2) === 1.01`
+- `isFloat(number)` — detects a non-zero fractional component in a valid number, BigInt, or numeric string
+- `isValidNumber(number)` — validates supported input without performing conversion
+- `isNumberZero(number)` — checks for exact numeric zero
+- `getLocale()` — returns the active locale for inspection; its configuration is recursively frozen after initialization
+
+Custom locale definitions must therefore be complete before their class is passed to `setLocale()`.
+
 ## Error Cases
 
 - Unknown locale code: `new ToWords({ localeCode: 'xx-XX' })`
 - Invalid ordinal input: negative or non-integer values passed to `toOrdinal()`
-- Precision-sensitive currency values passed as `number` instead of `string`
+- Invalid numeric input such as an empty string, malformed numeric string, `NaN`, or infinity
 
 ## Related
 
 - [Getting started](/guide/getting-started)
 - [Currency guide](/guide/currency)
 - [Tree-shaking](/guide/tree-shaking)
+- [Locale capability manifest](/guide/locale-capabilities)
+- [Locale conformance and quality gates](/guide/locale-quality)

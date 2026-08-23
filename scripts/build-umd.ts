@@ -50,6 +50,43 @@ type BuildRequest = {
   resultName: string | null;
 };
 
+const SIZE_BUDGETS = Object.freeze({
+  fullGzipped: 70 * 1024,
+  averageLocaleGzipped: 5.25 * 1024,
+  largestLocaleGzipped: 6 * 1024,
+});
+
+function assertSizeBudgets(
+  fullPackage: { name: string; raw: number; gzipped: number },
+  localeResults: readonly { name: string; raw: number; gzipped: number }[],
+): void {
+  const averageLocaleGzipped = localeResults.reduce((sum, result) => sum + result.gzipped, 0) / localeResults.length;
+  const largestLocale = localeResults.reduce((largest, result) =>
+    result.gzipped > largest.gzipped ? result : largest,
+  );
+  const failures: string[] = [];
+
+  if (fullPackage.gzipped > SIZE_BUDGETS.fullGzipped) {
+    failures.push(
+      `${fullPackage.name} is ${formatBytes(fullPackage.gzipped)} gzip (budget ${formatBytes(SIZE_BUDGETS.fullGzipped)})`,
+    );
+  }
+  if (averageLocaleGzipped > SIZE_BUDGETS.averageLocaleGzipped) {
+    failures.push(
+      `average locale is ${formatBytes(averageLocaleGzipped)} gzip (budget ${formatBytes(SIZE_BUDGETS.averageLocaleGzipped)})`,
+    );
+  }
+  if (largestLocale.gzipped > SIZE_BUDGETS.largestLocaleGzipped) {
+    failures.push(
+      `${largestLocale.name} is ${formatBytes(largestLocale.gzipped)} gzip (budget ${formatBytes(SIZE_BUDGETS.largestLocaleGzipped)})`,
+    );
+  }
+
+  if (failures.length > 0) {
+    throw new Error(`Bundle size budget exceeded:\n- ${failures.join('\n- ')}`);
+  }
+}
+
 function toBrowserGlobal(code: string): string {
   const exportMatch = code.match(/export\s*\{([^}]+)\}\s*;?\s*$/);
   if (!exportMatch) {
@@ -159,6 +196,7 @@ async function main(): Promise<void> {
   // Sort results by size
   const fullPkg = results[0];
   const localeResults = results.slice(1).sort((a, b) => a.gzipped - b.gzipped);
+  assertSizeBudgets(fullPkg, localeResults);
 
   if (verbose) {
     // Display results
@@ -184,6 +222,7 @@ async function main(): Promise<void> {
     console.log('└────────────────────────────────────┴────────────┴────────────┘');
 
     console.log(`\n✅ Built ${results.length} UMD bundles to ${displayDir}/`);
+    console.log('✅ Bundle size budgets passed');
 
     console.log('\n📝 Usage:');
     console.log('   <!-- Full package (all locales) -->');
@@ -203,4 +242,7 @@ async function main(): Promise<void> {
   }
 }
 
-main().catch(console.error);
+main().catch((error: unknown) => {
+  console.error(error);
+  process.exitCode = 1;
+});

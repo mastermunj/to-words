@@ -60,6 +60,24 @@ describe('CLI', () => {
     expect(exitSpy).not.toHaveBeenCalled();
   });
 
+  test('accepts options before the number', () => {
+    runCli(['--locale', 'en-US', '123']);
+    expect(logSpy).toHaveBeenCalledWith('One Hundred Twenty Three');
+    expect(exitSpy).not.toHaveBeenCalled();
+  });
+
+  test('converts a negative positional number', () => {
+    runCli(['--locale', 'en-US', '-5']);
+    expect(logSpy).toHaveBeenCalledWith('Minus Five');
+    expect(exitSpy).not.toHaveBeenCalled();
+  });
+
+  test('accepts a negative number after the end-of-options marker', () => {
+    runCli(['--locale', 'en-US', '--', '-5']);
+    expect(logSpy).toHaveBeenCalledWith('Minus Five');
+    expect(exitSpy).not.toHaveBeenCalled();
+  });
+
   test('converts with --currency flag', () => {
     runCli(['100', '--locale', 'en-US', '--currency']);
     expect(logSpy).toHaveBeenCalledWith('One Hundred Dollars Only');
@@ -69,6 +87,14 @@ describe('CLI', () => {
   test('converts with --ordinal flag', () => {
     runCli(['3', '--locale', 'en-US', '--ordinal']);
     expect(logSpy).toHaveBeenCalledWith('Third');
+    expect(exitSpy).not.toHaveBeenCalled();
+  });
+
+  test('preserves exact large ordinal strings', () => {
+    runCli(['9007199254740993', '--locale', 'en-US', '--ordinal']);
+    expect(logSpy).toHaveBeenCalledWith(
+      'Nine Quadrillion Seven Trillion One Hundred Ninety Nine Billion Two Hundred Fifty Four Million Seven Hundred Forty Thousand Nine Hundred Ninety Third',
+    );
     expect(exitSpy).not.toHaveBeenCalled();
   });
 
@@ -118,6 +144,36 @@ describe('CLI', () => {
   test('errors and exits 1 for an invalid number string', () => {
     runCli(['abc', '--locale', 'en-US']);
     expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('Error:'));
+    expect(exitSpy).toHaveBeenCalledWith(1);
+  });
+
+  test('rejects a fractional ordinal instead of truncating it', () => {
+    runCli(['3.9', '--locale', 'en-US', '--ordinal']);
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('non-negative integers'));
+    expect(exitSpy).toHaveBeenCalledWith(1);
+  });
+
+  test('rejects unknown options', () => {
+    runCli(['123', '--unknown']);
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('Unknown option'));
+    expect(exitSpy).toHaveBeenCalledWith(1);
+  });
+
+  test('rejects conflicting conversion modes', () => {
+    runCli(['123', '--currency', '--ordinal']);
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('cannot be used together'));
+    expect(exitSpy).toHaveBeenCalledWith(1);
+  });
+
+  test('rejects multiple positional numbers', () => {
+    runCli(['123', '456']);
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('Expected one number'));
+    expect(exitSpy).toHaveBeenCalledWith(1);
+  });
+
+  test('rejects repeated locale options', () => {
+    runCli(['123', '--locale', 'en-US', '--locale', 'en-IN']);
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('only be provided once'));
     expect(exitSpy).toHaveBeenCalledWith(1);
   });
 });

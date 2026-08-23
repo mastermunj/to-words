@@ -63,7 +63,7 @@ toCurrency(100, { localeCode: locale });
 
 This is the simplest API when locale changes at runtime, for example from a user profile or a language picker.
 
-**3. Per-locale import** — fully tree-shakeable, ~3.5 KB gzip:
+**3. Per-locale import** — fully tree-shakeable and the smallest bundle option:
 
 ```js
 import { toWords, toOrdinal, toCurrency } from 'to-words/en-US';
@@ -92,6 +92,7 @@ Use the per-locale UMD file for the smallest browser payload. Reach for the full
 ```bash
 npx to-words 12345 --locale en-US
 npx to-words 1234.56 --locale en-US --currency
+npx to-words --locale en-US -- -5
 npx to-words --detect-locale
 ```
 

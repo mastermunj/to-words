@@ -8,11 +8,11 @@
  * For tree-shaken single-locale imports, use `ToWords` from a locale entry point:
  *
  * @example
- * // Full package (all locales ~55KB gzipped)
+ * // Full package (all locales)
  * import { ToWords } from 'to-words';
  * const tw = new ToWords({ localeCode: 'en-IN' });
  *
- * // Single locale (~3-4KB gzipped) - SAME API!
+ * // Single-locale bundle - SAME API!
  * import { ToWords } from 'to-words/en-IN';
  * const tw = new ToWords();
  */
@@ -24,6 +24,7 @@ import {
   type LocaleInterface,
   type NumberInput,
   type NumberWordMap,
+  type OrdinalWordMap,
   type OrdinalOptions,
   type ToWordsOptions,
 } from './types.js';
@@ -53,6 +54,8 @@ interface LocaleCache {
   numberWordsMappingBigInt: CachedNumberWordMap[];
   exactWordsMap: Map<bigint, CachedNumberWordMap>; // O(1) lookup for exact matches
   smallNumbersMap: Map<bigint, CachedNumberWordMap>; // Direct lookup for 0-100
+  ordinalWordsMap: Map<bigint, OrdinalWordMap>;
+  ordinalExactWordsMap: Map<bigint, OrdinalWordMap>;
   // Pre-computed unit thresholds for faster iteration
   unitMappings: CachedNumberWordMap[]; // Numbers >= 100, sorted descending
   smallNumbersBoundary: bigint; // The largest "small number" that has an atomic word
@@ -82,6 +85,19 @@ const BIGINT_100 = 100n;
 const BIGINT_1000 = 1000n;
 const BIGINT_MAX_SAFE = BigInt(Number.MAX_SAFE_INTEGER);
 
+/** Freeze locale data recursively so public inspection cannot invalidate internal caches. */
+function deepFreeze<T>(value: T): T {
+  if (value === null || typeof value !== 'object' || Object.isFrozen(value)) {
+    return value;
+  }
+
+  Object.freeze(value);
+  for (const nestedValue of Object.values(value)) {
+    deepFreeze(nestedValue);
+  }
+  return value;
+}
+
 export class ToWordsCore {
   protected options: ToWordsOptions = {};
 
@@ -110,6 +126,28 @@ export class ToWordsCore {
       return entry.masculineValue;
     }
     return trailing && Array.isArray(entry.value) ? entry.value[1] : entry.resolvedValue;
+  }
+
+  /** Resolve an ordinal mapping's explicit or locale-wide gender form. */
+  private resolveOrdinalValue(
+    entry: OrdinalWordMap,
+    gender: OrdinalOptions['gender'],
+    localeConfig: LocaleInterface['config'],
+  ): string {
+    if (gender === 'feminine') {
+      if (entry.feminineValue) {
+        return entry.feminineValue;
+      }
+
+      const suffixes = localeConfig.ordinalGenderSuffixMapping;
+      if (suffixes && BigInt(entry.number) !== BIGINT_0 && entry.value.endsWith(suffixes.masculine)) {
+        return entry.value.slice(0, -suffixes.masculine.length) + suffixes.feminine;
+      }
+    }
+    if (gender === 'masculine' && entry.masculineValue) {
+      return entry.masculineValue;
+    }
+    return entry.value;
   }
 
   /**
@@ -158,7 +196,7 @@ export class ToWordsCore {
     }
     // Remove formalConfig from merged to prevent double-application
     mergedConfig.formalConfig = undefined;
-    return { config: mergedConfig };
+    return { config: deepFreeze(mergedConfig) };
   }
 
   /**
@@ -188,6 +226,7 @@ export class ToWordsCore {
     if (this.locale === undefined) {
       const LocaleClass = this.getLocaleClass();
       this.locale = new LocaleClass();
+      deepFreeze(this.locale.config);
       // Initialize cache for this locale
       this.initLocaleCache(this.locale);
     }
@@ -231,6 +270,16 @@ export class ToWordsCore {
       }
     }
 
+    const ordinalWordsMap = new Map<bigint, OrdinalWordMap>();
+    for (const elem of config.ordinalWordsMapping ?? []) {
+      ordinalWordsMap.set(BigInt(elem.number), elem);
+    }
+
+    const ordinalExactWordsMap = new Map<bigint, OrdinalWordMap>();
+    for (const elem of config.ordinalExactWordsMapping ?? []) {
+      ordinalExactWordsMap.set(BigInt(elem.number), elem);
+    }
+
     // Pre-compute unit mappings (>= 100) for faster iteration - already sorted descending
     const unitMappings = numberWordsMappingBigInt.filter((m) => m.numberBigInt >= BIGINT_100);
 
@@ -244,6 +293,8 @@ export class ToWordsCore {
       numberWordsMappingBigInt,
       exactWordsMap,
       smallNumbersMap,
+      ordinalWordsMap,
+      ordinalExactWordsMap,
       unitMappings,
       smallNumbersBoundary,
       pluralWordsSet,
@@ -356,30 +407,29 @@ export class ToWordsCore {
 
   private convertOrdinalBigInt(
     number: bigint,
-    _options: OrdinalOptions,
+    options: OrdinalOptions,
     localeInstance: InstanceType<ConstructorOf<LocaleInterface>>,
   ): string[] {
     const localeConfig = localeInstance.config;
+    const cache = this.getLocaleCache(localeInstance);
 
     // Check exact ordinal mapping first (for special cases like 100 that need special wording)
-    if (localeConfig.ordinalExactWordsMapping) {
-      const exactMatch = localeConfig.ordinalExactWordsMapping.find((m) => BigInt(m.number) === number);
-      if (exactMatch) {
-        return [exactMatch.value];
-      }
+    const exactMatch = cache.ordinalExactWordsMap.get(number);
+    if (exactMatch) {
+      return [this.resolveOrdinalValue(exactMatch, options.gender, localeConfig)];
     }
 
     // For simple numbers (0-20), use direct ordinal mapping
-    if (number <= 20n && localeConfig.ordinalWordsMapping) {
-      const ordinalMatch = localeConfig.ordinalWordsMapping.find((m) => BigInt(m.number) === number);
+    if (number <= 20n) {
+      const ordinalMatch = cache.ordinalWordsMap.get(number);
       if (ordinalMatch) {
-        return [ordinalMatch.value];
+        return [this.resolveOrdinalValue(ordinalMatch, options.gender, localeConfig)];
       }
     }
 
     // For composite numbers (like 21, 1000, 1234), convert to cardinal then modify last component
     // Strategy: Convert the number to cardinal, then find the last component and replace it with ordinal
-    const cardinalWords = this.convertInternal(number, true, undefined, localeInstance);
+    const cardinalWords = this.convertInternal(number, true, undefined, localeInstance, options.gender);
 
     // Convert the last word to its ordinal form.
     // For composite numbers like 21 (Twenty One), only "One" should become "First".
@@ -392,12 +442,10 @@ export class ToWordsCore {
 
     // Try to find ordinal mapping for the last component
     let transformed = false;
-    if (localeConfig.ordinalWordsMapping) {
-      const ordinalMatch = localeConfig.ordinalWordsMapping.find((m) => BigInt(m.number) === lastNumberComponent);
-      if (ordinalMatch) {
-        cardinalWords[lastWordIndex] = ordinalMatch.value;
-        transformed = true;
-      }
+    const ordinalMatch = cache.ordinalWordsMap.get(lastNumberComponent);
+    if (ordinalMatch) {
+      cardinalWords[lastWordIndex] = this.resolveOrdinalValue(ordinalMatch, options.gender, localeConfig);
+      transformed = true;
     }
 
     // If ordinalSuffix is available, use it
@@ -465,7 +513,9 @@ export class ToWordsCore {
     // For numbers like 111 (last two digits = 11), check if locale has word for 11
     // Note: lastTwoDigits === 0 is impossible here — multiples of 100 are caught above by the
     // unit-mapping loop (e.g. 200 % 100 === 0 returns 100 early), so lastTwoDigits is always 1-99.
-    const hasAtomicWord = localeConfig.numberWordsMapping.some((m) => BigInt(m.number) === lastTwoDigits);
+    const hasAtomicWord = localeInstance
+      ? this.getLocaleCache(localeInstance).smallNumbersMap.has(lastTwoDigits)
+      : localeConfig.numberWordsMapping.some((m) => BigInt(m.number) === lastTwoDigits);
     if (hasAtomicWord) {
       return lastTwoDigits;
     }
@@ -979,12 +1029,27 @@ export class ToWordsCore {
     return result;
   }
 
+  /** Round a number at decimal precision using decimal, rather than binary, arithmetic. */
   public toFixed(number: number, precision = 2): number {
-    return Number(Number(number).toFixed(precision));
+    if (!Number.isFinite(number)) {
+      return Number(Number(number).toFixed(precision));
+    }
+    if (!Number.isInteger(precision) || precision < 0 || precision > 100) {
+      throw new RangeError('toFixed() precision must be an integer between 0 and 100');
+    }
+
+    const rounded = this.roundNumberParts(this.parseNumberParts(number), precision);
+    const sign = rounded.isNegative ? '-' : '';
+    const decimal = rounded.fractionalPart ? `.${rounded.fractionalPart}` : '';
+    return Number(`${sign}${rounded.integerPart}${decimal}`);
   }
 
-  public isFloat(number: number | string): boolean {
-    return Number(number) === number && number % 1 !== 0;
+  /** Return whether a valid number input has a non-zero fractional component. */
+  public isFloat(number: NumberInput): boolean {
+    if (!this.isValidNumber(number)) {
+      return false;
+    }
+    return /[1-9]/.test(this.parseNumberParts(number).fractionalPart);
   }
 
   public isValidNumber(number: NumberInput): boolean {
@@ -1010,10 +1075,8 @@ export class ToWordsCore {
     return false;
   }
 
+  /** Return whether a numeric value is exactly zero. */
   public isNumberZero(number: number | bigint): boolean {
-    if (typeof number === 'bigint') {
-      return number === BIGINT_0;
-    }
-    return number >= 0 && number < 1;
+    return number === BIGINT_0 || number === 0;
   }
 }
