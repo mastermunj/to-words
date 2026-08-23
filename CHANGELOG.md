@@ -2,6 +2,19 @@
 
 All notable changes to this project are documented here. Releases and this changelog are managed by [Release Please](https://github.com/googleapis/release-please).
 
+## [6.0.0](https://github.com/mastermunj/to-words/compare/v5.7.0...v6.0.0) (2026-08-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* locale defaults, config mutability, utilities, and CLI semantics have changed.
+
+### Bug Fixes
+
+* enforce deterministic conversion contracts ([#2435](https://github.com/mastermunj/to-words/issues/2435)) ([cedf6f6](https://github.com/mastermunj/to-words/commit/cedf6f6d53cf31d2c4c2fbe369a0bb7d2a68b113))
+* preserve numeric precision without slowing hot paths ([#2432](https://github.com/mastermunj/to-words/issues/2432)) ([4a37512](https://github.com/mastermunj/to-words/commit/4a375123ef1e3f4f3bcdcb52b16128fc47882bc8))
+* reset formal locale and preserve decimal signs ([#2434](https://github.com/mastermunj/to-words/issues/2434)) ([552d4bd](https://github.com/mastermunj/to-words/commit/552d4bd86eec68415613f24c8f82caffe288d260))
+
 ## [5.7.0](https://github.com/mastermunj/to-words/compare/v5.6.1...v5.7.0) (2026-08-02)
 
 ### Features
