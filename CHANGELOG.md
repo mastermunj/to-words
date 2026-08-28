@@ -2,6 +2,17 @@
 
 All notable changes to this project are documented here. Releases and this changelog are managed by [Release Please](https://github.com/googleapis/release-please).
 
+## [7.0.0](https://github.com/mastermunj/to-words/compare/v6.0.0...v7.0.0) (2026-08-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* Remove the ee-EE and np-NP entry points and locale codes. Use et-EE and ne-NP instead. Conversion now defaults to strict range validation at each locale form's verified ceiling. Use rangeMode compose to retain legacy recursive composition. Public custom locale setup now validates the locale contract.
+
+### Features
+
+* establish v7 locale and conversion contracts ([#2441](https://github.com/mastermunj/to-words/issues/2441)) ([ca8ced6](https://github.com/mastermunj/to-words/commit/ca8ced62fcd2fb15d23d2472f0e4f16b1613343e))
+
 ## [6.0.0](https://github.com/mastermunj/to-words/compare/v5.7.0...v6.0.0) (2026-08-23)
 
 ## [6.0.0](https://github.com/mastermunj/to-words/compare/v5.7.0...v6.0.0) (2026-08-23)
