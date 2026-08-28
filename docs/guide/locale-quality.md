@@ -50,10 +50,16 @@ The full test suite also enforces project coverage thresholds and locale-specifi
 Maintainers can refresh the pinned IANA data after the registry changes:
 
 ```bash
-npm run locale-registry:update
+registry_file="$(mktemp)"
+curl --fail --show-error --silent --location --proto '=https' --tlsv1.2 \
+  https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry \
+  --output "$registry_file"
+npm run locale-registry:update -- "$registry_file"
+git diff -- scripts/data/iana-language-subtags.json
+rm "$registry_file"
 ```
 
-The snapshot keeps normal CI deterministic and offline. Updating it is an explicit, reviewable diff; CI never trusts live network data during a release.
+The download and import are separate trust steps. The importer validates the local file's size, structure, canonical subtag shapes, expected identities, and registry date, refuses rollback to an older snapshot, and writes atomically. The snapshot keeps normal CI deterministic and offline; review its generated diff before committing it.
 
 ## What The Gate Does Not Claim
 

@@ -181,8 +181,16 @@ Locale identifiers are checked against the committed [IANA Language Subtag Regis
 Maintainers can refresh the committed registry snapshot after IANA publishes an update:
 
 ```sh
-npm run locale-registry:update
+registry_file="$(mktemp)"
+curl --fail --show-error --silent --location --proto '=https' --tlsv1.2 \
+  https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry \
+  --output "$registry_file"
+npm run locale-registry:update -- "$registry_file"
+git diff -- scripts/data/iana-language-subtags.json
+rm "$registry_file"
 ```
+
+Downloading and importing are deliberately separate trust steps. The importer accepts only a local file, validates its size, structure, canonical subtag shapes, expected identities, and registry date, and refuses to roll the snapshot back. Review the generated diff before committing it.
 
 ### 3. Add tests
 
