@@ -14,6 +14,10 @@ export interface CurrencyOptions {
   };
 }
 
+export type RangeMode = 'strict' | 'compose';
+
+export type ConversionForm = 'cardinal' | 'ordinal' | 'currency';
+
 export type ConverterOptions = {
   currency?: boolean;
   ignoreDecimal?: boolean;
@@ -25,11 +29,13 @@ export type ConverterOptions = {
   useAnd?: boolean;
   formal?: boolean;
   decimalStyle?: 'digit' | 'fraction'; // 'digit' (default): digit-by-digit after point; 'fraction': positional/fractional style (e.g. "Forty-Five Hundredths")
+  rangeMode?: RangeMode; // 'strict' (default): enforce the locale's verified range; 'compose': recursively reuse the largest named scale
 };
 
 export type OrdinalOptions = {
   gender?: 'masculine' | 'feminine';
   formal?: boolean;
+  rangeMode?: RangeMode;
 };
 
 export type ToWordsOptions = {
@@ -107,6 +113,8 @@ export type LocaleConfig = {
   trim?: boolean;
   useTrailingForCurrency?: boolean; // If true, use trailing=true in currency mode (for French-style plurals)
   formalConfig?: FormalConfig;
+  /** Optional verified inclusive ceilings. Missing forms are derived from the locale's scale structure. */
+  maximumSupportedValues?: Partial<Record<ConversionForm, NumberInput>>;
 };
 
 export interface LocaleInterface {

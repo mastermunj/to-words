@@ -9,7 +9,7 @@ head:
 
 # BigInt & Large Numbers
 
-`to-words` accepts `bigint` and precision-preserving string input, so you can safely convert values far beyond `Number.MAX_SAFE_INTEGER` without rounding or truncation.
+`to-words` accepts `bigint` and precision-preserving string input, so values beyond `Number.MAX_SAFE_INTEGER` are never rounded or truncated. Each locale publishes an inclusive strict ceiling for cardinal, ordinal, and currency output.
 
 ## BigInt Example
 
@@ -40,6 +40,26 @@ tw.convert('1000000000000000000000');
 ```
 
 Use string input when the value came from a database, finance system, or API and must remain exact.
+
+## Supported Range and Compose Mode
+
+```js
+import { getLocaleMetadata } from 'to-words/manifest';
+
+getLocaleMetadata('en-US').range.maximumSupported.cardinal;
+// exact decimal string; safe to parse as BigInt
+```
+
+The default `rangeMode: 'strict'` raises `NumberOutOfRangeError` above the applicable ceiling. This prevents the package from silently presenting mechanically repeated scale words as verified locale output.
+
+Use compose mode only when that recursive behavior is explicitly acceptable:
+
+```js
+tw.convert('1e100', { rangeMode: 'compose' });
+tw.toOrdinal('1e100', { rangeMode: 'compose' });
+```
+
+Compose mode preserves exact input and the legacy algorithm, but wording beyond the strict ceiling is not claimed as independently verified.
 
 ## Large-Number Systems
 

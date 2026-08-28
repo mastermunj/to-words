@@ -10,6 +10,7 @@ describe('ToWordsCore - DefaultConverterOptions', () => {
       ignoreZeroCurrency: false,
       doNotAddOnly: false,
       includeZeroFractional: false,
+      rangeMode: 'strict',
     });
   });
 });

@@ -34,7 +34,12 @@ export const LOCALE_MANIFEST = Object.freeze(
         largeUnitExponents,
         largestNamedMagnitude,
         largestNamedMagnitudeExponent,
+        maximumDatum,
       ] = data;
+      const compactMaximums = Array.isArray(maximumDatum) ? maximumDatum : [maximumDatum, maximumDatum, maximumDatum];
+      const [maximumCardinal, maximumOrdinal, maximumCurrency] = compactMaximums.map((value) =>
+        typeof value === 'number' ? '9'.repeat(value) : value,
+      );
       const entry: LocaleManifestEntry<typeof localeCode> = Object.freeze({
         localeCode,
         capabilities: Object.freeze({
@@ -62,7 +67,12 @@ export const LOCALE_MANIFEST = Object.freeze(
           range: Object.freeze({
             largestNamedMagnitude,
             largestNamedMagnitudeExponent,
-            arbitraryPrecisionInput: true,
+            maximumSupported: Object.freeze({
+              cardinal: maximumCardinal,
+              ordinal: maximumOrdinal,
+              currency: maximumCurrency,
+            }),
+            composeModeAvailable: true,
           }),
         }),
       });

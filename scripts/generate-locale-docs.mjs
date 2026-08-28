@@ -60,12 +60,18 @@ function renderLargestMagnitude(range) {
     : `10^${range.largestNamedMagnitudeExponent}`;
 }
 
+function renderMaximum(range) {
+  const maximum = range.maximumSupported.cardinal;
+  return /^9+$/.test(maximum) ? `10^${maximum.length} - 1` : maximum;
+}
+
 function renderDocument() {
   const count = (predicate) => entries.filter(predicate).length;
   const rows = entries.map(({ localeCode, capabilities, metadata }) => [
     `\`${localeCode}\``,
     renderNumberingSystem(metadata.numbering.system),
     renderLargestMagnitude(metadata.range),
+    renderMaximum(metadata.range),
     capabilities.ordinal ? 'Yes' : 'No',
     renderGender(capabilities),
     capabilities.formal ? 'Yes' : 'No',
@@ -96,6 +102,7 @@ function renderDocument() {
     "getLocaleCapabilities('fr-FR')?.decimals.fraction; // true",
     "getLocaleMetadata('hi-IN')?.numbering.grouping; // [3, 2]",
     "getLocaleMetadata('en-US')?.range.largestNamedMagnitude; // exact decimal string",
+    "getLocaleMetadata('en-US')?.range.maximumSupported.cardinal; // verified inclusive ceiling",
     "LOCALE_MANIFEST['zh-CN'].capabilities.formal; // true",
     '```',
     '',
@@ -128,8 +135,9 @@ function renderDocument() {
     '- **East Asian**: the configuration contains 10^4 and 10^8 magnitudes; grouping proceeds in 4-digit units.',
     '- **Locale-specific**: configured large units do not match one of the structural families above. Inspect `largeUnitExponents` for the exact named powers of ten.',
     '- **Largest named scale**: the largest magnitude with an explicit word in the locale configuration.',
+    '- **Maximum verified integer**: the inclusive default ceiling for strict conversion. Cardinal, ordinal, and currency ceilings are exposed separately in the runtime manifest.',
     '',
-    '`largestNamedMagnitude` is descriptive metadata, not an input ceiling. Integer strings and `bigint` values can exceed it; conversion recursively reuses the largest configured scale. The package does not claim that recursively composed output has been independently certified by native speakers beyond the named range.',
+    "`rangeMode: 'strict'` is the v7 default and rejects values above the applicable verified ceiling with `NumberOutOfRangeError`. Use `rangeMode: 'compose'` to opt into the legacy recursive behavior, which reuses the largest configured scale without claiming that the resulting wording has been independently certified by native speakers.",
     '',
     '## All Locales',
     '',
@@ -138,6 +146,7 @@ function renderDocument() {
         'Locale',
         'Numbering system',
         'Largest named scale',
+        'Maximum verified integer',
         'Ordinal',
         'Gender',
         'Formal',
@@ -156,6 +165,8 @@ function renderManifestData() {
     'export type GeneratedLocaleCode =',
     ...entries.map(({ localeCode }, index) => `  | '${localeCode}'${index === entries.length - 1 ? ';' : ''}`),
     '',
+    'type CompactInteger = number | string;',
+    '',
     'type LocaleCapabilityDatum = readonly [',
     '  ordinal: boolean,',
     '  formal: boolean,',
@@ -168,12 +179,24 @@ function renderManifestData() {
     '  largeUnitExponents: readonly number[],',
     '  largestNamedMagnitude: string,',
     '  largestNamedMagnitudeExponent: number | null,',
+    '  maximumSupported:',
+    '    | CompactInteger',
+    '    | readonly [cardinal: CompactInteger, ordinal: CompactInteger, currency: CompactInteger],',
     '];',
     '',
     'export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, LocaleCapabilityDatum>> = {',
   ];
 
   for (const { localeCode, capabilities, metadata } of entries) {
+    const maximumValues = [
+      metadata.range.maximumSupported.cardinal,
+      metadata.range.maximumSupported.ordinal,
+      metadata.range.maximumSupported.currency,
+    ];
+    const compactInteger = (value) => (/^9+$/.test(value) ? String(value.length) : `'${value}'`);
+    const maximumSupported = maximumValues.every((value) => value === maximumValues[0])
+      ? compactInteger(maximumValues[0])
+      : `[${maximumValues.map(compactInteger).join(', ')}]`;
     const values = [
       capabilities.ordinal,
       capabilities.formal,
@@ -186,6 +209,7 @@ function renderManifestData() {
       `[${metadata.numbering.largeUnitExponents.join(', ')}]`,
       `'${metadata.range.largestNamedMagnitude}'`,
       String(metadata.range.largestNamedMagnitudeExponent),
+      maximumSupported,
     ].map(String);
     const compactLine = `  '${localeCode}': [${values.join(', ')}],`;
 

@@ -6,7 +6,7 @@ import {
   type OrdinalOptions,
   type ToWordsOptions,
 } from '../types.js';
-import { ToWordsCore } from '../ToWordsCore.js';
+import { ToWordsCore } from '../ToWordsCoreBase.js';
 
 // Igbo (Standard Igbo) number words
 // Decimal system with scale-first ordering: "nnari abụọ" = hundred two = 200
@@ -104,7 +104,7 @@ export default class Locale implements LocaleInterface {
 export class ToWords extends ToWordsCore {
   constructor(options: ToWordsOptions = {}) {
     super(options);
-    this.setLocale(Locale);
+    this.setLocale(Locale, 'ig-NG');
   }
 }
 

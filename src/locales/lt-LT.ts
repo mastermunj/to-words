@@ -6,7 +6,7 @@ import {
   type OrdinalOptions,
   type ToWordsOptions,
 } from '../types.js';
-import { ToWordsCore } from '../ToWordsCore.js';
+import { ToWordsCore } from '../ToWordsCoreBase.js';
 
 export default class Locale implements LocaleInterface {
   public config: LocaleConfig = {
@@ -175,7 +175,7 @@ export default class Locale implements LocaleInterface {
 export class ToWords extends ToWordsCore {
   constructor(options: ToWordsOptions = {}) {
     super(options);
-    this.setLocale(Locale);
+    this.setLocale(Locale, 'lt-LT');
   }
 }
 

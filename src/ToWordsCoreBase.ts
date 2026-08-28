@@ -1,0 +1,1186 @@
+/**
+ * Internal conversion core for prevalidated bundled locale entry points.
+ *
+ * This is the base class that contains all conversion logic but does NOT import
+ * any locale files. It's designed for tree-shaking when used with per-locale entry points.
+ *
+ * For the full package with all locales, use `ToWords` from the main entry point.
+ * For tree-shaken single-locale imports, use `ToWords` from a locale entry point:
+ *
+ * @example
+ * // Full package (all locales)
+ * import { ToWords } from 'to-words';
+ * const tw = new ToWords({ localeCode: 'en-IN' });
+ *
+ * // Single-locale bundle - SAME API!
+ * import { ToWords } from 'to-words/en-IN';
+ * const tw = new ToWords();
+ */
+
+import {
+  type ConstructorOf,
+  type ConverterOptions,
+  type ConversionForm,
+  type FormalConfig,
+  type LocaleInterface,
+  type LocaleConfig,
+  type NumberInput,
+  type NumberWordMap,
+  type OrdinalWordMap,
+  type OrdinalOptions,
+  type RangeMode,
+  type ToWordsOptions,
+} from './types.js';
+import { NumberOutOfRangeError } from './errors.js';
+
+export const DefaultConverterOptions: Readonly<ConverterOptions> = Object.freeze({
+  currency: false,
+  ignoreDecimal: false,
+  ignoreZeroCurrency: false,
+  doNotAddOnly: false,
+  includeZeroFractional: false,
+  rangeMode: 'strict',
+});
+
+export const DefaultToWordsOptions: Readonly<ToWordsOptions> = Object.freeze({
+  localeCode: 'en-IN',
+  converterOptions: DefaultConverterOptions,
+});
+
+// Cached BigInt mappings per locale to avoid repeated conversions
+interface CachedNumberWordMap extends NumberWordMap {
+  numberBigInt: bigint;
+  resolvedValue: string; // Pre-resolved value (first element if array)
+  feminineValue?: string;
+  masculineValue?: string;
+}
+
+interface LocaleCache {
+  numberWordsMappingBigInt: CachedNumberWordMap[];
+  exactWordsMap: Map<bigint, CachedNumberWordMap>; // O(1) lookup for exact matches
+  smallNumbersMap: Map<bigint, CachedNumberWordMap>; // Direct lookup for 0-100
+  ordinalWordsMap: Map<bigint, OrdinalWordMap>;
+  ordinalExactWordsMap: Map<bigint, OrdinalWordMap>;
+  // Pre-computed unit thresholds for faster iteration
+  unitMappings: CachedNumberWordMap[]; // Numbers >= 100, sorted descending
+  smallNumbersBoundary: bigint; // The largest "small number" that has an atomic word
+  // O(1) lookup sets for plural/ignore words
+  pluralWordsSet: Set<string>;
+  pluralWordsOnlyWhenTrailingSet: Set<string>;
+  ignoreOneForWordsSet: Set<string>;
+  noSplitWordAfterSet: Set<string>;
+  maximumSupported: Readonly<Record<'cardinal' | 'ordinal' | 'currency', bigint>>;
+}
+
+interface ParsedNumberParts {
+  isNegative: boolean;
+  integerPart: bigint;
+  fractionalPart: string;
+}
+
+// Global cache for all locales (computed once per locale)
+const localeCache = new WeakMap<InstanceType<ConstructorOf<LocaleInterface>>, LocaleCache>();
+
+// Pre-computed BigInt constants to avoid repeated creation
+const BIGINT_0 = 0n;
+const BIGINT_1 = 1n;
+const BIGINT_2 = 2n;
+const BIGINT_10 = 10n;
+const BIGINT_11 = 11n;
+const BIGINT_100 = 100n;
+const BIGINT_1000 = 1000n;
+const BIGINT_MAX_SAFE = BigInt(Number.MAX_SAFE_INTEGER);
+
+/** Freeze locale data recursively so public inspection cannot invalidate internal caches. */
+function deepFreeze<T>(value: T): T {
+  if (value === null || typeof value !== 'object' || Object.isFrozen(value)) {
+    return value;
+  }
+
+  Object.freeze(value);
+  for (const nestedValue of Object.values(value)) {
+    deepFreeze(nestedValue);
+  }
+  return value;
+}
+
+function snapshotConverterOptions(options: ConverterOptions | undefined): ConverterOptions | undefined {
+  if (!options) {
+    return options;
+  }
+  const currencyOptions = options.currencyOptions;
+  return {
+    ...options,
+    currencyOptions: currencyOptions
+      ? {
+          ...currencyOptions,
+          numberSpecificForms: currencyOptions.numberSpecificForms
+            ? { ...currencyOptions.numberSpecificForms }
+            : undefined,
+          fractionalUnit: {
+            ...currencyOptions.fractionalUnit,
+            numberSpecificForms: currencyOptions.fractionalUnit.numberSpecificForms
+              ? { ...currencyOptions.fractionalUnit.numberSpecificForms }
+              : undefined,
+          },
+        }
+      : undefined,
+  };
+}
+
+/** Compact derivation for built-in tables already checked by the locale quality gate. */
+function getBundledMaximumSupportedValues(config: LocaleConfig): Readonly<Record<ConversionForm, string>> {
+  const numbers = config.numberWordsMapping.map(({ number }) => BigInt(number));
+  const numberSet = new Set(numbers);
+  const largest = numbers[0];
+  const outerWidth =
+    numberSet.has(10_000n) && numberSet.has(100_000_000n)
+      ? 4
+      : numberSet.has(100_000n) && numberSet.has(10_000_000n)
+        ? 2
+        : 3;
+  const derived = (largest * 10n ** BigInt(outerWidth) - 1n).toString();
+  const configured = config.maximumSupportedValues;
+  return {
+    cardinal: String(configured?.cardinal ?? derived),
+    ordinal: String(configured?.ordinal ?? derived),
+    currency: String(configured?.currency ?? derived),
+  };
+}
+
+export class ToWordsCore {
+  protected options: ToWordsOptions = {};
+
+  protected locale: InstanceType<ConstructorOf<LocaleInterface>> | undefined = undefined;
+
+  protected localeClass: ConstructorOf<LocaleInterface> | undefined = undefined;
+
+  protected localeIdentifier: string | undefined = undefined;
+
+  private formalLocale: InstanceType<ConstructorOf<LocaleInterface>> | undefined = undefined;
+
+  constructor(options: ToWordsOptions = {}) {
+    this.options = deepFreeze({
+      localeCode: options.localeCode ?? DefaultToWordsOptions.localeCode,
+      converterOptions: snapshotConverterOptions(options.converterOptions) ?? DefaultToWordsOptions.converterOptions,
+    });
+  }
+
+  /**
+   * Resolve gendered value from a cached number-word mapping entry.
+   */
+  private resolveGenderedValue(
+    entry: CachedNumberWordMap,
+    gender: 'masculine' | 'feminine' | undefined,
+    trailing: boolean,
+  ): string {
+    if (gender === 'feminine' && entry.feminineValue) {
+      return entry.feminineValue;
+    }
+    if (gender === 'masculine' && entry.masculineValue) {
+      return entry.masculineValue;
+    }
+    return trailing && Array.isArray(entry.value) ? entry.value[1] : entry.resolvedValue;
+  }
+
+  /** Resolve an ordinal mapping's explicit or locale-wide gender form. */
+  private resolveOrdinalValue(
+    entry: OrdinalWordMap,
+    gender: OrdinalOptions['gender'],
+    localeConfig: LocaleInterface['config'],
+  ): string {
+    if (gender === 'feminine') {
+      if (entry.feminineValue) {
+        return entry.feminineValue;
+      }
+
+      const suffixes = localeConfig.ordinalGenderSuffixMapping;
+      if (suffixes && BigInt(entry.number) !== BIGINT_0 && entry.value.endsWith(suffixes.masculine)) {
+        return entry.value.slice(0, -suffixes.masculine.length) + suffixes.feminine;
+      }
+    }
+    if (gender === 'masculine' && entry.masculineValue) {
+      return entry.masculineValue;
+    }
+    return entry.value;
+  }
+
+  /**
+   * Resolve locale instance, applying formalConfig merge when formal=true.
+   */
+  private resolveLocale(formal?: boolean): InstanceType<ConstructorOf<LocaleInterface>> {
+    const locale = this.getLocale();
+    if (!formal) {
+      return locale;
+    }
+    const formalConfig = locale.config.formalConfig;
+    if (!formalConfig) {
+      return locale;
+    }
+    if (!this.formalLocale) {
+      this.formalLocale = this.createFormalLocale(locale, formalConfig);
+    }
+    return this.formalLocale;
+  }
+
+  /**
+   * Create a synthetic locale instance with formalConfig merged in.
+   */
+  private createFormalLocale(
+    base: InstanceType<ConstructorOf<LocaleInterface>>,
+    formalConfig: FormalConfig,
+  ): InstanceType<ConstructorOf<LocaleInterface>> {
+    const mergedConfig = { ...base.config };
+    if (formalConfig.numberWordsMapping) {
+      mergedConfig.numberWordsMapping = formalConfig.numberWordsMapping;
+    }
+    if (formalConfig.exactWordsMapping) {
+      mergedConfig.exactWordsMapping = formalConfig.exactWordsMapping;
+    }
+    if (formalConfig.ordinalWordsMapping) {
+      mergedConfig.ordinalWordsMapping = formalConfig.ordinalWordsMapping;
+    }
+    if (formalConfig.ordinalExactWordsMapping) {
+      mergedConfig.ordinalExactWordsMapping = formalConfig.ordinalExactWordsMapping;
+    }
+    if (formalConfig.currency) {
+      mergedConfig.currency = formalConfig.currency;
+    }
+    if (formalConfig.ignoreOneForWords) {
+      mergedConfig.ignoreOneForWords = formalConfig.ignoreOneForWords;
+    }
+    // Remove formalConfig from merged to prevent double-application
+    mergedConfig.formalConfig = undefined;
+    return { config: deepFreeze(mergedConfig) };
+  }
+
+  /**
+   * Set a locale class directly.
+   * @internal Used by per-locale entry points
+   */
+  public setLocale(localeClass: ConstructorOf<LocaleInterface>, localeIdentifier?: string): this {
+    this.localeClass = localeClass;
+    this.localeIdentifier = localeIdentifier;
+    this.locale = undefined; // Reset cached locale instance
+    this.formalLocale = undefined;
+    return this;
+  }
+
+  /**
+   * Get the locale class. Must be set via setLocale() or overridden in subclass.
+   */
+  public getLocaleClass(): ConstructorOf<LocaleInterface> {
+    if (this.localeClass) {
+      return this.localeClass;
+    }
+    throw new Error(
+      'No locale set. Use setLocale() or import from a locale-specific entry point (e.g., "to-words/en-IN")',
+    );
+  }
+
+  public getLocale(): InstanceType<ConstructorOf<LocaleInterface>> {
+    if (this.locale === undefined) {
+      const LocaleClass = this.getLocaleClass();
+      this.locale = new LocaleClass();
+      this.validateLocaleClass(LocaleClass, this.locale);
+      deepFreeze(this.locale.config);
+      // Initialize cache for this locale
+      this.initLocaleCache(this.locale);
+    }
+    return this.locale;
+  }
+
+  /** Hook used by the public core to validate untrusted custom locale classes. */
+  protected validateLocaleClass(
+    LocaleClass: ConstructorOf<LocaleInterface>,
+    locale: InstanceType<ConstructorOf<LocaleInterface>>,
+  ): void {
+    void LocaleClass;
+    void locale;
+  }
+
+  private initLocaleCache(locale: InstanceType<ConstructorOf<LocaleInterface>>): void {
+    // The caller (getLocale / getLocaleCache) guarantees this locale is not yet cached;
+    // the guard below is therefore always false and has been removed to keep coverage clean.
+    const config = locale.config;
+
+    // Pre-compute BigInt values and resolved string values for numberWordsMapping
+    const numberWordsMappingBigInt: CachedNumberWordMap[] = config.numberWordsMapping.map((elem) => ({
+      ...elem,
+      numberBigInt: BigInt(elem.number),
+      resolvedValue: Array.isArray(elem.value) ? elem.value[0] : elem.value,
+    }));
+
+    // Create Map for O(1) exact match lookup
+    const exactWordsMap = new Map<bigint, CachedNumberWordMap>();
+    if (config.exactWordsMapping) {
+      for (const elem of config.exactWordsMapping) {
+        const cached: CachedNumberWordMap = {
+          ...elem,
+          numberBigInt: BigInt(elem.number),
+          resolvedValue: Array.isArray(elem.value) ? elem.value[0] : elem.value,
+        };
+        exactWordsMap.set(cached.numberBigInt, cached);
+      }
+    }
+
+    // Create direct lookup map for small numbers (0-100) for O(1) access
+    const smallNumbersMap = new Map<bigint, CachedNumberWordMap>();
+    let smallNumbersBoundary = BIGINT_0;
+    for (const elem of numberWordsMappingBigInt) {
+      if (elem.numberBigInt <= BIGINT_100) {
+        smallNumbersMap.set(elem.numberBigInt, elem);
+        if (elem.numberBigInt > smallNumbersBoundary) {
+          smallNumbersBoundary = elem.numberBigInt;
+        }
+      }
+    }
+
+    const ordinalWordsMap = new Map<bigint, OrdinalWordMap>();
+    for (const elem of config.ordinalWordsMapping ?? []) {
+      ordinalWordsMap.set(BigInt(elem.number), elem);
+    }
+
+    const ordinalExactWordsMap = new Map<bigint, OrdinalWordMap>();
+    for (const elem of config.ordinalExactWordsMapping ?? []) {
+      ordinalExactWordsMap.set(BigInt(elem.number), elem);
+    }
+
+    // Pre-compute unit mappings (>= 100) for faster iteration - already sorted descending
+    const unitMappings = numberWordsMappingBigInt.filter((m) => m.numberBigInt >= BIGINT_100);
+
+    // Create Sets for O(1) lookup instead of array.includes()
+    const pluralWordsSet = new Set<string>(config.pluralWords ?? []);
+    const pluralWordsOnlyWhenTrailingSet = new Set<string>(config.pluralWordsOnlyWhenTrailing ?? []);
+    const ignoreOneForWordsSet = new Set<string>(config.ignoreOneForWords ?? []);
+    const noSplitWordAfterSet = new Set<string>(config.noSplitWordAfter ?? []);
+    const maximumSupportedValues = this.getMaximumSupportedValues(config);
+
+    localeCache.set(locale, {
+      numberWordsMappingBigInt,
+      exactWordsMap,
+      smallNumbersMap,
+      ordinalWordsMap,
+      ordinalExactWordsMap,
+      unitMappings,
+      smallNumbersBoundary,
+      pluralWordsSet,
+      pluralWordsOnlyWhenTrailingSet,
+      ignoreOneForWordsSet,
+      noSplitWordAfterSet,
+      maximumSupported: Object.freeze({
+        cardinal: BigInt(maximumSupportedValues.cardinal),
+        ordinal: BigInt(maximumSupportedValues.ordinal),
+        currency: BigInt(maximumSupportedValues.currency),
+      }),
+    });
+  }
+
+  /** Range derivation hook; the public core overrides this for arbitrary custom configurations. */
+  protected getMaximumSupportedValues(config: LocaleConfig): Readonly<Record<ConversionForm, string>> {
+    return getBundledMaximumSupportedValues(config);
+  }
+
+  private getLocaleCache(locale: InstanceType<ConstructorOf<LocaleInterface>>): LocaleCache {
+    let cache = localeCache.get(locale);
+    if (!cache) {
+      this.initLocaleCache(locale);
+      cache = localeCache.get(locale)!;
+    }
+    return cache;
+  }
+
+  public convert(number: NumberInput, options: ConverterOptions = {}): string {
+    // Fast path: merge options only when needed (avoid Object.assign in hot path)
+    const baseOptions = this.options.converterOptions;
+    const mergedOptions: ConverterOptions =
+      Object.keys(options).length === 0
+        ? baseOptions!
+        : {
+            currency: options.currency ?? baseOptions?.currency ?? false,
+            ignoreDecimal: options.ignoreDecimal ?? baseOptions?.ignoreDecimal ?? false,
+            ignoreZeroCurrency: options.ignoreZeroCurrency ?? baseOptions?.ignoreZeroCurrency ?? false,
+            doNotAddOnly: options.doNotAddOnly ?? baseOptions?.doNotAddOnly ?? false,
+            includeZeroFractional: options.includeZeroFractional ?? baseOptions?.includeZeroFractional ?? false,
+            currencyOptions: options.currencyOptions ?? baseOptions?.currencyOptions,
+            gender: options.gender ?? baseOptions?.gender,
+            useAnd: options.useAnd ?? baseOptions?.useAnd,
+            formal: options.formal ?? baseOptions?.formal,
+            decimalStyle: options.decimalStyle ?? baseOptions?.decimalStyle,
+            rangeMode: options.rangeMode ?? baseOptions?.rangeMode ?? 'strict',
+          };
+
+    if (!this.isValidNumber(number)) {
+      throw new Error(`Invalid Number "${String(number)}"`);
+    }
+
+    // Detect string inputs like "123.00" or "5.0" where the caller has explicitly expressed
+    // a zero fractional part. Number() coercion loses this info, so we capture it here.
+    const forceZeroFractional =
+      !!mergedOptions.includeZeroFractional &&
+      typeof number === 'string' &&
+      !mergedOptions.ignoreDecimal &&
+      /\.\d+$/.test(number.trim()) &&
+      Number(number.trim().split('.')[1]) === 0;
+
+    let words: string[] = [];
+    const localeOverride = this.resolveLocale(mergedOptions.formal);
+    if (mergedOptions.currency) {
+      words = this.convertCurrency(number, mergedOptions, forceZeroFractional, localeOverride);
+    } else {
+      words = this.convertNumber(number, mergedOptions, localeOverride);
+    }
+
+    if (localeOverride.config.trim) {
+      return words.join('');
+    }
+
+    return words.join(' ');
+  }
+
+  public toOrdinal(number: NumberInput, options: OrdinalOptions = {}): string {
+    if (!this.isValidNumber(number)) {
+      throw new Error(`Invalid Number "${String(number)}"`);
+    }
+
+    const locale = this.resolveLocale(options.formal);
+    const localeConfig = locale.config;
+
+    const parsed = this.parseNumberParts(number);
+    const hasFractionalValue = /[1-9]/.test(parsed.fractionalPart);
+
+    if (parsed.isNegative || hasFractionalValue) {
+      throw new Error(`Ordinal numbers must be non-negative integers, got "${number}"`);
+    }
+
+    this.assertWithinRange(parsed.integerPart, 'ordinal', options.rangeMode ?? 'strict', locale);
+
+    // Check if locale supports ordinals
+    if (
+      !localeConfig.ordinalWordsMapping &&
+      !localeConfig.ordinalSuffix &&
+      !localeConfig.ordinalPrefix &&
+      !localeConfig.ordinalExactWordsMapping
+    ) {
+      throw new Error(`Ordinal conversion not supported for locale "${this.options.localeCode}"`);
+    }
+
+    const words =
+      parsed.integerPart <= BIGINT_MAX_SAFE
+        ? this.convertOrdinal(Number(parsed.integerPart), options, locale)
+        : this.convertOrdinalBigInt(parsed.integerPart, options, locale);
+
+    if (localeConfig.trim) {
+      return words.join('');
+    }
+
+    return words.join(' ');
+  }
+
+  private assertWithinRange(
+    integerPart: bigint,
+    form: 'cardinal' | 'ordinal' | 'currency',
+    rangeMode: RangeMode | undefined,
+    locale: InstanceType<ConstructorOf<LocaleInterface>>,
+  ): void {
+    if (rangeMode === 'compose') {
+      return;
+    }
+    const maximum = this.getLocaleCache(locale).maximumSupported[form];
+    if (integerPart > maximum) {
+      throw new NumberOutOfRangeError(
+        this.localeIdentifier ?? this.options.localeCode!,
+        form,
+        integerPart.toString(),
+        maximum.toString(),
+      );
+    }
+  }
+
+  protected convertOrdinal(
+    number: number,
+    options: OrdinalOptions,
+    localeInstance: InstanceType<ConstructorOf<LocaleInterface>>,
+  ): string[] {
+    return this.convertOrdinalBigInt(BigInt(number), options, localeInstance);
+  }
+
+  private convertOrdinalBigInt(
+    number: bigint,
+    options: OrdinalOptions,
+    localeInstance: InstanceType<ConstructorOf<LocaleInterface>>,
+  ): string[] {
+    const localeConfig = localeInstance.config;
+    const cache = this.getLocaleCache(localeInstance);
+
+    // Check exact ordinal mapping first (for special cases like 100 that need special wording)
+    const exactMatch = cache.ordinalExactWordsMap.get(number);
+    if (exactMatch) {
+      return [this.resolveOrdinalValue(exactMatch, options.gender, localeConfig)];
+    }
+
+    // For simple numbers (0-20), use direct ordinal mapping
+    if (number <= 20n) {
+      const ordinalMatch = cache.ordinalWordsMap.get(number);
+      if (ordinalMatch) {
+        return [this.resolveOrdinalValue(ordinalMatch, options.gender, localeConfig)];
+      }
+    }
+
+    // For composite numbers (like 21, 1000, 1234), convert to cardinal then modify last component
+    // Strategy: Convert the number to cardinal, then find the last component and replace it with ordinal
+    const cardinalWords = this.convertInternal(number, true, undefined, localeInstance, options.gender);
+
+    // Convert the last word to its ordinal form.
+    // For composite numbers like 21 (Twenty One), only "One" should become "First".
+    // For 1000 (One Thousand), "Thousand" becomes "Thousandth".
+    const lastWordIndex = cardinalWords.length - 1;
+    const lastWord = cardinalWords[lastWordIndex];
+
+    // Find what number the last word represents
+    const lastNumberComponent = this.getLastNumberComponentBigInt(number, localeConfig, localeInstance);
+
+    // Try to find ordinal mapping for the last component
+    let transformed = false;
+    const ordinalMatch = cache.ordinalWordsMap.get(lastNumberComponent);
+    if (ordinalMatch) {
+      cardinalWords[lastWordIndex] = this.resolveOrdinalValue(ordinalMatch, options.gender, localeConfig);
+      transformed = true;
+    }
+
+    // If ordinalSuffix is available, use it
+    if (!transformed && localeConfig.ordinalSuffix) {
+      cardinalWords[lastWordIndex] = lastWord + localeConfig.ordinalSuffix;
+      transformed = true;
+    }
+
+    // Prefix-based ordinals (e.g. Khmer "ទី", Javanese "Kaping", Igbo "Nke")
+    if (!transformed && localeConfig.ordinalPrefix) {
+      cardinalWords.unshift(localeConfig.ordinalPrefix);
+    }
+
+    return cardinalWords;
+  }
+
+  protected getLastNumberComponent(
+    number: number,
+    localeConfig: LocaleInterface['config'],
+    localeInstance?: InstanceType<ConstructorOf<LocaleInterface>>,
+  ): number {
+    return Number(this.getLastNumberComponentBigInt(BigInt(number), localeConfig, localeInstance));
+  }
+
+  private getLastNumberComponentBigInt(
+    number: bigint,
+    localeConfig: LocaleInterface['config'],
+    localeInstance?: InstanceType<ConstructorOf<LocaleInterface>>,
+  ): bigint {
+    // Find the last number component that makes up this number
+    // This is locale-aware: Hindi/Indic locales have atomic words for 21-99,
+    // while English composes them (Twenty + One)
+
+    // For numbers 1-20, return the number itself
+    if (number <= 20n) {
+      return number;
+    }
+
+    // Use pre-computed cache when the locale instance is available (avoids
+    // re-filtering and re-sorting numberWordsMapping on every ordinal call)
+    const unitMappings = localeInstance
+      ? this.getLocaleCache(localeInstance).unitMappings
+      : localeConfig.numberWordsMapping
+          .filter((m) => Number(m.number) >= 100)
+          .sort((a, b) => Number(b.number) - Number(a.number))
+          .map((mapping) => ({
+            numberBigInt: BigInt(mapping.number),
+          }));
+
+    // Find if this is a round number ending in a unit
+    for (const mapping of unitMappings) {
+      const unit = mapping.numberBigInt;
+      if (number % unit === BIGINT_0) {
+        // This number is a multiple of this unit
+        // Return the unit itself (e.g., for 1000000 = 10 × 100000, return 100000)
+        return unit;
+      }
+    }
+
+    // Get the last two digits
+    const lastTwoDigits = number % BIGINT_100;
+
+    // Check if locale has atomic word for the last two digits (1-99)
+    // This is true for Hindi, Bengali, Gujarati, Marathi, etc.
+    // For numbers like 111 (last two digits = 11), check if locale has word for 11
+    // Note: lastTwoDigits === 0 is impossible here — multiples of 100 are caught above by the
+    // unit-mapping loop (e.g. 200 % 100 === 0 returns 100 early), so lastTwoDigits is always 1-99.
+    const hasAtomicWord = localeInstance
+      ? this.getLocaleCache(localeInstance).smallNumbersMap.has(lastTwoDigits)
+      : localeConfig.numberWordsMapping.some((m) => BigInt(m.number) === lastTwoDigits);
+    if (hasAtomicWord) {
+      return lastTwoDigits;
+    }
+
+    // For English-style locales that compose 21-99 (Twenty + One)
+    // Check for decade (20, 30, 40, etc.)
+    if (lastTwoDigits % BIGINT_10 === BIGINT_0) {
+      return lastTwoDigits;
+    }
+
+    // Return the ones digit
+    return number % BIGINT_10;
+  }
+
+  /**
+   * Parse a supported number without coercing decimal strings through Number().
+   * This preserves integers beyond Number.MAX_SAFE_INTEGER and expands finite
+   * scientific notation into ordinary integer/fractional digit components.
+   */
+  private parseNumberParts(number: NumberInput): ParsedNumberParts {
+    if (typeof number === 'bigint') {
+      return {
+        isNegative: number < BIGINT_0,
+        integerPart: number < BIGINT_0 ? -number : number,
+        fractionalPart: '',
+      };
+    }
+
+    if (typeof number === 'number') {
+      const isNegative = number < 0;
+      const absoluteNumber = isNegative ? -number : number;
+      if (Number.isInteger(absoluteNumber)) {
+        return {
+          isNegative,
+          integerPart: BigInt(absoluteNumber),
+          fractionalPart: '',
+        };
+      }
+
+      const decimal = absoluteNumber.toString();
+      const decimalPointIndex = decimal.indexOf('.');
+      if (decimalPointIndex !== -1 && !decimal.includes('e')) {
+        return {
+          isNegative,
+          integerPart: BigInt(decimal.slice(0, decimalPointIndex)),
+          fractionalPart: decimal.slice(decimalPointIndex + 1),
+        };
+      }
+    }
+
+    const input = typeof number === 'number' ? number.toString() : number.trim();
+
+    // Integer strings are both common and exactly representable by BigInt, including
+    // the hexadecimal/octal/binary forms already accepted by Number().
+    if (typeof number === 'string' && !input.includes('.') && !/[eE]/.test(input)) {
+      const integer = BigInt(input);
+      return {
+        isNegative: integer < BIGINT_0,
+        integerPart: integer < BIGINT_0 ? -integer : integer,
+        fractionalPart: '',
+      };
+    }
+
+    const match = /^([+-]?)(?:(\d+)(?:\.(\d*))?|\.(\d+))(?:[eE]([+-]?\d+))?$/.exec(input)!;
+
+    const sign = match[1];
+    const integerDigits = match[2] ?? '0';
+    const fractionalDigits = match[3] ?? match[4] ?? '';
+    const exponent = Number(match[5] ?? 0);
+    const digits = integerDigits + fractionalDigits;
+    const decimalPosition = integerDigits.length + exponent;
+
+    // Number() accepts extremely small exponent strings by underflowing them to zero.
+    // Avoid allocating an attacker-controlled number of zero characters while still
+    // supporting every exponent that a finite JavaScript number can represent.
+    if (Math.abs(decimalPosition) > 10_000) {
+      throw new Error(`Invalid Number "${String(number)}"`);
+    }
+
+    let normalizedInteger: string;
+    let normalizedFractional: string;
+    if (decimalPosition <= 0) {
+      normalizedInteger = '0';
+      normalizedFractional = '0'.repeat(-decimalPosition) + digits;
+    } else if (decimalPosition >= digits.length) {
+      normalizedInteger = digits + '0'.repeat(decimalPosition - digits.length);
+      normalizedFractional = '';
+    } else {
+      normalizedInteger = digits.slice(0, decimalPosition);
+      normalizedFractional = digits.slice(decimalPosition);
+    }
+
+    normalizedInteger = normalizedInteger.replace(/^0+(?=\d)/, '');
+    const hasNonZeroDigit = /[1-9]/.test(normalizedInteger) || /[1-9]/.test(normalizedFractional);
+
+    return {
+      isNegative: sign === '-' && hasNonZeroDigit,
+      integerPart: BigInt(normalizedInteger),
+      fractionalPart: normalizedFractional,
+    };
+  }
+
+  /** Round a parsed positive amount to a currency precision using decimal arithmetic. */
+  private roundNumberParts(parts: ParsedNumberParts, precision: number): ParsedNumberParts {
+    if (!Number.isInteger(precision) || precision < 0 || precision > 100) {
+      throw new RangeError('Currency precision must be an integer between 0 and 100');
+    }
+
+    const scale = BIGINT_10 ** BigInt(precision);
+    const retainedDigits = parts.fractionalPart.slice(0, precision).padEnd(precision, '0');
+    let scaledAmount = parts.integerPart * scale + BigInt(retainedDigits || '0');
+
+    if ((parts.fractionalPart[precision] ?? '0') >= '5') {
+      scaledAmount += BIGINT_1;
+    }
+
+    const integerPart = scaledAmount / scale;
+    const fractionalPart =
+      precision === 0 ? '' : (scaledAmount % scale).toString().padStart(precision, '0').replace(/0+$/, '');
+
+    return {
+      isNegative: parts.isNegative,
+      integerPart,
+      fractionalPart,
+    };
+  }
+
+  protected convertNumber(
+    number: NumberInput,
+    options: ConverterOptions = {},
+    localeOverride?: InstanceType<ConstructorOf<LocaleInterface>>,
+  ): string[] {
+    const locale = localeOverride ?? this.getLocale();
+    const localeConfig = locale.config;
+    const gender = options.gender;
+    const useAnd = options.useAnd;
+
+    let isNegativeNumber: boolean;
+    let integerPart: bigint;
+    let fractionalPart: string;
+
+    // Keep the overwhelmingly common integer/BigInt cardinal path allocation-free.
+    if (typeof number === 'bigint') {
+      isNegativeNumber = number < BIGINT_0;
+      integerPart = isNegativeNumber ? -number : number;
+      fractionalPart = '';
+    } else if (typeof number === 'number' && (Number.isInteger(number) || options.ignoreDecimal)) {
+      isNegativeNumber = number < 0;
+      integerPart = BigInt(Math.trunc(isNegativeNumber ? -number : number));
+      fractionalPart = '';
+    } else if (typeof number === 'string') {
+      const input = number.trim();
+      if (!input.includes('.') && !/[eE]/.test(input)) {
+        const integer = BigInt(input);
+        isNegativeNumber = integer < BIGINT_0;
+        integerPart = isNegativeNumber ? -integer : integer;
+        fractionalPart = '';
+      } else {
+        const parsed = this.parseNumberParts(input);
+        isNegativeNumber = parsed.isNegative;
+        integerPart = parsed.integerPart;
+        fractionalPart = options.ignoreDecimal ? '' : parsed.fractionalPart;
+      }
+    } else {
+      const parsed = this.parseNumberParts(number);
+      isNegativeNumber = parsed.isNegative;
+      integerPart = parsed.integerPart;
+      // Typed numbers with ignoreDecimal are handled by the fast path above.
+      fractionalPart = parsed.fractionalPart;
+    }
+
+    const isFloat = fractionalPart.length > 0 && /[1-9]/.test(fractionalPart);
+
+    this.assertWithinRange(integerPart, 'cardinal', options.rangeMode ?? 'strict', locale);
+
+    const ignoreZero = integerPart === BIGINT_0 && localeConfig.ignoreZeroInDecimals;
+    let words = this.convertInternal(integerPart, true, undefined, locale, gender, useAnd);
+    if (isFloat && ignoreZero) {
+      words = [];
+    }
+
+    const wordsWithDecimal: string[] = [];
+    if (isFloat) {
+      const fracValue = Number.parseInt(fractionalPart, 10);
+      const denominator = localeConfig.fractionDenominatorMapping?.[fractionalPart.length];
+      if (options.decimalStyle === 'fraction' && denominator) {
+        // Fractional style: "One Hundred Twenty Three and Forty-Five Hundredths"
+        if (!ignoreZero) {
+          wordsWithDecimal.push(localeConfig.texts.and);
+        }
+        wordsWithDecimal.push(...this.convertInternal(BigInt(fracValue), true, undefined, locale, gender));
+        const useSingular =
+          localeConfig.fractionSingularRule === 'slavic'
+            ? fracValue % 10 === 1 && fracValue % 100 !== 11
+            : fracValue === 1;
+        wordsWithDecimal.push(useSingular ? denominator.singular : denominator.plural);
+      } else {
+        // Default digit-by-digit style
+        if (!ignoreZero) {
+          wordsWithDecimal.push(localeConfig.texts.point);
+        }
+        if (fractionalPart.startsWith('0') && !localeConfig?.decimalLengthWordMapping) {
+          const zeroWords: string[] = [];
+          for (const num of fractionalPart) {
+            zeroWords.push(...this.convertInternal(BigInt(num), true, undefined, locale, gender));
+          }
+          wordsWithDecimal.push(...zeroWords);
+        } else {
+          wordsWithDecimal.push(...this.convertInternal(BigInt(fractionalPart), true, undefined, locale, gender));
+          const decimalLengthWord = localeConfig?.decimalLengthWordMapping?.[fractionalPart.length];
+          if (decimalLengthWord) {
+            wordsWithDecimal.push(decimalLengthWord);
+          }
+        }
+      }
+    }
+    if (isNegativeNumber) {
+      words.unshift(localeConfig.texts.minus);
+    }
+    words.push(...wordsWithDecimal);
+    return words;
+  }
+
+  protected convertCurrency(
+    number: NumberInput,
+    options: ConverterOptions = {},
+    forceZeroFractional = false,
+    localeOverride?: InstanceType<ConstructorOf<LocaleInterface>>,
+  ): string[] {
+    const locale = localeOverride ?? this.getLocale();
+    const localeConfig = locale.config;
+    const gender = options.gender;
+    const useAnd = options.useAnd;
+
+    const currencyOptions = options.currencyOptions ?? localeConfig.currency;
+    const precision = currencyOptions.precision ?? 2;
+    const parsed = this.parseNumberParts(number);
+    const rounded = options.ignoreDecimal
+      ? { ...parsed, fractionalPart: '' }
+      : this.roundNumberParts(parsed, precision);
+    const isNegativeNumber = rounded.isNegative;
+    const mainAmount = rounded.integerPart;
+    const fractionalPart = rounded.fractionalPart;
+    const isFloat = fractionalPart.length > 0;
+    let words: string[] = [];
+
+    this.assertWithinRange(mainAmount, 'currency', options.rangeMode ?? 'strict', locale);
+
+    const mainAmountNum = mainAmount <= BigInt(Number.MAX_SAFE_INTEGER) ? Number(mainAmount) : -1;
+    if (mainAmountNum !== -1 && currencyOptions.numberSpecificForms?.[mainAmountNum]) {
+      words = [currencyOptions.numberSpecificForms[mainAmountNum]];
+    } else {
+      // Determine if the main currency should be in singular form
+      // e.g. 1 Dollar Only instead of 1 Dollars Only
+      // Use useTrailingForCurrency config to determine trailing value
+      // French needs trailing=true to get "Quatre-Vingts Euros" (with 's')
+      // Spanish needs trailing=false to get "Un Euro" (not "Uno Euro")
+      const trailing = localeConfig.useTrailingForCurrency ?? false;
+      words = [...this.convertInternal(mainAmount, trailing, undefined, locale, gender, useAnd)];
+      if (mainAmount === 1n && currencyOptions.singular) {
+        words.push(currencyOptions.singular);
+      } else if (currencyOptions.plural) {
+        words.push(currencyOptions.plural);
+      }
+    }
+    const totalIsNonZero = mainAmount !== BIGINT_0 || isFloat;
+    const ignoreZero =
+      mainAmount === BIGINT_0 && (options.ignoreZeroCurrency || (localeConfig.ignoreZeroInDecimals && totalIsNonZero));
+
+    if (ignoreZero) {
+      words = [];
+    }
+
+    const wordsWithDecimal = [];
+    if (isFloat) {
+      if (!ignoreZero) {
+        wordsWithDecimal.push(localeConfig.texts.and);
+      }
+      const decimalBase =
+        !localeConfig.decimalLengthWordMapping && fractionalPart.length
+          ? BIGINT_10 ** BigInt(Math.max(0, precision - fractionalPart.length))
+          : BIGINT_1;
+      const decimalPart = BigInt(fractionalPart) * decimalBase;
+      const decimalPartNumber = decimalPart <= BIGINT_MAX_SAFE ? Number(decimalPart) : -1;
+
+      const decimalLengthWord = localeConfig?.decimalLengthWordMapping?.[fractionalPart.length];
+
+      if (decimalPartNumber !== -1 && currencyOptions.fractionalUnit.numberSpecificForms?.[decimalPartNumber]) {
+        wordsWithDecimal.push(currencyOptions.fractionalUnit.numberSpecificForms[decimalPartNumber]);
+      } else {
+        wordsWithDecimal.push(...this.convertInternal(decimalPart, false, undefined, locale, gender));
+
+        if (decimalLengthWord?.length) {
+          wordsWithDecimal.push(decimalLengthWord);
+        }
+
+        if (decimalPart === BIGINT_1 && currencyOptions.fractionalUnit.singular) {
+          wordsWithDecimal.push(currencyOptions.fractionalUnit.singular);
+        } else {
+          wordsWithDecimal.push(currencyOptions.fractionalUnit.plural);
+        }
+      }
+    } else if (
+      forceZeroFractional &&
+      !ignoreZero &&
+      !localeConfig.decimalLengthWordMapping &&
+      !!currencyOptions.fractionalUnit.plural
+    ) {
+      wordsWithDecimal.push(localeConfig.texts.and);
+      if (currencyOptions.fractionalUnit.numberSpecificForms?.[0]) {
+        wordsWithDecimal.push(currencyOptions.fractionalUnit.numberSpecificForms[0]);
+      } else {
+        wordsWithDecimal.push(...this.convertInternal(0n, false, undefined, locale, gender));
+        wordsWithDecimal.push(currencyOptions.fractionalUnit.plural);
+      }
+    } else if (localeConfig.decimalLengthWordMapping && words.length) {
+      wordsWithDecimal.push(currencyOptions.fractionalUnit.plural);
+    }
+    const isEmpty = words.length <= 0 && wordsWithDecimal.length <= 0;
+    if (!isEmpty && isNegativeNumber) {
+      words.unshift(localeConfig.texts.minus);
+    }
+    if (!isEmpty && localeConfig.texts.only && !options.doNotAddOnly && !localeConfig.onlyInFront) {
+      wordsWithDecimal.push(localeConfig.texts.only);
+    }
+    if (wordsWithDecimal.length) {
+      words.push(...wordsWithDecimal);
+    }
+
+    if (!isEmpty && !options.doNotAddOnly && localeConfig.onlyInFront) {
+      words.splice(0, 0, localeConfig.texts.only);
+    }
+
+    return words;
+  }
+
+  protected convertInternal(
+    number: bigint,
+    trailing: boolean = false,
+    overrides?: Record<number, string>,
+    localeInstance?: InstanceType<ConstructorOf<LocaleInterface>>,
+    gender?: 'masculine' | 'feminine',
+    useAnd?: boolean,
+  ): string[] {
+    const locale = localeInstance ?? this.getLocale();
+    const localeConfig = locale.config;
+    const cache = this.getLocaleCache(locale);
+
+    // Check overrides - avoid Object.keys() when overrides is undefined/empty
+    if (overrides) {
+      const numberAsNum = number <= BIGINT_MAX_SAFE ? Number(number) : -1;
+      if (numberAsNum !== -1 && overrides[numberAsNum]) {
+        return [overrides[numberAsNum]];
+      }
+    }
+
+    // Check exactWordsMapping using O(1) Map lookup
+    const exactMatch = cache.exactWordsMap.get(number);
+    if (exactMatch) {
+      return [this.resolveGenderedValue(exactMatch, gender, trailing)];
+    }
+
+    // Fast path: Use O(1) Map lookup for small numbers (0-100)
+    let match: CachedNumberWordMap;
+    if (number <= BIGINT_100) {
+      const directMatch = cache.smallNumbersMap.get(number);
+      if (directMatch) {
+        return [this.resolveGenderedValue(directMatch, gender, trailing)];
+      }
+      // Number not directly in map, use binary search (e.g., 21 = 20 + 1)
+      match = this.binarySearchDescending(cache.numberWordsMappingBigInt, number);
+    } else {
+      // Use binary search on pre-computed BigInt values (array is sorted descending)
+      match = this.binarySearchDescending(cache.numberWordsMappingBigInt, number);
+    }
+
+    const matchNumber = match.numberBigInt;
+    const words: string[] = [];
+
+    if (number <= BIGINT_100 || (number < BIGINT_1000 && localeConfig.namedLessThan1000)) {
+      words.push(this.resolveGenderedValue(match, gender, trailing));
+      const remainder = number - matchNumber;
+      if (remainder > BIGINT_0) {
+        if (localeConfig.splitWord) {
+          words.push(localeConfig.splitWord);
+        }
+        const remainderWords = this.convertInternal(remainder, trailing, overrides, locale, gender, useAnd);
+        for (const remainderWord of remainderWords) {
+          words.push(remainderWord);
+        }
+      }
+      return words;
+    }
+
+    const quotient = number / matchNumber;
+    const remainder = number % matchNumber;
+    let matchValue = match.resolvedValue;
+    const originalMatchValue = match.resolvedValue;
+
+    const matchNumberNum = Number(matchNumber);
+    const pluralForms = localeConfig.pluralForms?.[matchNumberNum];
+    let usedPluralForm = false;
+
+    // Check if this word uses ignoreOneForWords - use O(1) Set lookup
+    const usesIgnoreOne = cache.ignoreOneForWordsSet.has(originalMatchValue);
+
+    if (pluralForms) {
+      const lastTwoDigits = Number(quotient % BIGINT_100);
+      const useLastDigits = quotient >= BIGINT_11 && lastTwoDigits >= 3 && lastTwoDigits <= 10;
+
+      if (quotient === BIGINT_2 && pluralForms.dual) {
+        matchValue = pluralForms.dual;
+        usedPluralForm = true;
+      } else if (
+        (quotient >= BigInt(localeConfig.paucalConfig?.min ?? 3) &&
+          quotient <= BigInt(localeConfig.paucalConfig?.max ?? 10)) ||
+        useLastDigits
+      ) {
+        if (pluralForms.paucal) {
+          matchValue = pluralForms.paucal;
+        }
+      } else if (quotient >= BIGINT_11 && pluralForms.plural) {
+        matchValue = pluralForms.plural;
+      }
+    } else {
+      // Check if this word should get plural mark - use O(1) Set lookup
+      const matchValueStr = match.value as string;
+      const isInPluralWords = cache.pluralWordsSet.has(matchValueStr);
+      const isInTrailingOnlyPluralWords = cache.pluralWordsOnlyWhenTrailingSet.has(matchValueStr);
+
+      if (
+        quotient > BIGINT_1 &&
+        localeConfig.pluralMark &&
+        (isInPluralWords || (isInTrailingOnlyPluralWords && remainder === BIGINT_0))
+      ) {
+        matchValue += localeConfig.pluralMark;
+      }
+      // Apply singularValue only when quotient ends in 1 AND this word doesn't use ignoreOneForWords
+      // For ignoreOneForWords words, singularValue is handled separately below
+      if (quotient % BIGINT_10 === BIGINT_1 && !usesIgnoreOne) {
+        // matchValue is always resolvedValue (a string), so the Array.isArray guard is not needed.
+        matchValue = match.singularValue || matchValue;
+      }
+    }
+
+    if ((quotient === BIGINT_1 && usesIgnoreOne) || usedPluralForm) {
+      // When ignoring "one" and quotient is exactly 1, use singularValue if available
+      let valueToUse: string;
+      if (usedPluralForm) {
+        valueToUse = matchValue;
+      } else if (match.singularValue) {
+        valueToUse = match.singularValue;
+      } else {
+        // Gender-resolve the value (e.g. Spanish "Doscientos" → "Doscientas")
+        valueToUse = this.resolveGenderedValue(match, gender, trailing);
+      }
+      words.push(valueToUse);
+    } else {
+      // Quotient does NOT get gender — gender applies to the number being described, not scale multipliers
+      const quotientWords = this.convertInternal(quotient, false, overrides, locale, undefined, useAnd);
+      if (localeConfig.scaleFirst) {
+        // Scale-first ordering (e.g. Igbo: "Puku Abụọ" = Thousand Two = 2000)
+        words.push(matchValue);
+        for (const quotientWord of quotientWords) {
+          words.push(quotientWord);
+        }
+      } else {
+        for (const quotientWord of quotientWords) {
+          words.push(quotientWord);
+        }
+        words.push(matchValue);
+      }
+    }
+
+    if (remainder > BIGINT_0) {
+      // useAnd: insert "And" between unit word and remainder when remainder < 100
+      // Skip if locale already uses splitWord (e.g. Portuguese "E")
+      const andWord = localeConfig.texts.and?.trim();
+      if (useAnd && remainder < BIGINT_100 && !localeConfig.splitWord && andWord) {
+        words.push(localeConfig.texts.and);
+      }
+      if (localeConfig.splitWord) {
+        // Use O(1) Set lookup instead of array.includes()
+        if (!cache.noSplitWordAfterSet.has(match.resolvedValue)) {
+          words.push(localeConfig.splitWord);
+        }
+      }
+      const remainderWords = this.convertInternal(remainder, trailing, overrides, locale, gender, useAnd);
+      for (const remainderWord of remainderWords) {
+        words.push(remainderWord);
+      }
+    }
+    return words;
+  }
+
+  /**
+   * Binary search on a descending-sorted array of CachedNumberWordMap.
+   * Finds the first element where numberBigInt <= target.
+   */
+  private binarySearchDescending(arr: CachedNumberWordMap[], target: bigint): CachedNumberWordMap {
+    let left = 0;
+    let right = arr.length - 1;
+    let result = arr[right]; // Default to smallest (last element)
+
+    while (left <= right) {
+      const mid = (left + right) >> 1; // Faster than Math.floor
+      if (arr[mid].numberBigInt <= target) {
+        result = arr[mid];
+        right = mid - 1; // Look for larger match in left half
+      } else {
+        left = mid + 1; // Look in right half
+      }
+    }
+
+    return result;
+  }
+
+  /** Round a number at decimal precision using decimal, rather than binary, arithmetic. */
+  public toFixed(number: number, precision = 2): number {
+    if (!Number.isFinite(number)) {
+      return Number(Number(number).toFixed(precision));
+    }
+    if (!Number.isInteger(precision) || precision < 0 || precision > 100) {
+      throw new RangeError('toFixed() precision must be an integer between 0 and 100');
+    }
+
+    const rounded = this.roundNumberParts(this.parseNumberParts(number), precision);
+    const sign = rounded.isNegative ? '-' : '';
+    const decimal = rounded.fractionalPart ? `.${rounded.fractionalPart}` : '';
+    return Number(`${sign}${rounded.integerPart}${decimal}`);
+  }
+
+  /** Return whether a valid number input has a non-zero fractional component. */
+  public isFloat(number: NumberInput): boolean {
+    if (!this.isValidNumber(number)) {
+      return false;
+    }
+    return /[1-9]/.test(this.parseNumberParts(number).fractionalPart);
+  }
+
+  public isValidNumber(number: NumberInput): boolean {
+    // Fast path for common types
+    const type = typeof number;
+    if (type === 'bigint') {
+      return true;
+    }
+    if (type === 'number') {
+      return !Number.isNaN(number) && Number.isFinite(number as number);
+    }
+    // String case - reject empty/whitespace strings, then check if valid number
+    // Empty string converts to 0 via Number() but should be invalid
+    if (type === 'string') {
+      const str = number as string;
+      if (str.trim() === '') {
+        return false;
+      }
+      const converted = Number(str);
+      return !Number.isNaN(converted) && Number.isFinite(converted);
+    }
+
+    return false;
+  }
+
+  /** Return whether a numeric value is exactly zero. */
+  public isNumberZero(number: number | bigint): boolean {
+    return number === BIGINT_0 || number === 0;
+  }
+}

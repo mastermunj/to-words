@@ -17,6 +17,7 @@ Thank you for taking the time to contribute! This document covers everything you
 - [Commit Message Format](#commit-message-format)
 - [Running Tests](#running-tests)
 - [Building](#building)
+- [Documentation](#documentation)
 - [Release Process](#release-process)
 
 ---
@@ -59,6 +60,8 @@ This project follows the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.
 | `npm run lint:fix`               | Auto-fix linting errors                                    |
 | `npm run build`                  | Full production build (tsc CJS/ESM + Rolldown UMD + CLI)   |
 | `npm run test:runtime`           | Smoke-test compiled ESM, CJS, locale, and CLI entry points |
+| `npm run docs:dev`               | Run the VitePress documentation locally                    |
+| `npm run docs:build`             | Build and verify the deployable documentation site         |
 | `npm run commit`                 | Interactive commit with Commitizen                         |
 
 > **Tip:** Run `npm run lint:fix` before committing — the pre-commit hook will block if there are lint errors.
@@ -87,6 +90,8 @@ __tests__/
 
 scripts/
   build-umd.ts        # UMD bundle script
+  check-docs-build.mjs # Verifies VitePress output, base paths, links, and demo SSR
+  verify-docs-deployment.mjs # Verifies the deployed Pages site and client bundle
   runtime-smoke.mjs   # Compiled ESM/CJS/locale/CLI release smoke test
 ```
 
@@ -139,7 +144,7 @@ Your file must:
 
   ```ts
   import { type ConverterOptions, type NumberInput, type OrdinalOptions } from '../types.js';
-  import { ToWordsCore } from '../ToWordsCore.js';
+  import { ToWordsCore } from '../ToWordsCoreBase.js';
 
   export default class Locale implements LocaleInterface {
     public config: LocaleConfig = {
@@ -150,16 +155,18 @@ Your file must:
   export class ToWords extends ToWordsCore {
     constructor(options: ToWordsOptions = {}) {
       super(options);
-      this.setLocale(Locale);
+      this.setLocale(Locale, '<locale-code>');
     }
   }
 
-  const instance = new ToWords();
+  let instance: ToWords | undefined;
   ```
 
-  In practice, copy the bottom block verbatim from any existing locale file — the pattern is standardised across all 135 locales. Locale configuration is frozen on first initialization, so define it completely up front rather than mutating it after conversion starts.
+  In practice, copy the bottom block verbatim from any existing locale file — the pattern is standardised across all 135 locales. The full registry validates locale configuration automatically and all entry points freeze it on first initialization, so define it completely and deterministically up front rather than mutating it after conversion starts. Standalone locale bundles use the prevalidated base to avoid shipping authoring-time validation code to every browser.
 
   `numberWordsMapping` must contain zero, use unique numeric thresholds, and be strictly descending because the core uses binary search. The cross-locale invariant test enforces these requirements.
+
+  Strict cardinal, ordinal, and currency ceilings are derived from the configured scale structure. If reviewed native-language fixtures justify different ceilings, declare them with `maximumSupportedValues` and add boundary tests for every overridden form. Do not raise a ceiling merely because `rangeMode: 'compose'` can mechanically produce a string.
 
 ### 2. Register the locale
 
@@ -167,6 +174,15 @@ Open `src/locales/index.ts` and:
 
 1. Import your class.
 2. Add it to the `LOCALES` map with the correct BCP 47 locale code (e.g. `'sw-TZ'`).
+3. If this is a new language subtag, add its reviewed display name, exact IANA registry description, and documentation page to `scripts/locale-language-identities.ts`.
+
+Locale identifiers are checked against the committed [IANA Language Subtag Registry](https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry). The quality gate rejects invalid or non-canonical language, script, and region subtags, and also verifies that the registered language description matches the human-reviewed implementation identity. This second check catches valid-but-wrong codes, such as identifying an Estonian implementation with the Ewe language code.
+
+Maintainers can refresh the committed registry snapshot after IANA publishes an update:
+
+```sh
+npm run locale-registry:update
+```
 
 ### 3. Add tests
 
@@ -206,9 +222,11 @@ Add a row for your locale in the **Supported Locales** table in [README.md](READ
 
 ```sh
 npm run lint
-npm test -- run --coverage
+npm run test:locale-quality
+npm test -- --run
 npm run build
 npm run test:runtime
+npm run test:package
 ```
 
 All tests must pass and coverage must remain at 100% for the files you touched.
@@ -295,6 +313,27 @@ After building, run `npm run test:runtime` to verify the compiled ESM, CommonJS,
 
 ---
 
+## Documentation
+
+The documentation site is built with VitePress and deployed by `.github/workflows/docs.yml`.
+
+```sh
+# Local development with hot reload
+npm run docs:dev
+
+# Production build plus generated-data, base-path, link, asset, and demo checks
+npm run docs:build
+
+# Preview the already-built site
+npm run docs:preview
+```
+
+The interactive demo imports the same per-locale source entry points that are published to npm. Its locale list is checked against the runtime registry, and locale implementations are loaded on demand so documentation pages do not download the complete locale bundle.
+
+Repository administrators must keep **Settings → Pages → Build and deployment → Source** set to **GitHub Actions**. Do not select `main`/`docs`: that path publishes the VitePress Markdown sources through Jekyll instead of publishing the generated site. The deployment workflow runs for every push to `main`, verifies the built artifact before upload, and checks the public page after deployment.
+
+---
+
 ## Release Process
 
 Releases are automated with Release Please and npm trusted publishing:
@@ -303,6 +342,7 @@ Releases are automated with Release Please and npm trusted publishing:
 2. Release Please opens or updates `chore(release): <version>`. It owns the version changes in `package.json`, `package-lock.json`, `.release-please-manifest.json`, and `CHANGELOG.md`; do not edit those versions manually.
 3. Review and merge the release PR. Release Please creates the GitHub release and `v<version>` tag.
 4. The tag starts `publish.yml`, which installs cleanly, lints, tests, builds, smoke-tests compiled entry points, verifies package contents, and publishes through npm OIDC with automatic provenance.
+5. Every push to `main`, including the release merge, rebuilds and verifies the VitePress site before deploying it to GitHub Pages.
 
 Before a release, verify that the `RELEASE_PLEASE_TOKEN` repository secret is active and that npm trusted publishing is configured for the `mastermunj/to-words` repository and `publish.yml` workflow. Do not create the tag or run `npm publish` manually.
 

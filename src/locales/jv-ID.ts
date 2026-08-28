@@ -6,7 +6,7 @@ import {
   type OrdinalOptions,
   type ToWordsOptions,
 } from '../types.js';
-import { ToWordsCore } from '../ToWordsCore.js';
+import { ToWordsCore } from '../ToWordsCoreBase.js';
 
 // Javanese (ngoko register) number words
 // Uses Latin script (dominant writing system for modern Javanese)
@@ -102,7 +102,7 @@ export default class Locale implements LocaleInterface {
 export class ToWords extends ToWordsCore {
   constructor(options: ToWordsOptions = {}) {
     super(options);
-    this.setLocale(Locale);
+    this.setLocale(Locale, 'jv-ID');
   }
 }
 

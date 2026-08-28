@@ -1,11 +1,37 @@
 ---
 title: Migrate from number-to-words, written-number, n2words | to-words
-description: Side-by-side migration guide from number-to-words, written-number, num-words, and n2words to to-words, plus v5 to v6 upgrade notes.
+description: Side-by-side migration guide from number-to-words, written-number, num-words, and n2words to to-words, plus v6 to v7 upgrade notes.
 ---
 
 # Migration Guide
 
-`to-words` is designed to be low-friction if you are coming from another number-to-words package. The class API stays compatible with earlier `to-words` releases, and the functional helpers give you a modern migration path when you want less boilerplate.
+`to-words` is designed to be low-friction if you are coming from another number-to-words package. The core conversion methods remain consistent across releases, and the functional helpers give you a modern migration path when you want less boilerplate.
+
+## Upgrading from `to-words` v6
+
+v7 corrects the Estonian and Nepali locale identifiers. Update both dynamic locale values and per-locale imports:
+
+```diff
+-const tw = new ToWords({ localeCode: 'ee-EE' });
+-import { toWords } from 'to-words/ee-EE';
++const tw = new ToWords({ localeCode: 'et-EE' });
++import { toWords } from 'to-words/et-EE';
+-const nepali = new ToWords({ localeCode: 'np-NP' });
+-import { toCurrency } from 'to-words/np-NP';
++const nepali = new ToWords({ localeCode: 'ne-NP' });
++import { toCurrency } from 'to-words/ne-NP';
+```
+
+This also applies to functional helper options, CLI `--locale` values, and manifest lookups. The former codes are not retained as aliases: `ee` identifies the separate Ewe language, while `np` is not a registered language subtag. Estonian and Nepali output is otherwise unchanged, and automatic detection now recognizes `et`/`et-EE` and `ne`/`ne-NP`.
+
+Four other contracts are intentionally stricter:
+
+- `new ToWords()` now auto-detects the runtime locale like the functional helpers. Use `new ToWords({ localeCode: 'en-IN' })` to preserve the old implicit class default.
+- Locale options use the generated `LocaleCode` union. Use `resolveLocale(dynamicString)` for request, profile, or picker values; canonical variants such as `EN_us` resolve to `en-US`.
+- `LOCALES` and both exported default objects are frozen, constructor options are snapshotted, and the full `ToWords` / public `ToWordsCore` validate custom locale classes on first use. Per-locale entry points keep using their smaller prevalidated table.
+- Conversion defaults to `rangeMode: 'strict'` and throws `NumberOutOfRangeError` above the form-specific ceiling. Use `{ rangeMode: 'compose' }` (or CLI `--range-mode compose`) only when legacy recursive composition is intentional.
+
+The exact cardinal, ordinal, and currency ceilings are available from `getLocaleMetadata(localeCode).range.maximumSupported`.
 
 ## Upgrading from `to-words` v5
 

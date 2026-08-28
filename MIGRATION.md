@@ -2,10 +2,93 @@
 
 This guide covers two scenarios:
 
-1. **Upgrading within `to-words`** — moving from v5 to v6 or v4 to v5.
+1. **Upgrading within `to-words`** — moving from v6 to v7, v5 to v6, or v4 to v5.
 2. **Migrating from another package** — `number-to-words`, `written-number`, `num-words`, `n2words`.
 
-Current as of **v6.x** — check [npm](https://www.npmjs.com/package/to-words) for the latest.
+Current as of **v7.x** — check [npm](https://www.npmjs.com/package/to-words) for the latest.
+
+---
+
+## Upgrading from `to-words` v6
+
+v7 corrects two locale identifiers and tightens four package-wide contracts:
+
+| Area                            | v6                                      | v7                                                                                |
+| ------------------------------- | --------------------------------------- | --------------------------------------------------------------------------------- |
+| Root class without `localeCode` | Always `en-IN`                          | Uses the same runtime detection as functional helpers, then falls back to `en-IN` |
+| Locale inputs                   | Exact registry string                   | Canonical BCP 47 resolution plus the generated `LocaleCode` union                 |
+| Public defaults and registry    | Mutable exports                         | Frozen exports; constructor defaults are snapshotted                              |
+| Custom locale contract          | Manual validation available             | Full `ToWords` / `ToWordsCore` validate each custom class on first use            |
+| Values above a locale range     | Recursively composed without a boundary | `NumberOutOfRangeError` by default; legacy composition is opt-in                  |
+
+### Corrected locale identifiers
+
+| Language | v6 identifier | v7 identifier | Reason                                                            |
+| -------- | ------------- | ------------- | ----------------------------------------------------------------- |
+| Estonian | `ee-EE`       | `et-EE`       | `ee` identifies Ewe; `et` identifies Estonian.                    |
+| Nepali   | `np-NP`       | `ne-NP`       | `np` is not a registered language subtag; `ne` identifies Nepali. |
+
+The region subtags remain unchanged: `EE` identifies Estonia and `NP` identifies Nepal.
+
+Replace the locale code wherever it is passed dynamically:
+
+```diff
+-const tw = new ToWords({ localeCode: 'ee-EE' });
++const tw = new ToWords({ localeCode: 'et-EE' });
+-const nepali = new ToWords({ localeCode: 'np-NP' });
++const nepali = new ToWords({ localeCode: 'ne-NP' });
+```
+
+Replace per-locale imports as well:
+
+```diff
+-import { toWords } from 'to-words/ee-EE';
++import { toWords } from 'to-words/et-EE';
+-import { toCurrency } from 'to-words/np-NP';
++import { toCurrency } from 'to-words/ne-NP';
+```
+
+The same replacements apply to `toWords()`, `toOrdinal()`, `toCurrency()`, CLI `--locale` values, and locale-manifest lookups. The former identifiers are no longer registered or exported, and no compatibility aliases are provided. Applications using automatic locale detection now resolve `et`/`et-EE` to Estonian and `ne`/`ne-NP` to Nepali.
+
+The Estonian and Nepali conversion rules and output are otherwise unchanged.
+
+### Unified, typed locale resolution
+
+`new ToWords()` now auto-detects the runtime locale, matching `toWords()`, `toOrdinal()`, and `toCurrency()`. Pass `en-IN` explicitly if the old implicit class default was intentional:
+
+```diff
+-const tw = new ToWords();
++const tw = new ToWords({ localeCode: 'en-IN' });
+```
+
+Canonical case, underscore separators, and script-qualified tags now resolve consistently (`EN_us` → `en-US`, `zh-Hant-TW` → `zh-TW`). TypeScript callers receive the generated `LocaleCode` union. Resolve a dynamic user or request string before constructing:
+
+```ts
+import { resolveLocale, ToWords } from 'to-words';
+
+const localeCode = resolveLocale(requestLocale);
+if (!localeCode) throw new Error('Unsupported locale');
+const tw = new ToWords({ localeCode });
+```
+
+### Frozen state and automatic custom-locale validation
+
+`LOCALES`, `DefaultToWordsOptions`, and `DefaultConverterOptions` are frozen. A `ToWords` instance also snapshots nested constructor options, so later caller mutation does not change that instance. Treat these exports as read-only and create new option objects for application defaults.
+
+Custom locale classes passed to the full `ToWords` class or public `ToWordsCore` are validated automatically before their first conversion. Configuration must be deterministic for a given class and complete before `setLocale()` is called. Invalid mappings now fail early with a consolidated `TypeError`; `validateLocaleConfig()` remains available for authoring tools and CI. Per-locale entry points stay small by using their prevalidated built-in table directly.
+
+### Strict ranges
+
+Cardinal, ordinal, and currency conversion now default to `rangeMode: 'strict'`. Every locale publishes exact inclusive ceilings through `getLocaleMetadata(code).range.maximumSupported`. Above a ceiling, conversion throws a structured `NumberOutOfRangeError` with `code`, `localeCode`, `form`, `value`, and `maximumSupported` fields.
+
+If you intentionally relied on v6's recursive reuse of the largest scale, opt in explicitly:
+
+```diff
+-tw.convert(veryLargeInteger);
++tw.convert(veryLargeInteger, { rangeMode: 'compose' });
+```
+
+The same option is supported by ordinals, currency conversion, functional helpers, per-locale entry points, constructor `converterOptions`, and the CLI (`--range-mode compose`). Compose mode preserves the old algorithm but does not claim native-language verification beyond the published strict range.
 
 ---
 
@@ -308,8 +391,8 @@ es.convert(42);
 1. **Install** `npm install to-words` (requires Node ≥ 20).
 2. **Choose an import style:**
 
-- Full bundle: `import { toWords } from 'to-words'` (all 135 locales, ~69 KiB gzipped).
-- Per-locale: `import { toWords } from 'to-words/en-US'` (~5 KiB gzipped).
+- Full bundle: `import { toWords } from 'to-words'` (all 135 locales, ~70.4 KiB gzipped).
+- Per-locale: `import { toWords } from 'to-words/en-US'` (~5.5 KiB gzipped).
 
 3. **Pick a locale code** per market (`en-US`, `en-IN`, `es-MX`, `fr-FR`, …).
 4. **Update call sites** — use `toWords()` / `toOrdinal()` / `toCurrency()` for functional style, or `tw.convert()` / `tw.toOrdinal()` for the class-based style.

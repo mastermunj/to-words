@@ -6,7 +6,7 @@ import {
   type OrdinalOptions,
   type ToWordsOptions,
 } from '../types.js';
-import { ToWordsCore } from '../ToWordsCore.js';
+import { ToWordsCore } from '../ToWordsCoreBase.js';
 
 export default class Locale implements LocaleInterface {
   public config: LocaleConfig = {
@@ -248,6 +248,12 @@ export default class Locale implements LocaleInterface {
       5: { singular: 'لاکھواں', plural: 'لاکھوی' },
       6: { singular: 'دس-لاکھواں', plural: 'دس-لاکھوی' },
     },
+    // Existing native-language fixtures verify crore composition through this exact value.
+    maximumSupportedValues: {
+      cardinal: '98765432101234',
+      ordinal: '999999999',
+      currency: '98765432101234',
+    },
   };
 }
 
@@ -263,7 +269,7 @@ export default class Locale implements LocaleInterface {
 export class ToWords extends ToWordsCore {
   constructor(options: ToWordsOptions = {}) {
     super(options);
-    this.setLocale(Locale);
+    this.setLocale(Locale, 'ur-PK');
   }
 }
 

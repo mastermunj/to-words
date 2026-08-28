@@ -29,10 +29,7 @@ describe('Test Locale', () => {
 
   const wrongLocaleCode = localeCode + '-wrong';
   test(`Wrong Locale: ${wrongLocaleCode}`, () => {
-    const toWordsWrongLocale = new ToWords({
-      localeCode: wrongLocaleCode,
-    });
-    expect(() => toWordsWrongLocale.convert(1)).toThrow(/Unknown Locale/);
+    expect(() => new ToWords({ localeCode: wrongLocaleCode as never }).convert(1)).toThrow(/Unknown Locale/);
   });
 });
 

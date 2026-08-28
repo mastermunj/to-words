@@ -23,7 +23,6 @@ import daDk from './da-DK.js';
 import deAt from './de-AT.js';
 import deCh from './de-CH.js';
 import deDe from './de-DE.js';
-import eeEE from './ee-EE.js';
 import enAe from './en-AE.js';
 import enAu from './en-AU.js';
 import enBd from './en-BD.js';
@@ -62,6 +61,7 @@ import esEs from './es-ES.js';
 import esMx from './es-MX.js';
 import esPe from './es-PE.js';
 import esUs from './es-US.js';
+import etEE from './et-EE.js';
 import faIr from './fa-IR.js';
 import fiFi from './fi-FI.js';
 import frBe from './fr-BE.js';
@@ -99,7 +99,7 @@ import msSg from './ms-SG.js';
 import nbNo from './nb-NO.js';
 import nlNl from './nl-NL.js';
 import nlSr from './nl-SR.js';
-import npNp from './np-NP.js';
+import neNp from './ne-NP.js';
 import orIn from './or-IN.js';
 import paIn from './pa-IN.js';
 import plPl from './pl-PL.js';
@@ -136,7 +136,7 @@ import siLk from './si-LK.js';
 import kmKh from './km-KH.js';
 import zuZa from './zu-ZA.js';
 
-const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
+const LOCALES: Readonly<Record<string, ConstructorOf<LocaleInterface>>> = Object.freeze({
   'af-ZA': afZa,
   'am-ET': amEt,
   'ar-AE': arAe,
@@ -160,7 +160,6 @@ const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
   'de-AT': deAt,
   'de-CH': deCh,
   'de-DE': deDe,
-  'ee-EE': eeEE,
   'el-GR': elGr,
   'en-AE': enAe,
   'en-AU': enAu,
@@ -200,6 +199,7 @@ const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
   'es-MX': esMx,
   'es-PE': esPe,
   'es-US': esUs,
+  'et-EE': etEE,
   'fa-IR': faIr,
   'fi-FI': fiFi,
   'fil-PH': filPh,
@@ -238,7 +238,7 @@ const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
   'nb-NO': nbNo,
   'nl-NL': nlNl,
   'nl-SR': nlSr,
-  'np-NP': npNp,
+  'ne-NP': neNp,
   'or-IN': orIn,
   'pa-IN': paIn,
   'pl-PL': plPl,
@@ -272,6 +272,6 @@ const LOCALES: { [key: string]: ConstructorOf<LocaleInterface> } = {
   'si-LK': siLk,
   'km-KH': kmKh,
   'zu-ZA': zuZa,
-};
+});
 
 export default LOCALES;

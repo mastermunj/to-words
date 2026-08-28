@@ -37,7 +37,8 @@ describe('locale capability manifest', () => {
     expect(metadata.filter(({ numbering }) => numbering.system === 'indian')).toHaveLength(19);
     expect(metadata.filter(({ numbering }) => numbering.system === 'east-asian')).toHaveLength(5);
     expect(metadata.filter(({ numbering }) => numbering.system === 'locale-specific')).toHaveLength(4);
-    expect(metadata.every(({ range }) => range.arbitraryPrecisionInput)).toBe(true);
+    expect(metadata.every(({ range }) => range.composeModeAvailable)).toBe(true);
+    expect(metadata.every(({ range }) => /^\d+$/.test(range.maximumSupported.cardinal))).toBe(true);
 
     const indian = LOCALE_MANIFEST['hi-IN'].metadata;
     expect(indian.numbering.grouping).toEqual([3, 2]);
@@ -46,6 +47,7 @@ describe('locale capability manifest', () => {
     expect(Object.isFrozen(indian.numbering.grouping)).toBe(true);
     expect(Object.isFrozen(indian.numbering.largeUnitExponents)).toBe(true);
     expect(Object.isFrozen(indian.range)).toBe(true);
+    expect(Object.isFrozen(indian.range.maximumSupported)).toBe(true);
   });
 
   test('publishes verified aggregate capability counts', () => {
@@ -61,10 +63,18 @@ describe('locale capability manifest', () => {
 
   test('supports type-safe guards and lookups', () => {
     expect(isSupportedLocale('en-US')).toBe(true);
+    expect(isSupportedLocale('et-EE')).toBe(true);
+    expect(isSupportedLocale('ee-EE')).toBe(false);
+    expect(isSupportedLocale('ne-NP')).toBe(true);
+    expect(isSupportedLocale('np-NP')).toBe(false);
     expect(isSupportedLocale('xx-XX')).toBe(false);
     expect(getLocaleCapabilities('en-US')).toBe(LOCALE_MANIFEST['en-US'].capabilities);
     expect(getLocaleCapabilities('xx-XX')).toBeUndefined();
     expect(getLocaleMetadata('en-US')).toBe(LOCALE_MANIFEST['en-US'].metadata);
+    expect(getLocaleCapabilities('ee-EE')).toBeUndefined();
+    expect(getLocaleMetadata('ee-EE')).toBeUndefined();
+    expect(getLocaleCapabilities('np-NP')).toBeUndefined();
+    expect(getLocaleMetadata('np-NP')).toBeUndefined();
     expect(getLocaleMetadata('xx-XX')).toBeUndefined();
   });
 });
