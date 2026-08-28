@@ -4,7 +4,6 @@ All notable changes to this project are documented here. Releases and this chang
 
 ## [6.0.0](https://github.com/mastermunj/to-words/compare/v5.7.0...v6.0.0) (2026-08-23)
 
-
 ## [6.0.0](https://github.com/mastermunj/to-words/compare/v5.7.0...v6.0.0) (2026-08-23)
 
 ### ⚠ BREAKING CHANGES

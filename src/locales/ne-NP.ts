@@ -6,7 +6,7 @@ import {
   type OrdinalOptions,
   type ToWordsOptions,
 } from '../types.js';
-import { ToWordsCore } from '../ToWordsCore.js';
+import { ToWordsCore } from '../ToWordsCoreBase.js';
 
 export default class Locale implements LocaleInterface {
   public config: LocaleConfig = {
@@ -261,14 +261,14 @@ export default class Locale implements LocaleInterface {
  * This is a lightweight version that only bundles this specific locale.
  *
  * @example
- * import { ToWords } from 'to-words/np-NP';
+ * import { ToWords } from 'to-words/ne-NP';
  * const tw = new ToWords();
  * tw.convert(1234);
  */
 export class ToWords extends ToWordsCore {
   constructor(options: ToWordsOptions = {}) {
     super(options);
-    this.setLocale(Locale);
+    this.setLocale(Locale, 'ne-NP');
   }
 }
 

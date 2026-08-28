@@ -60,6 +60,18 @@ describe('CLI', () => {
     expect(exitSpy).not.toHaveBeenCalled();
   });
 
+  test('converts Estonian with the et-EE locale code', () => {
+    runCli(['42', '--locale', 'et-EE']);
+    expect(logSpy).toHaveBeenCalledWith('Nelikümmend Kaks');
+    expect(exitSpy).not.toHaveBeenCalled();
+  });
+
+  test('converts Nepali with the ne-NP locale code', () => {
+    runCli(['42', '--locale', 'ne-NP']);
+    expect(logSpy).toHaveBeenCalledWith('बयालीस');
+    expect(exitSpy).not.toHaveBeenCalled();
+  });
+
   test('accepts options before the number', () => {
     runCli(['--locale', 'en-US', '123']);
     expect(logSpy).toHaveBeenCalledWith('One Hundred Twenty Three');
@@ -104,6 +116,19 @@ describe('CLI', () => {
     expect(exitSpy).not.toHaveBeenCalled();
   });
 
+  test('supports explicit compose mode for values above the strict locale range', () => {
+    runCli(['1e100', '--locale', 'en-US', '--range-mode', 'compose']);
+    expect(logSpy).toHaveBeenCalledTimes(1);
+    expect(logSpy.mock.calls[0][0]).toEqual(expect.any(String));
+    expect(exitSpy).not.toHaveBeenCalled();
+  });
+
+  test('uses strict range handling by default', () => {
+    runCli(['1e100', '--locale', 'en-US']);
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('outside the verified cardinal range'));
+    expect(exitSpy).toHaveBeenCalledWith(1);
+  });
+
   test('uses auto-detected locale when --locale is omitted', () => {
     runCli(['1']);
     expect(logSpy).toHaveBeenCalledTimes(1);
@@ -135,9 +160,33 @@ describe('CLI', () => {
     expect(exitSpy).toHaveBeenCalledWith(1);
   });
 
+  test('rejects an invalid --range-mode value', () => {
+    runCli(['100', '--range-mode', 'unsafe']);
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('strict'));
+    expect(exitSpy).toHaveBeenCalledWith(1);
+  });
+
+  test('rejects repeated --range-mode options', () => {
+    runCli(['100', '--range-mode', 'strict', '--range-mode', 'compose']);
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('only be provided once'));
+    expect(exitSpy).toHaveBeenCalledWith(1);
+  });
+
   test('errors and exits 1 for an unknown locale', () => {
     runCli(['100', '--locale', 'xx-XX']);
     expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('Unknown Locale'));
+    expect(exitSpy).toHaveBeenCalledWith(1);
+  });
+
+  test('rejects the removed ee-EE locale code', () => {
+    runCli(['42', '--locale', 'ee-EE']);
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('use "et-EE" instead'));
+    expect(exitSpy).toHaveBeenCalledWith(1);
+  });
+
+  test('rejects the removed np-NP locale code with a migration hint', () => {
+    runCli(['42', '--locale', 'np-NP']);
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('use "ne-NP" instead'));
     expect(exitSpy).toHaveBeenCalledWith(1);
   });
 

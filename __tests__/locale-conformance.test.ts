@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import { deriveLocaleCapabilities, deriveLocaleMetadata, validateLocaleConfig } from '../src/locale-contract.js';
-import { LOCALES, ToWords } from '../src/ToWords.js';
+import { LOCALES, NumberOutOfRangeError, ToWords } from '../src/ToWords.js';
+import type { LocaleCode } from '../src/locale-manifest.js';
 import type { LocaleConfig, NumberInput, NumberWordMap, OrdinalWordMap } from '../src/types.js';
 
 type ConformanceCheck = () => boolean;
@@ -64,7 +65,7 @@ function hasFormalWitness(toWords: ToWords, config: LocaleConfig): boolean {
 
 describe('locale behavioral conformance', () => {
   test.each(Object.keys(LOCALES))('%s satisfies the runtime quality gate', (localeCode) => {
-    const toWords = new ToWords({ localeCode });
+    const toWords = new ToWords({ localeCode: localeCode as LocaleCode });
     const config = toWords.getLocale().config;
     const capabilities = deriveLocaleCapabilities(config);
     const metadata = deriveLocaleMetadata(config);
@@ -123,6 +124,27 @@ describe('locale behavioral conformance', () => {
         `named-range boundary ${boundary} has string parity`,
         () => toWords.convert(boundary.toString()) === toWords.convert(boundary),
       );
+    }
+
+    for (const form of ['cardinal', 'ordinal', 'currency'] as const) {
+      const maximum = BigInt(metadata.range.maximumSupported[form]);
+      const convert = (number: bigint, rangeMode: 'strict' | 'compose' = 'strict'): string => {
+        if (form === 'ordinal') {
+          return toWords.toOrdinal(number, { rangeMode });
+        }
+        return toWords.convert(number, { currency: form === 'currency', rangeMode });
+      };
+
+      runCheck(issues, `${form} strict ceiling is accepted`, () => convert(maximum).length > 0);
+      runCheck(issues, `${form} strict ceiling + 1 is rejected`, () => {
+        try {
+          convert(maximum + 1n);
+          return false;
+        } catch (error) {
+          return error instanceof NumberOutOfRangeError && error.form === form;
+        }
+      });
+      runCheck(issues, `${form} compose mode accepts ceiling + 1`, () => Boolean(convert(maximum + 1n, 'compose')));
     }
 
     expect(issues).toEqual([]);

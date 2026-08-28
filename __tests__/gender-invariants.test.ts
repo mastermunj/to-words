@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { LOCALES, ToWords } from '../src/ToWords.js';
+import type { LocaleCode } from '../src/locale-manifest.js';
 import type { ConverterOptions, NumberWordMap } from '../src/types.js';
 
 type GenderedNumberEntry = Pick<NumberWordMap, 'number' | 'feminineValue' | 'masculineValue'>;
@@ -44,7 +45,7 @@ function getLocaleGenderEntries(toWords: ToWords): {
 describe('Gender mapping invariants', () => {
   const localeCodes = Object.keys(LOCALES).sort();
   const localesWithGenderEntries = localeCodes.filter((localeCode) => {
-    const toWords = new ToWords({ localeCode });
+    const toWords = new ToWords({ localeCode: localeCode as LocaleCode });
     const { base, formal } = getLocaleGenderEntries(toWords);
     return base.length > 0 || formal.length > 0;
   });
@@ -54,7 +55,7 @@ describe('Gender mapping invariants', () => {
   });
 
   test.each(localesWithGenderEntries)('resolves declared gender values for %s', (localeCode) => {
-    const toWords = new ToWords({ localeCode });
+    const toWords = new ToWords({ localeCode: localeCode as LocaleCode });
     const { base, formal } = getLocaleGenderEntries(toWords);
     const modes: Array<{ name: 'base' | 'formal'; options: ConverterOptions; entries: GenderedNumberEntry[] }> = [
       { name: 'base', options: {}, entries: base },

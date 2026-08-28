@@ -112,6 +112,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
+import { ToWords as EnglishToWords } from '../../../src/locales/en-US.ts';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -123,23 +124,28 @@ interface Locale {
   flag: string;
 }
 
-// ---------------------------------------------------------------------------
-// Library — loaded from CDN so the docs build has no dep on dist/
-// ---------------------------------------------------------------------------
-declare const ToWords: any;
+type DemoConverter = Pick<InstanceType<typeof EnglishToWords>, 'convert' | 'toOrdinal'>;
+type DemoLocaleModule = { ToWords: new () => DemoConverter };
 
-function loadLibrary(): Promise<void> {
-  return new Promise((resolve, reject) => {
-    if (typeof ToWords !== 'undefined') {
-      resolve();
-      return;
-    }
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/to-words@5/dist/umd/to-words.min.js';
-    script.onload = () => resolve();
-    script.onerror = () => reject(new Error('Failed to load to-words from CDN'));
-    document.head.appendChild(script);
-  });
+const localeModules = import.meta.glob<DemoLocaleModule>('../../../src/locales/*.ts');
+const englishConverter = new EnglishToWords();
+const converterCache = new Map<string, DemoConverter>([['en-US', englishConverter]]);
+
+async function getConverter(localeCode: string): Promise<DemoConverter> {
+  const cached = converterCache.get(localeCode);
+  if (cached) {
+    return cached;
+  }
+
+  const loadLocale = localeModules[`../../../src/locales/${localeCode}.ts`];
+  if (!loadLocale) {
+    throw new Error(`Unsupported locale: ${localeCode}`);
+  }
+
+  const localeModule = await loadLocale();
+  const converter = new localeModule.ToWords();
+  converterCache.set(localeCode, converter);
+  return converter;
 }
 
 // ---------------------------------------------------------------------------
@@ -169,7 +175,6 @@ const LOCALES: Locale[] = [
   { code: 'de-AT', language: 'German', country: 'Austria', flag: '🇦🇹' },
   { code: 'de-CH', language: 'German', country: 'Switzerland', flag: '🇨🇭' },
   { code: 'de-DE', language: 'German', country: 'Germany', flag: '🇩🇪' },
-  { code: 'ee-EE', language: 'Estonian', country: 'Estonia', flag: '🇪🇪' },
   { code: 'el-GR', language: 'Greek', country: 'Greece', flag: '🇬🇷' },
   { code: 'en-AE', language: 'English', country: 'UAE', flag: '🇦🇪' },
   { code: 'en-AU', language: 'English', country: 'Australia', flag: '🇦🇺' },
@@ -210,15 +215,19 @@ const LOCALES: Locale[] = [
   { code: 'es-PE', language: 'Spanish', country: 'Peru', flag: '🇵🇪' },
   { code: 'es-US', language: 'Spanish', country: 'USA', flag: '🇺🇸' },
   { code: 'es-VE', language: 'Spanish', country: 'Venezuela', flag: '🇻🇪' },
+  { code: 'et-EE', language: 'Estonian', country: 'Estonia', flag: '🇪🇪' },
   { code: 'fa-IR', language: 'Persian', country: 'Iran', flag: '🇮🇷' },
   { code: 'fi-FI', language: 'Finnish', country: 'Finland', flag: '🇫🇮' },
   { code: 'fil-PH', language: 'Filipino', country: 'Philippines', flag: '🇵🇭' },
   { code: 'fr-BE', language: 'French', country: 'Belgium', flag: '🇧🇪' },
   { code: 'fr-CA', language: 'French', country: 'Canada', flag: '🇨🇦' },
   { code: 'fr-CH', language: 'French', country: 'Switzerland', flag: '🇨🇭' },
+  { code: 'fr-CI', language: 'French', country: 'Côte d’Ivoire', flag: '🇨🇮' },
+  { code: 'fr-CM', language: 'French', country: 'Cameroon', flag: '🇨🇲' },
   { code: 'fr-DZ', language: 'French', country: 'Algeria', flag: '🇩🇿' },
   { code: 'fr-FR', language: 'French', country: 'France', flag: '🇫🇷' },
   { code: 'fr-MA', language: 'French', country: 'Morocco', flag: '🇲🇦' },
+  { code: 'fr-MG', language: 'French', country: 'Madagascar', flag: '🇲🇬' },
   { code: 'fr-SA', language: 'French', country: 'Saudi Arabia', flag: '🇸🇦' },
   { code: 'gu-IN', language: 'Gujarati', country: 'India', flag: '🇮🇳' },
   { code: 'ha-NG', language: 'Hausa', country: 'Nigeria', flag: '🇳🇬' },
@@ -247,7 +256,7 @@ const LOCALES: Locale[] = [
   { code: 'nb-NO', language: 'Norwegian', country: 'Norway', flag: '🇳🇴' },
   { code: 'nl-NL', language: 'Dutch', country: 'Netherlands', flag: '🇳🇱' },
   { code: 'nl-SR', language: 'Dutch', country: 'Suriname', flag: '🇸🇷' },
-  { code: 'np-NP', language: 'Nepali', country: 'Nepal', flag: '🇳🇵' },
+  { code: 'ne-NP', language: 'Nepali', country: 'Nepal', flag: '🇳🇵' },
   { code: 'or-IN', language: 'Odia', country: 'India', flag: '🇮🇳' },
   { code: 'pa-IN', language: 'Punjabi', country: 'India', flag: '🇮🇳' },
   { code: 'pl-PL', language: 'Polish', country: 'Poland', flag: '🇵🇱' },
@@ -286,10 +295,10 @@ const LOCALES: Locale[] = [
 const numberValue = ref('12345.67');
 const selectedLocale = ref('en-US');
 const mode = ref<'currency' | 'words' | 'ordinal'>('currency');
-const resultText = ref('Loading…');
+const resultText = ref(englishConverter.convert(12345.67, { currency: true }));
 const hasError = ref(false);
 const copied = ref(false);
-const libraryReady = ref(false);
+let latestConversion = 0;
 
 const localeSearch = ref('');
 const dropdownOpen = ref(false);
@@ -350,13 +359,11 @@ function localeDisplayText(loc: Locale) {
   return `${loc.flag} ${loc.language} — ${loc.country} (${loc.code})`;
 }
 
-function convert() {
-  if (!libraryReady.value) {
-    return;
-  }
+async function convert() {
+  const conversion = ++latestConversion;
   const raw = numberValue.value.trim();
   try {
-    const tw = new ToWords({ localeCode: selectedLocale.value });
+    const tw = await getConverter(selectedLocale.value);
     let result: string;
     if (mode.value === 'ordinal') {
       const n = Number.parseInt(raw, 10);
@@ -371,11 +378,15 @@ function convert() {
       }
       result = tw.convert(n, { currency: mode.value === 'currency' });
     }
-    resultText.value = result;
-    hasError.value = false;
+    if (conversion === latestConversion) {
+      resultText.value = result;
+      hasError.value = false;
+    }
   } catch (e: any) {
-    resultText.value = e.message ?? 'Error';
-    hasError.value = true;
+    if (conversion === latestConversion) {
+      resultText.value = e.message ?? 'Error';
+      hasError.value = true;
+    }
   }
 }
 
@@ -472,17 +483,9 @@ function selectLocale(loc: Locale) {
 // ---------------------------------------------------------------------------
 // Lifecycle
 // ---------------------------------------------------------------------------
-onMounted(async () => {
+onMounted(() => {
   const sel = LOCALES.find((l) => l.code === 'en-US')!;
   localeSearch.value = localeDisplayText(sel);
-  try {
-    await loadLibrary();
-    libraryReady.value = true;
-    convert();
-  } catch {
-    resultText.value = 'Could not load library';
-    hasError.value = true;
-  }
 });
 </script>
 

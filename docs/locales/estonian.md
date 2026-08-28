@@ -1,17 +1,17 @@
 ---
-title: Estonian Number to Words in JavaScript (ee-EE) | to-words
-description: Convert numbers to Estonian words in JavaScript with ee-EE support, Euro currency, and ordinal numbers. npm install to-words.
+title: Estonian Number to Words in JavaScript (et-EE) | to-words
+description: Convert numbers to Estonian words in JavaScript with et-EE support, Euro currency, and ordinal numbers. npm install to-words.
 head:
   - - meta
     - name: keywords
-      content: estonian number to words javascript, ee-EE number to words npm, arv sõnadesse eesti, euro sõnadega javascript
+      content: estonian number to words javascript, et-EE number to words npm, arv sõnadesse eesti, euro sõnadega javascript
 ---
 
-# Estonian Number to Words in JavaScript (ee-EE)
+# Estonian Number to Words in JavaScript (et-EE)
 
-Use `ee-EE` when your application needs Estonian number words for invoicing, checkout flows, or legal documents that print totals in full words.
+Use `et-EE` when your application needs Estonian number words for invoicing, checkout flows, or legal documents that print totals in full words.
 
-> **Locale codes:** `ee-EE` · **Numbering system:** Short scale · **Currency:** Euro / Sent · **Script:** Latin
+> **Locale codes:** `et-EE` · **Numbering system:** Short scale · **Currency:** Euro / Sent · **Script:** Latin
 
 ## Install
 
@@ -24,7 +24,7 @@ npm install to-words
 ```js
 import { ToWords } from 'to-words';
 
-const tw = new ToWords({ localeCode: 'ee-EE' });
+const tw = new ToWords({ localeCode: 'et-EE' });
 
 tw.convert(100); // "Sada"
 tw.convert(1000); // "Tuhat"
@@ -49,7 +49,7 @@ tw.toOrdinal(100);
 ## Tree-shakeable (single-locale) import
 
 ```js
-import { toWords, toCurrency, toOrdinal } from 'to-words/ee-EE';
+import { toWords, toCurrency, toOrdinal } from 'to-words/et-EE';
 
 toWords(1000);
 toCurrency(999.99);
@@ -59,7 +59,7 @@ toCurrency(999.99);
 
 | Locale code | Country | Currency    | Notes                            |
 | ----------- | ------- | ----------- | -------------------------------- |
-| `ee-EE`     | Estonia | Euro / Sent | Standard Estonian number wording |
+| `et-EE`     | Estonia | Euro / Sent | Standard Estonian number wording |
 
 ## Related
 
@@ -71,7 +71,7 @@ toCurrency(999.99);
 ## FAQ
 
 **Q: Which locale code should I use for Estonian number-to-words output?**
-Use `ee-EE`.
+Use `et-EE`.
 
 **Q: Does `to-words` support Estonian ordinal words?**
-Yes. `ee-EE` includes ordinal mappings so `toOrdinal()` works without any custom suffix logic.
+Yes. `et-EE` includes ordinal mappings so `toOrdinal()` works without any custom suffix logic.

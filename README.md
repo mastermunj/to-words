@@ -64,7 +64,7 @@ toWords(452.36, { localeCode: 'en-IN', currency: true });
 ## ✨ Features
 
 - **135 Locales** — The most comprehensive locale coverage available
-- **BigInt Support** — Handle numbers up to 10^63 (Vigintillion) and beyond
+- **BigInt Support** — Exact integer input beyond `Number.MAX_SAFE_INTEGER`, with locale-specific supported ranges
 - **Multiple Numbering Systems** — Short scale, Long scale, Indian, and East Asian
 - **Currency Formatting** — Locale-specific currency with fractional units
 - **Ordinal Numbers** — First, Second, Third, etc.
@@ -78,6 +78,8 @@ toWords(452.36, { localeCode: 'en-IN', currency: true });
 - **High Performance** — Up to 4.7M ops/sec (small integers; see benchmark section for full breakdown)
 - **Functional API** — `toWords()`, `toOrdinal()`, `toCurrency()` named exports for ergonomic one-liners
 - **Auto Locale Detection** — `detectLocale()` reads `navigator.language` or `Intl` in any runtime
+- **Typed Locale Resolution** — Generated `LocaleCode` union plus `resolveLocale()` for dynamic BCP 47 input
+- **Strict Locale Ranges** — Form-specific ceilings with structured errors and explicit legacy composition mode
 - **Capability Manifest** — Query supported locales and derived feature support through `to-words/manifest`
 - **CLI** — `npx to-words 12345 --locale en-US` for shell scripts and quick conversions
 - **Wide Compatibility** — All modern browsers and Node.js 20+; compatible by architecture with Deno, Bun, and Cloudflare Workers (zero Node.js-specific APIs)
@@ -200,7 +202,7 @@ toWords(123.45); // "One Hundred Twenty Three Point Four Five"
 
 ### BigInt & Large Numbers
 
-Handle numbers beyond JavaScript's safe integer limit:
+Handle numbers beyond JavaScript's safe integer limit without precision loss. Strict mode accepts values through the active locale's published ceiling:
 
 ```js
 const toWords = new ToWords({ localeCode: 'en-US' });
@@ -216,6 +218,9 @@ toWords.convert(1000000000000000000000000000000000000000000000000000000000000000
 toWords.convert('9007199254740993');
 // "Nine Quadrillion Seven Trillion One Hundred Ninety Nine Billion
 //  Two Hundred Fifty Four Million Seven Hundred Forty Thousand Nine Hundred Ninety Three"
+
+// Legacy recursive scale composition is still available explicitly
+toWords.convert('1e100', { rangeMode: 'compose' });
 ```
 
 ### Currency Conversion
@@ -473,11 +478,11 @@ import { getLocaleCapabilities, getLocaleMetadata, isSupportedLocale, SUPPORTED_
 isSupportedLocale('en-US'); // true
 getLocaleCapabilities('zh-CN')?.formal; // true
 getLocaleMetadata('hi-IN')?.numbering.grouping; // [3, 2]
-getLocaleMetadata('en-US')?.range.largestNamedMagnitude; // exact decimal string
+getLocaleMetadata('en-US')?.range.maximumSupported.cardinal; // exact inclusive ceiling
 SUPPORTED_LOCALES.length; // 135
 ```
 
-The manifest contains compact generated capability, numbering-system, and named-range metadata without loading locale conversion tables. Custom locale authors can validate their configuration with `assertLocaleConfig()` from `to-words/locale-contract`. See the [generated capability matrix](https://mastermunj.github.io/to-words/guide/locale-capabilities) and [locale quality gates](https://mastermunj.github.io/to-words/guide/locale-quality).
+The manifest contains compact generated capability, numbering-system, and range metadata without loading locale conversion tables. Custom locale classes passed to the full `ToWords` class or `ToWordsCore` are validated automatically on first use; authors can also call `assertLocaleConfig()` from `to-words/locale-contract` in CI. Per-locale entry points use smaller, prevalidated built-in tables. See the [generated capability matrix](https://mastermunj.github.io/to-words/guide/locale-capabilities) and [locale quality gates](https://mastermunj.github.io/to-words/guide/locale-quality).
 
 ### Browser Usage (UMD)
 
@@ -542,10 +547,10 @@ toCurrency(1234.56); // "One Thousand Two Hundred Thirty Four Dollars And Fifty 
 
 ### Auto-Detect Locale
 
-`detectLocale()` is automatically used by `toWords()`, `toOrdinal()`, and `toCurrency()` when no `localeCode` is provided — so in most cases you don't need to call it directly. It is useful when you want to read the runtime locale for other purposes, display it to the user, or pass it explicitly to a class instance.
+`detectLocale()` is automatically used by `new ToWords()`, `toWords()`, `toOrdinal()`, and `toCurrency()` when no `localeCode` is provided — so in most cases you don't need to call it directly. `resolveLocale()` applies the same matching rules to a dynamic string without reading the environment.
 
 ```js
-import { detectLocale, toWords, ToWords } from 'to-words';
+import { detectLocale, resolveLocale, toWords, ToWords } from 'to-words';
 
 // Used implicitly — no localeCode needed
 toWords(1000);
@@ -557,6 +562,8 @@ toWords(1000);
 const locale = detectLocale('en-US'); // custom fallback if detection misses
 const tw = new ToWords({ localeCode: locale });
 tw.convert(1000);
+
+const requestLocale = resolveLocale('EN_us'); // 'en-US'
 ```
 
 Locale matching canonicalises BCP 47 casing and aliases, ignores script subtags when matching a supported language-region pair, and uses deterministic defaults for language-only values (`en` → `en-US`, `es` → `es-ES`, `pt` → `pt-BR`). In SSR and APIs, pass the request locale explicitly; `setLocaleDetector()` changes process-wide state and is intended for tests or application-wide configuration.
@@ -823,14 +830,15 @@ toWords.convert(100000000);
 ### Constructor Options
 
 ```typescript
-interface ToWordsOptions {
-  localeCode?: string; // Default: 'en-IN'
+interface BundledToWordsOptions {
+  localeCode?: LocaleCode; // Default: auto-detected, then falls back to 'en-IN'
   converterOptions?: {
     currency?: boolean; // Default: false
     ignoreDecimal?: boolean; // Default: false
     ignoreZeroCurrency?: boolean; // Default: false
     doNotAddOnly?: boolean; // Default: false
     includeZeroFractional?: boolean; // Default: false
+    rangeMode?: 'strict' | 'compose'; // Default: 'strict'
     currencyOptions?: {
       name: string;
       plural: string;
@@ -873,7 +881,7 @@ The three conversion helpers (`toWords`, `toOrdinal`, `toCurrency`) are availabl
 Converts a number to words.
 
 - **number**: `number | bigint | string` — The number to convert
-- **options** _(full bundle)_: `ConverterOptions & { localeCode?: string }` — When `localeCode` is omitted, `detectLocale()` is called automatically
+- **options** _(full bundle)_: `ConverterOptions & { localeCode?: LocaleCode }` — When `localeCode` is omitted, `detectLocale()` is called automatically
 - **options** _(per-locale)_: `ConverterOptions`
 - **returns**: `string`
 
@@ -891,7 +899,7 @@ toWords(12345); // locale baked in, no detection needed
 Converts a number to ordinal words.
 
 - **number**: `number | bigint | string` — Must represent a non-negative integer
-- **options** _(full bundle)_: `OrdinalOptions & { localeCode?: string }` — When `localeCode` is omitted, `detectLocale()` is called automatically
+- **options** _(full bundle)_: `OrdinalOptions & { localeCode?: LocaleCode }` — When `localeCode` is omitted, `detectLocale()` is called automatically
 - **options** _(per-locale)_: `OrdinalOptions`
 - **returns**: `string`
 
@@ -909,7 +917,7 @@ toOrdinal(21); // locale baked in
 Shorthand for converting a number to currency words. Equivalent to `toWords(number, { currency: true, ...options })`.
 
 - **number**: `number | bigint | string`
-- **options** _(full bundle)_: `ConverterOptions & { localeCode?: string }` — When `localeCode` is omitted, `detectLocale()` is called automatically
+- **options** _(full bundle)_: `ConverterOptions & { localeCode?: LocaleCode }` — When `localeCode` is omitted, `detectLocale()` is called automatically
 - **options** _(per-locale)_: `ConverterOptions`
 - **returns**: `string`
 
@@ -930,8 +938,8 @@ Reads the current runtime locale.
 - In **Node.js** (and compatible runtimes): reads `Intl.DateTimeFormat().resolvedOptions().locale`
 - Normalises BCP 47 tags (e.g. `zh-Hant-TW` → `zh-TW`) and falls back to a language-prefix match
 
-- **fallback** _(optional)_: `string` — Returned when no supported locale can be matched. Default: `'en-IN'`
-- **returns**: `string` — A supported locale code
+- **fallback** _(optional)_: `LocaleCode` — Returned when no supported locale can be matched. Default: `'en-IN'`
+- **returns**: `LocaleCode` — A supported locale code
 
 Matching canonicalises BCP 47 casing and aliases. Language-only or unknown-region inputs use explicit defaults rather than registry order, including `en` → `en-US`, `es` → `es-ES`, `pt` → `pt-BR`, and `sw` → `sw-KE`.
 
@@ -944,6 +952,17 @@ detectLocale('en-GB'); // custom fallback if detection fails
 
 > `detectLocale` is only available from the full bundle (`to-words`), not from per-locale entry points.
 
+#### `resolveLocale(input)`
+
+Canonicalises and matches a dynamic BCP 47 string without reading the environment. It returns `LocaleCode | undefined`, making it the safe bridge between user/request data and the typed constructor/helpers.
+
+```ts
+import { resolveLocale, ToWords } from 'to-words';
+
+const localeCode = resolveLocale('zh-Hant-TW'); // 'zh-TW'
+if (localeCode) new ToWords({ localeCode });
+```
+
 `setLocaleDetector()` changes a process-wide detector and is intended for tests or application-wide configuration. Do not change it per SSR/API request; pass `{ localeCode }` explicitly instead.
 
 ### Utility Methods
@@ -952,21 +971,25 @@ detectLocale('en-GB'); // custom fallback if detection fails
 - `isFloat(number)` returns whether a valid `number | bigint | string` has a non-zero fractional component.
 - `isNumberZero(number)` returns `true` only for exact numeric zero.
 - `getLocale().config` is available for inspection and is recursively frozen after initialization. Define custom locale data before passing its class to `setLocale()`.
+- `resolveLocale(input)` returns a supported canonical `LocaleCode` or `undefined` without reading runtime globals.
+
+`LOCALES`, `DefaultToWordsOptions`, and `DefaultConverterOptions` are frozen. Constructor options, including nested currency data, are snapshotted when an instance is created.
 
 ### Converter Options
 
-| Option                  | Type    | Default   | Description                                                                                                                                                                                                                      |
-| ----------------------- | ------- | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `currency`              | boolean | false     | Convert as currency with locale-specific formatting                                                                                                                                                                              |
-| `ignoreDecimal`         | boolean | false     | Ignore fractional part when converting                                                                                                                                                                                           |
-| `ignoreZeroCurrency`    | boolean | false     | Skip zero main currency (e.g., show only "Thirty Six Paise")                                                                                                                                                                     |
-| `doNotAddOnly`          | boolean | false     | Omit "Only" suffix in currency mode                                                                                                                                                                                              |
-| `includeZeroFractional` | boolean | false     | When input is a string like `"123.00"`, include "And Zero Paise" even though the decimal is zero                                                                                                                                 |
-| `currencyOptions`       | object  | undefined | Override locale's default currency settings                                                                                                                                                                                      |
-| `gender`                | string  | undefined | Grammatical gender: `'masculine'` or `'feminine'`. Applies to locales with gendered number words                                                                                                                                 |
-| `useAnd`                | boolean | undefined | Insert the locale connector before the last two digits (e.g., "One Hundred **And** Twenty Three"). No-op when locale already defines a split word or has an empty connector token                                                |
-| `formal`                | boolean | undefined | Use formal/financial characters (currently supported for zh-CN and zh-TW)                                                                                                                                                        |
-| `decimalStyle`          | string  | `'digit'` | Decimal rendering style: `'digit'` (default — digit-by-digit after the point) or `'fraction'` (positional/legal style — "Forty-Five Hundredths"). See [Fraction Style](#-spelled-out-decimal-fraction-style) for locale support. |
+| Option                  | Type    | Default    | Description                                                                                                                                                                                                                      |
+| ----------------------- | ------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `currency`              | boolean | false      | Convert as currency with locale-specific formatting                                                                                                                                                                              |
+| `ignoreDecimal`         | boolean | false      | Ignore fractional part when converting                                                                                                                                                                                           |
+| `ignoreZeroCurrency`    | boolean | false      | Skip zero main currency (e.g., show only "Thirty Six Paise")                                                                                                                                                                     |
+| `doNotAddOnly`          | boolean | false      | Omit "Only" suffix in currency mode                                                                                                                                                                                              |
+| `includeZeroFractional` | boolean | false      | When input is a string like `"123.00"`, include "And Zero Paise" even though the decimal is zero                                                                                                                                 |
+| `currencyOptions`       | object  | undefined  | Override locale's default currency settings                                                                                                                                                                                      |
+| `gender`                | string  | undefined  | Grammatical gender: `'masculine'` or `'feminine'`. Applies to locales with gendered number words                                                                                                                                 |
+| `useAnd`                | boolean | undefined  | Insert the locale connector before the last two digits (e.g., "One Hundred **And** Twenty Three"). No-op when locale already defines a split word or has an empty connector token                                                |
+| `formal`                | boolean | undefined  | Use formal/financial characters (currently supported for zh-CN and zh-TW)                                                                                                                                                        |
+| `decimalStyle`          | string  | `'digit'`  | Decimal rendering style: `'digit'` (default — digit-by-digit after the point) or `'fraction'` (positional/legal style — "Forty-Five Hundredths"). See [Fraction Style](#-spelled-out-decimal-fraction-style) for locale support. |
+| `rangeMode`             | string  | `'strict'` | `'strict'` enforces the locale's form-specific ceiling; `'compose'` opts into legacy recursive scale composition.                                                                                                                |
 
 ### Common Options Example
 
@@ -1040,7 +1063,7 @@ digits), it automatically falls back to the default digit-by-digit style — no 
 | **Scandinavian**                       | da-DK, nb-NO, sv-SE                                                                                                                                                                                                     |
 | **Other European**                     | bg-BG, ca-ES, cs-CZ, el-GR, hr-HR, hu-HU, lv-LV, pl-PL, ro-RO, sk-SK, sl-SI, sq-AL, sr-RS                                                                                                                               |
 | **Slavic (with Slavic singular rule)** | be-BY, ru-RU, uk-UA                                                                                                                                                                                                     |
-| **Indic**                              | as-IN, bn-BD, bn-IN, gu-IN, hi-IN, kn-IN, ml-IN, mr-IN, np-NP, or-IN, pa-IN, ta-IN, te-IN                                                                                                                               |
+| **Indic**                              | as-IN, bn-BD, bn-IN, gu-IN, hi-IN, kn-IN, ml-IN, mr-IN, ne-NP, or-IN, pa-IN, ta-IN, te-IN                                                                                                                               |
 | **Others**                             | af-ZA, fa-IR, he-IL, id-ID, ka-GE, ms-MY, ms-SG, ur-PK, vi-VN                                                                                                                                                           |
 
 > Locales not listed above (Arabic, East Asian, Turkic, etc.) do not yet support
@@ -1050,9 +1073,9 @@ digits), it automatically falls back to the default digit-by-digit style — no 
 
 | Import Method             | Raw      | Gzip     |
 | ------------------------- | -------- | -------- |
-| Full bundle (all locales) | 697 KiB  | 68.5 KiB |
-| Single locale (en-US)     | 17.6 KiB | 4.9 KiB  |
-| Single locale (en-IN)     | 15.4 KiB | 4.8 KiB  |
+| Full bundle (all locales) | 703 KiB  | 70.4 KiB |
+| Single locale (en-US)     | 19.5 KiB | 5.5 KiB  |
+| Single locale (en-IN)     | 17.2 KiB | 5.3 KiB  |
 
 > **Tip:** Use tree-shakeable imports or single-locale UMD bundles for the smallest bundle size.
 
@@ -1128,7 +1151,6 @@ All 135 locales with their core setup are listed below. Numbering-system, groupi
 | de-AT  | German          | Austria             | Euro          | ✓       |
 | de-CH  | German          | Switzerland         | Franken       | ✓       |
 | de-DE  | German          | Germany             | Euro          | ✓       |
-| ee-EE  | Estonian        | Estonia             | Euro          | ✓       |
 | el-GR  | Greek           | Greece              | Ευρώ          | ✓       |
 | en-AE  | English         | UAE                 | Dirham        | ✓       |
 | en-AU  | English         | Australia           | Dollar        | ✓       |
@@ -1169,6 +1191,7 @@ All 135 locales with their core setup are listed below. Numbering-system, groupi
 | es-PE  | Spanish         | Peru                | Sol           | ✓       |
 | es-US  | Spanish         | USA                 | Dólar         | ✓       |
 | es-VE  | Spanish         | Venezuela           | Bolívar       | ✓       |
+| et-EE  | Estonian        | Estonia             | Euro          | ✓       |
 | fa-IR  | Persian         | Iran                | تومان         | ✓       |
 | fi-FI  | Finnish         | Finland             | Euro          | ✓       |
 | fil-PH | Filipino        | Philippines         | Piso          | ✓       |
@@ -1209,7 +1232,7 @@ All 135 locales with their core setup are listed below. Numbering-system, groupi
 | nb-NO  | Norwegian       | Norway              | Krone         | ✓       |
 | nl-NL  | Dutch           | Netherlands         | Euro          | ✓       |
 | nl-SR  | Dutch           | Suriname            | Dollar        | ✓       |
-| np-NP  | Nepali          | Nepal               | रुपैयाँ       | ✓       |
+| ne-NP  | Nepali          | Nepal               | रुपैयाँ       | ✓       |
 | or-IN  | Odia            | India               | ଟଙ୍କା         | ✓       |
 | pa-IN  | Punjabi         | India               | ਰੁਪਇਆ         | ✓       |
 | pl-PL  | Polish          | Poland              | Złoty         | ✓       |

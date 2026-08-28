@@ -1,22 +1,22 @@
 import { describe, expect, test } from 'vitest';
 import { cloneDeep } from 'lodash';
 import { ToWords } from '../src/ToWords';
-import npNp from '../src/locales/np-NP.js';
+import neNp from '../src/locales/ne-NP.js';
 import {
   ToWords as LocaleToWords,
   toWords as localeToWords,
   toOrdinal as localeToOrdinal,
   toCurrency as localeToCurrency,
-} from '../src/locales/np-NP.js';
+} from '../src/locales/ne-NP.js';
 
-const localeCode = 'np-NP';
+const localeCode = 'ne-NP';
 const toWords = new ToWords({
   localeCode,
 });
 
 describe('Test Locale', () => {
   test(`Locale Class: ${localeCode}`, () => {
-    expect(toWords.getLocaleClass()).toBe(npNp);
+    expect(toWords.getLocaleClass()).toBe(neNp);
   });
 
   describe('Test Locale ToWords', () => {
@@ -29,10 +29,7 @@ describe('Test Locale', () => {
 
   const wrongLocaleCode = localeCode + '-wrong';
   test(`Wrong Locale: ${wrongLocaleCode}`, () => {
-    const toWordsWrongLocale = new ToWords({
-      localeCode: wrongLocaleCode,
-    });
-    expect(() => toWordsWrongLocale.convert(1)).toThrow(/Unknown Locale/);
+    expect(() => new ToWords({ localeCode: wrongLocaleCode as never }).convert(1)).toThrow(/Unknown Locale/);
   });
 });
 

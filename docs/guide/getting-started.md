@@ -50,7 +50,7 @@ Use this when you want to instantiate once and convert many values with the same
 **2. Functional (full bundle)** — one-liners with all 135 locales:
 
 ```js
-import { detectLocale, toWords, toOrdinal, toCurrency } from 'to-words';
+import { detectLocale, resolveLocale, toWords, toOrdinal, toCurrency } from 'to-words';
 
 toWords(12345, { localeCode: 'en-US' });
 toCurrency(100, { localeCode: 'en-US' });
@@ -59,6 +59,10 @@ toOrdinal(3, { localeCode: 'en-US' });
 // Or let the runtime locale decide
 const locale = detectLocale('en-US');
 toCurrency(100, { localeCode: locale });
+
+// Dynamic input is canonicalized and narrowed to LocaleCode
+const requestedLocale = resolveLocale('EN_us'); // 'en-US'
+if (requestedLocale) toWords(12345, { localeCode: requestedLocale });
 ```
 
 This is the simplest API when locale changes at runtime, for example from a user profile or a language picker.
@@ -102,6 +106,7 @@ npx to-words --detect-locale
 - Use full-bundle functions when locale comes from runtime state
 - Use per-locale imports when bundle size matters most
 - Use string input for values where decimal precision must be preserved exactly, such as `'500.500'`
+- Use the default strict range for verified output; pass `rangeMode: 'compose'` only for intentional legacy scale composition
 
 ## Next steps
 

@@ -51,9 +51,11 @@ type BuildRequest = {
 };
 
 const SIZE_BUDGETS = Object.freeze({
-  fullGzipped: 70 * 1024,
-  averageLocaleGzipped: 5.25 * 1024,
-  largestLocaleGzipped: 6 * 1024,
+  // v7 strict ranges add roughly 0.4 KiB gzip to expose structured errors and
+  // per-form limits in both full and standalone browser builds.
+  fullGzipped: 70.5 * 1024,
+  averageLocaleGzipped: 5.75 * 1024,
+  largestLocaleGzipped: 6.5 * 1024,
 });
 
 function assertSizeBudgets(

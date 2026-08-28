@@ -23,21 +23,42 @@ import {
   type LocaleInterface,
   type NumberInput,
   type OrdinalOptions,
+  type ToWordsOptions,
 } from './types.js';
 import { ToWordsCore, DefaultConverterOptions, DefaultToWordsOptions } from './ToWordsCore.js';
+import type { LocaleCode } from './locale-manifest.js';
 import LOCALES from './locales/index.js';
 
 // Re-export everything from ToWordsCore for backwards compatibility
 export { DefaultConverterOptions, DefaultToWordsOptions };
 export { LOCALES };
+export { NumberOutOfRangeError } from './errors.js';
+export type { LocaleCode } from './locale-manifest.js';
+
+export type BundledToWordsOptions = Omit<ToWordsOptions, 'localeCode'> & { localeCode?: LocaleCode };
 
 // Module-level instance cache for the functional helpers (toWords / toOrdinal / toCurrency).
 // Each locale gets one cached instance — repeated calls at the same locale are zero-overhead.
-const instanceCache = new Map<string, ToWords>();
+const instanceCache = new Map<LocaleCode, ToWords>();
+
+const RENAMED_LOCALES: Readonly<Record<string, string>> = {
+  'ee-EE': 'et-EE',
+  'np-NP': 'ne-NP',
+};
+
+function hasLocale(localeCode: string): boolean {
+  return Object.hasOwn(LOCALES, localeCode);
+}
+
+function unknownLocaleError(localeCode: string): Error {
+  const replacement = Object.hasOwn(RENAMED_LOCALES, localeCode) ? RENAMED_LOCALES[localeCode] : undefined;
+  const migrationHint = replacement ? ` This locale code was renamed in v7; use "${replacement}" instead.` : '';
+  return new Error(`Unknown Locale "${localeCode}".${migrationHint}`);
+}
 
 // Language-only and unknown-region inputs must not depend on registry insertion order.
 // These defaults intentionally select the package's canonical regional variant.
-const DEFAULT_LOCALE_BY_LANGUAGE: Readonly<Record<string, string>> = {
+const DEFAULT_LOCALE_BY_LANGUAGE: Readonly<Record<string, LocaleCode>> = {
   ar: 'ar-SA',
   bn: 'bn-IN',
   de: 'de-DE',
@@ -110,6 +131,15 @@ export function setLocaleDetector(fn: (() => string) | null): void {
 }
 
 export class ToWords extends ToWordsCore {
+  constructor(options: BundledToWordsOptions = {}) {
+    const requestedLocale = options.localeCode as string | undefined;
+    const localeCode = requestedLocale === undefined ? detectLocale() : resolveLocale(requestedLocale);
+    if (!localeCode) {
+      throw unknownLocaleError(requestedLocale!);
+    }
+    super({ ...options, localeCode });
+  }
+
   /**
    * Get the locale class, either from setLocale() or by looking up the localeCode.
    * This overrides ToWordsCore to add LOCALES lookup.
@@ -120,10 +150,7 @@ export class ToWords extends ToWordsCore {
       return this.localeClass;
     }
 
-    // Fall back to looking up by localeCode in LOCALES
-    if (!(this.options.localeCode! in LOCALES)) {
-      throw new Error(`Unknown Locale "${this.options.localeCode}"`);
-    }
+    // The constructor has already canonicalized and validated this code.
     return LOCALES[this.options.localeCode!];
   }
 }
@@ -133,10 +160,11 @@ export class ToWords extends ToWordsCore {
  * When `localeCode` is omitted, `detectLocale()` is called once here —
  * the single place where auto-detection happens for all functional helpers.
  */
-function getCachedInstance(localeCode?: string): ToWords {
-  const code = localeCode ?? detectLocale();
-  if (!(code in LOCALES)) {
-    throw new Error(`Unknown Locale "${code}"`);
+function getCachedInstance(localeCode?: LocaleCode): ToWords {
+  const requestedLocale = localeCode as string | undefined;
+  const code = requestedLocale === undefined ? detectLocale() : resolveLocale(requestedLocale);
+  if (!code) {
+    throw unknownLocaleError(requestedLocale!);
   }
   let inst = instanceCache.get(code);
   if (!inst) {
@@ -165,20 +193,15 @@ function getCachedInstance(localeCode?: string): ToWords {
  *
  * @param fallback  Locale code to return when detection yields no match.
  */
-export function detectLocale(fallback: string = DefaultToWordsOptions.localeCode!): string {
-  const rawCandidate = _localeDetector ? _localeDetector() : readRawLocale();
-  if (!rawCandidate) {
-    return fallback;
-  }
-
-  const candidate = rawCandidate.trim().replaceAll('_', '-');
+export function resolveLocale(input: string): LocaleCode | undefined {
+  const candidate = input.trim().replaceAll('_', '-');
   if (!candidate) {
-    return fallback;
+    return undefined;
   }
 
   // 1. Exact match
-  if (candidate in LOCALES) {
-    return candidate;
+  if (hasLocale(candidate)) {
+    return candidate as LocaleCode;
   }
 
   let language: string;
@@ -189,8 +212,15 @@ export function detectLocale(fallback: string = DefaultToWordsOptions.localeCode
     region = locale.region?.toUpperCase();
 
     const canonical = locale.toString();
-    if (canonical in LOCALES) {
-      return canonical;
+    if (hasLocale(canonical)) {
+      return canonical as LocaleCode;
+    }
+    // Script subtags and Unicode extensions can be ignored when the package
+    // has the corresponding language-region implementation. Variants cannot:
+    // dropping one could select materially different wording.
+    const recognisedBaseName = [locale.language, locale.script, locale.region].filter(Boolean).join('-');
+    if (locale.baseName !== recognisedBaseName) {
+      return undefined;
     }
   } catch {
     const parts = candidate.split('-');
@@ -204,23 +234,29 @@ export function detectLocale(fallback: string = DefaultToWordsOptions.localeCode
   // 2. Match language + region after canonicalisation, ignoring script subtags.
   if (region) {
     const languageRegion = `${language}-${region}`;
-    if (languageRegion in LOCALES) {
-      return languageRegion;
+    if (hasLocale(languageRegion)) {
+      return languageRegion as LocaleCode;
     }
   }
 
   // 3. Explicit language default, followed by the sole/first supported variant.
   const languageDefault = DEFAULT_LOCALE_BY_LANGUAGE[language];
-  if (languageDefault && languageDefault in LOCALES) {
+  if (languageDefault && hasLocale(languageDefault)) {
     return languageDefault;
   }
 
   const languageMatch = Object.keys(LOCALES).find((code) => code.startsWith(`${language}-`));
   if (languageMatch) {
-    return languageMatch;
+    return languageMatch as LocaleCode;
   }
 
-  return fallback;
+  return undefined;
+}
+
+export function detectLocale(fallback: LocaleCode = DefaultToWordsOptions.localeCode as LocaleCode): LocaleCode {
+  const fallbackLocale = resolveLocale(fallback) ?? (DefaultToWordsOptions.localeCode as LocaleCode);
+  const rawCandidate = _localeDetector ? _localeDetector() : readRawLocale();
+  return resolveLocale(rawCandidate) ?? fallbackLocale;
 }
 
 /**
@@ -234,7 +270,7 @@ export function detectLocale(fallback: string = DefaultToWordsOptions.localeCode
  * toWords(12345, { localeCode: 'en-US' }); // "Twelve Thousand Three Hundred Forty Five"
  * toWords(12345); // uses auto-detected runtime locale, falls back to 'en-IN'
  */
-export function toWords(number: NumberInput, options?: ConverterOptions & { localeCode?: string }): string {
+export function toWords(number: NumberInput, options?: ConverterOptions & { localeCode?: LocaleCode }): string {
   const { localeCode, ...converterOptions } = options ?? {};
   return getCachedInstance(localeCode).convert(number, converterOptions);
 }
@@ -249,7 +285,7 @@ export function toWords(number: NumberInput, options?: ConverterOptions & { loca
  * toOrdinal(21, { localeCode: 'en-US' }); // "Twenty First"
  * toOrdinal(21); // uses auto-detected runtime locale, falls back to 'en-IN'
  */
-export function toOrdinal(number: NumberInput, options?: OrdinalOptions & { localeCode?: string }): string {
+export function toOrdinal(number: NumberInput, options?: OrdinalOptions & { localeCode?: LocaleCode }): string {
   const { localeCode, ...ordinalOptions } = options ?? {};
   return getCachedInstance(localeCode).toOrdinal(number, ordinalOptions);
 }
@@ -265,7 +301,7 @@ export function toOrdinal(number: NumberInput, options?: OrdinalOptions & { loca
  * toCurrency(1234.56, { localeCode: 'en-US' }); // "One Thousand Two Hundred Thirty Four Dollars And Fifty Six Cents Only"
  * toCurrency(1234.56); // uses auto-detected runtime locale, falls back to 'en-IN'
  */
-export function toCurrency(number: NumberInput, options?: ConverterOptions & { localeCode?: string }): string {
+export function toCurrency(number: NumberInput, options?: ConverterOptions & { localeCode?: LocaleCode }): string {
   const { localeCode, ...converterOptions } = options ?? {};
   return getCachedInstance(localeCode).convert(number, { ...converterOptions, currency: true });
 }

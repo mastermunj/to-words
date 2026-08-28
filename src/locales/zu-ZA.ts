@@ -6,7 +6,7 @@ import {
   type OrdinalOptions,
   type ToWordsOptions,
 } from '../types.js';
-import { ToWordsCore } from '../ToWordsCore.js';
+import { ToWordsCore } from '../ToWordsCoreBase.js';
 
 // NOTE: Zulu connector particles (nan-/na-/ne-) before unit words change form
 // depending on the noun class of the unit (e.g. 21 = "amashumi amabili nanye"
@@ -122,7 +122,7 @@ export default class Locale implements LocaleInterface {
 export class ToWords extends ToWordsCore {
   constructor(options: ToWordsOptions = {}) {
     super(options);
-    this.setLocale(Locale);
+    this.setLocale(Locale, 'zu-ZA');
   }
 }
 

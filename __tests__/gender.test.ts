@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { ToWords } from '../src/ToWords.js';
+import type { LocaleCode } from '../src/locale-manifest.js';
 
 describe('Gender-aware cardinals', () => {
   describe('Spanish (es-ES)', () => {
@@ -667,7 +668,7 @@ describe('Gender-aware ordinals', () => {
   test.each(['es-AR', 'es-CL', 'es-CO', 'es-ES', 'es-MX', 'es-PE', 'es-US', 'es-VE'])(
     '%s resolves feminine Spanish ordinal forms',
     (localeCode) => {
-      const toWords = new ToWords({ localeCode });
+      const toWords = new ToWords({ localeCode: localeCode as LocaleCode });
       expect(toWords.toOrdinal(1, { gender: 'masculine' })).toBe('Primero');
       expect(toWords.toOrdinal(1, { gender: 'feminine' })).toBe('Primera');
       expect(toWords.toOrdinal(10, { gender: 'feminine' })).toBe('Décima');

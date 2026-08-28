@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
 import { ToWords, detectLocale } from './ToWords.js';
+import type { LocaleCode } from './locale-manifest.js';
+import type { RangeMode } from './types.js';
 
 function printHelp(): void {
   console.log(`Usage: to-words <number> [options]
@@ -9,6 +11,7 @@ Options:
   --locale <code>    Locale code (default: auto-detected, falls back to en-IN)
   --currency         Convert as currency amount
   --ordinal          Convert as ordinal (e.g. "Third")
+  --range-mode <mode>  Range handling: strict (default) or compose
   --detect-locale    Print the auto-detected locale and exit
   --                  End options (useful before a negative number)
   -h, --help         Show this help
@@ -18,6 +21,7 @@ Examples:
   to-words 12345 --locale en-US
   to-words 1234.56 --locale en-US --currency
   to-words 3 --locale en-US --ordinal
+  to-words 1e100 --locale en-US --range-mode compose
   to-words --locale en-US -- -5
   to-words --detect-locale
 `);
@@ -28,6 +32,7 @@ type CliOptions = {
   localeCode?: string;
   number?: string;
   ordinal: boolean;
+  rangeMode?: RangeMode;
 };
 
 function parseArgs(args: string[]): CliOptions | string {
@@ -57,6 +62,16 @@ function parseArgs(args: string[]): CliOptions | string {
         return '--locale requires a locale code (e.g. --locale en-US)';
       }
       options.localeCode = provided;
+      index += 1;
+    } else if (arg === '--range-mode') {
+      if (options.rangeMode !== undefined) {
+        return 'The --range-mode option may only be provided once.';
+      }
+      const provided = args[index + 1];
+      if (provided !== 'strict' && provided !== 'compose') {
+        return '--range-mode requires either "strict" or "compose"';
+      }
+      options.rangeMode = provided;
       index += 1;
     } else if (arg.startsWith('-') && !/^-(?:\d|\.\d)/.test(arg)) {
       return `Unknown option "${arg}".`;
@@ -103,11 +118,14 @@ export function runCli(args: string[]): void {
   }
 
   try {
-    const tw = new ToWords({ localeCode: parsed.localeCode ?? detectLocale() });
+    // CLI input is dynamic; the constructor performs canonical resolution and
+    // emits migration-aware errors for unsupported legacy codes.
+    const localeCode = (parsed.localeCode ?? detectLocale()) as LocaleCode;
+    const tw = new ToWords({ localeCode });
     if (parsed.ordinal) {
-      console.log(tw.toOrdinal(parsed.number!));
+      console.log(tw.toOrdinal(parsed.number!, { rangeMode: parsed.rangeMode }));
     } else {
-      console.log(tw.convert(parsed.number!, { currency: parsed.currency }));
+      console.log(tw.convert(parsed.number!, { currency: parsed.currency, rangeMode: parsed.rangeMode }));
     }
   } catch (e) {
     console.error(`Error: ${(e as Error).message}`);

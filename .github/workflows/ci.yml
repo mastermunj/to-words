@@ -28,9 +28,28 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
-      - run: npm run lint --if-present
-      - run: npm run build --if-present
-      - run: npm run test:runtime
+      - name: Lint
+        if: matrix.node-version == '24.x'
+        run: npm run lint --if-present
+      - name: Build complete distribution
+        if: matrix.node-version == '24.x'
+        run: npm run build --if-present
+      - name: Build Node.js entry points on supported LTS lines
+        if: matrix.node-version != '24.x'
+        run: |
+          npm run build:cjs
+          npm run build:esm
+          npm run build:pkgjson
+          npm run build:cli
+      - name: Test complete compiled runtime
+        if: matrix.node-version == '24.x'
+        run: npm run test:runtime
+      - name: Test Node.js compiled runtime
+        if: matrix.node-version != '24.x'
+        run: npm run test:runtime -- --skip-umd
+      - name: Test packed npm artifact
+        if: matrix.node-version == '24.x'
+        run: npm run test:package
       - run: npm test
         env:
           CI: true

@@ -5,21 +5,23 @@ import {
   toOrdinal as toOrdinalFn,
   toCurrency as toCurrencyFn,
   detectLocale as detectLocaleFn,
+  resolveLocale as resolveLocaleFn,
   setLocaleDetector as setLocaleDetectorFn,
+  DefaultConverterOptions,
+  DefaultToWordsOptions,
+  LOCALES,
+  NumberOutOfRangeError,
 } from '../src/ToWords';
 
 describe('Wrong Locale', () => {
-  const localeCode = 'en-INDIA';
-  const toWords = new ToWords({
-    localeCode: localeCode,
-  });
+  const localeCode = 'xx-XX';
   test(`With Locale: ${localeCode}`, () => {
-    expect(() => toWords.convert(1)).toThrow(/Unknown Locale/);
+    expect(() => new ToWords({ localeCode: localeCode as never }).convert(1)).toThrow(/Unknown Locale/);
   });
 });
 
 describe('Test Wrong Inputs', () => {
-  const toWords = new ToWords();
+  const toWords = new ToWords({ localeCode: 'en-IN' });
 
   const testWrongInputs = [
     '',
@@ -38,7 +40,7 @@ describe('Test Wrong Inputs', () => {
 });
 
 describe('Test BigInt Inputs', () => {
-  const toWords = new ToWords();
+  const toWords = new ToWords({ localeCode: 'en-IN' });
 
   test('Basic BigInt', () => {
     expect(toWords.convert(12345n)).toBe('Twelve Thousand Three Hundred Forty Five');
@@ -72,14 +74,14 @@ describe('Test BigInt Inputs', () => {
 describe('Test setLocale method', () => {
   test('setLocale with en-US locale class', async () => {
     const { default: EnUsLocale } = await import('../src/locales/en-US');
-    const toWords = new ToWords();
+    const toWords = new ToWords({ localeCode: 'en-IN' });
     toWords.setLocale(EnUsLocale);
     expect(toWords.convert(1234)).toBe('One Thousand Two Hundred Thirty Four');
   });
 
   test('setLocale with en-IN locale class', async () => {
     const { default: EnInLocale } = await import('../src/locales/en-IN');
-    const toWords = new ToWords();
+    const toWords = new ToWords({ localeCode: 'en-IN' });
     toWords.setLocale(EnInLocale);
     expect(toWords.convert(1234)).toBe('One Thousand Two Hundred Thirty Four');
     expect(toWords.convert(1234, { currency: true })).toBe('One Thousand Two Hundred Thirty Four Rupees Only');
@@ -87,14 +89,14 @@ describe('Test setLocale method', () => {
 
   test('setLocale with fr-FR locale class', async () => {
     const { default: FrFrLocale } = await import('../src/locales/fr-FR');
-    const toWords = new ToWords();
+    const toWords = new ToWords({ localeCode: 'en-IN' });
     toWords.setLocale(FrFrLocale);
     expect(toWords.convert(80)).toBe('Quatre-Vingts');
   });
 
   test('setLocale returns this for chaining', async () => {
     const { default: EnInLocale } = await import('../src/locales/en-IN');
-    const toWords = new ToWords();
+    const toWords = new ToWords({ localeCode: 'en-IN' });
     const result = toWords.setLocale(EnInLocale).convert(100);
     expect(result).toBe('One Hundred');
   });
@@ -158,7 +160,7 @@ describe('Test per-locale entry points', () => {
 // ============================================================
 
 describe('Comprehensive Input Validation', () => {
-  const toWords = new ToWords();
+  const toWords = new ToWords({ localeCode: 'en-IN' });
 
   describe('Invalid Input Types', () => {
     test('should throw error for null input', () => {
@@ -274,7 +276,7 @@ describe('Comprehensive Input Validation', () => {
 });
 
 describe('Valid String Number Inputs', () => {
-  const toWords = new ToWords();
+  const toWords = new ToWords({ localeCode: 'en-IN' });
 
   describe('Basic String Numbers', () => {
     test('should convert positive string integer', () => {
@@ -346,7 +348,7 @@ describe('Valid String Number Inputs', () => {
 });
 
 describe('Boundary Values and Edge Cases', () => {
-  const toWords = new ToWords();
+  const toWords = new ToWords({ localeCode: 'en-IN' });
 
   describe('Zero Variants', () => {
     test('converts integer zero', () => {
@@ -495,7 +497,7 @@ describe('Boundary Values and Edge Cases', () => {
 });
 
 describe('Decimal Number Tests', () => {
-  const toWords = new ToWords();
+  const toWords = new ToWords({ localeCode: 'en-IN' });
 
   describe('Common Decimals', () => {
     test('converts 0.5 correctly', () => {
@@ -553,7 +555,7 @@ describe('Decimal Number Tests', () => {
 });
 
 describe('Currency Options Combinations', () => {
-  const toWords = new ToWords();
+  const toWords = new ToWords({ localeCode: 'en-IN' });
 
   describe('Basic Currency', () => {
     test('converts 0 with currency', () => {
@@ -660,7 +662,7 @@ describe('Currency Options Combinations', () => {
 });
 
 describe('Negative Number Tests', () => {
-  const toWords = new ToWords();
+  const toWords = new ToWords({ localeCode: 'en-IN' });
 
   describe('Negative Integers', () => {
     test('converts -1 correctly', () => {
@@ -702,7 +704,7 @@ describe('Negative Number Tests', () => {
 });
 
 describe('BigInt Extended Tests', () => {
-  const toWords = new ToWords();
+  const toWords = new ToWords({ localeCode: 'en-IN' });
 
   describe('BigInt Basic', () => {
     test('converts 1n correctly', () => {
@@ -740,7 +742,7 @@ describe('BigInt Extended Tests', () => {
 });
 
 describe('Ordinal Number Tests', () => {
-  const toWords = new ToWords();
+  const toWords = new ToWords({ localeCode: 'en-IN' });
 
   describe('Invalid Ordinal Inputs', () => {
     test('throws for negative numbers', () => {
@@ -805,15 +807,29 @@ describe('Ordinal Number Tests', () => {
 
 describe('Locale Handling Tests', () => {
   describe('Locale Code Format', () => {
-    test('locale code must match exact format (case-sensitive)', () => {
-      // The library uses exact locale codes, so case matters
-      expect(() => new ToWords({ localeCode: 'en-in' }).convert(100)).toThrow(/Unknown Locale/);
-      expect(() => new ToWords({ localeCode: 'EN-IN' }).convert(100)).toThrow(/Unknown Locale/);
+    test('canonicalizes case and separator variants', () => {
+      expect(new ToWords({ localeCode: 'en-in' as never }).convert(100)).toBe('One Hundred');
+      expect(new ToWords({ localeCode: 'EN_IN' as never }).convert(100)).toBe('One Hundred');
     });
 
     test('correct locale code works', () => {
       const toWords = new ToWords({ localeCode: 'en-IN' });
       expect(toWords.convert(100)).toBe('One Hundred');
+    });
+
+    test('uses et-EE for Estonian and rejects the former ee-EE code', () => {
+      expect(new ToWords({ localeCode: 'et-EE' }).convert(42)).toBe('Nelikümmend Kaks');
+      expect(() => new ToWords({ localeCode: 'ee-EE' as never }).convert(42)).toThrow('use "et-EE" instead');
+    });
+
+    test('uses ne-NP for Nepali and rejects the former np-NP code', () => {
+      expect(new ToWords({ localeCode: 'ne-NP' }).convert(42)).toBe('बयालीस');
+      expect(() => new ToWords({ localeCode: 'np-NP' as never }).convert(42)).toThrow('use "ne-NP" instead');
+    });
+
+    test('does not treat inherited object properties as locale codes', () => {
+      expect(() => new ToWords({ localeCode: 'toString' as never }).convert(42)).toThrow('Unknown Locale "toString"');
+      expect(() => toWordsFn(42, { localeCode: 'constructor' as never })).toThrow('Unknown Locale "constructor"');
     });
   });
 
@@ -833,7 +849,7 @@ describe('Locale Handling Tests', () => {
 });
 
 describe('isValidNumber Method Tests', () => {
-  const toWords = new ToWords();
+  const toWords = new ToWords({ localeCode: 'en-IN' });
 
   describe('Valid Numbers', () => {
     test('returns true for positive integer', () => {
@@ -901,7 +917,7 @@ describe('isValidNumber Method Tests', () => {
 });
 
 describe('isFloat Method Tests', () => {
-  const toWords = new ToWords();
+  const toWords = new ToWords({ localeCode: 'en-IN' });
 
   describe('Float Detection', () => {
     test('returns true for decimal number', () => {
@@ -941,7 +957,7 @@ describe('isFloat Method Tests', () => {
 });
 
 describe('toFixed Method Tests', () => {
-  const toWords = new ToWords();
+  const toWords = new ToWords({ localeCode: 'en-IN' });
 
   describe('Rounding', () => {
     test('rounds to 2 decimal places', () => {
@@ -985,7 +1001,7 @@ describe('toFixed Method Tests', () => {
 });
 
 describe('Consistency Tests', () => {
-  const toWords = new ToWords();
+  const toWords = new ToWords({ localeCode: 'en-IN' });
 
   describe('Number and String Consistency', () => {
     test('number and string produce same result', () => {
@@ -1058,8 +1074,8 @@ describe('toWords() functional helper', () => {
   });
 
   test('rejects unsupported locale codes before helper caching', () => {
-    expect(() => toWordsFn(1, { localeCode: 'invalid-one' })).toThrow('Unknown Locale "invalid-one"');
-    expect(() => toWordsFn(1, { localeCode: 'invalid-two' })).toThrow('Unknown Locale "invalid-two"');
+    expect(() => toWordsFn(1, { localeCode: 'invalid-one' as never })).toThrow('Unknown Locale "invalid-one"');
+    expect(() => toWordsFn(1, { localeCode: 'invalid-two' as never })).toThrow('Unknown Locale "invalid-two"');
   });
 });
 
@@ -1140,6 +1156,12 @@ describe('detectLocale()', () => {
     expect(detectLocaleFn('en-US')).toBe('en-US');
   });
 
+  test('canonicalizes the fallback and rejects an unsupported dynamic fallback', () => {
+    setLocaleDetectorFn(() => 'xx-XX');
+    expect(detectLocaleFn('EN_us' as never)).toBe('en-US');
+    expect(detectLocaleFn('also-invalid' as never)).toBe('en-IN');
+  });
+
   test('exact match: returns locale as-is when it is in LOCALES', () => {
     setLocaleDetectorFn(() => 'fr-FR');
     expect(detectLocaleFn()).toBe('fr-FR');
@@ -1165,11 +1187,25 @@ describe('detectLocale()', () => {
     ['EN-us', 'en-US'],
     ['en_US', 'en-US'],
     ['es', 'es-ES'],
+    ['et', 'et-EE'],
+    ['ET-ee', 'et-EE'],
+    ['ne', 'ne-NP'],
+    ['NE-np', 'ne-NP'],
     ['pt', 'pt-BR'],
     ['sw-ZZ', 'sw-KE'],
   ])('canonicalises %s to deterministic locale %s', (input, expected) => {
     setLocaleDetectorFn(() => input);
     expect(detectLocaleFn()).toBe(expected);
+  });
+
+  test('does not interpret the Ewe locale ee-EE as Estonian', () => {
+    setLocaleDetectorFn(() => 'ee-EE');
+    expect(detectLocaleFn()).toBe('en-IN');
+  });
+
+  test('does not treat inherited object properties as detected locales', () => {
+    setLocaleDetectorFn(() => 'toString');
+    expect(detectLocaleFn('en-GB')).toBe('en-GB');
   });
 
   test('falls back safely for a malformed locale', () => {
@@ -1255,6 +1291,128 @@ describe('locale configuration immutability', () => {
       config.texts.and = 'Mutated';
     }).toThrow(TypeError);
     expect(toWords.convert(101)).toBe('One Hundred One');
+  });
+});
+
+describe('v7 locale resolution and public state', () => {
+  afterEach(() => {
+    setLocaleDetectorFn(null);
+  });
+
+  test('uses the same canonical resolver for public inputs and class construction', () => {
+    expect(resolveLocaleFn('EN_us')).toBe('en-US');
+    expect(resolveLocaleFn('zh-Hant-TW')).toBe('zh-TW');
+    expect(resolveLocaleFn('xx-XX')).toBeUndefined();
+    expect(new ToWords({ localeCode: 'EN_us' as never }).convert(100_000)).toBe('One Hundred Thousand');
+  });
+
+  test('auto-detects the root class locale when localeCode is omitted', () => {
+    setLocaleDetectorFn(() => 'fr-FR');
+    expect(new ToWords().convert(80)).toBe('Quatre-Vingts');
+  });
+
+  test('freezes exported defaults and the bundled locale registry', () => {
+    expect(Object.isFrozen(DefaultConverterOptions)).toBe(true);
+    expect(Object.isFrozen(DefaultToWordsOptions)).toBe(true);
+    expect(Object.isFrozen(LOCALES)).toBe(true);
+    expect(() => {
+      (LOCALES as Record<string, unknown>)['xx-XX'] = class {};
+    }).toThrow(TypeError);
+  });
+
+  test('snapshots nested constructor options', () => {
+    const currencyOptions = {
+      name: 'Token',
+      plural: 'Tokens',
+      singular: 'Token',
+      symbol: 'T',
+      numberSpecificForms: { 2: 'Two Tokens' },
+      fractionalUnit: {
+        name: 'Part',
+        plural: 'Parts',
+        singular: 'Part',
+        symbol: 'p',
+        numberSpecificForms: { 2: 'Two Parts' },
+      },
+    };
+    const tw = new ToWords({ localeCode: 'en-US', converterOptions: { currency: true, currencyOptions } });
+
+    currencyOptions.plural = 'Mutated';
+    currencyOptions.numberSpecificForms[2] = 'Mutated Tokens';
+    currencyOptions.fractionalUnit.plural = 'Mutated Parts';
+    currencyOptions.fractionalUnit.numberSpecificForms[2] = 'Mutated Parts';
+
+    expect(tw.convert(2.02)).toBe('Two Tokens And Two Parts Only');
+
+    const withoutSpecificForms = {
+      name: 'Credit',
+      plural: 'Credits',
+      symbol: 'C',
+      fractionalUnit: { name: 'Unit', plural: 'Units', symbol: 'u' },
+    };
+    const simple = new ToWords({
+      localeCode: 'en-US',
+      converterOptions: { currency: true, currencyOptions: withoutSpecificForms },
+    });
+    expect(simple.convert(2.02)).toBe('Two Credits And Two Units Only');
+  });
+});
+
+describe('v7 locale validation and strict ranges', () => {
+  test('validates a custom locale automatically before its first conversion', async () => {
+    const { default: EnUsLocale } = await import('../src/locales/en-US.js');
+    class InvalidLocale extends EnUsLocale {
+      public config = { ...new EnUsLocale().config, numberWordsMapping: [] };
+    }
+
+    const tw = new ToWords({ localeCode: 'en-US' }).setLocale(InvalidLocale, 'invalid-test');
+    expect(() => tw.convert(1)).toThrow(/Invalid locale configuration/);
+  });
+
+  test.each(['cardinal', 'ordinal', 'currency'] as const)(
+    'enforces the %s ceiling with structured errors',
+    async (form) => {
+      const { default: EnUsLocale } = await import('../src/locales/en-US.js');
+      class LimitedLocale extends EnUsLocale {
+        public config = {
+          ...new EnUsLocale().config,
+          maximumSupportedValues: { cardinal: 100, ordinal: 100, currency: 100 },
+        };
+      }
+
+      const tw = new ToWords({ localeCode: 'en-US' }).setLocale(LimitedLocale, 'limited-test');
+      const convert = () => {
+        if (form === 'ordinal') {
+          return tw.toOrdinal(101);
+        }
+        return tw.convert(101, { currency: form === 'currency' });
+      };
+
+      let error: unknown;
+      try {
+        convert();
+      } catch (caught) {
+        error = caught;
+      }
+      expect(error).toBeInstanceOf(NumberOutOfRangeError);
+      expect(error).toMatchObject({
+        code: 'NUMBER_OUT_OF_RANGE',
+        localeCode: 'limited-test',
+        form,
+        value: '101',
+        maximumSupported: '100',
+      });
+    },
+  );
+
+  test('preserves legacy recursive composition as an explicit opt-in', async () => {
+    const { default: EnUsLocale } = await import('../src/locales/en-US.js');
+    class LimitedLocale extends EnUsLocale {
+      public config = { ...new EnUsLocale().config, maximumSupportedValues: { cardinal: 100 } };
+    }
+    const tw = new ToWords({ localeCode: 'en-US' }).setLocale(LimitedLocale, 'limited-test');
+
+    expect(tw.convert(101, { rangeMode: 'compose' })).toBe('One Hundred One');
   });
 });
 

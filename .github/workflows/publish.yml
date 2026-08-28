@@ -49,8 +49,8 @@ jobs:
       - name: Verify compiled runtimes
         run: npm run test:runtime
 
-      - name: Verify package contents
-        run: npm pack --dry-run --ignore-scripts
+      - name: Verify installable package artifact
+        run: npm run test:package
 
       - name: Publish to npm
         run: npm publish

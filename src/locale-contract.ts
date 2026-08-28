@@ -1,4 +1,4 @@
-import type { LocaleConfig, NumberWordMap, OrdinalWordMap } from './types.js';
+import type { ConversionForm, LocaleConfig, NumberInput, NumberWordMap, OrdinalWordMap } from './types.js';
 
 const DEFAULT_CURRENCY_PRECISION = 2;
 
@@ -35,8 +35,10 @@ export type LocaleRangeMetadata = Readonly<{
   largestNamedMagnitude: string;
   /** Base-10 exponent when largestNamedMagnitude is an exact power of ten. */
   largestNamedMagnitudeExponent: number | null;
-  /** bigint and integer-string inputs are not capped by the named scale list. */
-  arbitraryPrecisionInput: true;
+  /** Inclusive verified integer ceiling for each conversion form, represented without precision loss. */
+  maximumSupported: Readonly<Record<ConversionForm, string>>;
+  /** Recursive reuse of the largest configured scale remains available as an explicit opt-in. */
+  composeModeAvailable: true;
 }>;
 
 export type LocaleMetadata = Readonly<{
@@ -95,6 +97,50 @@ function getGrouping(system: NumberingSystem): readonly number[] {
   }
 }
 
+function parsePositiveInteger(value: NumberInput): bigint | undefined {
+  try {
+    const parsed = BigInt(value);
+    return parsed >= 0n ? parsed : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+function getOuterGroupingWidth(system: NumberingSystem, exponents: readonly number[]): number {
+  const grouping = getGrouping(system);
+  if (grouping.length > 0) {
+    return grouping.at(-1)!;
+  }
+  if (exponents.length > 1) {
+    return exponents.at(-1)! - exponents.at(-2)!;
+  }
+  return 3;
+}
+
+/** Derive the inclusive verified ceiling used by strict conversion mode. */
+export function deriveMaximumSupportedValues(config: LocaleConfig): Readonly<Record<ConversionForm, string>> {
+  const configuredMagnitudes = config.numberWordsMapping.map(({ number }) => BigInt(number));
+  const largeMagnitudes = configuredMagnitudes.filter((number) => number >= 1000n);
+  const exponents = [
+    ...new Set(largeMagnitudes.map(getPowerOfTenExponent).filter((value): value is number => value !== null)),
+  ].sort((left, right) => left - right);
+  const system = getNumberingSystem(largeMagnitudes, exponents);
+  const largestNamedMagnitude = configuredMagnitudes.reduce(
+    (largest, current) => (current > largest ? current : largest),
+    0n,
+  );
+  const derivedMaximum = largestNamedMagnitude * 10n ** BigInt(getOuterGroupingWidth(system, exponents)) - 1n;
+  const overrides = config.maximumSupportedValues;
+  const resolve = (form: ConversionForm): string =>
+    (overrides?.[form] === undefined ? derivedMaximum : parsePositiveInteger(overrides[form])!)!.toString();
+
+  return Object.freeze({
+    cardinal: resolve('cardinal'),
+    ordinal: resolve('ordinal'),
+    currency: resolve('currency'),
+  });
+}
+
 /** Derive public feature metadata directly from a locale configuration. */
 export function deriveLocaleCapabilities(config: LocaleConfig): LocaleCapabilities {
   const fractionDigits = getFractionDigits(config);
@@ -148,7 +194,8 @@ export function deriveLocaleMetadata(config: LocaleConfig): LocaleMetadata {
     range: Object.freeze({
       largestNamedMagnitude: largestNamedMagnitude.toString(),
       largestNamedMagnitudeExponent: getPowerOfTenExponent(largestNamedMagnitude),
-      arbitraryPrecisionInput: true as const,
+      maximumSupported: deriveMaximumSupportedValues(config),
+      composeModeAvailable: true as const,
     }),
   });
 }
@@ -236,6 +283,12 @@ function validateResolvedConfig(config: LocaleConfig, name: string): string[] {
   const ordinalSuffixes = config.ordinalGenderSuffixMapping;
   if (ordinalSuffixes && (!ordinalSuffixes.masculine || !ordinalSuffixes.feminine)) {
     issues.push(`${name}.ordinalGenderSuffixMapping values must be non-empty`);
+  }
+
+  for (const [form, value] of Object.entries(config.maximumSupportedValues ?? {})) {
+    if (parsePositiveInteger(value) === undefined) {
+      issues.push(`${name}.maximumSupportedValues.${form} must be a non-negative integer`);
+    }
   }
 
   for (const [digits, denominator] of Object.entries(config.fractionDenominatorMapping ?? {})) {

@@ -23,7 +23,6 @@ export type GeneratedLocaleCode =
   | 'de-AT'
   | 'de-CH'
   | 'de-DE'
-  | 'ee-EE'
   | 'el-GR'
   | 'en-AE'
   | 'en-AU'
@@ -64,6 +63,7 @@ export type GeneratedLocaleCode =
   | 'es-PE'
   | 'es-US'
   | 'es-VE'
+  | 'et-EE'
   | 'fa-IR'
   | 'fi-FI'
   | 'fil-PH'
@@ -102,9 +102,9 @@ export type GeneratedLocaleCode =
   | 'ms-SG'
   | 'my-MM'
   | 'nb-NO'
+  | 'ne-NP'
   | 'nl-NL'
   | 'nl-SR'
-  | 'np-NP'
   | 'or-IN'
   | 'pa-IN'
   | 'pl-PL'
@@ -136,6 +136,8 @@ export type GeneratedLocaleCode =
   | 'zh-TW'
   | 'zu-ZA';
 
+type CompactInteger = number | string;
+
 type LocaleCapabilityDatum = readonly [
   ordinal: boolean,
   formal: boolean,
@@ -148,6 +150,9 @@ type LocaleCapabilityDatum = readonly [
   largeUnitExponents: readonly number[],
   largestNamedMagnitude: string,
   largestNamedMagnitudeExponent: number | null,
+  maximumSupported:
+    | CompactInteger
+    | readonly [cardinal: CompactInteger, ordinal: CompactInteger, currency: CompactInteger],
 ];
 
 export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, LocaleCapabilityDatum>> = {
@@ -163,17 +168,18 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
-  'am-ET': [true, false, false, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15],
-  'ar-AE': [true, false, true, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15],
-  'ar-DZ': [true, false, true, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15],
-  'ar-EG': [true, false, true, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15],
-  'ar-IQ': [true, false, true, false, [], 3, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15],
-  'ar-LB': [true, false, true, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15],
-  'ar-MA': [true, false, true, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15],
-  'ar-SA': [true, false, true, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15],
-  'ar-SD': [true, false, true, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15],
-  'ar-YE': [true, false, true, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15],
+  'am-ET': [true, false, false, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15, 18],
+  'ar-AE': [true, false, true, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15, 18],
+  'ar-DZ': [true, false, true, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15, 18],
+  'ar-EG': [true, false, true, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15, 18],
+  'ar-IQ': [true, false, true, false, [], 3, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15, 18],
+  'ar-LB': [true, false, true, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15, 18],
+  'ar-MA': [true, false, true, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15, 18],
+  'ar-SA': [true, false, true, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15, 18],
+  'ar-SD': [true, false, true, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15, 18],
+  'ar-YE': [true, false, true, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15, 18],
   'as-IN': [
     true,
     false,
@@ -186,8 +192,9 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 5, 7, 9, 11, 13, 15, 17],
     '100000000000000000',
     17,
+    19,
   ],
-  'az-AZ': [true, false, false, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15],
+  'az-AZ': [true, false, false, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15, 18],
   'be-BY': [
     true,
     false,
@@ -200,6 +207,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
   'bg-BG': [
     true,
@@ -213,6 +221,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
   'bn-BD': [
     true,
@@ -226,6 +235,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 5, 7, 9, 11, 13, 15, 17],
     '100000000000000000',
     17,
+    19,
   ],
   'bn-IN': [
     true,
@@ -239,6 +249,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 5, 7, 9, 11, 13, 15, 17],
     '100000000000000000',
     17,
+    19,
   ],
   'ca-ES': [
     true,
@@ -252,6 +263,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
   'cs-CZ': [
     true,
@@ -265,6 +277,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
   'da-DK': [
     true,
@@ -278,6 +291,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
   'de-AT': [
     true,
@@ -291,6 +305,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27],
     '1000000000000000000000000000',
     27,
+    30,
   ],
   'de-CH': [
     true,
@@ -304,6 +319,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27],
     '1000000000000000000000000000',
     27,
+    30,
   ],
   'de-DE': [
     true,
@@ -317,8 +333,8 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27],
     '1000000000000000000000000000',
     27,
+    30,
   ],
-  'ee-EE': [true, false, false, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15],
   'el-GR': [
     true,
     false,
@@ -331,6 +347,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
   'en-AE': [
     true,
@@ -344,6 +361,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63],
     '1000000000000000000000000000000000000000000000000000000000000000',
     63,
+    66,
   ],
   'en-AU': [
     true,
@@ -357,6 +375,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63],
     '1000000000000000000000000000000000000000000000000000000000000000',
     63,
+    66,
   ],
   'en-BD': [
     true,
@@ -370,6 +389,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 5, 7, 9, 11, 13, 15, 17],
     '100000000000000000',
     17,
+    19,
   ],
   'en-CA': [
     true,
@@ -383,6 +403,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63],
     '1000000000000000000000000000000000000000000000000000000000000000',
     63,
+    66,
   ],
   'en-GB': [
     true,
@@ -396,6 +417,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63],
     '1000000000000000000000000000000000000000000000000000000000000000',
     63,
+    66,
   ],
   'en-GH': [
     true,
@@ -409,6 +431,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63],
     '1000000000000000000000000000000000000000000000000000000000000000',
     63,
+    66,
   ],
   'en-HK': [
     true,
@@ -422,6 +445,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63],
     '1000000000000000000000000000000000000000000000000000000000000000',
     63,
+    66,
   ],
   'en-IE': [
     true,
@@ -435,6 +459,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63],
     '1000000000000000000000000000000000000000000000000000000000000000',
     63,
+    66,
   ],
   'en-IN': [
     true,
@@ -448,6 +473,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 5, 7, 9, 11, 13, 15, 17],
     '100000000000000000',
     17,
+    19,
   ],
   'en-IQ': [
     true,
@@ -461,6 +487,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63],
     '1000000000000000000000000000000000000000000000000000000000000000',
     63,
+    66,
   ],
   'en-JM': [
     true,
@@ -474,6 +501,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63],
     '1000000000000000000000000000000000000000000000000000000000000000',
     63,
+    66,
   ],
   'en-KE': [
     true,
@@ -487,6 +515,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63],
     '1000000000000000000000000000000000000000000000000000000000000000',
     63,
+    66,
   ],
   'en-LK': [
     true,
@@ -500,6 +529,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63],
     '1000000000000000000000000000000000000000000000000000000000000000',
     63,
+    66,
   ],
   'en-MA': [
     true,
@@ -513,6 +543,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63],
     '1000000000000000000000000000000000000000000000000000000000000000',
     63,
+    66,
   ],
   'en-MM': [
     true,
@@ -526,6 +557,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63],
     '1000000000000000000000000000000000000000000000000000000000000000',
     63,
+    66,
   ],
   'en-MU': [
     true,
@@ -539,6 +571,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 5, 7, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63],
     '1000000000000000000000000000000000000000000000000000000000000000',
     63,
+    65,
   ],
   'en-MY': [
     true,
@@ -552,6 +585,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63],
     '1000000000000000000000000000000000000000000000000000000000000000',
     63,
+    66,
   ],
   'en-NG': [
     true,
@@ -565,6 +599,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63],
     '1000000000000000000000000000000000000000000000000000000000000000',
     63,
+    66,
   ],
   'en-NP': [
     true,
@@ -578,6 +613,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 5, 7, 9, 11, 13, 15, 17],
     '100000000000000000',
     17,
+    19,
   ],
   'en-NZ': [
     true,
@@ -591,6 +627,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63],
     '1000000000000000000000000000000000000000000000000000000000000000',
     63,
+    66,
   ],
   'en-OM': [
     true,
@@ -604,6 +641,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63],
     '1000000000000000000000000000000000000000000000000000000000000000',
     63,
+    66,
   ],
   'en-PH': [
     true,
@@ -617,6 +655,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63],
     '1000000000000000000000000000000000000000000000000000000000000000',
     63,
+    66,
   ],
   'en-PK': [
     true,
@@ -630,6 +669,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 5, 7, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63],
     '1000000000000000000000000000000000000000000000000000000000000000',
     63,
+    65,
   ],
   'en-SA': [
     true,
@@ -643,6 +683,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63],
     '1000000000000000000000000000000000000000000000000000000000000000',
     63,
+    66,
   ],
   'en-SG': [
     true,
@@ -656,6 +697,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63],
     '1000000000000000000000000000000000000000000000000000000000000000',
     63,
+    66,
   ],
   'en-TT': [
     true,
@@ -669,6 +711,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63],
     '1000000000000000000000000000000000000000000000000000000000000000',
     63,
+    66,
   ],
   'en-TZ': [
     true,
@@ -682,6 +725,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63],
     '1000000000000000000000000000000000000000000000000000000000000000',
     63,
+    66,
   ],
   'en-UG': [
     true,
@@ -695,6 +739,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63],
     '1000000000000000000000000000000000000000000000000000000000000000',
     63,
+    66,
   ],
   'en-US': [
     true,
@@ -708,6 +753,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63],
     '1000000000000000000000000000000000000000000000000000000000000000',
     63,
+    66,
   ],
   'en-ZA': [
     true,
@@ -721,6 +767,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63],
     '1000000000000000000000000000000000000000000000000000000000000000',
     63,
+    66,
   ],
   'en-ZW': [
     true,
@@ -734,6 +781,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63],
     '1000000000000000000000000000000000000000000000000000000000000000',
     63,
+    66,
   ],
   'es-AR': [
     true,
@@ -747,6 +795,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
   'es-CL': [
     true,
@@ -760,6 +809,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
   'es-CO': [
     true,
@@ -773,6 +823,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
   'es-ES': [
     true,
@@ -786,6 +837,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
   'es-MX': [
     true,
@@ -799,6 +851,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
   'es-PE': [
     true,
@@ -812,6 +865,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
   'es-US': [
     true,
@@ -825,6 +879,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
   'es-VE': [
     true,
@@ -838,7 +893,9 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
+  'et-EE': [true, false, false, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15, 18],
   'fa-IR': [
     true,
     false,
@@ -851,9 +908,10 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
-  'fi-FI': [true, false, false, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15],
-  'fil-PH': [true, false, false, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15],
+  'fi-FI': [true, false, false, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15, 18],
+  'fil-PH': [true, false, false, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15, 18],
   'fr-BE': [
     true,
     false,
@@ -866,6 +924,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27],
     '1000000000000000000000000000',
     27,
+    30,
   ],
   'fr-CA': [
     true,
@@ -879,6 +938,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27],
     '1000000000000000000000000000',
     27,
+    30,
   ],
   'fr-CH': [
     true,
@@ -892,6 +952,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27],
     '1000000000000000000000000000',
     27,
+    30,
   ],
   'fr-CI': [
     true,
@@ -905,6 +966,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27],
     '1000000000000000000000000000',
     27,
+    30,
   ],
   'fr-CM': [
     true,
@@ -918,6 +980,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27],
     '1000000000000000000000000000',
     27,
+    30,
   ],
   'fr-DZ': [
     true,
@@ -931,6 +994,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27],
     '1000000000000000000000000000',
     27,
+    30,
   ],
   'fr-FR': [
     true,
@@ -944,6 +1008,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27],
     '1000000000000000000000000000',
     27,
+    30,
   ],
   'fr-MA': [
     true,
@@ -957,6 +1022,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27],
     '1000000000000000000000000000',
     27,
+    30,
   ],
   'fr-MG': [
     true,
@@ -970,6 +1036,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27],
     '1000000000000000000000000000',
     27,
+    30,
   ],
   'fr-SA': [
     true,
@@ -983,6 +1050,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15, 18, 21, 24, 27],
     '1000000000000000000000000000',
     27,
+    30,
   ],
   'gu-IN': [
     true,
@@ -996,9 +1064,10 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 5, 7, 9, 11, 13, 15, 17],
     '100000000000000000',
     17,
+    19,
   ],
-  'ha-NG': [true, false, false, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15],
-  'hbo-IL': [true, false, true, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15],
+  'ha-NG': [true, false, false, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15, 18],
+  'hbo-IL': [true, false, true, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15, 18],
   'he-IL': [
     true,
     false,
@@ -1011,6 +1080,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
   'hi-IN': [
     true,
@@ -1024,6 +1094,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 5, 7, 9, 11, 13, 15, 17],
     '100000000000000000',
     17,
+    19,
   ],
   'hr-HR': [
     true,
@@ -1037,6 +1108,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
   'hu-HU': [
     true,
@@ -1050,6 +1122,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
   'id-ID': [
     true,
@@ -1063,9 +1136,10 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
-  'ig-NG': [true, false, false, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15],
-  'is-IS': [true, false, false, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15],
+  'ig-NG': [true, false, false, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15, 18],
+  'is-IS': [true, false, false, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15, 18],
   'it-IT': [
     true,
     false,
@@ -1078,6 +1152,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
   'ja-JP': [
     true,
@@ -1091,8 +1166,9 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
     '100000000000000000000',
     20,
+    24,
   ],
-  'jv-ID': [true, false, false, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15],
+  'jv-ID': [true, false, false, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15, 18],
   'ka-GE': [
     true,
     false,
@@ -1105,8 +1181,9 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
-  'km-KH': [true, false, false, false, [], 2, 'locale-specific', [], [3, 4, 5, 6, 9, 12], '1000000000000', 12],
+  'km-KH': [true, false, false, false, [], 2, 'locale-specific', [], [3, 4, 5, 6, 9, 12], '1000000000000', 12, 15],
   'kn-IN': [
     true,
     false,
@@ -1119,6 +1196,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 5, 7, 9, 11, 13, 15, 17],
     '100000000000000000',
     17,
+    19,
   ],
   'ko-KR': [
     true,
@@ -1132,8 +1210,9 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 4, 8, 12, 16, 17, 18, 19, 20],
     '100000000000000000000',
     20,
+    24,
   ],
-  'lt-LT': [true, false, true, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15],
+  'lt-LT': [true, false, true, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15, 18],
   'lv-LV': [
     true,
     false,
@@ -1146,6 +1225,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
   'ml-IN': [
     true,
@@ -1159,6 +1239,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 5, 7, 9, 11, 13, 15, 17],
     '100000000000000000',
     17,
+    19,
   ],
   'mr-IN': [
     true,
@@ -1172,6 +1253,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 5, 7, 9, 11, 13, 15, 17],
     '100000000000000000',
     17,
+    19,
   ],
   'ms-MY': [
     true,
@@ -1185,6 +1267,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
   'ms-SG': [
     true,
@@ -1198,8 +1281,9 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
-  'my-MM': [true, false, false, false, [], 2, 'locale-specific', [], [3, 4, 5, 6, 9, 12], '1000000000000', 12],
+  'my-MM': [true, false, false, false, [], 2, 'locale-specific', [], [3, 4, 5, 6, 9, 12], '1000000000000', 12, 15],
   'nb-NO': [
     true,
     false,
@@ -1212,6 +1296,21 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
+    18,
+  ],
+  'ne-NP': [
+    true,
+    false,
+    false,
+    false,
+    [1, 2, 3, 4, 5, 6],
+    2,
+    'indian',
+    [3, 2],
+    [3, 5, 7, 9, 11, 13, 15, 17],
+    '100000000000000000',
+    17,
+    19,
   ],
   'nl-NL': [
     true,
@@ -1225,6 +1324,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
   'nl-SR': [
     true,
@@ -1238,19 +1338,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
-  ],
-  'np-NP': [
-    true,
-    false,
-    false,
-    false,
-    [1, 2, 3, 4, 5, 6],
-    2,
-    'indian',
-    [3, 2],
-    [3, 5, 7, 9, 11, 13, 15, 17],
-    '100000000000000000',
-    17,
+    18,
   ],
   'or-IN': [
     true,
@@ -1264,6 +1352,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 5, 7, 9, 11, 13, 15, 17],
     '100000000000000000',
     17,
+    19,
   ],
   'pa-IN': [
     true,
@@ -1277,6 +1366,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 5, 7, 9, 11, 13, 15, 17],
     '100000000000000000',
     17,
+    19,
   ],
   'pl-PL': [
     true,
@@ -1290,6 +1380,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
   'pt-AO': [
     true,
@@ -1303,6 +1394,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
   'pt-BR': [
     true,
@@ -1316,6 +1408,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
   'pt-MZ': [
     true,
@@ -1329,6 +1422,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
   'pt-PT': [
     true,
@@ -1342,6 +1436,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
   'ro-RO': [
     true,
@@ -1355,6 +1450,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
   'ru-RU': [
     true,
@@ -1368,8 +1464,9 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
-  'si-LK': [true, false, false, false, [], 2, 'locale-specific', [], [3, 5, 6, 9, 12], '1000000000000', 12],
+  'si-LK': [true, false, false, false, [], 2, 'locale-specific', [], [3, 5, 6, 9, 12], '1000000000000', 12, 15],
   'sk-SK': [
     true,
     false,
@@ -1382,6 +1479,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
   'sl-SI': [
     true,
@@ -1395,6 +1493,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
   'sq-AL': [
     true,
@@ -1408,6 +1507,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
   'sr-RS': [
     true,
@@ -1421,6 +1521,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
   'sv-SE': [
     true,
@@ -1434,9 +1535,10 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
-  'sw-KE': [true, false, false, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15],
-  'sw-TZ': [true, false, false, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15],
+  'sw-KE': [true, false, false, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15, 18],
+  'sw-TZ': [true, false, false, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15, 18],
   'ta-IN': [
     true,
     false,
@@ -1449,6 +1551,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 5, 7, 9, 11, 13, 15, 17],
     '100000000000000000',
     17,
+    19,
   ],
   'te-IN': [
     true,
@@ -1462,9 +1565,23 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 5, 7, 9, 11, 13, 15, 17],
     '100000000000000000',
     17,
+    19,
   ],
-  'th-TH': [true, false, false, false, [], 2, 'locale-specific', [], [3, 4, 5, 6, 9, 12, 15], '1000000000000000', 15],
-  'tr-TR': [true, false, false, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15],
+  'th-TH': [
+    true,
+    false,
+    false,
+    false,
+    [],
+    2,
+    'locale-specific',
+    [],
+    [3, 4, 5, 6, 9, 12, 15],
+    '1000000000000000',
+    15,
+    18,
+  ],
+  'tr-TR': [true, false, false, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15, 18],
   'uk-UA': [
     true,
     false,
@@ -1477,9 +1594,23 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
-  'ur-PK': [true, false, false, false, [1, 2, 3, 4, 5, 6], 2, 'indian', [3, 2], [3, 5, 7], '10000000', 7],
-  'uz-UZ': [true, false, false, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12], '1000000000000', 12],
+  'ur-PK': [
+    true,
+    false,
+    false,
+    false,
+    [1, 2, 3, 4, 5, 6],
+    2,
+    'indian',
+    [3, 2],
+    [3, 5, 7],
+    '10000000',
+    7,
+    ['98765432101234', 9, '98765432101234'],
+  ],
+  'uz-UZ': [true, false, false, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12], '1000000000000', 12, 15],
   'vi-VN': [
     true,
     false,
@@ -1492,8 +1623,9 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 6, 9, 12, 15],
     '1000000000000000',
     15,
+    18,
   ],
-  'yo-NG': [true, false, false, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15],
+  'yo-NG': [true, false, false, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15, 18],
   'yue-HK': [
     true,
     false,
@@ -1506,6 +1638,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
     '100000000000000000000',
     20,
+    24,
   ],
   'zh-CN': [
     true,
@@ -1519,6 +1652,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
     '100000000000000000000',
     20,
+    24,
   ],
   'zh-TW': [
     true,
@@ -1532,6 +1666,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
     '100000000000000000000',
     20,
+    24,
   ],
-  'zu-ZA': [true, false, false, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12], '1000000000000', 12],
+  'zu-ZA': [true, false, false, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12], '1000000000000', 12, 15],
 };

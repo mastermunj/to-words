@@ -136,7 +136,12 @@ describe('locale contract', () => {
       range: {
         largestNamedMagnitude: String(mappings[0].number),
         largestNamedMagnitudeExponent: exponents.at(-1),
-        arbitraryPrecisionInput: true,
+        maximumSupported: {
+          cardinal: (BigInt(mappings[0].number) * 10n ** BigInt(grouping.at(-1)!) - 1n).toString(),
+          ordinal: (BigInt(mappings[0].number) * 10n ** BigInt(grouping.at(-1)!) - 1n).toString(),
+          currency: (BigInt(mappings[0].number) * 10n ** BigInt(grouping.at(-1)!) - 1n).toString(),
+        },
+        composeModeAvailable: true,
       },
     });
     expect(Object.isFrozen(metadata)).toBe(true);
@@ -162,7 +167,12 @@ describe('locale contract', () => {
       range: {
         largestNamedMagnitude: '1001',
         largestNamedMagnitudeExponent: null,
-        arbitraryPrecisionInput: true,
+        maximumSupported: {
+          cardinal: '1000999',
+          ordinal: '1000999',
+          currency: '1000999',
+        },
+        composeModeAvailable: true,
       },
     });
 
@@ -185,6 +195,25 @@ describe('locale contract', () => {
     expect(validateLocaleConfig(config)).toEqual([]);
     expect(validateLocaleConfig(createConfig({ formalConfig: {} }))).toEqual([]);
     expect(() => assertLocaleConfig(config)).not.toThrow();
+  });
+
+  test('supports explicit per-form verified ceilings', () => {
+    const config = createConfig({
+      maximumSupportedValues: { cardinal: '999', ordinal: 99n, currency: 499 },
+    });
+
+    expect(deriveLocaleMetadata(config).range.maximumSupported).toEqual({
+      cardinal: '999',
+      ordinal: '99',
+      currency: '499',
+    });
+    expect(validateLocaleConfig(config)).toEqual([]);
+    expect(validateLocaleConfig(createConfig({ maximumSupportedValues: { cardinal: '1.5' } }))).toContain(
+      'locale.maximumSupportedValues.cardinal must be a non-negative integer',
+    );
+    expect(validateLocaleConfig(createConfig({ maximumSupportedValues: { ordinal: -1 } }))).toContain(
+      'locale.maximumSupportedValues.ordinal must be a non-negative integer',
+    );
   });
 
   test('reports every conversion-critical invariant violation', () => {

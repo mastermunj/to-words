@@ -10,6 +10,7 @@
 
 import { bench, describe } from 'vitest';
 import { ToWords } from '../src/ToWords';
+import type { LocaleCode } from '../src/locale-manifest.js';
 import type { ConverterOptions } from '../src/types';
 
 // =============================================================================
@@ -42,7 +43,7 @@ let sink: string = '';
 
 for (const localeCode of locales) {
   describe(`${localeCode}`, () => {
-    const toWords = new ToWords({ localeCode });
+    const toWords = new ToWords({ localeCode: localeCode as LocaleCode });
 
     bench(`small int (${testValues.small})`, () => {
       sink = toWords.convert(testValues.small);
