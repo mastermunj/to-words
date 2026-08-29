@@ -7,7 +7,7 @@
 [![license](https://img.shields.io/npm/l/to-words)](https://github.com/mastermunj/to-words/blob/main/LICENSE)
 [![node](https://img.shields.io/node/v/to-words)](https://www.npmjs.com/package/to-words)
 
-Convert numbers and currency amounts into words across 135 locales — production-ready BigInt, ordinal, and TypeScript support.
+Convert numbers and currency amounts into words across 136 locales — production-ready BigInt, ordinal, and TypeScript support.
 
 ```js
 import { toWords } from 'to-words';
@@ -63,7 +63,7 @@ toWords(452.36, { localeCode: 'en-IN', currency: true });
 
 ## ✨ Features
 
-- **135 Locales** — The most comprehensive locale coverage available
+- **136 Locales** — The most comprehensive locale coverage available
 - **BigInt Support** — Exact integer input beyond `Number.MAX_SAFE_INTEGER`, with locale-specific supported ranges
 - **Multiple Numbering Systems** — Short scale, Long scale, Indian, and East Asian
 - **Currency Formatting** — Locale-specific currency with fractional units
@@ -99,7 +99,7 @@ tw.convert(100, { currency: true }); // "One Hundred Dollars Only"
 tw.toOrdinal(3); // "Third"
 ```
 
-**2. Functional (full bundle)** — one-liners with a `localeCode` option, all 135 locales available:
+**2. Functional (full bundle)** — one-liners with a `localeCode` option, all 136 locales available:
 
 ```js
 import { toWords, toOrdinal, toCurrency } from 'to-words';
@@ -479,7 +479,7 @@ isSupportedLocale('en-US'); // true
 getLocaleCapabilities('zh-CN')?.formal; // true
 getLocaleMetadata('hi-IN')?.numbering.grouping; // [3, 2]
 getLocaleMetadata('en-US')?.range.maximumSupported.cardinal; // exact inclusive ceiling
-SUPPORTED_LOCALES.length; // 135
+SUPPORTED_LOCALES.length; // 136
 ```
 
 The manifest contains compact generated capability, numbering-system, and range metadata without loading locale conversion tables. Custom locale classes passed to the full `ToWords` class or `ToWordsCore` are validated automatically on first use; authors can also call `assertLocaleConfig()` from `to-words/locale-contract` in CI. Per-locale entry points use smaller, prevalidated built-in tables. See the [generated capability matrix](https://mastermunj.github.io/to-words/guide/locale-capabilities) and [locale quality gates](https://mastermunj.github.io/to-words/guide/locale-quality).
@@ -576,7 +576,7 @@ Migrating from `number-to-words`, `written-number`, `num-words`, or `n2words`? H
 
 | Capability                 | **to-words**    | number-to-words | written-number | num-words      | n2words       |
 | -------------------------- | --------------- | --------------- | -------------- | -------------- | ------------- |
-| Locale / language coverage | **135 locales** | English-focused | Multi-language | Indian English | 70+ languages |
+| Locale / language coverage | **136 locales** | English-focused | Multi-language | Indian English | 70+ languages |
 | TypeScript declarations    | ✅              | ❌              | ❌             | ✅             | ✅            |
 | ESM-ready package          | ✅              | ❌              | ❌             | ❌             | ✅            |
 | Package `exports` map      | ✅              | ❌              | ❌             | ❌             | ✅            |
@@ -1124,7 +1124,7 @@ Deno, Bun, and Cloudflare Workers are compatible by architecture: the library us
 
 ## 🗺️ Supported Locales
 
-All 135 locales with their core setup are listed below. Numbering-system, grouping, and named-range metadata is maintained in the [generated capability matrix](https://mastermunj.github.io/to-words/guide/locale-capabilities) rather than duplicated here.
+All 136 locales with their core setup are listed below. Numbering-system, grouping, and named-range metadata is maintained in the [generated capability matrix](https://mastermunj.github.io/to-words/guide/locale-capabilities) rather than duplicated here.
 
 | Locale | Language        | Country             | Currency      | Ordinal |
 | ------ | --------------- | ------------------- | ------------- | ------- |
@@ -1222,6 +1222,7 @@ All 135 locales with their core setup are listed below. Numbering-system, groupi
 | km-KH  | Khmer           | Cambodia            | រៀល           | ✓       |
 | kn-IN  | Kannada         | India               | ರೂಪಾಯಿ        | ✓       |
 | ko-KR  | Korean          | South Korea         | 원            | ✓       |
+| lo-LA  | Lao             | Laos                | ກີບ           | ✓       |
 | lt-LT  | Lithuanian      | Lithuania           | Euras         | ✓       |
 | lv-LV  | Latvian         | Latvia              | Eiro          | ✓       |
 | ml-IN  | Malayalam       | India               | രൂപ           | ✓       |

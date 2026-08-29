@@ -1,6 +1,6 @@
 ---
 title: Invoice Amount in Words JavaScript — to-words
-description: Print invoice amounts in words across 135 locales using to-words. Node.js, PDFKit, jsPDF, React, Vue. npm install to-words.
+description: Print invoice amounts in words across 136 locales using to-words. Node.js, PDFKit, jsPDF, React, Vue. npm install to-words.
 head:
   - - meta
     - name: keywords
@@ -9,7 +9,7 @@ head:
 
 # Invoice Amount in Words
 
-Most invoicing regulations globally require the total to be written in words. `to-words` handles 135 locales — generate the right phrase for every customer's jurisdiction.
+Most invoicing regulations globally require the total to be written in words. `to-words` handles 136 locales — generate the right phrase for every customer's jurisdiction.
 
 ## The Problem
 

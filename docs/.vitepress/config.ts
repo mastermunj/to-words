@@ -58,7 +58,7 @@ function getFaqHead(pageFaq: unknown) {
 export default defineConfig({
   title: 'to-words',
   description:
-    'Convert numbers to words in 135 locales — JavaScript, TypeScript, ESM/CJS/UMD, BigInt, currency, ordinal.',
+    'Convert numbers to words in 136 locales — JavaScript, TypeScript, ESM/CJS/UMD, BigInt, currency, ordinal.',
   base: '/to-words/',
   lang: 'en-US',
   cleanUrls: true,
@@ -86,7 +86,7 @@ export default defineConfig({
       {
         property: 'og:description',
         content:
-          'Convert numbers to words in 135 locales — JavaScript, TypeScript, ESM/CJS/UMD, BigInt, currency, ordinal.',
+          'Convert numbers to words in 136 locales — JavaScript, TypeScript, ESM/CJS/UMD, BigInt, currency, ordinal.',
       },
     ],
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
@@ -112,7 +112,7 @@ export default defineConfig({
       {
         text: 'Locales',
         items: [
-          { text: 'Browse All 135 Locales', link: '/locales/' },
+          { text: 'Browse All 136 Locales', link: '/locales/' },
           { text: 'Afrikaans', link: '/locales/afrikaans' },
           { text: 'Albanian', link: '/locales/albanian' },
           { text: 'Amharic', link: '/locales/amharic' },
@@ -150,6 +150,7 @@ export default defineConfig({
           { text: 'Kannada', link: '/locales/kannada' },
           { text: 'Khmer', link: '/locales/khmer' },
           { text: 'Korean', link: '/locales/korean' },
+          { text: 'Lao', link: '/locales/lao' },
           { text: 'Latvian', link: '/locales/latvian' },
           { text: 'Lithuanian', link: '/locales/lithuanian' },
           { text: 'Malay (2 locales)', link: '/locales/malay' },
@@ -224,7 +225,7 @@ export default defineConfig({
       '/locales/': [
         {
           text: 'Locale Directory',
-          items: [{ text: 'Browse All 135 Locales', link: '/locales/' }],
+          items: [{ text: 'Browse All 136 Locales', link: '/locales/' }],
         },
         {
           text: 'Language Guides',
@@ -266,6 +267,7 @@ export default defineConfig({
             { text: 'Kannada', link: '/locales/kannada' },
             { text: 'Khmer', link: '/locales/khmer' },
             { text: 'Korean', link: '/locales/korean' },
+            { text: 'Lao', link: '/locales/lao' },
             { text: 'Latvian', link: '/locales/latvian' },
             { text: 'Lithuanian', link: '/locales/lithuanian' },
             { text: 'Malay', link: '/locales/malay' },

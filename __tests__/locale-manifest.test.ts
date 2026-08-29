@@ -11,7 +11,7 @@ import LOCALES from '../src/locales/index.js';
 
 describe('locale capability manifest', () => {
   test('contains every locale in deterministic order', () => {
-    expect(SUPPORTED_LOCALES).toHaveLength(135);
+    expect(SUPPORTED_LOCALES).toHaveLength(136);
     expect(SUPPORTED_LOCALES).toEqual(Object.keys(LOCALES).sort());
     expect(Object.keys(LOCALE_MANIFEST)).toEqual(SUPPORTED_LOCALES);
     expect(Object.isFrozen(SUPPORTED_LOCALES)).toBe(true);
@@ -36,7 +36,7 @@ describe('locale capability manifest', () => {
     expect(metadata.filter(({ numbering }) => numbering.system === 'base-thousand')).toHaveLength(107);
     expect(metadata.filter(({ numbering }) => numbering.system === 'indian')).toHaveLength(19);
     expect(metadata.filter(({ numbering }) => numbering.system === 'east-asian')).toHaveLength(5);
-    expect(metadata.filter(({ numbering }) => numbering.system === 'locale-specific')).toHaveLength(4);
+    expect(metadata.filter(({ numbering }) => numbering.system === 'locale-specific')).toHaveLength(5);
     expect(metadata.every(({ range }) => range.composeModeAvailable)).toBe(true);
     expect(metadata.every(({ range }) => /^\d+$/.test(range.maximumSupported.cardinal))).toBe(true);
 
@@ -53,7 +53,7 @@ describe('locale capability manifest', () => {
   test('publishes verified aggregate capability counts', () => {
     const capabilities = SUPPORTED_LOCALES.map((localeCode) => LOCALE_MANIFEST[localeCode].capabilities);
 
-    expect(capabilities.filter(({ ordinal }) => ordinal)).toHaveLength(135);
+    expect(capabilities.filter(({ ordinal }) => ordinal)).toHaveLength(136);
     expect(capabilities.filter(({ formal }) => formal)).toHaveLength(2);
     expect(capabilities.filter(({ gender }) => gender.cardinal)).toHaveLength(37);
     expect(capabilities.filter(({ gender }) => gender.ordinal)).toHaveLength(8);

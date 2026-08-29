@@ -15,7 +15,7 @@ Choosing a number-to-words npm package? This page compares actively used options
 
 | Capability                     | **to-words**    | number-to-words | written-number | num-words      | n2words       |
 | ------------------------------ | --------------- | --------------- | -------------- | -------------- | ------------- |
-| Locale/language coverage claim | **135 locales** | English-focused | Multi-language | Indian English | 70+ languages |
+| Locale/language coverage claim | **136 locales** | English-focused | Multi-language | Indian English | 70+ languages |
 | TypeScript declarations        | ✅              | ❌              | ❌             | ✅             | ✅            |
 | ESM-ready package              | ✅              | ❌              | ❌             | ❌             | ✅            |
 | Package `exports` map          | ✅              | ❌              | ❌             | ❌             | ✅            |

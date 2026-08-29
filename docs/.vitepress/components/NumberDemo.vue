@@ -102,7 +102,7 @@
 
     <!-- Stats bar -->
     <div class="demo-stats-bar">
-      <span class="demo-stat">🌍 135 Locales</span>
+      <span class="demo-stat">🌍 136 Locales</span>
       <span class="demo-stat">⚡ 4M+ ops/sec</span>
       <span class="demo-stat">📦 ~3 KB gzip</span>
       <span class="demo-stat">🔷 TypeScript</span>
@@ -246,6 +246,7 @@ const LOCALES: Locale[] = [
   { code: 'km-KH', language: 'Khmer', country: 'Cambodia', flag: '🇰🇭' },
   { code: 'kn-IN', language: 'Kannada', country: 'India', flag: '🇮🇳' },
   { code: 'ko-KR', language: 'Korean', country: 'South Korea', flag: '🇰🇷' },
+  { code: 'lo-LA', language: 'Lao', country: 'Laos', flag: '🇱🇦' },
   { code: 'lt-LT', language: 'Lithuanian', country: 'Lithuania', flag: '🇱🇹' },
   { code: 'lv-LV', language: 'Latvian', country: 'Latvia', flag: '🇱🇻' },
   { code: 'ml-IN', language: 'Malayalam', country: 'India', flag: '🇮🇳' },

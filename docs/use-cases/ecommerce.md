@@ -1,6 +1,6 @@
 ---
 title: E-commerce Checkout Totals in Words — to-words
-description: Show checkout and order totals in words to reduce ambiguity on high-value orders. Works across 135 locales with to-words.
+description: Show checkout and order totals in words to reduce ambiguity on high-value orders. Works across 136 locales with to-words.
 head:
   - - meta
     - name: keywords

@@ -94,6 +94,7 @@ export type GeneratedLocaleCode =
   | 'km-KH'
   | 'kn-IN'
   | 'ko-KR'
+  | 'lo-LA'
   | 'lt-LT'
   | 'lv-LV'
   | 'ml-IN'
@@ -1212,6 +1213,7 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     20,
     24,
   ],
+  'lo-LA': [true, false, false, false, [], 2, 'locale-specific', [], [3, 5, 6, 9, 12, 15], '1000000000000000', 15, 18],
   'lt-LT': [true, false, true, false, [], 2, 'base-thousand', [3], [3, 6, 9, 12, 15], '1000000000000000', 15, 18],
   'lv-LV': [
     true,

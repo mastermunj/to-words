@@ -1,6 +1,6 @@
 ---
 title: Numbers to Words for Text-to-Speech (TTS) — to-words
-description: Generate natural language numbers for TTS engines. to-words converts numbers to spoken words in 135 locales. Works with Web Speech API, Azure TTS, Google TTS.
+description: Generate natural language numbers for TTS engines. to-words converts numbers to spoken words in 136 locales. Works with Web Speech API, Azure TTS, Google TTS.
 head:
   - - meta
     - name: keywords
