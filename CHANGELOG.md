@@ -2,6 +2,14 @@
 
 All notable changes to this project are documented here. Releases and this changelog are managed by [Release Please](https://github.com/googleapis/release-please).
 
+## [7.1.0](https://github.com/mastermunj/to-words/compare/v7.0.0...v7.1.0) (2026-08-30)
+
+
+### Features
+
+* add Lao (lo-LA) locale ([7ec273f](https://github.com/mastermunj/to-words/commit/7ec273f34667b80e8e27373778bab5f67760c1f3))
+* add Lao (lo-LA) locale ([5279b3f](https://github.com/mastermunj/to-words/commit/5279b3f2f72822dd80228e4232a2d234ac281f3b)), closes [#2443](https://github.com/mastermunj/to-words/issues/2443)
+
 ## [7.0.0](https://github.com/mastermunj/to-words/compare/v6.0.0...v7.0.0) (2026-08-28)
 
 
