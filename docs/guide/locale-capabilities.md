@@ -9,7 +9,7 @@ description: Generated, machine-verifiable feature support for every to-words lo
 
 This reference is generated from the locale configurations shipped by the package. It is checked in CI, so the documentation and runtime manifest cannot silently drift apart.
 
-**135 locales** · **135 ordinal** · **100 fraction style** · **37 cardinal gender** · **8 ordinal gender** · **2 formal numeral locales**
+**136 locales** · **136 ordinal** · **100 fraction style** · **37 cardinal gender** · **8 ordinal gender** · **2 formal numeral locales**
 
 ## Programmatic Usage
 
@@ -155,6 +155,7 @@ Cardinal, currency, and digit-style decimal conversion are part of every locale 
 | `km-KH`  | Locale-specific  | 10^12               | 10^15 - 1                | Yes     | —                  | No     | —                | 2                 |
 | `kn-IN`  | Indian           | 10^17               | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
 | `ko-KR`  | East Asian       | 10^20               | 10^24 - 1                | Yes     | —                  | No     | —                | 2                 |
+| `lo-LA`  | Locale-specific  | 10^15               | 10^18 - 1                | Yes     | —                  | No     | —                | 2                 |
 | `lt-LT`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | —                | 2                 |
 | `lv-LV`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6 | 2                 |
 | `ml-IN`  | Indian           | 10^17               | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |

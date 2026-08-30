@@ -1,17 +1,17 @@
 ---
-title: All 135 Locales — Number to Words | to-words
-description: Complete list of all 135 language and regional locales supported by to-words. Arabic, Chinese, Devanagari, Latin, CJK, Cyrillic scripts and more.
+title: All 136 Locales — Number to Words | to-words
+description: Complete list of all 136 language and regional locales supported by to-words. Arabic, Chinese, Devanagari, Latin, CJK, Cyrillic scripts and more.
 head:
   - - meta
     - name: keywords
-      content: number to words supported locales, number to words 135 languages, to-words all locales list
+      content: number to words supported locales, number to words 136 languages, to-words all locales list
 ---
 
 <script setup>
 import LocaleDirectory from '../.vitepress/components/LocaleDirectory.vue'
 </script>
 
-# All 135 Supported Locales
+# All 136 Supported Locales
 
 Use this directory when you need the exact locale code, currency setup, or feature coverage before wiring `to-words` into a real product. The table below is generated from the library's source locale registry, so it stays aligned with the package rather than drifting from it.
 
@@ -66,6 +66,7 @@ These are dedicated language guides covering every supported language. Each guid
 | Khmer                 | [khmer](/locales/khmer)             | km-KH                                                                                                                                                                                                                   |
 | Korean                | [korean](/locales/korean)           | ko-KR                                                                                                                                                                                                                   |
 | Latvian               | [latvian](/locales/latvian)         | lv-LV                                                                                                                                                                                                                   |
+| Lao                   | [lao](/locales/lao)                 | lo-LA                                                                                                                                                                                                                   |
 | Lithuanian            | [lithuanian](/locales/lithuanian)   | lt-LT                                                                                                                                                                                                                   |
 | Malay                 | [malay](/locales/malay)             | ms-MY, ms-SG                                                                                                                                                                                                            |
 | Malayalam             | [malayalam](/locales/malayalam)     | ml-IN                                                                                                                                                                                                                   |

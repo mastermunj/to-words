@@ -55,7 +55,7 @@ await assertMissingModule('removed ESM ee-EE entry point', () => import('to-word
 await assertMissingModule('removed CommonJS ee-EE entry point', () => require('to-words/ee-EE'), 'MODULE_NOT_FOUND');
 await assertMissingModule('removed ESM np-NP entry point', () => import('to-words/np-NP'), 'ERR_MODULE_NOT_FOUND');
 await assertMissingModule('removed CommonJS np-NP entry point', () => require('to-words/np-NP'), 'MODULE_NOT_FOUND');
-assertEqual('ESM manifest export', esmManifest.SUPPORTED_LOCALES.length, 135);
+assertEqual('ESM manifest export', esmManifest.SUPPORTED_LOCALES.length, 136);
 assertEqual('ESM Estonian manifest entry', esmManifest.isSupportedLocale('et-EE'), true);
 assertEqual('ESM removed locale manifest entry', esmManifest.isSupportedLocale('ee-EE'), false);
 assertEqual('ESM Nepali manifest entry', esmManifest.isSupportedLocale('ne-NP'), true);

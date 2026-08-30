@@ -1,6 +1,6 @@
 ---
 title: Payroll Amount in Words JavaScript — to-words
-description: Generate payroll and payslip amounts in words across 135 locales using to-words. Useful for salary slips, HR systems, and statutory forms.
+description: Generate payroll and payslip amounts in words across 136 locales using to-words. Useful for salary slips, HR systems, and statutory forms.
 head:
   - - meta
     - name: keywords

@@ -90,6 +90,7 @@ import jvId from './jv-ID.js';
 import kaGe from './ka-GE.js';
 import knIn from './kn-IN.js';
 import koKr from './ko-KR.js';
+import loLa from './lo-LA.js';
 import ltLt from './lt-LT.js';
 import lvLv from './lv-LV.js';
 import mlIn from './ml-IN.js';
@@ -229,6 +230,7 @@ const LOCALES: Readonly<Record<string, ConstructorOf<LocaleInterface>>> = Object
   'ka-GE': kaGe,
   'kn-IN': knIn,
   'ko-KR': koKr,
+  'lo-LA': loLa,
   'lt-LT': ltLt,
   'lv-LV': lvLv,
   'ml-IN': mlIn,

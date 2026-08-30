@@ -1,11 +1,11 @@
 ---
-title: to-words — Convert Numbers to Words in 135 Locales | JavaScript npm
-description: The most complete number-to-words library for JavaScript. 135 locales, TypeScript, ESM/CJS/UMD, BigInt, currency, ordinal. npm install to-words.
+title: to-words — Convert Numbers to Words in 136 Locales | JavaScript npm
+description: The most complete number-to-words library for JavaScript. 136 locales, TypeScript, ESM/CJS/UMD, BigInt, currency, ordinal. npm install to-words.
 layout: home
 head:
   - - meta
     - property: og:title
-      content: to-words — Convert Numbers to Words in 135 Locales | JavaScript npm
+      content: to-words — Convert Numbers to Words in 136 Locales | JavaScript npm
   - - meta
     - name: keywords
       content: number to words javascript, convert number to words js, number to words npm, amount in words typescript, number to words library node
@@ -19,7 +19,7 @@ import NumberDemo from './.vitepress/components/NumberDemo.vue'
 
 # Convert Numbers to Words in JavaScript
 
-The most complete number-to-words library for JavaScript and TypeScript. **135 locales**, currency, ordinal, BigInt, ESM/CJS/UMD — single package, zero dependencies.
+The most complete number-to-words library for JavaScript and TypeScript. **136 locales**, currency, ordinal, BigInt, ESM/CJS/UMD — single package, zero dependencies.
 
 ```bash
 npm install to-words
@@ -41,7 +41,7 @@ npm install to-words
 | Latest npm version             | 5.6.0           | 1.2.4           | 0.11.1         | 1.2.3          | 5.0.0         |
 | Last publish (UTC)             | 2026-05-27      | 2018-08-09      | 2021-07-12     | 2023-02-21     | 2026-05-30    |
 | npm downloads (last week)      | 111,476         | 492,316         | 53,011         | 6,319          | 24,404        |
-| Language/locale coverage claim | **135 locales** | English-focused | Multi-language | Indian English | 70+ languages |
+| Language/locale coverage claim | **136 locales** | English-focused | Multi-language | Indian English | 70+ languages |
 | TypeScript declarations        | ✅              | ❌              | ❌             | ✅             | ✅            |
 | BigInt support                 | ✅              | ❌              | ❌             | ❌             | ✅            |
 | Currency conversion            | ✅              | ❌              | ❌             | ❌             | ✅            |
@@ -114,9 +114,9 @@ toCurrency(452.36, { localeCode: 'hi-IN' }); // "चार सौ बावन �
 
 ## Use Cases
 
-- **Invoicing & Billing** — print totals in words on PDF invoices across 135 countries
+- **Invoicing & Billing** — print totals in words on PDF invoices across 136 countries
 - **Cheque Printing** — banks require amounts in words; locale currency wording keeps major and minor unit names aligned
-- **Text-to-Speech** — feed clean word strings to TTS engines in 135 languages
+- **Text-to-Speech** — feed clean word strings to TTS engines in 136 languages
 - **Payroll & Payslips** — generate salary slip amounts in words across regions
 - **E-commerce Checkout** — reduce ambiguity on high-value order confirmations
 - **Legal Documents** — contracts that require spelled-out numbers
@@ -152,7 +152,7 @@ These are dedicated locale guide pages, listed alphabetically by language name f
   <a href="/to-words/locales/vietnamese">🇻🇳 Vietnamese</a>
 </div>
 
-→ [See all 135 locales](/locales/)
+→ [See all 136 locales](/locales/)
 
 ## Start Here Next
 

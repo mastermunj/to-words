@@ -53,6 +53,7 @@ export const LOCALE_LANGUAGE_IDENTITIES: Readonly<Record<string, LocaleLanguageI
   km: { displayName: 'Khmer', registryDescription: 'Khmer', page: '/locales/khmer' },
   kn: { displayName: 'Kannada', registryDescription: 'Kannada', page: '/locales/kannada' },
   ko: { displayName: 'Korean', registryDescription: 'Korean', page: '/locales/korean' },
+  lo: { displayName: 'Lao', registryDescription: 'Lao', page: '/locales/lao' },
   lt: { displayName: 'Lithuanian', registryDescription: 'Lithuanian', page: '/locales/lithuanian' },
   lv: { displayName: 'Latvian', registryDescription: 'Latvian', page: '/locales/latvian' },
   ml: { displayName: 'Malayalam', registryDescription: 'Malayalam', page: '/locales/malayalam' },
