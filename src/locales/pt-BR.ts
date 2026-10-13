@@ -29,10 +29,10 @@ export default class Locale implements LocaleInterface {
       point: 'Vírgula',
     },
     numberWordsMapping: [
-      { number: 1000000000000000, value: 'Quadrilhões' },
-      { number: 1000000000000, value: 'Trilhões' },
-      { number: 1000000000, value: 'Bilhões' },
-      { number: 1000000, value: 'Milhões' },
+      { number: 1000000000000000, value: 'Quadrilhão' },
+      { number: 1000000000000, value: 'Trilhão' },
+      { number: 1000000000, value: 'Bilhão' },
+      { number: 1000000, value: 'Milhão' },
       { number: 1000, value: 'Mil' },
       { number: 900, value: 'Novecentos', feminineValue: 'Novecentas' },
       { number: 800, value: 'Oitocentos', feminineValue: 'Oitocentas' },
@@ -53,7 +53,7 @@ export default class Locale implements LocaleInterface {
       { number: 20, value: 'Vinte' },
       { number: 19, value: 'Dezenove' },
       { number: 18, value: 'Dezoito' },
-      { number: 17, value: 'Dezesete' },
+      { number: 17, value: 'Dezessete' },
       { number: 16, value: 'Dezesseis' },
       { number: 15, value: 'Quinze' },
       { number: 14, value: 'Quatorze' },
@@ -72,13 +72,15 @@ export default class Locale implements LocaleInterface {
       { number: 1, value: 'Um', feminineValue: 'Uma' },
       { number: 0, value: 'Zero' },
     ],
-    exactWordsMapping: [
-      { number: 100, value: 'Cem' },
-      { number: 1000000000000000, value: 'Um Quadrilhão' },
-      { number: 1000000000000, value: 'Um Trilhão' },
-      { number: 1000000000, value: 'Um Bilhão' },
-      { number: 1000000, value: 'Um Milhão' },
-    ],
+    exactWordsMapping: [{ number: 100, value: 'Cem' }],
+    // Ciberdúvidas / CLDR pt: scale nouns are singular after 1 (um milhão) and plural after 2+.
+    pluralRule: 'one-other',
+    pluralForms: {
+      1000000000000000: { other: 'Quadrilhões' },
+      1000000000000: { other: 'Trilhões' },
+      1000000000: { other: 'Bilhões' },
+      1000000: { other: 'Milhões' },
+    },
     ignoreOneForWords: [
       'Mil',
       'Novecentos',
@@ -92,8 +94,14 @@ export default class Locale implements LocaleInterface {
       'Cento',
     ],
     splitWord: 'E',
-    noSplitWordAfter: ['Mil', 'Milhões', 'Bilhões', 'Trilhões', 'Quadrilhões'],
+    noSplitWordAfter: ['Mil', 'Quadrilhão', 'Trilhão', 'Bilhão', 'Milhão'],
+    splitWordBeforeSimpleGroup: true,
+    // Every component is ordinal (vigésimo primeiro, milésimo primeiro), as in es.
+    // «mil» agrees with the counted noun (duzentas mil pessoas; Ciberdúvidas «numerais feminino»).
+    multiplierFollowsGender: [1000],
+    ordinalComposition: 'every-component',
     ordinalWordsMapping: [
+      { number: 1000000000000000, value: 'Quadrilionésimo' },
       { number: 1000000000000, value: 'Trilionésimo' },
       { number: 1000000000, value: 'Bilionésimo' },
       { number: 1000000, value: 'Milionésimo' },

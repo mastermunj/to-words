@@ -83,6 +83,18 @@ export default class Locale implements LocaleInterface {
       { number: 800, value: 'Kahdeksansataa' },
       { number: 900, value: 'Yhdeksänsataa' },
     ],
+    // CLDR fi: after 2+ the scale words take the partitive (kaksi tuhatta, kaksi miljoonaa).
+    pluralRule: 'one-other',
+    pluralForms: {
+      1000: { other: 'Tuhatta' },
+      1000000: { other: 'Miljoonaa' },
+      1000000000: { other: 'Miljardia' },
+      1000000000000: { other: 'Biljoonaa' },
+      1000000000000000: { other: 'Biljardia' },
+    },
+    // CLDR fi: every part of an ordinal is ordinal, multipliers included (kahdes tuhannes).
+    ordinalComposition: 'every-component',
+    ordinalMultipliers: true,
     ignoreOneForWords: [
       'Sata',
       'Kaksisataa',
@@ -101,9 +113,9 @@ export default class Locale implements LocaleInterface {
       { number: 1000000000, value: 'Miljardis' },
       { number: 1000000, value: 'Miljoonas' },
       { number: 1000, value: 'Tuhannes' },
-      { number: 900, value: 'Yhdeksänsadas' },
-      { number: 800, value: 'Kahdeksansadas' },
-      { number: 700, value: 'Seitsemänsadas' },
+      { number: 900, value: 'Yhdeksässadas' },
+      { number: 800, value: 'Kahdeksassadas' },
+      { number: 700, value: 'Seitsemässadas' },
       { number: 600, value: 'Kuudessadas' },
       { number: 500, value: 'Viidessadas' },
       { number: 400, value: 'Neljässadas' },
@@ -135,7 +147,8 @@ export default class Locale implements LocaleInterface {
       { number: 5, value: 'Viides' },
       { number: 4, value: 'Neljäs' },
       { number: 3, value: 'Kolmas' },
-      { number: 2, value: 'Toinen' },
+      // As a multiplier 2 is kahdes (kahdes tuhannes; CLDR fi).
+      { number: 2, value: 'Toinen', compoundValue: 'Kahdes' },
       { number: 1, value: 'Ensimmäinen' },
       { number: 0, value: 'Nollas' },
     ],

@@ -45,16 +45,16 @@ const testIntegers: [number, string][] = [
   [2741034, 'Twenty Seven Lakh Forty One Thousand Thirty Four'],
   [86429753, 'Eight Crore Sixty Four Lakh Twenty Nine Thousand Seven Hundred Fifty Three'],
   [975310864, 'Ninety Seven Crore Fifty Three Lakh Ten Thousand Eight Hundred Sixty Four'],
-  [9876543210, 'Nine Arab Eighty Seven Crore Sixty Five Lakh Forty Three Thousand Two Hundred Ten'],
-  [98765432101, 'Ninety Eight Arab Seventy Six Crore Fifty Four Lakh Thirty Two Thousand One Hundred One'],
-  [987654321012, 'Nine Kharab Eighty Seven Arab Sixty Five Crore Forty Three Lakh Twenty One Thousand Twelve'],
+  [9876543210, 'Nine Hundred Eighty Seven Crore Sixty Five Lakh Forty Three Thousand Two Hundred Ten'],
+  [98765432101, 'Nine Thousand Eight Hundred Seventy Six Crore Fifty Four Lakh Thirty Two Thousand One Hundred One'],
+  [987654321012, 'Ninety Eight Thousand Seven Hundred Sixty Five Crore Forty Three Lakh Twenty One Thousand Twelve'],
   [
     9876543210123,
-    'Ninety Eight Kharab Seventy Six Arab Fifty Four Crore Thirty Two Lakh Ten Thousand One Hundred Twenty Three',
+    'Nine Lakh Eighty Seven Thousand Six Hundred Fifty Four Crore Thirty Two Lakh Ten Thousand One Hundred Twenty Three',
   ],
   [
     98765432101234,
-    'Nine Neel Eighty Seven Kharab Sixty Five Arab Forty Three Crore Twenty One Lakh One Thousand Two Hundred Thirty Four',
+    'Ninety Eight Lakh Seventy Six Thousand Five Hundred Forty Three Crore Twenty One Lakh One Thousand Two Hundred Thirty Four',
   ],
 ];
 
@@ -313,9 +313,9 @@ const testOrdinalNumbers: [number, string][] = [
   [200, 'Two Hundredth'],
   [1000, 'One Thousandth'],
   [10000, 'Ten Thousandth'],
-  [100000, 'One Lakh'],
-  [1000000, 'Ten Lakh'],
-  [10000000, 'One Crore'],
+  [100000, 'One Lakhth'],
+  [1000000, 'Ten Lakhth'],
+  [10000000, 'One Croreth'],
 
   // Numbers in the hundreds with endings
   [101, 'One Hundred First'],

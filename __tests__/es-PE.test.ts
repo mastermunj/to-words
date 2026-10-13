@@ -138,16 +138,16 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
 
 const testFloats: [number, string][] = [
   [0.0, 'Cero'],
-  [0.04, 'Cero Coma Cero Cuatro'],
-  [0.0468, 'Cero Coma Cero Cuatro Seis Ocho'],
-  [0.4, 'Cero Coma Cuatro'],
-  [0.63, 'Cero Coma Sesenta Y Tres'],
-  [0.973, 'Cero Coma Novecientos Setenta Y Tres'],
-  [0.999, 'Cero Coma Novecientos Noventa Y Nueve'],
-  [37.06, 'Treinta Y Siete Coma Cero Seis'],
-  [37.068, 'Treinta Y Siete Coma Cero Seis Ocho'],
-  [37.68, 'Treinta Y Siete Coma Sesenta Y Ocho'],
-  [37.683, 'Treinta Y Siete Coma Seiscientos Ochenta Y Tres'],
+  [0.04, 'Cero Punto Cero Cuatro'],
+  [0.0468, 'Cero Punto Cero Cuatro Seis Ocho'],
+  [0.4, 'Cero Punto Cuatro'],
+  [0.63, 'Cero Punto Sesenta Y Tres'],
+  [0.973, 'Cero Punto Novecientos Setenta Y Tres'],
+  [0.999, 'Cero Punto Novecientos Noventa Y Nueve'],
+  [37.06, 'Treinta Y Siete Punto Cero Seis'],
+  [37.068, 'Treinta Y Siete Punto Cero Seis Ocho'],
+  [37.68, 'Treinta Y Siete Punto Sesenta Y Ocho'],
+  [37.683, 'Treinta Y Siete Punto Seiscientos Ochenta Y Tres'],
 ];
 
 describe('Test with options = { currency: true, includeZeroFractional: true }', () => {

@@ -33,31 +33,47 @@ describe('Test Locale', () => {
   });
 });
 
+// Currency phrase for an integer amount: «un leu», «de» after 00 / 20–99 (douăzeci de lei; DOOM).
+const lei = (amount: number, words: string): string => {
+  const n = Math.abs(amount);
+  if (n === 1) {
+    return 'Un Leu';
+  }
+  const lastTwo = n % 100;
+  return `${words}${n !== 0 && (lastTwo === 0 || lastTwo >= 20) ? ' De' : ''} Lei`;
+};
+
 const testIntegers: [number, string][] = [
   [0, 'Zero'],
-  [137, 'O Sută Treizeci Șapte'],
+  [137, 'O Sută Treizeci Și Șapte'],
   [700, 'Șapte Sute'],
   [1100, 'O Mie O Sută'],
   [4680, 'Patru Mii Șase Sute Optzeci'],
-  [63892, 'Șaizeci Trei Mii Opt Sute Nouăzeci Două'],
-  [86100, 'Optzeci Șase Mii O Sută'],
-  [792581, 'Șapte Sute Nouăzeci Două Mii Cinci Sute Optzeci Unu'],
-  [2741034, 'Două Milioane Șapte Sute Patruzeci Unu Mii Treizeci Patru'],
-  [86429753, 'Optzeci Șase Milioane Patru Sute Douăzeci Nouă Mii Șapte Sute Cincizeci Trei'],
-  [975310864, 'Nouă Sute Șaptezeci Cinci Milioane Trei Sute Zece Mii Opt Sute Șaizeci Patru'],
-  [9876543210, 'Nouă Miliarde Opt Sute Șaptezeci Șase Milioane Cinci Sute Patruzeci Trei Mii Două Sute Zece'],
-  [98765432101, 'Nouăzeci Opt Miliarde Șapte Sute Șaizeci Cinci Milioane Patru Sute Treizeci Două Mii O Sută Unu'],
+  [63892, 'Șaizeci Și Trei De Mii Opt Sute Nouăzeci Și Doi'],
+  [86100, 'Optzeci Și Șase De Mii O Sută'],
+  [792581, 'Șapte Sute Nouăzeci Și Două De Mii Cinci Sute Optzeci Și Unu'],
+  [2741034, 'Două Milioane Șapte Sute Patruzeci Și Una De Mii Treizeci Și Patru'],
+  [86429753, 'Optzeci Și Șase De Milioane Patru Sute Douăzeci Și Nouă De Mii Șapte Sute Cincizeci Și Trei'],
+  [975310864, 'Nouă Sute Șaptezeci Și Cinci De Milioane Trei Sute Zece Mii Opt Sute Șaizeci Și Patru'],
+  [
+    9876543210,
+    'Nouă Miliarde Opt Sute Șaptezeci Și Șase De Milioane Cinci Sute Patruzeci Și Trei De Mii Două Sute Zece',
+  ],
+  [
+    98765432101,
+    'Nouăzeci Și Opt De Miliarde Șapte Sute Șaizeci Și Cinci De Milioane Patru Sute Treizeci Și Două De Mii O Sută Unu',
+  ],
   [
     987654321012,
-    'Nouă Sute Optzeci Șapte Miliarde Șase Sute Cincizeci Patru Milioane Trei Sute Douăzeci Unu Mii Doisprezece',
+    'Nouă Sute Optzeci Și Șapte De Miliarde Șase Sute Cincizeci Și Patru De Milioane Trei Sute Douăzeci Și Una De Mii Doisprezece',
   ],
   [
     9876543210123,
-    'Nouă Trilion Opt Sute Șaptezeci Șase Miliarde Cinci Sute Patruzeci Trei Milioane Două Sute Zece Mii O Sută Douăzeci Trei',
+    'Nouă Bilioane Opt Sute Șaptezeci Și Șase De Miliarde Cinci Sute Patruzeci Și Trei De Milioane Două Sute Zece Mii O Sută Douăzeci Și Trei',
   ],
   [
     98765432101234,
-    'Nouăzeci Opt Trilion Șapte Sute Șaizeci Cinci Miliarde Patru Sute Treizeci Două Milioane O Sută Unu Mii Două Sute Treizeci Patru',
+    'Nouăzeci Și Opt De Bilioane Șapte Sute Șaizeci Și Cinci De Miliarde Patru Sute Treizeci Și Două De Milioane O Sută Una Mii Două Sute Treizeci Și Patru',
   ],
 ];
 
@@ -85,7 +101,7 @@ describe('Test Negative Integers with options = {}', () => {
 describe('Test Integers with options = { currency: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} Lei Exact`;
+    row[1] = `${lei(row[0] as number, row[1] as string)} Exact`;
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -96,7 +112,7 @@ describe('Test Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, doNotAddOnly: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} Lei`;
+    row[1] = `${lei(row[0] as number, row[1] as string)}`;
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -108,11 +124,11 @@ describe('Test Negative Integers with options = { currency: true }', () => {
   const testNegativeIntegersWithCurrency = cloneDeep(testIntegers);
   testNegativeIntegersWithCurrency.map((row, i) => {
     if (i === 0) {
-      row[1] = `${row[1]} Lei Exact`;
+      row[1] = `${lei(row[0] as number, row[1] as string)} Exact`;
       return;
     }
     row[0] = -row[0];
-    row[1] = `Minus ${row[1]} Lei Exact`;
+    row[1] = `Minus ${lei(row[0] as number, row[1] as string)} Exact`;
   });
 
   test.concurrent.each(testNegativeIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -123,7 +139,7 @@ describe('Test Negative Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, ignoreZeroCurrency: true }', () => {
   const testIntegersWithCurrencyAndIgnoreZeroCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrencyAndIgnoreZeroCurrency.map((row, i) => {
-    row[1] = i === 0 ? '' : `${row[1]} Lei Exact`;
+    row[1] = i === 0 ? '' : `${lei(row[0] as number, row[1] as string)} Exact`;
   });
 
   test.concurrent.each(testIntegersWithCurrencyAndIgnoreZeroCurrency)('convert %d => %s', (input, expected) => {
@@ -141,24 +157,24 @@ const testFloats: [number, string][] = [
   [0.04, 'Zero Virgulă Zero Patru'],
   [0.0468, 'Zero Virgulă Zero Patru Șase Opt'],
   [0.4, 'Zero Virgulă Patru'],
-  [0.63, 'Zero Virgulă Șaizeci Trei'],
-  [0.973, 'Zero Virgulă Nouă Sute Șaptezeci Trei'],
-  [0.999, 'Zero Virgulă Nouă Sute Nouăzeci Nouă'],
-  [37.06, 'Treizeci Șapte Virgulă Zero Șase'],
-  [37.068, 'Treizeci Șapte Virgulă Zero Șase Opt'],
-  [37.68, 'Treizeci Șapte Virgulă Șaizeci Opt'],
-  [37.683, 'Treizeci Șapte Virgulă Șase Sute Optzeci Trei'],
+  [0.63, 'Zero Virgulă Șaizeci Și Trei'],
+  [0.973, 'Zero Virgulă Nouă Sute Șaptezeci Și Trei'],
+  [0.999, 'Zero Virgulă Nouă Sute Nouăzeci Și Nouă'],
+  [37.06, 'Treizeci Și Șapte Virgulă Zero Șase'],
+  [37.068, 'Treizeci Și Șapte Virgulă Zero Șase Opt'],
+  [37.68, 'Treizeci Și Șapte Virgulă Șaizeci Și Opt'],
+  [37.683, 'Treizeci Și Șapte Virgulă Șase Sute Optzeci Și Trei'],
 ];
 
 describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
   const testIncludeZeroFractional: [number | string, string][] = [
-    [123, `O Sută Douăzeci Trei Lei Exact`],
-    ['123', `O Sută Douăzeci Trei Lei Exact`],
-    ['123.0', `O Sută Douăzeci Trei Lei Și Zero Bani Exact`],
-    ['123.00', `O Sută Douăzeci Trei Lei Și Zero Bani Exact`],
+    [123, `O Sută Douăzeci Și Trei De Lei Exact`],
+    ['123', `O Sută Douăzeci Și Trei De Lei Exact`],
+    ['123.0', `O Sută Douăzeci Și Trei De Lei Și Zero Bani Exact`],
+    ['123.00', `O Sută Douăzeci Și Trei De Lei Și Zero Bani Exact`],
     ['0.00', `Zero Lei Și Zero Bani Exact`],
-    ['-123.00', `Minus O Sută Douăzeci Trei Lei Și Zero Bani Exact`],
-    ['37.68', `Treizeci Șapte Lei Și Șaizeci Opt Bani Exact`],
+    ['-123.00', `Minus O Sută Douăzeci Și Trei De Lei Și Zero Bani Exact`],
+    ['37.68', `Treizeci Și Șapte De Lei Și Șaizeci Și Opt De Bani Exact`],
   ];
 
   test.concurrent.each(testIncludeZeroFractional)('convert %s => %s', (input, expected) => {
@@ -181,14 +197,14 @@ const testFloatsWithCurrency: [number, string][] = [
   [0.0, `Zero Lei Exact`],
   [0.04, `Zero Lei Și Patru Bani Exact`],
   [0.0468, `Zero Lei Și Cinci Bani Exact`],
-  [0.4, `Zero Lei Și Patruzeci Bani Exact`],
-  [0.63, `Zero Lei Și Șaizeci Trei Bani Exact`],
-  [0.973, `Zero Lei Și Nouăzeci Șapte Bani Exact`],
-  [0.999, `Unu Leu Exact`],
-  [37.06, `Treizeci Șapte Lei Și Șase Bani Exact`],
-  [37.068, `Treizeci Șapte Lei Și Șapte Bani Exact`],
-  [37.68, `Treizeci Șapte Lei Și Șaizeci Opt Bani Exact`],
-  [37.683, `Treizeci Șapte Lei Și Șaizeci Opt Bani Exact`],
+  [0.4, `Zero Lei Și Patruzeci De Bani Exact`],
+  [0.63, `Zero Lei Și Șaizeci Și Trei De Bani Exact`],
+  [0.973, `Zero Lei Și Nouăzeci Și Șapte De Bani Exact`],
+  [0.999, `Un Leu Exact`],
+  [37.06, `Treizeci Și Șapte De Lei Și Șase Bani Exact`],
+  [37.068, `Treizeci Și Șapte De Lei Și Șapte Bani Exact`],
+  [37.68, `Treizeci Și Șapte De Lei Și Șaizeci Și Opt De Bani Exact`],
+  [37.683, `Treizeci Și Șapte De Lei Și Șaizeci Și Opt De Bani Exact`],
 ];
 
 describe('Test Floats with options = { currency: true }', () => {
@@ -226,7 +242,7 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
     if (row[0] === 0.999) {
       row[1] = `Zero Lei Exact`;
     } else {
-      row[1] = (row[1] as string).replace(/ Și .+ Bani/, '');
+      row[1] = (row[1] as string).replace(/ (Lei|Leu) Și .+ Bani?/, ' $1');
     }
   });
 
@@ -247,7 +263,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
     if (row[0] > 0 && row[0] < 1) {
       row[1] = '';
     }
-    row[1] = (row[1] as string).replace(/ Și .+ Bani/, '');
+    row[1] = (row[1] as string).replace(/ (Lei|Leu) Și .+ Bani?/, ' $1');
   });
 
   test.concurrent.each(testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals)(
@@ -268,14 +284,14 @@ const testFloatsWithEuroCurrency = [
   [0.0, `Zero Euro Exact`],
   [0.04, `Zero Euro Și Patru Eurocenți Exact`],
   [0.0468, `Zero Euro Și Cinci Eurocenți Exact`],
-  [0.4, `Zero Euro Și Patruzeci Eurocenți Exact`],
-  [0.63, `Zero Euro Și Șaizeci Trei Eurocenți Exact`],
-  [0.973, `Zero Euro Și Nouăzeci Șapte Eurocenți Exact`],
+  [0.4, `Zero Euro Și Patruzeci De Eurocenți Exact`],
+  [0.63, `Zero Euro Și Șaizeci Și Trei De Eurocenți Exact`],
+  [0.973, `Zero Euro Și Nouăzeci Și Șapte De Eurocenți Exact`],
   [0.999, `Unu Euro Exact`],
-  [37.06, `Treizeci Șapte Euro Și Șase Eurocenți Exact`],
-  [37.068, `Treizeci Șapte Euro Și Șapte Eurocenți Exact`],
-  [37.68, `Treizeci Șapte Euro Și Șaizeci Opt Eurocenți Exact`],
-  [37.683, `Treizeci Șapte Euro Și Șaizeci Opt Eurocenți Exact`],
+  [37.06, `Treizeci Și Șapte De Euro Și Șase Eurocenți Exact`],
+  [37.068, `Treizeci Și Șapte De Euro Și Șapte Eurocenți Exact`],
+  [37.68, `Treizeci Și Șapte De Euro Și Șaizeci Și Opt De Eurocenți Exact`],
+  [37.683, `Treizeci Și Șapte De Euro Și Șaizeci Și Opt De Eurocenți Exact`],
 ];
 
 const euroCurrencyOptions = {
@@ -322,9 +338,9 @@ const testOrdinalNumbers: [number, string][] = [
   [20, 'Al Douăzecilea'],
 
   // Composite numbers (21-29, 30, 40, 50, etc.)
-  [21, 'Douăzeci Primul'],
-  [22, 'Douăzeci Al Doilea'],
-  [23, 'Douăzeci Al Treilea'],
+  [21, 'Al Douăzeci Și Unulea'],
+  [22, 'Al Douăzeci Și Doilea'],
+  [23, 'Al Douăzeci Și Treilea'],
   [30, 'Al Treizecilea'],
   [40, 'Al Patruzecilea'],
   [50, 'Al Cincizecilea'],
@@ -334,39 +350,39 @@ const testOrdinalNumbers: [number, string][] = [
   [90, 'Al Nouăzecilea'],
 
   // Numbers ending in 1, 2, 3 (various decades)
-  [31, 'Treizeci Primul'],
-  [32, 'Treizeci Al Doilea'],
-  [33, 'Treizeci Al Treilea'],
-  [41, 'Patruzeci Primul'],
-  [42, 'Patruzeci Al Doilea'],
-  [43, 'Patruzeci Al Treilea'],
-  [51, 'Cincizeci Primul'],
-  [52, 'Cincizeci Al Doilea'],
-  [53, 'Cincizeci Al Treilea'],
+  [31, 'Al Treizeci Și Unulea'],
+  [32, 'Al Treizeci Și Doilea'],
+  [33, 'Al Treizeci Și Treilea'],
+  [41, 'Al Patruzeci Și Unulea'],
+  [42, 'Al Patruzeci Și Doilea'],
+  [43, 'Al Patruzeci Și Treilea'],
+  [51, 'Al Cincizeci Și Unulea'],
+  [52, 'Al Cincizeci Și Doilea'],
+  [53, 'Al Cincizeci Și Treilea'],
 
   // Round numbers (100, 200, 1000, etc.)
   [100, 'Al O Sutălea'],
   [200, 'Al Două Sutelea'],
   [1000, 'Al O Miilea'],
-  [10000, 'Zece Al Miilea'],
-  [100000, 'O Sută Al Miilea'],
+  [10000, 'Al Zece Miilea'],
+  [100000, 'Al O Sută De Miilea'],
   [1000000, 'Al Un Milionulea'],
-  [10000000, 'Zece Al Milionulea'],
+  [10000000, 'Al Zece Milioanelea'],
 
   // Numbers in the hundreds with endings
-  [101, 'O Sută Primul'],
-  [102, 'O Sută Al Doilea'],
-  [103, 'O Sută Al Treilea'],
-  [111, 'O Sută Al Unsprezecelea'],
-  [112, 'O Sută Al Doisprezecelea'],
-  [113, 'O Sută Al Treisprezecelea'],
-  [123, 'O Sută Douăzeci Al Treilea'],
+  [101, 'Al O Sută Unulea'],
+  [102, 'Al O Sută Doilea'],
+  [103, 'Al O Sută Treilea'],
+  [111, 'Al O Sută Unsprezecelea'],
+  [112, 'Al O Sută Doisprezecelea'],
+  [113, 'Al O Sută Treisprezecelea'],
+  [123, 'Al O Sută Douăzeci Și Treilea'],
 
   // Complex numbers
-  [1001, 'O Mie Primul'],
-  [1111, 'O Mie O Sută Al Unsprezecelea'],
-  [1234, 'O Mie Două Sute Treizeci Al Patrulea'],
-  [12345, 'Doisprezece Mii Trei Sute Patruzeci Al Cincilea'],
+  [1001, 'Al O Mie Unulea'],
+  [1111, 'Al O Mie O Sută Unsprezecelea'],
+  [1234, 'Al O Mie Două Sute Treizeci Și Patrulea'],
+  [12345, 'Al Douăsprezece Mii Trei Sute Patruzeci Și Cincilea'],
 ];
 
 describe('Test Ordinal Numbers', () => {
@@ -403,7 +419,7 @@ const powersOfTen: [number, string][] = [
   [100, 'O Sută'],
   [1000, 'O Mie'],
   [10000, 'Zece Mii'],
-  [100000, 'O Sută Mii'],
+  [100000, 'O Sută De Mii'],
   [1000000, 'Un Milion'],
 ];
 
@@ -525,9 +541,9 @@ describe('Functional helpers (locale-level)', () => {
 
 const testFractionStyleRoRO: [number, string][] = [
   [1.1, 'Unu Și Unu Zecime'],
-  [2.5, 'Două Și Cinci Zecimi'],
+  [2.5, 'Doi Și Cinci Zecimi'],
   [1.01, 'Unu Și Unu Sutime'],
-  [1.45, 'Unu Și Patruzeci Cinci Sutimi'],
+  [1.45, 'Unu Și Patruzeci Și Cinci Sutimi'],
   [0.05, 'Zero Și Cinci Sutimi'],
   [1.001, 'Unu Și Unu Miime'],
   [1.005, 'Unu Și Cinci Miimi'],
@@ -537,7 +553,7 @@ const testFractionStyleRoRO: [number, string][] = [
   [1.00005, 'Unu Și Cinci Sutimi de Miime'],
   [1.000001, 'Unu Și Unu Milionime'],
   [1.000005, 'Unu Și Cinci Milionime'],
-  [123.45, 'O Sută Douăzeci Trei Și Patruzeci Cinci Sutimi'],
+  [123.45, 'O Sută Douăzeci Și Trei Și Patruzeci Și Cinci Sutimi'],
 ];
 
 describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
@@ -547,10 +563,10 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
 
   test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
     expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
-      'Unu Virgulă Unu Milioane Două Sute Treizeci Patru Mii Cinci Sute Șaizeci Șapte',
+      'Unu Virgulă Un Milion Două Sute Treizeci Și Patru De Mii Cinci Sute Șaizeci Și Șapte',
     );
     expect(toWords.convert(1.1234567)).toBe(
-      'Unu Virgulă Unu Milioane Două Sute Treizeci Patru Mii Cinci Sute Șaizeci Șapte',
+      'Unu Virgulă Un Milion Două Sute Treizeci Și Patru De Mii Cinci Sute Șaizeci Și Șapte',
     );
   });
 

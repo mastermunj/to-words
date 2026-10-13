@@ -1,0 +1,22 @@
+{
+  "locale": "sv-SE",
+  "sources": {
+    "wikt-miljon": {
+      "title": "Wiktionary — miljon (Swedish; quotation \"för 78 miljoner år sedan\")",
+      "url": "https://en.wiktionary.org/wiki/miljon",
+      "accessed": "2026-10-08"
+    }
+  },
+  "cases": [
+    {
+      "id": "scale-2000000",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "2000000",
+      "expected": "Två Miljoner",
+      "status": "verified",
+      "attested": false,
+      "sources": ["wikt-miljon"]
+    }
+  ]
+}

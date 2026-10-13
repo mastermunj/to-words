@@ -55,19 +55,19 @@ const testIntegers: [number, string][] = [
   [18, 'Tetëmbëdhjetë'],
   [19, 'Nëntëmbëdhjetë'],
   [20, 'Njëzet'],
-  [21, 'Njëzet Një'],
-  [22, 'Njëzet Dy'],
+  [21, 'Njëzet E Një'],
+  [22, 'Njëzet E Dy'],
   [30, 'Tridhjetë'],
-  [35, 'Tridhjetë Pesë'],
+  [35, 'Tridhjetë E Pesë'],
   [40, 'Dyzet'],
   [50, 'Pesëdhjetë'],
   [60, 'Gjashtëdhjetë'],
   [70, 'Shtatëdhjetë'],
   [80, 'Tetëdhjetë'],
   [90, 'Nëntëdhjetë'],
-  [99, 'Nëntëdhjetë Nëntë'],
+  [99, 'Nëntëdhjetë E Nëntë'],
   [100, 'Njëqind'],
-  [137, 'Njëqind Tridhjetë Shtatë'],
+  [137, 'Njëqind E Tridhjetë E Shtatë'],
   [200, 'Dyqind'],
   [300, 'Treqind'],
   [400, 'Katërqind'],
@@ -77,22 +77,22 @@ const testIntegers: [number, string][] = [
   [800, 'Tetëqind'],
   [900, 'Nëntëqind'],
   [1000, 'Një Mijë'],
-  [1100, 'Një Mijë Njëqind'],
+  [1100, 'Një Mijë E Njëqind'],
   [2000, 'Dy Mijë'],
   [3000, 'Tre Mijë'],
   [4000, 'Katër Mijë'],
   [5000, 'Pesë Mijë'],
-  [4680, 'Katër Mijë Gjashtëqind Tetëdhjetë'],
+  [4680, 'Katër Mijë E Gjashtëqind E Tetëdhjetë'],
   [10000, 'Dhjetë Mijë'],
-  [63892, 'Gjashtëdhjetë Tre Mijë Tetëqind Nëntëdhjetë Dy'],
+  [63892, 'Gjashtëdhjetë E Tre Mijë E Tetëqind E Nëntëdhjetë E Dy'],
   [100000, 'Njëqind Mijë'],
   [1000000, 'Një Milion'],
-  [2000000, 'Dy Milion'],
-  [5000000, 'Pesë Milion'],
-  [2741034, 'Dy Milion Shtatëqind Dyzet Një Mijë Tridhjetë Katër'],
+  [2000000, 'Dy Milionë'],
+  [5000000, 'Pesë Milionë'],
+  [2741034, 'Dy Milionë E Shtatëqind E Dyzet E Një Mijë E Tridhjetë E Katër'],
   [1000000000, 'Një Miliard'],
-  [2000000000, 'Dy Miliard'],
-  [5000000000, 'Pesë Miliard'],
+  [2000000000, 'Dy Miliardë'],
+  [5000000000, 'Pesë Miliardë'],
 ];
 
 describe('Test Integers with options = {}', () => {
@@ -183,20 +183,20 @@ const testFloats: [number, string][] = [
   [0.0, 'Zero'],
   [0.04, 'Zero Presje Zero Katër'],
   [0.4, 'Zero Presje Katër'],
-  [0.63, 'Zero Presje Gjashtëdhjetë Tre'],
-  [37.06, 'Tridhjetë Shtatë Presje Zero Gjashtë'],
-  [37.68, 'Tridhjetë Shtatë Presje Gjashtëdhjetë Tetë'],
+  [0.63, 'Zero Presje Gjashtëdhjetë E Tre'],
+  [37.06, 'Tridhjetë E Shtatë Presje Zero Gjashtë'],
+  [37.68, 'Tridhjetë E Shtatë Presje Gjashtëdhjetë E Tetë'],
 ];
 
 describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
   const testIncludeZeroFractional: [number | string, string][] = [
-    [123, `Njëqind Njëzet Tre Lekë Vetëm`],
-    ['123', `Njëqind Njëzet Tre Lekë Vetëm`],
-    ['123.0', `Njëqind Njëzet Tre Lekë E Zero Qindarka Vetëm`],
-    ['123.00', `Njëqind Njëzet Tre Lekë E Zero Qindarka Vetëm`],
+    [123, `Njëqind E Njëzet E Tre Lekë Vetëm`],
+    ['123', `Njëqind E Njëzet E Tre Lekë Vetëm`],
+    ['123.0', `Njëqind E Njëzet E Tre Lekë E Zero Qindarka Vetëm`],
+    ['123.00', `Njëqind E Njëzet E Tre Lekë E Zero Qindarka Vetëm`],
     ['0.00', `Zero Lekë E Zero Qindarka Vetëm`],
-    ['-123.00', `Minus Njëqind Njëzet Tre Lekë E Zero Qindarka Vetëm`],
-    ['37.68', `Tridhjetë Shtatë Lekë E Gjashtëdhjetë Tetë Qindarka Vetëm`],
+    ['-123.00', `Minus Njëqind E Njëzet E Tre Lekë E Zero Qindarka Vetëm`],
+    ['37.68', `Tridhjetë E Shtatë Lekë E Gjashtëdhjetë E Tetë Qindarka Vetëm`],
   ];
 
   test.concurrent.each(testIncludeZeroFractional)('convert %s => %s', (input, expected) => {
@@ -219,10 +219,10 @@ const testFloatsWithCurrency: [number, string][] = [
   [0.0, 'Zero Lekë Vetëm'],
   [0.04, 'Zero Lekë E Katër Qindarka Vetëm'],
   [0.4, 'Zero Lekë E Dyzet Qindarka Vetëm'],
-  [0.63, 'Zero Lekë E Gjashtëdhjetë Tre Qindarka Vetëm'],
+  [0.63, 'Zero Lekë E Gjashtëdhjetë E Tre Qindarka Vetëm'],
   [0.999, 'Një Lek Vetëm'],
-  [37.06, 'Tridhjetë Shtatë Lekë E Gjashtë Qindarka Vetëm'],
-  [37.68, 'Tridhjetë Shtatë Lekë E Gjashtëdhjetë Tetë Qindarka Vetëm'],
+  [37.06, 'Tridhjetë E Shtatë Lekë E Gjashtë Qindarka Vetëm'],
+  [37.68, 'Tridhjetë E Shtatë Lekë E Gjashtëdhjetë E Tetë Qindarka Vetëm'],
 ];
 
 describe('Test Floats with options = { currency: true }', () => {
@@ -261,8 +261,8 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
     [0.4, 'Zero Lekë Vetëm'],
     [0.63, 'Zero Lekë Vetëm'],
     [0.999, 'Zero Lekë Vetëm'],
-    [37.06, 'Tridhjetë Shtatë Lekë Vetëm'],
-    [37.68, 'Tridhjetë Shtatë Lekë Vetëm'],
+    [37.06, 'Tridhjetë E Shtatë Lekë Vetëm'],
+    [37.68, 'Tridhjetë E Shtatë Lekë Vetëm'],
   ];
 
   test.concurrent.each(testFloatsWithCurrencyAndIgnoreDecimal)('convert %d => %s', (input, expected) => {
@@ -297,8 +297,8 @@ const testOrdinalNumbers: [number, string][] = [
   [18, 'I Tetëmbëdhjetëti'],
   [19, 'I Nëntëmbëdhjetëti'],
   [20, 'I Njëzetti'],
-  [21, 'Njëzet I Parë'],
-  [22, 'Njëzet I Dytë'],
+  [21, 'I Njëzet E Njëti'],
+  [22, 'I Njëzet E Dyti'],
   [30, 'I Tridhjetëti'],
   [40, 'I Dyzetti'],
   [50, 'I Pesëdhjetëti'],
@@ -307,11 +307,11 @@ const testOrdinalNumbers: [number, string][] = [
   [80, 'I Tetëdhjetëti'],
   [90, 'I Nëntëdhjetëti'],
   [100, 'I Njëqindti'],
-  [101, 'Njëqind I Parë'],
+  [101, 'I Njëqind E Njëti'],
   [200, 'I Dyqindti'],
   [300, 'I Treqindti'],
   [1000, 'I Mijëti'],
-  [1001, 'Një Mijë I Parë'],
+  [1001, 'I Një Mijë E Njëti'],
   [1000000, 'I Milionti'],
 ];
 
@@ -465,7 +465,7 @@ const testFractionStyleSqAL: [number, string][] = [
   [1.1, 'Një E Një E Dhjeta'],
   [2.5, 'Dy E Pesë Të Dhjeta'],
   [1.01, 'Një E Një E Qindta'],
-  [1.45, 'Një E Dyzet Pesë Të Qindtat'],
+  [1.45, 'Një E Dyzet E Pesë Të Qindtat'],
   [0.05, 'Zero E Pesë Të Qindtat'],
   [1.001, 'Një E Një E Mijëta'],
   [1.005, 'Një E Pesë Të Mijëtat'],
@@ -475,7 +475,7 @@ const testFractionStyleSqAL: [number, string][] = [
   [1.00005, 'Një E Pesë Të Njëqind Mijëtat'],
   [1.000001, 'Një E Një E Milionëta'],
   [1.000005, 'Një E Pesë Të Milionëtat'],
-  [123.45, 'Njëqind Njëzet Tre E Dyzet Pesë Të Qindtat'],
+  [123.45, 'Njëqind E Njëzet E Tre E Dyzet E Pesë Të Qindtat'],
 ];
 
 describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
@@ -485,10 +485,10 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
 
   test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
     expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
-      'Një Presje Një Milion Dyqind Tridhjetë Katër Mijë Pesëqind Gjashtëdhjetë Shtatë',
+      'Një Presje Një Milion E Dyqind E Tridhjetë E Katër Mijë E Pesëqind E Gjashtëdhjetë E Shtatë',
     );
     expect(toWords.convert(1.1234567)).toBe(
-      'Një Presje Një Milion Dyqind Tridhjetë Katër Mijë Pesëqind Gjashtëdhjetë Shtatë',
+      'Një Presje Një Milion E Dyqind E Tridhjetë E Katër Mijë E Pesëqind E Gjashtëdhjetë E Shtatë',
     );
   });
 

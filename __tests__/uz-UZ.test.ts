@@ -257,7 +257,7 @@ const testOrdinals = [
   [25, 'Yigirma Beshinchi'],
   [30, "O'ttizinchi"],
   [40, 'Qirqinchi'],
-  [50, 'Ellikinchi'],
+  [50, 'Elliginchi'],
   [100, 'Yuzinchi'],
   [1000, 'Minginchi'],
 ];

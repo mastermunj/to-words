@@ -69,6 +69,9 @@ export default class Locale implements LocaleInterface {
       { number: 100, value: 'Seratus' },
     ],
     ignoreOneForWords: ['Ribu', 'Ratus'],
+    // CLDR id: «ke-» joins the whole number (kedua puluh satu, keseratus).
+    ordinalPrefix: 'Ke',
+    ordinalComposition: 'fused-prefix',
     ordinalWordsMapping: [
       { number: 1000000000000000, value: 'Kekuadriliun' },
       { number: 1000000000000, value: 'Ketriliun' },
@@ -102,7 +105,8 @@ export default class Locale implements LocaleInterface {
       { number: 4, value: 'Keempat' },
       { number: 3, value: 'Ketiga' },
       { number: 2, value: 'Kedua' },
-      { number: 1, value: 'Kesatu' },
+      // Standalone first is «pertama» (id.wikipedia 193,060 vs «kesatu» 159); compounds keep ke- (Kedua Puluh Satu).
+      { number: 1, value: 'Pertama' },
       { number: 0, value: 'Kenol' },
     ],
     ordinalExactWordsMapping: [

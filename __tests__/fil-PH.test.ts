@@ -55,43 +55,49 @@ const testIntegers: [number, string][] = [
   [18, 'Labingwalo'],
   [19, 'Labinsiyam'],
   [20, 'Dalawampu'],
-  [21, 'Dalawampu Isa'],
-  [25, 'Dalawampu Lima'],
+  [21, "Dalawampu't Isa"],
+  [25, "Dalawampu't Lima"],
   [30, 'Tatlumpu'],
-  [35, 'Tatlumpu Lima'],
+  [35, "Tatlumpu't Lima"],
   [50, 'Limampu'],
-  [99, 'Siyamnapu Siyam'],
+  [99, "Siyamnapu't Siyam"],
   [100, 'Isang Daan'],
-  [101, 'Isa Daan Isa'],
-  [111, 'Isa Daan Labing-isa'],
-  [137, 'Isa Daan Tatlumpu Pito'],
-  [200, 'Dalawa Daan'],
-  [500, 'Lima Daan'],
-  [700, 'Pito Daan'],
-  [999, 'Siyam Daan Siyamnapu Siyam'],
+  [101, 'Isang Daan At Isa'],
+  [111, 'Isang Daan At Labing-isa'],
+  [137, "Isang Daan At Tatlumpu't Pito"],
+  [200, 'Dalawang Daan'],
+  [500, 'Limang Daan'],
+  [700, 'Pitong Daan'],
+  [999, "Siyam Na Raan At Siyamnapu't Siyam"],
   [1000, 'Isang Libo'],
-  [1001, 'Isa Libo Isa'],
-  [1100, 'Isa Libo Isang Daan'],
-  [1111, 'Isa Libo Isa Daan Labing-isa'],
-  [2000, 'Dalawa Libo'],
-  [4680, 'Apat Libo Anim Daan Walumpu'],
-  [10000, 'Sampu Libo'],
-  [11000, 'Labing-isa Libo'],
-  [21000, 'Dalawampu Isa Libo'],
-  [63892, 'Animnapu Tatlo Libo Walo Daan Siyamnapu Dalawa'],
-  [86100, 'Walumpu Anim Libo Isang Daan'],
-  [100000, 'Isang Daan Libo'],
-  [123456, 'Isa Daan Dalawampu Tatlo Libo Apat Daan Limampu Anim'],
-  [792581, 'Pito Daan Siyamnapu Dalawa Libo Lima Daan Walumpu Isa'],
+  [1001, "Isang Libo't Isa"],
+  [1100, "Isang Libo't Isang Daan"],
+  [1111, "Isang Libo't Isang Daan At Labing-isa"],
+  [2000, 'Dalawang Libo'],
+  [4680, "Apat Na Libo't Anim Na Raan At Walumpu"],
+  [10000, 'Sampung Libo'],
+  [11000, 'Labing-isang Libo'],
+  [21000, "Dalawampu't Isang Libo"],
+  [63892, "Animnapu't Tatlong Libo't Walong Daan At Siyamnapu't Dalawa"],
+  [86100, "Walumpu't Anim Na Libo't Isang Daan"],
+  [100000, 'Isang Daang Libo'],
+  [123456, "Isang Daan At Dalawampu't Tatlong Libo't Apat Na Raan At Limampu't Anim"],
+  [792581, "Pitong Daan At Siyamnapu't Dalawang Libo't Limang Daan At Walumpu't Isa"],
   [1000000, 'Isang Milyon'],
-  [2000000, 'Dalawa Milyon'],
-  [2741034, 'Dalawa Milyon Pito Daan Apatnapu Isa Libo Tatlumpu Apat'],
-  [10000000, 'Sampu Milyon'],
-  [86429753, 'Walumpu Anim Milyon Apat Daan Dalawampu Siyam Libo Pito Daan Limampu Tatlo'],
-  [100000000, 'Isang Daan Milyon'],
-  [975310864, 'Siyam Daan Pitumpu Lima Milyon Tatlo Daan Sampu Libo Walo Daan Animnapu Apat'],
+  [2000000, 'Dalawang Milyon'],
+  [2741034, "Dalawang Milyon At Pitong Daan At Apatnapu't Isang Libo't Tatlumpu't Apat"],
+  [10000000, 'Sampung Milyon'],
+  [86429753, "Walumpu't Anim Na Milyon At Apat Na Raan At Dalawampu't Siyam Na Libo't Pitong Daan At Limampu't Tatlo"],
+  [100000000, 'Isang Daang Milyon'],
+  [
+    975310864,
+    "Siyam Na Raan At Pitumpu't Limang Milyon At Tatlong Daan At Sampung Libo't Walong Daan At Animnapu't Apat",
+  ],
   [1000000000, 'Isang Bilyon'],
-  [9876543210, 'Siyam Bilyon Walo Daan Pitumpu Anim Milyon Lima Daan Apatnapu Tatlo Libo Dalawa Daan Sampu'],
+  [
+    9876543210,
+    "Siyam Na Bilyon At Walong Daan At Pitumpu't Anim Na Milyon At Limang Daan At Apatnapu't Tatlong Libo't Dalawang Daan At Sampu",
+  ],
   [1000000000000, 'Isang Trilyon'],
 ];
 
@@ -117,30 +123,30 @@ describe('Test Negative Integers with options = {}', () => {
 });
 
 const testIntegersWithCurrency: [number, string][] = [
-  [0, 'Sero Piso'],
-  [1, 'Isa Piso'],
-  [2, 'Dalawa Piso'],
-  [3, 'Tatlo Piso'],
-  [4, 'Apat Piso'],
-  [5, 'Lima Piso'],
-  [6, 'Anim Piso'],
-  [7, 'Pito Piso'],
-  [8, 'Walo Piso'],
-  [9, 'Siyam Piso'],
-  [10, 'Sampu Piso'],
-  [21, 'Dalawampu Isa Piso'],
-  [100, 'Isang Daan Piso'],
-  [101, 'Isa Daan Isa Piso'],
-  [111, 'Isa Daan Labing-isa Piso'],
-  [137, 'Isa Daan Tatlumpu Pito Piso'],
-  [1000, 'Isang Libo Piso'],
-  [1001, 'Isa Libo Isa Piso'],
-  [1100, 'Isa Libo Isang Daan Piso'],
-  [1111, 'Isa Libo Isa Daan Labing-isa Piso'],
-  [10000, 'Sampu Libo Piso'],
-  [100000, 'Isang Daan Libo Piso'],
-  [123456, 'Isa Daan Dalawampu Tatlo Libo Apat Daan Limampu Anim Piso'],
-  [1000000, 'Isang Milyon Piso'],
+  [0, 'Serong Piso'],
+  [1, 'Isang Piso'],
+  [2, 'Dalawang Piso'],
+  [3, 'Tatlong Piso'],
+  [4, 'Apat Na Piso'],
+  [5, 'Limang Piso'],
+  [6, 'Anim Na Piso'],
+  [7, 'Pitong Piso'],
+  [8, 'Walong Piso'],
+  [9, 'Siyam Na Piso'],
+  [10, 'Sampung Piso'],
+  [21, "Dalawampu't Isang Piso"],
+  [100, 'Isang Daang Piso'],
+  [101, 'Isang Daan At Isang Piso'],
+  [111, 'Isang Daan At Labing-isang Piso'],
+  [137, "Isang Daan At Tatlumpu't Pitong Piso"],
+  [1000, 'Isang Libong Piso'],
+  [1001, "Isang Libo't Isang Piso"],
+  [1100, "Isang Libo't Isang Daang Piso"],
+  [1111, "Isang Libo't Isang Daan At Labing-isang Piso"],
+  [10000, 'Sampung Libong Piso'],
+  [100000, 'Isang Daang Libong Piso'],
+  [123456, "Isang Daan At Dalawampu't Tatlong Libo't Apat Na Raan At Limampu't Anim Na Piso"],
+  [1000000, 'Isang Milyong Piso'],
 ];
 
 describe('Test Integers with options = { currency: true }', () => {
@@ -172,7 +178,7 @@ describe('Test Negative Integers with options = { currency: true }', () => {
     row[1] = `Minus ${row[1]} Lamang`;
   });
 
-  testNegativeIntegersWithCurrency[0][1] = 'Sero Piso Lamang';
+  testNegativeIntegersWithCurrency[0][1] = 'Serong Piso Lamang';
 
   test.concurrent.each(testNegativeIntegersWithCurrency)('convert %d => %s', (input, expected) => {
     expect(toWords.convert(input as number, { currency: true })).toBe(expected);
@@ -200,28 +206,28 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
 });
 
 const testFloatsWithCurrency: [number, string][] = [
-  [0, 'Sero Piso Lamang'],
-  [0.04, 'Sero Piso At Apat Sentimo Lamang'],
-  [0.0468, 'Sero Piso At Lima Sentimo Lamang'],
-  [0.4, 'Sero Piso At Apatnapu Sentimo Lamang'],
-  [0.63, 'Sero Piso At Animnapu Tatlo Sentimo Lamang'],
-  [0.973, 'Sero Piso At Siyamnapu Pito Sentimo Lamang'],
-  [0.999, 'Isa Piso Lamang'],
-  [37.06, 'Tatlumpu Pito Piso At Anim Sentimo Lamang'],
-  [37.068, 'Tatlumpu Pito Piso At Pito Sentimo Lamang'],
-  [37.68, 'Tatlumpu Pito Piso At Animnapu Walo Sentimo Lamang'],
-  [37.683, 'Tatlumpu Pito Piso At Animnapu Walo Sentimo Lamang'],
+  [0, 'Serong Piso Lamang'],
+  [0.04, 'Serong Piso At Apat Na Sentimo Lamang'],
+  [0.0468, 'Serong Piso At Limang Sentimo Lamang'],
+  [0.4, 'Serong Piso At Apatnapung Sentimo Lamang'],
+  [0.63, "Serong Piso At Animnapu't Tatlong Sentimo Lamang"],
+  [0.973, "Serong Piso At Siyamnapu't Pitong Sentimo Lamang"],
+  [0.999, 'Isang Piso Lamang'],
+  [37.06, "Tatlumpu't Pitong Piso At Anim Na Sentimo Lamang"],
+  [37.068, "Tatlumpu't Pitong Piso At Pitong Sentimo Lamang"],
+  [37.68, "Tatlumpu't Pitong Piso At Animnapu't Walong Sentimo Lamang"],
+  [37.683, "Tatlumpu't Pitong Piso At Animnapu't Walong Sentimo Lamang"],
 ];
 
 describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
   const testIncludeZeroFractional: [number | string, string][] = [
-    [123, `Isa Daan Dalawampu Tatlo Piso Lamang`],
-    ['123', `Isa Daan Dalawampu Tatlo Piso Lamang`],
-    ['123.0', `Isa Daan Dalawampu Tatlo Piso At Sero Sentimo Lamang`],
-    ['123.00', `Isa Daan Dalawampu Tatlo Piso At Sero Sentimo Lamang`],
-    ['0.00', `Sero Piso At Sero Sentimo Lamang`],
-    ['-123.00', `Minus Isa Daan Dalawampu Tatlo Piso At Sero Sentimo Lamang`],
-    ['37.68', `Tatlumpu Pito Piso At Animnapu Walo Sentimo Lamang`],
+    [123, `Isang Daan At Dalawampu't Tatlong Piso Lamang`],
+    ['123', `Isang Daan At Dalawampu't Tatlong Piso Lamang`],
+    ['123.0', `Isang Daan At Dalawampu't Tatlong Piso At Serong Sentimo Lamang`],
+    ['123.00', `Isang Daan At Dalawampu't Tatlong Piso At Serong Sentimo Lamang`],
+    ['0.00', `Serong Piso At Serong Sentimo Lamang`],
+    ['-123.00', `Minus Isang Daan At Dalawampu't Tatlong Piso At Serong Sentimo Lamang`],
+    ['37.68', `Tatlumpu't Pitong Piso At Animnapu't Walong Sentimo Lamang`],
   ];
 
   test.concurrent.each(testIncludeZeroFractional)('convert %s => %s', (input, expected) => {
@@ -244,7 +250,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true 
   const testFloatsWithCurrencyData = cloneDeep(testFloatsWithCurrency);
   testFloatsWithCurrencyData[0][1] = '';
   testFloatsWithCurrencyData.map((row) => {
-    row[1] = row[1].replace('Sero Piso At ', '');
+    row[1] = row[1].replace('Serong Piso At ', '');
   });
 
   test.concurrent.each(testFloatsWithCurrencyData)('convert %d => %s', (input, expected) => {
@@ -261,7 +267,7 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
   const testFloatsWithCurrencyData = cloneDeep(testFloatsWithCurrency);
   testFloatsWithCurrencyData.map((row) => {
     if (row[0] === 0.999) {
-      row[1] = 'Sero Piso Lamang';
+      row[1] = 'Serong Piso Lamang';
     } else {
       row[1] = row[1].replace(new RegExp(' At .* Sentimo'), '');
     }
@@ -298,13 +304,13 @@ const testFloats: [number, string][] = [
   [0.04, 'Sero Tuldok Sero Apat'],
   [0.0468, 'Sero Tuldok Sero Apat Anim Walo'],
   [0.4, 'Sero Tuldok Apat'],
-  [0.63, 'Sero Tuldok Animnapu Tatlo'],
-  [0.973, 'Sero Tuldok Siyam Daan Pitumpu Tatlo'],
-  [0.999, 'Sero Tuldok Siyam Daan Siyamnapu Siyam'],
-  [37.06, 'Tatlumpu Pito Tuldok Sero Anim'],
-  [37.068, 'Tatlumpu Pito Tuldok Sero Anim Walo'],
-  [37.68, 'Tatlumpu Pito Tuldok Animnapu Walo'],
-  [37.683, 'Tatlumpu Pito Tuldok Anim Daan Walumpu Tatlo'],
+  [0.63, "Sero Tuldok Animnapu't Tatlo"],
+  [0.973, "Sero Tuldok Siyam Na Raan At Pitumpu't Tatlo"],
+  [0.999, "Sero Tuldok Siyam Na Raan At Siyamnapu't Siyam"],
+  [37.06, "Tatlumpu't Pito Tuldok Sero Anim"],
+  [37.068, "Tatlumpu't Pito Tuldok Sero Anim Walo"],
+  [37.68, "Tatlumpu't Pito Tuldok Animnapu't Walo"],
+  [37.683, "Tatlumpu't Pito Tuldok Anim Na Raan At Walumpu't Tatlo"],
 ];
 
 describe('Test Floats with options = {}', () => {
@@ -335,9 +341,9 @@ const testOrdinalNumbers: [number, string][] = [
   [18, 'Ikalabingwalo'],
   [19, 'Ikalabinsiyam'],
   [20, 'Ikadalawampu'],
-  [21, 'Dalawampu Una'],
-  [22, 'Dalawampu Ikalawa'],
-  [23, 'Dalawampu Ikatlo'],
+  [21, "Ikadalawampu't Isa"],
+  [22, "Ikadalawampu't Dalawa"],
+  [23, "Ikadalawampu't Tatlo"],
   [30, 'Ikatatlumpu'],
   [40, 'Ikaapatnapu'],
   [50, 'Ikalimampu'],
@@ -345,33 +351,33 @@ const testOrdinalNumbers: [number, string][] = [
   [70, 'Ikapitumpu'],
   [80, 'Ikawalumpu'],
   [90, 'Ikasiyamnapu'],
-  [31, 'Tatlumpu Una'],
-  [32, 'Tatlumpu Ikalawa'],
-  [33, 'Tatlumpu Ikatlo'],
-  [41, 'Apatnapu Una'],
-  [42, 'Apatnapu Ikalawa'],
-  [43, 'Apatnapu Ikatlo'],
-  [51, 'Limampu Una'],
-  [52, 'Limampu Ikalawa'],
-  [53, 'Limampu Ikatlo'],
-  [100, 'Isang Ikadaan'],
-  [200, 'Dalawa Ikadaan'],
-  [1000, 'Isang Ikalibo'],
-  [10000, 'Sampu Ikalibo'],
-  [100000, 'Isang Daan Ikalibo'],
-  [1000000, 'Isang Ikamilyon'],
-  [10000000, 'Sampu Ikamilyon'],
-  [101, 'Isa Daan Una'],
-  [102, 'Isa Daan Ikalawa'],
-  [103, 'Isa Daan Ikatlo'],
-  [111, 'Isa Daan Ikalabing-isa'],
-  [112, 'Isa Daan Ikalabindalawa'],
-  [113, 'Isa Daan Ikalabintatlo'],
-  [123, 'Isa Daan Dalawampu Ikatlo'],
-  [1001, 'Isa Libo Una'],
-  [1111, 'Isa Libo Isa Daan Ikalabing-isa'],
-  [1234, 'Isa Libo Dalawa Daan Tatlumpu Ikaapat'],
-  [12345, 'Labindalawa Libo Tatlo Daan Apatnapu Ikalima'],
+  [31, "Ikatatlumpu't Isa"],
+  [32, "Ikatatlumpu't Dalawa"],
+  [33, "Ikatatlumpu't Tatlo"],
+  [41, "Ikaapatnapu't Isa"],
+  [42, "Ikaapatnapu't Dalawa"],
+  [43, "Ikaapatnapu't Tatlo"],
+  [51, "Ikalimampu't Isa"],
+  [52, "Ikalimampu't Dalawa"],
+  [53, "Ikalimampu't Tatlo"],
+  [100, 'Ikaisang Daan'],
+  [200, 'Ikadalawang Daan'],
+  [1000, 'Ikaisang Libo'],
+  [10000, 'Ikasampung Libo'],
+  [100000, 'Ikaisang Daang Libo'],
+  [1000000, 'Ikaisang Milyon'],
+  [10000000, 'Ikasampung Milyon'],
+  [101, 'Ikaisang Daan At Isa'],
+  [102, 'Ikaisang Daan At Dalawa'],
+  [103, 'Ikaisang Daan At Tatlo'],
+  [111, 'Ikaisang Daan At Labing-isa'],
+  [112, 'Ikaisang Daan At Labindalawa'],
+  [113, 'Ikaisang Daan At Labintatlo'],
+  [123, "Ikaisang Daan At Dalawampu't Tatlo"],
+  [1001, "Ikaisang Libo't Isa"],
+  [1111, "Ikaisang Libo't Isang Daan At Labing-isa"],
+  [1234, "Ikaisang Libo't Dalawang Daan At Tatlumpu't Apat"],
+  [12345, "Ikalabindalawang Libo't Tatlong Daan At Apatnapu't Lima"],
 ];
 
 describe('Test Ordinal Numbers', () => {
@@ -406,8 +412,8 @@ const testPowersOfTen: [number, string][] = [
   [10, 'Sampu'],
   [100, 'Isang Daan'],
   [1000, 'Isang Libo'],
-  [10000, 'Sampu Libo'],
-  [100000, 'Isang Daan Libo'],
+  [10000, 'Sampung Libo'],
+  [100000, 'Isang Daang Libo'],
   [1000000, 'Isang Milyon'],
 ];
 
@@ -476,8 +482,8 @@ describe('Test Zero Variants', () => {
     expect(toWords.convert('0')).toBe('Sero');
   });
 
-  test.concurrent('convert 0 with currency => Sero Piso Lamang', () => {
-    expect(toWords.convert(0, { currency: true })).toBe('Sero Piso Lamang');
+  test.concurrent('convert 0 with currency => Serong Piso Lamang', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('Serong Piso Lamang');
   });
 });
 

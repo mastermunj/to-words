@@ -35,34 +35,31 @@ describe('Test Locale', () => {
 
 const testIntegers: [number, string][] = [
   [0, 'nulle'],
-  [137, 'simtu trīsdesmit septiņi'],
-  [700, 'septiņi simti'],
-  [4680, 'četri tūkstoši seši simti astoņdesmit'],
-  [63892, 'sešdesmit trīs tūkstoši astoņi simti deviņdesmit divi'],
-  [792581, 'septiņi simti deviņdesmit divi tūkstoši pieci simti astoņdesmit viens'],
-  [1234567, 'viens miljons divi simti trīsdesmit četri tūkstoši pieci simti sešdesmit septiņi'],
-  [2741034, 'divi miljoni septiņi simti četrdesmit viens tūkstotis trīsdesmit četri'],
-  [86429753, 'astoņdesmit seši miljoni četri simti divdesmit deviņi tūkstoši septiņi simti piecdesmit trīs'],
-  [975310864, 'deviņi simti septiņdesmit pieci miljoni trīs simti desmit tūkstoši astoņi simti sešdesmit četri'],
-  [
-    9876543210,
-    'deviņi miljardi astoņi simti septiņdesmit seši miljoni pieci simti četrdesmit trīs tūkstoši divi simti desmit',
-  ],
+  [137, 'simt trīsdesmit septiņi'],
+  [700, 'septiņsimt'],
+  [4680, 'četri tūkstoši sešsimt astoņdesmit'],
+  [63892, 'sešdesmit trīs tūkstoši astoņsimt deviņdesmit divi'],
+  [792581, 'septiņsimt deviņdesmit divi tūkstoši piecsimt astoņdesmit viens'],
+  [1234567, 'viens miljons divsimt trīsdesmit četri tūkstoši piecsimt sešdesmit septiņi'],
+  [2741034, 'divi miljoni septiņsimt četrdesmit viens tūkstotis trīsdesmit četri'],
+  [86429753, 'astoņdesmit seši miljoni četrsimt divdesmit deviņi tūkstoši septiņsimt piecdesmit trīs'],
+  [975310864, 'deviņsimt septiņdesmit pieci miljoni trīssimt desmit tūkstoši astoņsimt sešdesmit četri'],
+  [9876543210, 'deviņi miljardi astoņsimt septiņdesmit seši miljoni piecsimt četrdesmit trīs tūkstoši divsimt desmit'],
   [
     98765432101,
-    'deviņdesmit astoņi miljardi septiņi simti sešdesmit pieci miljoni četri simti trīsdesmit divi tūkstoši simtu viens',
+    'deviņdesmit astoņi miljardi septiņsimt sešdesmit pieci miljoni četrsimt trīsdesmit divi tūkstoši simt viens',
   ],
   [
     987654321012,
-    'deviņi simti astoņdesmit septiņi miljardi seši simti piecdesmit četri miljoni trīs simti divdesmit viens tūkstotis divpadsmit',
+    'deviņsimt astoņdesmit septiņi miljardi sešsimt piecdesmit četri miljoni trīssimt divdesmit viens tūkstotis divpadsmit',
   ],
   [
     9876543210123,
-    'deviņi triljoni astoņi simti septiņdesmit seši miljardi pieci simti četrdesmit trīs miljoni divi simti desmit tūkstoši simtu divdesmit trīs',
+    'deviņi triljoni astoņsimt septiņdesmit seši miljardi piecsimt četrdesmit trīs miljoni divsimt desmit tūkstoši simt divdesmit trīs',
   ],
   [
     98765432101234,
-    'deviņdesmit astoņi triljoni septiņi simti sešdesmit pieci miljardi četri simti trīsdesmit divi miljoni simtu viens tūkstotis divi simti trīsdesmit četri',
+    'deviņdesmit astoņi triljoni septiņsimt sešdesmit pieci miljardi četrsimt trīsdesmit divi miljoni simt viens tūkstotis divsimt trīsdesmit četri',
   ],
 ];
 
@@ -131,22 +128,22 @@ const testFloats: [number, string][] = [
   [0.0468, 'nulle komats nulle četri seši astoņi'],
   [0.4, 'nulle komats četri'],
   [0.63, 'nulle komats sešdesmit trīs'],
-  [0.973, 'nulle komats deviņi simti septiņdesmit trīs'],
-  [0.999, 'nulle komats deviņi simti deviņdesmit deviņi'],
+  [0.973, 'nulle komats deviņsimt septiņdesmit trīs'],
+  [0.999, 'nulle komats deviņsimt deviņdesmit deviņi'],
   [37.06, 'trīsdesmit septiņi komats nulle seši'],
   [37.068, 'trīsdesmit septiņi komats nulle seši astoņi'],
   [37.68, 'trīsdesmit septiņi komats sešdesmit astoņi'],
-  [37.683, 'trīsdesmit septiņi komats seši simti astoņdesmit trīs'],
+  [37.683, 'trīsdesmit septiņi komats sešsimt astoņdesmit trīs'],
 ];
 
 describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
   const testIncludeZeroFractional: [number | string, string][] = [
-    [123, `simtu divdesmit trīs eiro`],
-    ['123', `simtu divdesmit trīs eiro`],
-    ['123.0', `simtu divdesmit trīs eiro un nulle centi`],
-    ['123.00', `simtu divdesmit trīs eiro un nulle centi`],
+    [123, `simt divdesmit trīs eiro`],
+    ['123', `simt divdesmit trīs eiro`],
+    ['123.0', `simt divdesmit trīs eiro un nulle centi`],
+    ['123.00', `simt divdesmit trīs eiro un nulle centi`],
     ['0.00', `nulle eiro un nulle centi`],
-    ['-123.00', `mīnus simtu divdesmit trīs eiro un nulle centi`],
+    ['-123.00', `mīnus simt divdesmit trīs eiro un nulle centi`],
     ['37.68', `trīsdesmit septiņi eiro un sešdesmit astoņi centi`],
   ];
 
@@ -285,12 +282,12 @@ const testOrdinals: [number, string][] = [
   [90, 'deviņdesmitais'],
   [99, 'deviņdesmit devītais'],
   [100, 'simtais'],
-  [101, 'simtu pirmais'],
-  [123, 'simtu divdesmit trešais'],
-  [1000, 'viens tūkstošais'],
+  [101, 'simt pirmais'],
+  [123, 'simt divdesmit trešais'],
+  [1000, 'tūkstošais'],
   [1001, 'viens tūkstotis pirmais'],
-  [1000000, 'viens miljonais'],
-  [1000000000, 'viens miljardais'],
+  [1000000, 'miljonais'],
+  [1000000000, 'miljardais'],
 ];
 
 describe('Test Ordinals with toOrdinal()', () => {
@@ -311,10 +308,10 @@ describe('Test Ordinal Error Cases', () => {
 
 const testPowersOfTen: [number, string][] = [
   [10, 'desmit'],
-  [100, 'Simtu'],
+  [100, 'simts'],
   [1000, 'viens tūkstotis'],
   [10000, 'desmit tūkstoši'],
-  [100000, 'Simtu tūkstoši'],
+  [100000, 'simts tūkstoši'],
   [1000000, 'viens miljons'],
 ];
 
@@ -327,7 +324,7 @@ describe('Test Powers of Ten', () => {
 const testBigInt: [bigint, string][] = [
   [0n, 'nulle'],
   [1n, 'viens'],
-  [100n, 'Simtu'],
+  [100n, 'simts'],
   [1000n, 'viens tūkstotis'],
 ];
 
@@ -339,7 +336,7 @@ describe('Test BigInt', () => {
 
 const testNegativeBigInt: [bigint, string][] = [
   [-1n, 'mīnus viens'],
-  [-100n, 'mīnus Simtu'],
+  [-100n, 'mīnus simts'],
   [-1000n, 'mīnus viens tūkstotis'],
 ];
 
@@ -352,8 +349,8 @@ describe('Test Negative BigInt', () => {
 const testStringInput: [string, string][] = [
   ['0', 'nulle'],
   ['1', 'viens'],
-  ['100', 'Simtu'],
-  ['-100', 'mīnus Simtu'],
+  ['100', 'simts'],
+  ['-100', 'mīnus simts'],
 ];
 
 describe('Test String Input', () => {
@@ -430,20 +427,20 @@ describe('Functional helpers (locale-level)', () => {
 });
 
 const testFractionStyleLvLV: [number, string][] = [
-  [1.1, 'viens un viens Desmitdaļa'],
-  [2.5, 'divi un pieci Desmitdaļas'],
-  [1.01, 'viens un viens Simtdaļa'],
-  [1.45, 'viens un četrdesmit pieci Simtdaļas'],
-  [0.05, 'nulle un pieci Simtdaļas'],
-  [1.001, 'viens un viens Tūkstošdaļa'],
-  [1.005, 'viens un pieci Tūkstošdaļas'],
-  [1.0001, 'viens un viens Desmittūkstošdaļa'],
-  [1.0005, 'viens un pieci Desmittūkstošdaļas'],
-  [1.00001, 'viens un viens Simttūkstošdaļa'],
-  [1.00005, 'viens un pieci Simttūkstošdaļas'],
-  [1.000001, 'viens un viens Miljonsdaļa'],
-  [1.000005, 'viens un pieci Miljonsdaļas'],
-  [123.45, 'simtu divdesmit trīs un četrdesmit pieci Simtdaļas'],
+  [1.1, 'viens un viena desmitdaļa'],
+  [2.5, 'divi un piecas desmitdaļas'],
+  [1.01, 'viens un viena simtdaļa'],
+  [1.45, 'viens un četrdesmit piecas simtdaļas'],
+  [0.05, 'nulle un piecas simtdaļas'],
+  [1.001, 'viens un viena tūkstošdaļa'],
+  [1.005, 'viens un piecas tūkstošdaļas'],
+  [1.0001, 'viens un viena desmittūkstošdaļa'],
+  [1.0005, 'viens un piecas desmittūkstošdaļas'],
+  [1.00001, 'viens un viena simttūkstošdaļa'],
+  [1.00005, 'viens un piecas simttūkstošdaļas'],
+  [1.000001, 'viens un viena miljondaļa'],
+  [1.000005, 'viens un piecas miljondaļas'],
+  [123.45, 'simt divdesmit trīs un četrdesmit piecas simtdaļas'],
 ];
 
 describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
@@ -453,15 +450,43 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
 
   test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
     expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
-      'viens komats viens miljons divi simti trīsdesmit četri tūkstoši pieci simti sešdesmit septiņi',
+      'viens komats viens miljons divsimt trīsdesmit četri tūkstoši piecsimt sešdesmit septiņi',
     );
     expect(toWords.convert(1.1234567)).toBe(
-      'viens komats viens miljons divi simti trīsdesmit četri tūkstoši pieci simti sešdesmit septiņi',
+      'viens komats viens miljons divsimt trīsdesmit četri tūkstoši piecsimt sešdesmit septiņi',
     );
   });
 
   test('digit-by-digit style works without decimalStyle option', () => {
     expect(toWords.convert(1.5)).toBe('viens komats pieci');
     expect(toWords.convert(0.05)).toBe('nulle komats nulle pieci');
+  });
+});
+
+describe('Sourced forms (tezaurs.lv)', () => {
+  const tw = new ToWords({ localeCode: 'lv-LV' });
+
+  test.each([
+    [100, 'simts'],
+    [101, 'simt viens'],
+    [2000, 'divi tūkstoši'],
+    [1000000000000, 'viens triljons'],
+  ])('convert %d => %s', (input, expected) => {
+    expect(tw.convert(input)).toBe(expected);
+  });
+
+  test.each([
+    [200, 'divsimtais'],
+    [1000, 'tūkstošais'],
+    [2000, 'divtūkstošais'],
+    [1000000, 'miljonais'],
+    [1200, 'viens tūkstotis divsimtais'],
+  ])('toOrdinal %d => %s', (input, expected) => {
+    expect(tw.toOrdinal(input)).toBe(expected);
+  });
+
+  test('feminine forms of 1-9; currency ignores the gender option', () => {
+    expect(tw.convert(24, { gender: 'feminine' })).toBe('divdesmit četras');
+    expect(tw.convert(1.01, { currency: true, gender: 'feminine' })).toBe('viens eiro un viens cents');
   });
 });

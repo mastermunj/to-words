@@ -1,4 +1,12 @@
-import type { ConversionForm, LocaleConfig, NumberInput, NumberWordMap, OrdinalWordMap } from './types.js';
+import type {
+  ConversionForm,
+  LocaleConfig,
+  NumberInput,
+  NumberWordMap,
+  OrdinalWordMap,
+  PluralUnitForms,
+} from './types.js';
+import { PLURAL_CATEGORIES, PLURAL_RULE_NAMES, type PluralCategory } from './plural-rules.js';
 
 const DEFAULT_CURRENCY_PRECISION = 2;
 
@@ -301,7 +309,73 @@ function validateResolvedConfig(config: LocaleConfig, name: string): string[] {
     }
   }
 
+  validateAccuracyOptions(config, name, issues);
+
   return issues;
+}
+
+const isPositiveInteger = (value: unknown): boolean => Number.isSafeInteger(value) && (value as number) > 0;
+
+function validateUnitForms(forms: PluralUnitForms | undefined, path: string, issues: string[]): void {
+  for (const [category, form] of Object.entries(forms ?? {})) {
+    if (!PLURAL_CATEGORIES.includes(category as PluralCategory) || typeof form !== 'string' || !form) {
+      issues.push(`${path}.${category} must be a CLDR plural category with a non-empty form`);
+    }
+  }
+}
+
+/** Contract for the opt-in accuracy capabilities (plural rules, compounding, ordinals, currency). */
+function validateAccuracyOptions(config: LocaleConfig, name: string, issues: string[]): void {
+  if (config.pluralRule !== undefined && !PLURAL_RULE_NAMES.includes(config.pluralRule)) {
+    issues.push(`${name}.pluralRule must be one of ${PLURAL_RULE_NAMES.join(', ')}`);
+  }
+  for (const [scale, forms] of Object.entries(config.pluralForms ?? {})) {
+    const { dual, paucal, plural, ...categories } = forms;
+    void dual;
+    void paucal;
+    void plural;
+    validateUnitForms(categories, `${name}.pluralForms[${scale}]`, issues);
+  }
+  const currency = config.currency;
+  validateUnitForms(currency.pluralForms, `${name}.currency.pluralForms`, issues);
+  validateUnitForms(currency.fractionalUnit.pluralForms, `${name}.currency.fractionalUnit.pluralForms`, issues);
+  const largerUnit = currency.fractionalUnit.largerUnit;
+  if (largerUnit && (!largerUnit.name || !isPositiveInteger(largerUnit.factor) || largerUnit.factor < 2)) {
+    issues.push(`${name}.currency.fractionalUnit.largerUnit needs a name and an integer factor of at least 2`);
+  }
+  for (const [path, gender] of [
+    ['currency.gender', currency.gender],
+    ['currency.fractionalUnit.gender', currency.fractionalUnit.gender],
+    ...config.numberWordsMapping.map((entry, index) => [`numberWordsMapping[${index}].gender`, entry.gender]),
+  ] as const) {
+    if (gender !== undefined && gender !== 'masculine' && gender !== 'feminine') {
+      issues.push(`${name}.${path} must be masculine or feminine`);
+    }
+  }
+  const joining = config.wordJoining;
+  if (joining) {
+    if (joining.separator !== undefined && typeof joining.separator !== 'string') {
+      issues.push(`${name}.wordJoining.separator must be a string`);
+    }
+    if (joining.compoundBelow !== undefined && !isPositiveInteger(joining.compoundBelow)) {
+      issues.push(`${name}.wordJoining.compoundBelow must be a positive integer`);
+    }
+    if (joining.separateAfter?.some((value) => !isPositiveInteger(value))) {
+      issues.push(`${name}.wordJoining.separateAfter must contain positive integers`);
+    }
+  }
+  if (
+    config.ordinalComposition !== undefined &&
+    !['last-component', 'every-component', 'last-token', 'fused-prefix', 'cardinal'].includes(config.ordinalComposition)
+  ) {
+    issues.push(
+      `${name}.ordinalComposition must be last-component, every-component, last-token, fused-prefix or cardinal`,
+    );
+  }
+  const connector = config.currencyScaleConnector;
+  if (connector && (!connector.word || !isPositiveInteger(connector.minScale) || connector.elidedWord === '')) {
+    issues.push(`${name}.currencyScaleConnector needs a word, a positive integer minScale and a non-empty elidedWord`);
+  }
 }
 
 /**

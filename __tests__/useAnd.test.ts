@@ -69,11 +69,12 @@ describe('useAnd option', () => {
     const toWords = new ToWords({ localeCode: 'de-DE' });
 
     test('101 with useAnd', () => {
-      expect(toWords.convert(101, { useAnd: true })).toBe('Hundert Und Eins');
+      // Duden D 65: one word below a million, so the «und» joins the compound.
+      expect(toWords.convert(101, { useAnd: true })).toBe('Hundertundeins');
     });
 
     test('1001 with useAnd', () => {
-      expect(toWords.convert(1001, { useAnd: true })).toBe('Tausend Und Eins');
+      expect(toWords.convert(1001, { useAnd: true })).toBe('Tausendundeins');
     });
   });
 
@@ -118,11 +119,11 @@ describe('useAnd option', () => {
     const toWords = new ToWords({ localeCode: 'nl-NL' });
 
     test('101 with useAnd', () => {
-      expect(toWords.convert(101, { useAnd: true })).toBe('Een Honderd En Een');
+      expect(toWords.convert(101, { useAnd: true })).toBe('Honderdeneen');
     });
 
     test('1001 with useAnd', () => {
-      expect(toWords.convert(1001, { useAnd: true })).toBe('Een Duizend En Een');
+      expect(toWords.convert(1001, { useAnd: true })).toBe('Duizend En Een');
     });
   });
 
@@ -130,11 +131,11 @@ describe('useAnd option', () => {
     const toWords = new ToWords({ localeCode: 'sv-SE' });
 
     test('101 with useAnd', () => {
-      expect(toWords.convert(101, { useAnd: true })).toBe('Hundra Och Ett');
+      expect(toWords.convert(101, { useAnd: true })).toBe('Hundraochett');
     });
 
     test('1001 with useAnd', () => {
-      expect(toWords.convert(1001, { useAnd: true })).toBe('Tusen Och Ett');
+      expect(toWords.convert(1001, { useAnd: true })).toBe('Tusenochett');
     });
   });
 
@@ -162,7 +163,7 @@ describe('useAnd option', () => {
     });
 
     test('1001 with useAnd', () => {
-      expect(toWords.convert(1001, { useAnd: true })).toBe('Mila E Uno');
+      expect(toWords.convert(1001, { useAnd: true })).toBe('Mille E Uno');
     });
   });
 

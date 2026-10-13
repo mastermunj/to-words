@@ -55,31 +55,31 @@ const testIntegers: [number, string][] = [
   [18, 'שמונה עשרה'],
   [19, 'תשע עשרה'],
   [20, 'עשרים'],
-  [21, 'עשרים ו אחת'],
-  [25, 'עשרים ו חמש'],
+  [21, 'עשרים ואחת'],
+  [25, 'עשרים וחמש'],
   [30, 'שלושים'],
-  [42, 'ארבעים ו שתיים'],
+  [42, 'ארבעים ושתיים'],
   [50, 'חמישים'],
-  [99, 'תשעים ו תשע'],
+  [99, 'תשעים ותשע'],
   [100, 'מאה'],
-  [137, 'אחת מאה ו שלושים ו שבע'],
+  [137, 'מאה שלושים ושבע'],
   [200, 'מאתיים'],
-  [300, 'שלוש מאה'],
-  [500, 'חמש מאה'],
-  [700, 'שבע מאה'],
-  [999, 'תשע מאה ו תשעים ו תשע'],
+  [300, 'שלוש מאות'],
+  [500, 'חמש מאות'],
+  [700, 'שבע מאות'],
+  [999, 'תשע מאות תשעים ותשע'],
   [1000, 'אלף'],
-  [1001, 'אלף ו אחת'],
-  [1234, 'אלף ו שתיים מאה ו שלושים ו ארבע'],
+  [1001, 'אלף ואחת'],
+  [1234, 'אלף מאתיים שלושים וארבע'],
   [2000, 'אלפיים'],
-  [4680, 'ארבע אלף ו שש מאה ו שמונים'],
-  [10000, 'עשר אלף'],
-  [63892, 'שישים ו שלוש אלף ו שמונה מאה ו תשעים ו שתיים'],
+  [4680, 'ארבעת אלפים שש מאות ושמונים'],
+  [10000, 'עשרת אלפים'],
+  [63892, 'שישים ושלושה אלף שמונה מאות תשעים ושתיים'],
   [100000, 'מאה אלף'],
-  [792581, 'שבע מאה ו תשעים ו שתיים אלף ו חמש מאה ו שמונים ו אחת'],
+  [792581, 'שבע מאות תשעים ושניים אלף חמש מאות שמונים ואחת'],
   [1000000, 'מיליון'],
-  [2741034, 'שתיים מיליון ו שבע מאה ו ארבעים ו אחת אלף ו שלושים ו ארבע'],
-  [86429753, 'שמונים ו שש מיליון ו ארבע מאה ו עשרים ו תשע אלף ו שבע מאה ו חמישים ו שלוש'],
+  [2741034, 'שני מיליון שבע מאות ארבעים ואחד אלף שלושים וארבע'],
+  [86429753, 'שמונים ושישה מיליון ארבע מאות עשרים ותשעה אלף שבע מאות חמישים ושלוש'],
   [1000000000, 'מיליארד'],
 ];
 
@@ -108,23 +108,23 @@ const testFloats: [number, string][] = [
   [0.0, 'אפס'],
   [0.4, 'אפס נקודה ארבע'],
   [0.04, 'אפס נקודה אפס ארבע'],
-  [0.63, 'אפס נקודה שישים ו שלוש'],
-  [0.973, 'אפס נקודה תשע מאה ו שבעים ו שלוש'],
-  [0.999, 'אפס נקודה תשע מאה ו תשעים ו תשע'],
-  [37.06, 'שלושים ו שבע נקודה אפס שש'],
-  [37.68, 'שלושים ו שבע נקודה שישים ו שמונה'],
-  [37.683, 'שלושים ו שבע נקודה שש מאה ו שמונים ו שלוש'],
+  [0.63, 'אפס נקודה שישים ושלוש'],
+  [0.973, 'אפס נקודה תשע מאות שבעים ושלוש'],
+  [0.999, 'אפס נקודה תשע מאות תשעים ותשע'],
+  [37.06, 'שלושים ושבע נקודה אפס שש'],
+  [37.68, 'שלושים ושבע נקודה שישים ושמונה'],
+  [37.683, 'שלושים ושבע נקודה שש מאות שמונים ושלוש'],
 ];
 
 describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
   const testIncludeZeroFractional: [number | string, string][] = [
-    [123, `אחת מאה ו עשרים ו שלוש שקלים בלבד`],
-    ['123', `אחת מאה ו עשרים ו שלוש שקלים בלבד`],
-    ['123.0', `אחת מאה ו עשרים ו שלוש שקלים ו אפס אגורות בלבד`],
-    ['123.00', `אחת מאה ו עשרים ו שלוש שקלים ו אפס אגורות בלבד`],
-    ['0.00', `אפס שקלים ו אפס אגורות בלבד`],
-    ['-123.00', `מינוס אחת מאה ו עשרים ו שלוש שקלים ו אפס אגורות בלבד`],
-    ['37.68', `שלושים ו שבע שקלים ו שישים ו שמונה אגורות בלבד`],
+    [123, `מאה עשרים ושלושה שקלים בלבד`],
+    ['123', `מאה עשרים ושלושה שקלים בלבד`],
+    ['123.0', `מאה עשרים ושלושה שקלים ואפס אגורות בלבד`],
+    ['123.00', `מאה עשרים ושלושה שקלים ואפס אגורות בלבד`],
+    ['0.00', `אפס שקלים ואפס אגורות בלבד`],
+    ['-123.00', `מינוס מאה עשרים ושלושה שקלים ואפס אגורות בלבד`],
+    ['37.68', `שלושים ושבעה שקלים ושישים ושמונה אגורות בלבד`],
   ];
 
   test.concurrent.each(testIncludeZeroFractional)('convert %s => %s', (input, expected) => {
@@ -143,13 +143,25 @@ describe('Test Floats with options = {}', () => {
   });
 });
 
+// שקל is masculine and «one»/«two» have fixed phrases (שקל אחד, שני שקלים).
+const shekels = (amount: number): string => {
+  const n = Math.abs(amount);
+  if (n === 1) {
+    return 'שקל אחד';
+  }
+  if (n === 2) {
+    return 'שני שקלים';
+  }
+  return `${toWords.convert(n, { gender: 'masculine' })} שקלים`;
+};
+
 describe('Test Integers with options = { currency: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} שקלים בלבד`;
+    row[1] = `${shekels(row[0] as number)} בלבד`;
   });
   // Fix for singular form
-  testIntegersWithCurrency[1][1] = 'אחת שקל בלבד';
+  testIntegersWithCurrency[1][1] = 'שקל אחד בלבד';
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
     expect(toWords.convert(input as number, { currency: true })).toBe(expected);
@@ -159,10 +171,10 @@ describe('Test Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, doNotAddOnly: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} שקלים`;
+    row[1] = shekels(row[0] as number);
   });
   // Fix for singular form
-  testIntegersWithCurrency[1][1] = 'אחת שקל';
+  testIntegersWithCurrency[1][1] = 'שקל אחד';
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
     expect(toWords.convert(input as number, { currency: true, doNotAddOnly: true })).toBe(expected);
@@ -173,14 +185,14 @@ describe('Test Negative Integers with options = { currency: true }', () => {
   const testNegativeIntegersWithCurrency = cloneDeep(testIntegers);
   testNegativeIntegersWithCurrency.map((row, i) => {
     if (i === 0) {
-      row[1] = `${row[1]} שקלים בלבד`;
+      row[1] = `${shekels(row[0] as number)} בלבד`;
       return;
     }
     row[0] = -row[0];
-    row[1] = `מינוס ${row[1]} שקלים בלבד`;
+    row[1] = `מינוס ${shekels(row[0] as number)} בלבד`;
   });
   // Fix for singular form
-  testNegativeIntegersWithCurrency[1][1] = 'מינוס אחת שקל בלבד';
+  testNegativeIntegersWithCurrency[1][1] = 'מינוס שקל אחד בלבד';
 
   test.concurrent.each(testNegativeIntegersWithCurrency)('convert %d => %s', (input, expected) => {
     expect(toWords.convert(input as number, { currency: true })).toBe(expected);
@@ -190,10 +202,10 @@ describe('Test Negative Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, ignoreZeroCurrency: true }', () => {
   const testIntegersWithCurrencyAndIgnoreZeroCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrencyAndIgnoreZeroCurrency.map((row, i) => {
-    row[1] = i === 0 ? '' : `${row[1]} שקלים בלבד`;
+    row[1] = i === 0 ? '' : `${shekels(row[0] as number)} בלבד`;
   });
   // Fix for singular form
-  testIntegersWithCurrencyAndIgnoreZeroCurrency[1][1] = 'אחת שקל בלבד';
+  testIntegersWithCurrencyAndIgnoreZeroCurrency[1][1] = 'שקל אחד בלבד';
 
   test.concurrent.each(testIntegersWithCurrencyAndIgnoreZeroCurrency)('convert %d => %s', (input, expected) => {
     expect(
@@ -207,17 +219,17 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
 
 const testFloatsWithCurrency: [number, string][] = [
   [0.0, 'אפס שקלים בלבד'],
-  [0.04, 'אפס שקלים ו ארבע אגורות בלבד'],
-  [0.4, 'אפס שקלים ו ארבעים אגורות בלבד'],
-  [0.63, 'אפס שקלים ו שישים ו שלוש אגורות בלבד'],
-  [0.973, 'אפס שקלים ו תשעים ו שבע אגורות בלבד'],
-  [0.999, 'אחת שקל בלבד'],
-  [37.06, 'שלושים ו שבע שקלים ו שש אגורות בלבד'],
-  [37.68, 'שלושים ו שבע שקלים ו שישים ו שמונה אגורות בלבד'],
-  [37.683, 'שלושים ו שבע שקלים ו שישים ו שמונה אגורות בלבד'],
+  [0.04, 'אפס שקלים וארבע אגורות בלבד'],
+  [0.4, 'אפס שקלים וארבעים אגורות בלבד'],
+  [0.63, 'אפס שקלים ושישים ושלוש אגורות בלבד'],
+  [0.973, 'אפס שקלים ותשעים ושבע אגורות בלבד'],
+  [0.999, 'שקל אחד בלבד'],
+  [37.06, 'שלושים ושבעה שקלים ושש אגורות בלבד'],
+  [37.68, 'שלושים ושבעה שקלים ושישים ושמונה אגורות בלבד'],
+  [37.683, 'שלושים ושבעה שקלים ושישים ושמונה אגורות בלבד'],
   [100, 'מאה שקלים בלבד'],
-  [500.25, 'חמש מאה שקלים ו עשרים ו חמש אגורות בלבד'],
-  [1000.5, 'אלף שקלים ו חמישים אגורות בלבד'],
+  [500.25, 'חמש מאות שקלים ועשרים וחמש אגורות בלבד'],
+  [1000.5, 'אלף שקלים וחמישים אגורות בלבד'],
 ];
 
 describe('Test Floats with options = { currency: true }', () => {
@@ -234,7 +246,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true 
       return;
     }
     if (row[0] > 0 && row[0] < 1) {
-      row[1] = (row[1] as string).replace('אפס שקלים ו ', '');
+      row[1] = (row[1] as string).replace('אפס שקלים ו', '');
     }
   });
 
@@ -256,11 +268,11 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
     [0.63, 'אפס שקלים בלבד'],
     [0.973, 'אפס שקלים בלבד'],
     [0.999, 'אפס שקלים בלבד'],
-    [37.06, 'שלושים ו שבע שקלים בלבד'],
-    [37.68, 'שלושים ו שבע שקלים בלבד'],
-    [37.683, 'שלושים ו שבע שקלים בלבד'],
+    [37.06, 'שלושים ושבעה שקלים בלבד'],
+    [37.68, 'שלושים ושבעה שקלים בלבד'],
+    [37.683, 'שלושים ושבעה שקלים בלבד'],
     [100, 'מאה שקלים בלבד'],
-    [500.25, 'חמש מאה שקלים בלבד'],
+    [500.25, 'חמש מאות שקלים בלבד'],
     [1000.5, 'אלף שקלים בלבד'],
   ];
 
@@ -286,14 +298,14 @@ const testOrdinals: [number, string][] = [
   [8, 'השמיני'],
   [9, 'התשיעי'],
   [10, 'העשירי'],
-  [11, 'האחת עשרה'],
-  [12, 'השתים עשרה'],
-  [19, 'התשע עשרה'],
+  [11, 'האחד עשר'],
+  [12, 'השנים עשר'],
+  [19, 'התשעה עשר'],
   [20, 'העשרים'],
-  [21, 'עשרים ו הראשון'],
-  [25, 'עשרים ו החמישי'],
+  [21, 'העשרים ואחד'],
+  [25, 'העשרים וחמישה'],
   [30, 'השלושים'],
-  [99, 'תשעים ו התשיעי'],
+  [99, 'התשעים ותשעה'],
   [100, 'המאה'],
   [200, 'המאתיים'],
   [1000, 'האלף'],
@@ -310,7 +322,7 @@ const testPowersOfTen: [number, string][] = [
   [10, 'עשר'],
   [100, 'מאה'],
   [1000, 'אלף'],
-  [10000, 'עשר אלף'],
+  [10000, 'עשרת אלפים'],
   [100000, 'מאה אלף'],
   [1000000, 'מיליון'],
 ];
@@ -411,20 +423,20 @@ describe('Functional helpers (locale-level)', () => {
 });
 
 const testFractionStyleHeIL: [number, string][] = [
-  [1.1, 'אחת ו אחת עשירית'],
-  [2.5, 'שתיים ו חמש עשיריות'],
-  [1.01, 'אחת ו אחת מאית'],
-  [1.45, 'אחת ו ארבעים ו חמש מאיות'],
-  [0.05, 'אפס ו חמש מאיות'],
-  [1.001, 'אחת ו אחת אלפית'],
-  [1.005, 'אחת ו חמש אלפיות'],
-  [1.0001, 'אחת ו אחת עשרת-אלפית'],
-  [1.0005, 'אחת ו חמש עשרת-אלפיות'],
-  [1.00001, 'אחת ו אחת מאה-אלפית'],
-  [1.00005, 'אחת ו חמש מאה-אלפיות'],
-  [1.000001, 'אחת ו אחת מיליונית'],
-  [1.000005, 'אחת ו חמש מיליוניות'],
-  [123.45, 'אחת מאה ו עשרים ו שלוש ו ארבעים ו חמש מאיות'],
+  [1.1, 'אחת ואחת עשירית'],
+  [2.5, 'שתיים וחמש עשיריות'],
+  [1.01, 'אחת ואחת מאית'],
+  [1.45, 'אחת וארבעים וחמש מאיות'],
+  [0.05, 'אפס וחמש מאיות'],
+  [1.001, 'אחת ואחת אלפית'],
+  [1.005, 'אחת וחמש אלפיות'],
+  [1.0001, 'אחת ואחת עשרת-אלפית'],
+  [1.0005, 'אחת וחמש עשרת-אלפיות'],
+  [1.00001, 'אחת ואחת מאה-אלפית'],
+  [1.00005, 'אחת וחמש מאה-אלפיות'],
+  [1.000001, 'אחת ואחת מיליונית'],
+  [1.000005, 'אחת וחמש מיליוניות'],
+  [123.45, 'מאה עשרים ושלוש וארבעים וחמש מאיות'],
 ];
 
 describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
@@ -434,9 +446,9 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
 
   test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
     expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
-      'אחת נקודה מיליון ו שתיים מאה ו שלושים ו ארבע אלף ו חמש מאה ו שישים ו שבע',
+      'אחת נקודה מיליון מאתיים שלושים וארבעה אלף חמש מאות שישים ושבע',
     );
-    expect(toWords.convert(1.1234567)).toBe('אחת נקודה מיליון ו שתיים מאה ו שלושים ו ארבע אלף ו חמש מאה ו שישים ו שבע');
+    expect(toWords.convert(1.1234567)).toBe('אחת נקודה מיליון מאתיים שלושים וארבעה אלף חמש מאות שישים ושבע');
   });
 
   test('digit-by-digit style works without decimalStyle option', () => {

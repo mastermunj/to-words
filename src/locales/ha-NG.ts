@@ -65,7 +65,13 @@ export default class Locale implements LocaleInterface {
       { number: 1, value: 'Ɗaya' },
       { number: 0, value: 'Sifili' },
     ],
-    exactWordsMapping: [{ number: 100, value: 'Ɗari Ɗaya' }],
+    // Hausa: the number follows the noun it counts (ɗari biyu, dubu ashirin da ɗaya, naira ɗaya);
+    // en.wiktionary ha: 100 = ɗari, 1000 = dubu, without «ɗaya».
+    scaleFirst: true,
+    ignoreOneForWords: ['Ɗari', 'Dubu'],
+    currencyUnitFirst: true,
+    ordinalPrefix: 'Na ',
+    ordinalComposition: 'fused-prefix',
     ordinalWordsMapping: [
       { number: 1000000000000000, value: 'Na Kuwadirilyan' },
       { number: 1000000000000, value: 'Na Tiriliyan' },
@@ -102,7 +108,6 @@ export default class Locale implements LocaleInterface {
       { number: 1, value: 'Na Farko' },
       { number: 0, value: 'Na Sifili' },
     ],
-    ordinalExactWordsMapping: [{ number: 100, value: 'Na Ɗari Ɗaya' }],
   };
 }
 

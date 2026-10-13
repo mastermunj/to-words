@@ -28,12 +28,14 @@ export default class Locale implements LocaleInterface {
       only: 'Only',
       point: 'Point',
     },
+    // Above a crore, official Indian usage composes crore-based amounts (Union Budget 2026-27:
+    // «₹53.5 lakh crore», no arab/kharab). The range keeps its earlier ceiling, composing «Crore Crore» above.
+    maximumSupportedValues: {
+      cardinal: '9999999999999999999',
+      ordinal: '9999999999999999999',
+      currency: '9999999999999999999',
+    },
     numberWordsMapping: [
-      { number: 100000000000000000n, value: 'Shankh' },
-      { number: 1000000000000000n, value: 'Padma' },
-      { number: 10000000000000n, value: 'Neel' },
-      { number: 100000000000n, value: 'Kharab' },
-      { number: 1000000000n, value: 'Arab' },
       { number: 10000000, value: 'Crore' },
       { number: 100000, value: 'Lakh' },
       { number: 1000, value: 'Thousand' },
@@ -73,6 +75,9 @@ export default class Locale implements LocaleInterface {
       { number: 1000000000000, value: 'Trillionth' },
       { number: 1000000000, value: 'Billionth' },
       { number: 1000000, value: 'Millionth' },
+      // en.wiktionary «croreth», «lakhth» (South Asia).
+      { number: 10000000, value: 'Croreth' },
+      { number: 100000, value: 'Lakhth' },
       { number: 1000, value: 'Thousandth' },
       { number: 100, value: 'Hundredth' },
       { number: 90, value: 'Ninetieth' },

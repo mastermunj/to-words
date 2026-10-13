@@ -29,10 +29,11 @@ export default class Locale implements LocaleInterface {
       point: 'Perpuluhan',
     },
     numberWordsMapping: [
-      { number: 1000000000000000, value: 'Kuadriliun' },
-      { number: 1000000000000, value: 'Triliun' },
+      { number: 1000000000000000, value: 'Kuadrilion' },
+      { number: 1000000000000, value: 'Trilion' },
       { number: 1000000000, value: 'Bilion' },
-      { number: 1000000, value: 'Juta' },
+      // sejuta like seratus, seribu (CLDR ms).
+      { number: 1000000, value: 'Juta', singularValue: 'Sejuta' },
       { number: 1000, value: 'Ribu', singularValue: 'Seribu' },
       { number: 100, value: 'Ratus', singularValue: 'Seratus' },
       { number: 90, value: 'Sembilan Puluh' },
@@ -68,10 +69,13 @@ export default class Locale implements LocaleInterface {
       { number: 1000, value: 'Seribu' },
       { number: 100, value: 'Seratus' },
     ],
-    ignoreOneForWords: ['Ribu', 'Ratus'],
+    ignoreOneForWords: ['Juta', 'Ribu', 'Ratus'],
+    // CLDR ms: «ke-» joins the whole number (kedua puluh satu); Malay spells trilion (Indonesian triliun).
+    ordinalPrefix: 'Ke',
+    ordinalComposition: 'fused-prefix',
     ordinalWordsMapping: [
-      { number: 1000000000000000, value: 'Kekuadriliun' },
-      { number: 1000000000000, value: 'Ketriliun' },
+      { number: 1000000000000000, value: 'Kekuadrilion' },
+      { number: 1000000000000, value: 'Ketrilion' },
       { number: 1000000000, value: 'Kebilion' },
       { number: 1000000, value: 'Kejuta' },
       { number: 1000, value: 'Keribu' },
@@ -102,7 +106,8 @@ export default class Locale implements LocaleInterface {
       { number: 4, value: 'Keempat' },
       { number: 3, value: 'Ketiga' },
       { number: 2, value: 'Kedua' },
-      { number: 1, value: 'Kesatu' },
+      // Standalone first is «pertama» (id.wikipedia 193,060 vs «kesatu» 159); compounds keep ke- (Kedua Puluh Satu).
+      { number: 1, value: 'Pertama' },
       { number: 0, value: 'Kesifar' },
     ],
     ordinalExactWordsMapping: [

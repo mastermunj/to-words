@@ -318,7 +318,7 @@ const examples = [
   { value: '1000000', display: '1,000,000', desc: 'One Million', mode: 'words' },
   { value: '1', display: '1st', desc: 'Ordinal', mode: 'ordinal' },
   { value: '9007199254740993', display: '9×10¹⁵', desc: 'Beyond MAX_SAFE', mode: 'words' },
-  { value: '100000000000000000', display: '10¹⁷', desc: 'Shankh / Quintillion', mode: 'words' },
+  { value: '100000000000000000', display: '10¹⁷', desc: 'Quintillion', mode: 'words' },
   { value: '-273.15', display: '-273.15', desc: 'Negative', mode: 'words' },
   { value: '3.14159', display: 'π', desc: 'Pi', mode: 'words' },
 ];

@@ -37,30 +37,27 @@ const testIntegers: [number, string][] = [
   [0, 'Zero'],
   [137, 'Cento E Trinta E Sete'],
   [700, 'Setecentos'],
-  [1100, 'Mil Cem'],
+  [1100, 'Mil E Cem'],
   [4680, 'Quatro Mil Seiscentos E Oitenta'],
   [63892, 'Sessenta E Três Mil Oitocentos E Noventa E Dois'],
-  [86100, 'Oitenta E Seis Mil Cem'],
+  [86100, 'Oitenta E Seis Mil E Cem'],
   [792581, 'Setecentos E Noventa E Dois Mil Quinhentos E Oitenta E Um'],
-  [2741034, 'Dois Milhões Setecentos E Quarenta E Um Mil Trinta E Quatro'],
+  [2741034, 'Dois Milhões Setecentos E Quarenta E Um Mil E Trinta E Quatro'],
   [86429753, 'Oitenta E Seis Milhões Quatrocentos E Vinte E Nove Mil Setecentos E Cinquenta E Três'],
   [975310864, 'Novecentos E Setenta E Cinco Milhões Trezentos E Dez Mil Oitocentos E Sessenta E Quatro'],
-  [9876543210, 'Nove Mil Milhões Oitocentos E Setenta E Seis Milhões Quinhentos E Quarenta E Três Mil Duzentos E Dez'],
-  [
-    98765432101,
-    'Noventa E Oito Mil Milhões Setecentos E Sessenta E Cinco Milhões Quatrocentos E Trinta E Dois Mil Cento E Um',
-  ],
+  [9876543210, 'Nove Mil Oitocentos E Setenta E Seis Milhões Quinhentos E Quarenta E Três Mil Duzentos E Dez'],
+  [98765432101, 'Noventa E Oito Mil Setecentos E Sessenta E Cinco Milhões Quatrocentos E Trinta E Dois Mil Cento E Um'],
   [
     987654321012,
-    'Novecentos E Oitenta E Sete Mil Milhões Seiscentos E Cinquenta E Quatro Milhões Trezentos E Vinte E Um Mil Doze',
+    'Novecentos E Oitenta E Sete Mil Seiscentos E Cinquenta E Quatro Milhões Trezentos E Vinte E Um Mil E Doze',
   ],
   [
     9876543210123,
-    'Nove Trilhões Oitocentos E Setenta E Seis Mil Milhões Quinhentos E Quarenta E Três Milhões Duzentos E Dez Mil Cento E Vinte E Três',
+    'Nove Biliões Oitocentos E Setenta E Seis Mil Quinhentos E Quarenta E Três Milhões Duzentos E Dez Mil Cento E Vinte E Três',
   ],
   [
     98765432101234,
-    'Noventa E Oito Trilhões Setecentos E Sessenta E Cinco Mil Milhões Quatrocentos E Trinta E Dois Milhões Cento E Um Mil Duzentos E Trinta E Quatro',
+    'Noventa E Oito Biliões Setecentos E Sessenta E Cinco Mil Quatrocentos E Trinta E Dois Milhões Cento E Um Mil Duzentos E Trinta E Quatro',
   ],
 ];
 
@@ -266,8 +263,8 @@ const testOrdinals: [number, string][] = [
   [19, 'Décimo Nono'],
   [20, 'Vigésimo'],
   // Composite numbers (21, 22, 30, 40, 50, 60, 70, 80, 90)
-  [21, 'Vinte E Primeiro'],
-  [22, 'Vinte E Segundo'],
+  [21, 'Vigésimo Primeiro'],
+  [22, 'Vigésimo Segundo'],
   [30, 'Trigésimo'],
   [40, 'Quadragésimo'],
   [50, 'Quinquagésimo'],
@@ -281,9 +278,9 @@ const testOrdinals: [number, string][] = [
   [1000, 'Milésimo'],
   [1000000, 'Milionésimo'],
   // Complex numbers (101, 123, 1234)
-  [101, 'Cento E Primeiro'],
-  [123, 'Cento E Vinte E Terceiro'],
-  [1234, 'Mil Duzentos E Trinta E Quarto'],
+  [101, 'Centésimo Primeiro'],
+  [123, 'Centésimo Vigésimo Terceiro'],
+  [1234, 'Milésimo Ducentésimo Trigésimo Quarto'],
 ];
 
 describe('Test Ordinal Numbers', () => {
@@ -450,10 +447,10 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
 
   test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
     expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
-      'Um Vírgula Um Milhões Duzentos E Trinta E Quatro Mil Quinhentos E Sessenta E Sete',
+      'Um Vírgula Um Milhão Duzentos E Trinta E Quatro Mil Quinhentos E Sessenta E Sete',
     );
     expect(toWords.convert(1.1234567)).toBe(
-      'Um Vírgula Um Milhões Duzentos E Trinta E Quatro Mil Quinhentos E Sessenta E Sete',
+      'Um Vírgula Um Milhão Duzentos E Trinta E Quatro Mil Quinhentos E Sessenta E Sete',
     );
   });
 

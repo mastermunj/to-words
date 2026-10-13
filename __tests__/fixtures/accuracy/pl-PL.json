@@ -1,0 +1,164 @@
+{
+  "locale": "pl-PL",
+  "sources": {
+    "cldr-plural": {
+      "title": "Unicode CLDR — Language Plural Rules (pl: one / few / many)",
+      "url": "https://www.unicode.org/cldr/charts/latest/supplemental/language_plural_rules.html",
+      "accessed": "2026-10-08"
+    },
+    "wp-pl-grammar": {
+      "title": "Wikipedia — Polish grammar, Numerals (2000 = dwa tysiące; 91,234 = dziewięćdziesiąt jeden tysięcy dwieście trzydzieści cztery; 2–4 and compounds ending in 2–4 take nominative plural, otherwise genitive plural)",
+      "url": "https://en.wikipedia.org/wiki/Polish_grammar#Numerals",
+      "accessed": "2026-10-08"
+    },
+    "wikt-tysiac": {
+      "title": "Wiktionary — tysiąc (genitive plural tysięcy)",
+      "url": "https://en.wiktionary.org/wiki/tysiąc",
+      "accessed": "2026-10-08"
+    },
+    "wikt-zloty": {
+      "title": "Wiktionary — złoty (nominative plural złote, genitive plural złotych)",
+      "url": "https://en.wiktionary.org/wiki/złoty",
+      "accessed": "2026-10-08"
+    }
+  },
+  "cases": [
+    {
+      "id": "scale-2000",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "2000",
+      "expected": "Dwa Tysiące",
+      "status": "verified",
+      "attested": true,
+      "sources": [
+        "wp-pl-grammar"
+      ]
+    },
+    {
+      "id": "scale-5000",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "5000",
+      "expected": "Pięć Tysięcy",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "wp-pl-grammar",
+        "wikt-tysiac"
+      ]
+    },
+    {
+      "id": "scale-21000",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "21000",
+      "expected": "Dwadzieścia Jeden Tysięcy",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "wp-pl-grammar",
+        "cldr-plural"
+      ]
+    },
+    {
+      "id": "scale-22000",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "22000",
+      "expected": "Dwadzieścia Dwa Tysiące",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "wp-pl-grammar",
+        "cldr-plural"
+      ]
+    },
+    {
+      "id": "scale-91234",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "91234",
+      "expected": "Dziewięćdziesiąt Jeden Tysięcy Dwieście Trzydzieści Cztery",
+      "status": "verified",
+      "attested": true,
+      "sources": [
+        "wp-pl-grammar"
+      ]
+    },
+    {
+      "id": "scale-2000000",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "2000000",
+      "expected": "Dwa Miliony",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "wp-pl-grammar",
+        "cldr-plural"
+      ]
+    },
+    {
+      "id": "scale-5000000",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "5000000",
+      "expected": "Pięć Milionów",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "wp-pl-grammar",
+        "cldr-plural"
+      ]
+    },
+    {
+      "id": "cur-2",
+      "capability": "currency",
+      "form": "currency",
+      "input": "2",
+      "options": {
+        "doNotAddOnly": true
+      },
+      "expected": "Dwa Złote",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "wp-pl-grammar",
+        "wikt-zloty"
+      ]
+    },
+    {
+      "id": "cur-5",
+      "capability": "currency",
+      "form": "currency",
+      "input": "5",
+      "options": {
+        "doNotAddOnly": true
+      },
+      "expected": "Pięć Złotych",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "wp-pl-grammar",
+        "wikt-zloty"
+      ]
+    },
+    {
+      "id": "cur-22",
+      "capability": "currency",
+      "form": "currency",
+      "input": "22",
+      "options": {
+        "doNotAddOnly": true
+      },
+      "expected": "Dwadzieścia Dwa Złote",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "wp-pl-grammar",
+        "wikt-zloty"
+      ]
+    }
+  ]
+}

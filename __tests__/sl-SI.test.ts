@@ -36,7 +36,7 @@ describe('Test Locale', () => {
 const testIntegers: [number, string][] = [
   [0, 'Nič'],
   [1, 'Ena'],
-  [2, 'Dva'],
+  [2, 'Dve'],
   [3, 'Tri'],
   [4, 'Štiri'],
   [5, 'Pet'],
@@ -55,19 +55,19 @@ const testIntegers: [number, string][] = [
   [18, 'Osemnajst'],
   [19, 'Devetnajst'],
   [20, 'Dvajset'],
-  [21, 'Dvajset Ena'],
-  [22, 'Dvajset Dva'],
+  [21, 'Enaindvajset'],
+  [22, 'Dvaindvajset'],
   [30, 'Trideset'],
-  [35, 'Trideset Pet'],
+  [35, 'Petintrideset'],
   [40, 'Štirideset'],
   [50, 'Petdeset'],
   [60, 'Šestdeset'],
   [70, 'Sedemdeset'],
   [80, 'Osemdeset'],
   [90, 'Devetdeset'],
-  [99, 'Devetdeset Devet'],
+  [99, 'Devetindevetdeset'],
   [100, 'Sto'],
-  [137, 'Sto Trideset Sedem'],
+  [137, 'Sto Sedemintrideset'],
   [200, 'Dvesto'],
   [300, 'Tristo'],
   [400, 'Štiristo'],
@@ -81,15 +81,15 @@ const testIntegers: [number, string][] = [
   [2000, 'Dva Tisoč'],
   [4680, 'Štiri Tisoč Šeststo Osemdeset'],
   [10000, 'Deset Tisoč'],
-  [63892, 'Šestdeset Tri Tisoč Osemsto Devetdeset Dva'],
+  [63892, 'Triinšestdeset Tisoč Osemsto Dvaindevetdeset'],
   [100000, 'Sto Tisoč'],
   [1000000, 'Milijon'],
-  [2000000, 'Dva Milijone'],
-  [3000000, 'Tri Milijone'],
-  [5000000, 'Pet Milijon'],
-  [2741034, 'Dva Milijone Sedemsto Štirideset Ena Tisoč Trideset Štiri'],
+  [2000000, 'Dva Milijona'],
+  [3000000, 'Trije Milijoni'],
+  [5000000, 'Pet Milijonov'],
+  [2741034, 'Dva Milijona Sedemsto Enainštirideset Tisoč Štiriintrideset'],
   [1000000000, 'Milijarda'],
-  [2000000000, 'Dva Milijarde'],
+  [2000000000, 'Dve Milijardi'],
 ];
 
 describe('Test Integers with options = {}', () => {
@@ -116,8 +116,8 @@ describe('Test Negative Integers with options = {}', () => {
 describe('Test Integers with options = { currency: true }', () => {
   const testIntegersWithCurrency: [number, string][] = [
     [0, 'Nič Evrov Samo'],
-    [1, 'Ena Evro Samo'],
-    [2, 'Dva Evrov Samo'],
+    [1, 'En Evro Samo'],
+    [2, 'Dva Evra Samo'],
     [10, 'Deset Evrov Samo'],
     [100, 'Sto Evrov Samo'],
     [1000, 'Tisoč Evrov Samo'],
@@ -132,8 +132,8 @@ describe('Test Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, doNotAddOnly: true }', () => {
   const testIntegersWithCurrency: [number, string][] = [
     [0, 'Nič Evrov'],
-    [1, 'Ena Evro'],
-    [2, 'Dva Evrov'],
+    [1, 'En Evro'],
+    [2, 'Dva Evra'],
     [10, 'Deset Evrov'],
     [100, 'Sto Evrov'],
     [1000, 'Tisoč Evrov'],
@@ -147,7 +147,7 @@ describe('Test Integers with options = { currency: true, doNotAddOnly: true }', 
 describe('Test Negative Integers with options = { currency: true }', () => {
   const testNegativeIntegersWithCurrency: [number, string][] = [
     [0, 'Nič Evrov Samo'],
-    [-1, 'Minus Ena Evro Samo'],
+    [-1, 'Minus En Evro Samo'],
     [-10, 'Minus Deset Evrov Samo'],
     [-100, 'Minus Sto Evrov Samo'],
   ];
@@ -160,7 +160,7 @@ describe('Test Negative Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, ignoreZeroCurrency: true }', () => {
   const testIntegersWithCurrencyAndIgnoreZeroCurrency: [number, string][] = [
     [0, ''],
-    [1, 'Ena Evro Samo'],
+    [1, 'En Evro Samo'],
     [10, 'Deset Evrov Samo'],
   ];
 
@@ -178,20 +178,20 @@ const testFloats: [number, string][] = [
   [0.0, 'Nič'],
   [0.04, 'Nič Vejica Nič Štiri'],
   [0.4, 'Nič Vejica Štiri'],
-  [0.63, 'Nič Vejica Šestdeset Tri'],
-  [37.06, 'Trideset Sedem Vejica Nič Šest'],
-  [37.68, 'Trideset Sedem Vejica Šestdeset Osem'],
+  [0.63, 'Nič Vejica Triinšestdeset'],
+  [37.06, 'Sedemintrideset Vejica Nič Šest'],
+  [37.68, 'Sedemintrideset Vejica Oseminšestdeset'],
 ];
 
 describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
   const testIncludeZeroFractional: [number | string, string][] = [
-    [123, `Sto Dvajset Tri Evrov Samo`],
-    ['123', `Sto Dvajset Tri Evrov Samo`],
-    ['123.0', `Sto Dvajset Tri Evrov In Nič Centov Samo`],
-    ['123.00', `Sto Dvajset Tri Evrov In Nič Centov Samo`],
+    [123, `Sto Triindvajset Evrov Samo`],
+    ['123', `Sto Triindvajset Evrov Samo`],
+    ['123.0', `Sto Triindvajset Evrov In Nič Centov Samo`],
+    ['123.00', `Sto Triindvajset Evrov In Nič Centov Samo`],
     ['0.00', `Nič Evrov In Nič Centov Samo`],
-    ['-123.00', `Minus Sto Dvajset Tri Evrov In Nič Centov Samo`],
-    ['37.68', `Trideset Sedem Evrov In Šestdeset Osem Centov Samo`],
+    ['-123.00', `Minus Sto Triindvajset Evrov In Nič Centov Samo`],
+    ['37.68', `Sedemintrideset Evrov In Oseminšestdeset Centov Samo`],
   ];
 
   test.concurrent.each(testIncludeZeroFractional)('convert %s => %s', (input, expected) => {
@@ -212,11 +212,11 @@ describe('Test Floats with options = {}', () => {
 
 const testFloatsWithCurrency: [number, string][] = [
   [0.0, 'Nič Evrov Samo'],
-  [0.04, 'Nič Evrov In Štiri Centov Samo'],
+  [0.04, 'Nič Evrov In Štirje Centi Samo'],
   [0.4, 'Nič Evrov In Štirideset Centov Samo'],
-  [0.63, 'Nič Evrov In Šestdeset Tri Centov Samo'],
-  [37.06, 'Trideset Sedem Evrov In Šest Centov Samo'],
-  [37.68, 'Trideset Sedem Evrov In Šestdeset Osem Centov Samo'],
+  [0.63, 'Nič Evrov In Triinšestdeset Centov Samo'],
+  [37.06, 'Sedemintrideset Evrov In Šest Centov Samo'],
+  [37.68, 'Sedemintrideset Evrov In Oseminšestdeset Centov Samo'],
 ];
 
 describe('Test Floats with options = { currency: true }', () => {
@@ -228,9 +228,9 @@ describe('Test Floats with options = { currency: true }', () => {
 describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true }', () => {
   const testFloatsWithCurrencyAndIgnoreZeroCurrency: [number, string][] = [
     [0.0, ''],
-    [0.04, 'Štiri Centov Samo'],
+    [0.04, 'Štirje Centi Samo'],
     [0.4, 'Štirideset Centov Samo'],
-    [37.06, 'Trideset Sedem Evrov In Šest Centov Samo'],
+    [37.06, 'Sedemintrideset Evrov In Šest Centov Samo'],
   ];
 
   test.concurrent.each(testFloatsWithCurrencyAndIgnoreZeroCurrency)('convert %d => %s', (input, expected) => {
@@ -248,8 +248,8 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
     [0.0, 'Nič Evrov Samo'],
     [0.04, 'Nič Evrov Samo'],
     [0.4, 'Nič Evrov Samo'],
-    [37.06, 'Trideset Sedem Evrov Samo'],
-    [37.68, 'Trideset Sedem Evrov Samo'],
+    [37.06, 'Sedemintrideset Evrov Samo'],
+    [37.68, 'Sedemintrideset Evrov Samo'],
   ];
 
   test.concurrent.each(testFloatsWithCurrencyAndIgnoreDecimal)('convert %d => %s', (input, expected) => {
@@ -279,7 +279,7 @@ const testOrdinals: [number, string][] = [
   [13, 'Trinajsti'],
   [19, 'Devetnajsti'],
   [20, 'Dvajseti'],
-  [21, 'Dvajset Prvi'],
+  [21, 'Enaindvajseti'],
   [30, 'Trideseti'],
   [50, 'Petdeseti'],
   [100, 'Stoti'],
@@ -420,9 +420,9 @@ describe('Functional helpers (locale-level)', () => {
 
 const testFractionStyleSlSI: [number, string][] = [
   [1.1, 'Ena In Ena Desetinka'],
-  [2.5, 'Dva In Pet Desetinke'],
+  [2.5, 'Dve In Pet Desetinke'],
   [1.01, 'Ena In Ena Stotinka'],
-  [1.45, 'Ena In Štirideset Pet Stotinke'],
+  [1.45, 'Ena In Petinštirideset Stotinke'],
   [0.05, 'Nič In Pet Stotinke'],
   [1.001, 'Ena In Ena Tisočinka'],
   [1.005, 'Ena In Pet Tisočinke'],
@@ -432,7 +432,7 @@ const testFractionStyleSlSI: [number, string][] = [
   [1.00005, 'Ena In Pet Sto-Tisočinke'],
   [1.000001, 'Ena In Ena Milijontinka'],
   [1.000005, 'Ena In Pet Milijontinke'],
-  [123.45, 'Sto Dvajset Tri In Štirideset Pet Stotinke'],
+  [123.45, 'Sto Triindvajset In Petinštirideset Stotinke'],
 ];
 
 describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
@@ -442,13 +442,53 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
 
   test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
     expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
-      'Ena Vejica Milijon Dvesto Trideset Štiri Tisoč Petsto Šestdeset Sedem',
+      'Ena Vejica Milijon Dvesto Štiriintrideset Tisoč Petsto Sedeminšestdeset',
     );
-    expect(toWords.convert(1.1234567)).toBe('Ena Vejica Milijon Dvesto Trideset Štiri Tisoč Petsto Šestdeset Sedem');
+    expect(toWords.convert(1.1234567)).toBe('Ena Vejica Milijon Dvesto Štiriintrideset Tisoč Petsto Sedeminšestdeset');
   });
 
   test('digit-by-digit style works without decimalStyle option', () => {
     expect(toWords.convert(1.5)).toBe('Ena Vejica Pet');
     expect(toWords.convert(0.05)).toBe('Nič Vejica Nič Pet');
+  });
+});
+
+// Attested examples from en.wikipedia «Slovene numerals» and en.wiktionary. Units come before tens as one
+// word (enaindvajset); hundreds/thousands/millions are separate words; scale nouns take dual/paucal/
+// genitive-plural forms and the multiplier agrees with the noun's gender.
+describe('en.wikipedia «Slovene numerals» / en.wiktionary — attested forms', () => {
+  test.each([
+    [21, 'Enaindvajset'],
+    [22, 'Dvaindvajset'],
+    [101, 'Sto Ena'],
+    [121, 'Sto Enaindvajset'],
+    [999, 'Devetsto Devetindevetdeset'],
+    [1001, 'Tisoč Ena'],
+    [1100, 'Tisoč Sto'],
+    [5555, 'Pet Tisoč Petsto Petinpetdeset'],
+    [2000, 'Dva Tisoč'],
+    [3000, 'Tri Tisoč'],
+    [4000, 'Štiri Tisoč'],
+    [2000000, 'Dva Milijona'],
+    [3000000, 'Trije Milijoni'],
+    [7000000, 'Sedem Milijonov'],
+    [7015027, 'Sedem Milijonov Petnajst Tisoč Sedemindvajset'],
+    [2000000000, 'Dve Milijardi'],
+    [3000000000, 'Tri Milijarde'],
+  ])('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+
+  test('only the last word of a multi-word number becomes the ordinal', () => {
+    expect(toWords.toOrdinal(200)).toBe('Dvestoti');
+    expect(toWords.toOrdinal(201)).toBe('Dvesto Prvi');
+    expect(toWords.toOrdinal(21)).toBe('Enaindvajseti');
+  });
+
+  test('euro agrees with the amount (dual / paucal / genitive plural)', () => {
+    expect(toWords.convert(1, { currency: true })).toBe('En Evro Samo');
+    expect(toWords.convert(2, { currency: true })).toBe('Dva Evra Samo');
+    expect(toWords.convert(3, { currency: true })).toBe('Trije Evri Samo');
+    expect(toWords.convert(5, { currency: true })).toBe('Pet Evrov Samo');
   });
 });

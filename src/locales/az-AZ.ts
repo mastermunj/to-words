@@ -64,7 +64,8 @@ export default class Locale implements LocaleInterface {
       { number: 1, value: 'Bir' },
       { number: 0, value: 'Sıfır' },
     ],
-    ignoreOneForWords: ['Min'],
+    // yüz and min stand alone (yüz altmış iki, min yüz; library had «Bir Yüz» inside numbers but «Yüz» alone).
+    ignoreOneForWords: ['Min', 'Yüz'],
     ordinalWordsMapping: [
       { number: 1000000000000000, value: 'Katrilyonuncu' },
       { number: 1000000000000, value: 'Trilyonuncu' },

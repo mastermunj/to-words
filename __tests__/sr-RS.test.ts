@@ -76,18 +76,18 @@ const testIntegers: [number, string][] = [
   [700, 'Sedamsto'],
   [800, 'Osamsto'],
   [900, 'Devetsto'],
-  [1000, 'Hiljada'],
-  [1100, 'Hiljada Sto'],
-  [2000, 'Dva Hiljada'],
-  [4680, 'Četiri Hiljada Šeststo Osamdeset'],
+  [1000, 'Hiljadu'],
+  [1100, 'Hiljadu Sto'],
+  [2000, 'Dve Hiljade'],
+  [4680, 'Četiri Hiljade Šeststo Osamdeset'],
   [10000, 'Deset Hiljada'],
-  [63892, 'Šezdeset Tri Hiljada Osamsto Devedeset Dva'],
+  [63892, 'Šezdeset Tri Hiljade Osamsto Devedeset Dva'],
   [100000, 'Sto Hiljada'],
   [1000000, 'Milion'],
-  [2000000, 'Dva Milion'],
-  [2741034, 'Dva Milion Sedamsto Četrdeset Jedan Hiljada Trideset Četiri'],
+  [2000000, 'Dva Miliona'],
+  [2741034, 'Dva Miliona Sedamsto Četrdeset Jedna Hiljada Trideset Četiri'],
   [1000000000, 'Milijarda'],
-  [2000000000, 'Dva Milijarda'],
+  [2000000000, 'Dve Milijarde'],
 ];
 
 describe('Test Integers with options = {}', () => {
@@ -111,11 +111,22 @@ describe('Test Negative Integers with options = {}', () => {
   });
 });
 
+// Serbian unit form by CLDR category (one: …1 except 11; few: …2-4 except 12-14).
+function getCurrencyName(amount: number): string {
+  const n = Math.abs(amount);
+  if (n % 10 === 1 && n % 100 !== 11) {
+    return 'Dinar';
+  }
+  if (n % 10 >= 2 && n % 10 <= 4 && !(n % 100 >= 12 && n % 100 <= 14)) {
+    return 'Dinara';
+  }
+  return 'Dinara';
+}
+
 describe('Test Integers with options = { currency: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    // For 1, use singular "Dinar", otherwise use plural "Dinara"
-    const currencyName = row[1] === 'Jedan' ? 'Dinar' : 'Dinara';
+    const currencyName = getCurrencyName(row[0] as number);
     row[1] = `${row[1]} ${currencyName} Samo`;
   });
 
@@ -127,8 +138,7 @@ describe('Test Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, doNotAddOnly: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    // For 1, use singular "Dinar", otherwise use plural "Dinara"
-    const currencyName = row[1] === 'Jedan' ? 'Dinar' : 'Dinara';
+    const currencyName = getCurrencyName(row[0] as number);
     row[1] = `${row[1]} ${currencyName}`;
   });
 
@@ -145,8 +155,7 @@ describe('Test Negative Integers with options = { currency: true }', () => {
       return;
     }
     row[0] = -row[0];
-    // For -1, use singular "Dinar", otherwise use plural "Dinara"
-    const currencyName = row[1] === 'Jedan' ? 'Dinar' : 'Dinara';
+    const currencyName = getCurrencyName(row[0] as number);
     row[1] = `Minus ${row[1]} ${currencyName} Samo`;
   });
 
@@ -161,8 +170,7 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
     if (i === 0) {
       row[1] = '';
     } else {
-      // For 1, use singular "Dinar", otherwise use plural "Dinara"
-      const currencyName = row[1] === 'Jedan' ? 'Dinar' : 'Dinara';
+      const currencyName = getCurrencyName(row[0] as number);
       row[1] = `${row[1]} ${currencyName} Samo`;
     }
   });
@@ -215,9 +223,9 @@ describe('Test Floats with options = {}', () => {
 
 const testFloatsWithCurrency: [number, string][] = [
   [0.0, 'Nula Dinara Samo'],
-  [0.04, 'Nula Dinara I Četiri Para Samo'],
+  [0.04, 'Nula Dinara I Četiri Pare Samo'],
   [0.4, 'Nula Dinara I Četrdeset Para Samo'],
-  [0.63, 'Nula Dinara I Šezdeset Tri Para Samo'],
+  [0.63, 'Nula Dinara I Šezdeset Tri Pare Samo'],
   [0.999, 'Jedan Dinar Samo'],
   [37.06, 'Trideset Sedam Dinara I Šest Para Samo'],
   [37.68, 'Trideset Sedam Dinara I Šezdeset Osam Para Samo'],
@@ -258,7 +266,7 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
     if (row[0] === 0.999) {
       row[1] = 'Nula Dinara Samo';
     } else {
-      row[1] = (row[1] as string).replace(new RegExp(` I [\\wčćšžČĆŠŽ ]+ Para`), '');
+      row[1] = (row[1] as string).replace(new RegExp(` I [\\wčćšžČĆŠŽ ]+ Par[ae]`), '');
     }
   });
 
@@ -317,10 +325,14 @@ const testOrdinalNumbers: [number, string][] = [
 
   // Thousands
   [1000, 'Hiljaditi'],
-  [1001, 'Hiljada Prvi'],
+  [1001, 'Hiljadu Prvi'],
 
   // Millions
   [1000000, 'Milioniti'],
+  // sr.wikipedia number infoboxes: 21 двадесет први, 1000 хиљадити, 10 000 десет хиљадити
+  [10000, 'Deset Hiljaditi'],
+  [600, 'Šeststoti'],
+  [1000000000000000000, 'Trilioniti'],
 ];
 
 describe('Test Ordinal Numbers', () => {
@@ -355,7 +367,7 @@ describe('Test Ordinal Error Cases', () => {
 const testPowersOfTen: [number, string][] = [
   [10, 'Deset'],
   [100, 'Sto'],
-  [1000, 'Hiljada'],
+  [1000, 'Hiljadu'],
   [10000, 'Deset Hiljada'],
   [100000, 'Sto Hiljada'],
   [1000000, 'Milion'],
@@ -372,7 +384,7 @@ const testBigInts: [bigint, string][] = [
   [0n, 'Nula'],
   [1n, 'Jedan'],
   [100n, 'Sto'],
-  [1000n, 'Hiljada'],
+  [1000n, 'Hiljadu'],
 ];
 
 describe('Test BigInt Inputs', () => {
@@ -385,7 +397,7 @@ describe('Test BigInt Inputs', () => {
 const testNegativeBigInts: [bigint, string][] = [
   [-1n, 'Minus Jedan'],
   [-100n, 'Minus Sto'],
-  [-1000n, 'Minus Hiljada'],
+  [-1000n, 'Minus Hiljadu'],
 ];
 
 describe('Test Negative BigInt Inputs', () => {
@@ -478,20 +490,22 @@ describe('Functional helpers (locale-level)', () => {
 });
 
 const testFractionStyleSrRS: [number, string][] = [
-  [1.1, 'Jedan I Jedan Десетинка'],
-  [2.5, 'Dva I Pet Десетинке'],
-  [1.01, 'Jedan I Jedan Стотинка'],
-  [1.45, 'Jedan I Četrdeset Pet Стотинке'],
-  [0.05, 'Nula I Pet Стотинке'],
-  [1.001, 'Jedan I Jedan Хиљадинка'],
-  [1.005, 'Jedan I Pet Хиљадинке'],
-  [1.0001, 'Jedan I Jedan Десетохиљадинка'],
-  [1.0005, 'Jedan I Pet Десетохиљадинке'],
-  [1.00001, 'Jedan I Jedan Стохиљадинка'],
-  [1.00005, 'Jedan I Pet Стохиљадинке'],
-  [1.000001, 'Jedan I Jedan Милионинка'],
-  [1.000005, 'Jedan I Pet Милионинке'],
-  [123.45, 'Sto Dvadeset Tri I Četrdeset Pet Стотинке'],
+  // Feminine numerator, denominator by plural category (en.wiktionary sh «stotinka»: gen pl stotinki).
+  [1.1, 'Jedan I Jedna Desetinka'],
+  [2.5, 'Dva I Pet Desetinki'],
+  [1.01, 'Jedan I Jedna Stotinka'],
+  [1.02, 'Jedan I Dve Stotinke'],
+  [1.45, 'Jedan I Četrdeset Pet Stotinki'],
+  [0.05, 'Nula I Pet Stotinki'],
+  [1.001, 'Jedan I Jedna Hiljadinka'],
+  [1.005, 'Jedan I Pet Hiljadinki'],
+  [1.0001, 'Jedan I Jedna Desetohiljadinka'],
+  [1.0005, 'Jedan I Pet Desetohiljadinki'],
+  [1.00001, 'Jedan I Jedna Stohiljadinka'],
+  [1.00005, 'Jedan I Pet Stohiljadinki'],
+  [1.000001, 'Jedan I Jedna Milioninka'],
+  [1.000005, 'Jedan I Pet Milioninki'],
+  [123.45, 'Sto Dvadeset Tri I Četrdeset Pet Stotinki'],
 ];
 
 describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
@@ -501,9 +515,9 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
 
   test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
     expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
-      'Jedan Zarez Milion Dvesta Trideset Četiri Hiljada Petsto Šezdeset Sedam',
+      'Jedan Zarez Milion Dvesta Trideset Četiri Hiljade Petsto Šezdeset Sedam',
     );
-    expect(toWords.convert(1.1234567)).toBe('Jedan Zarez Milion Dvesta Trideset Četiri Hiljada Petsto Šezdeset Sedam');
+    expect(toWords.convert(1.1234567)).toBe('Jedan Zarez Milion Dvesta Trideset Četiri Hiljade Petsto Šezdeset Sedam');
   });
 
   test('digit-by-digit style works without decimalStyle option', () => {

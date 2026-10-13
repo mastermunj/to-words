@@ -785,26 +785,27 @@ toWords.convert(1000000000);
 
 ### Indian System
 
-Used in: India, Bangladesh, Nepal, Pakistan.
+Used in: India, Bangladesh, Nepal, and Urdu in Pakistan (`ur-PK`). `en-PK` and `en-MU` use the
+international scale (Million, Billion), as the Pakistani and Mauritian budget documents do.
 
-| Number | Name   |
-| ------ | ------ |
-| 10^5   | Lakh   |
-| 10^7   | Crore  |
-| 10^9   | Arab   |
-| 10^11  | Kharab |
-| 10^13  | Neel   |
-| 10^15  | Padma  |
-| 10^17  | Shankh |
+| Number | Name  |
+| ------ | ----- |
+| 10^5   | Lakh  |
+| 10^7   | Crore |
+
+Above a crore, the Indian and Bangladeshi locales compose crore-based amounts, the form official
+Indian usage takes (Union Budget 2026-27: "₹53.5 lakh crore"): 10^9 is "One Hundred Crore", 10^12
+"One Lakh Crore". Nepal (`ne-NP`, `en-NP`) keeps Arba/Kharba, as its government budget does, and
+`ur-PK` counts in ارب above a crore (ایک ہزار ارب = 10^12).
 
 ```js
 const toWords = new ToWords({ localeCode: 'en-IN' });
-toWords.convert(100000000000000000n);
-// "One Shankh"
+toWords.convert(1000000000000n);
+// "One Lakh Crore"
 
 const toWordsHindi = new ToWords({ localeCode: 'hi-IN' });
-toWordsHindi.convert(100000000000000000n);
-// "एक शंख"
+toWordsHindi.convert(1000000000000n);
+// "एक लाख करोड़"
 ```
 
 ### East Asian System
@@ -1142,7 +1143,7 @@ All 136 locales with their core setup are listed below. Numbering-system, groupi
 | as-IN  | Assamese        | India               | টকা           | ✓       |
 | az-AZ  | Azerbaijani     | Azerbaijan          | Manat         | ✓       |
 | be-BY  | Belarusian      | Belarus             | Рубель        | ✓       |
-| bg-BG  | Bulgarian       | Bulgaria            | Лев           | ✓       |
+| bg-BG  | Bulgarian       | Bulgaria            | Евро          | ✓       |
 | bn-BD  | Bengali         | Bangladesh          | টাকা          | ✓       |
 | bn-IN  | Bengali         | India               | টাকা          | ✓       |
 | ca-ES  | Catalan         | Spain               | Euro          | ✓       |

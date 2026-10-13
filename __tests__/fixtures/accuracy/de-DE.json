@@ -1,0 +1,53 @@
+{
+  "locale": "de-DE",
+  "sources": {
+    "duden-million": {
+      "title": "Duden — Million (feminine noun; plural Millionen)",
+      "url": "https://www.duden.de/rechtschreibung/Million",
+      "accessed": "2026-10-08"
+    },
+    "dewikt-hunderteins": {
+      "title": "Wiktionary (de) — hunderteins (written as one word)",
+      "url": "https://de.wiktionary.org/wiki/hunderteins",
+      "accessed": "2026-10-08"
+    }
+  },
+  "cases": [
+    {
+      "id": "card-101",
+      "capability": "cardinal",
+      "form": "cardinal",
+      "input": "101",
+      "expected": "Hunderteins",
+      "status": "verified",
+      "attested": true,
+      "sources": [
+        "dewikt-hunderteins"
+      ]
+    },
+    {
+      "id": "scale-1000000",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "1000000",
+      "expected": "Eine Million",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "duden-million"
+      ]
+    },
+    {
+      "id": "scale-2000000",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "2000000",
+      "expected": "Zwei Millionen",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "duden-million"
+      ]
+    }
+  ]
+}

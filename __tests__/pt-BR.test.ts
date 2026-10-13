@@ -37,12 +37,12 @@ const testIntegers: [number, string][] = [
   [0, 'Zero'],
   [137, 'Cento E Trinta E Sete'],
   [700, 'Setecentos'],
-  [1100, 'Mil Cem'],
+  [1100, 'Mil E Cem'],
   [4680, 'Quatro Mil Seiscentos E Oitenta'],
   [63892, 'Sessenta E Três Mil Oitocentos E Noventa E Dois'],
-  [86100, 'Oitenta E Seis Mil Cem'],
+  [86100, 'Oitenta E Seis Mil E Cem'],
   [792581, 'Setecentos E Noventa E Dois Mil Quinhentos E Oitenta E Um'],
-  [2741034, 'Dois Milhões Setecentos E Quarenta E Um Mil Trinta E Quatro'],
+  [2741034, 'Dois Milhões Setecentos E Quarenta E Um Mil E Trinta E Quatro'],
   [86429753, 'Oitenta E Seis Milhões Quatrocentos E Vinte E Nove Mil Setecentos E Cinquenta E Três'],
   [975310864, 'Novecentos E Setenta E Cinco Milhões Trezentos E Dez Mil Oitocentos E Sessenta E Quatro'],
   [9876543210, 'Nove Bilhões Oitocentos E Setenta E Seis Milhões Quinhentos E Quarenta E Três Mil Duzentos E Dez'],
@@ -52,7 +52,7 @@ const testIntegers: [number, string][] = [
   ],
   [
     987654321012,
-    'Novecentos E Oitenta E Sete Bilhões Seiscentos E Cinquenta E Quatro Milhões Trezentos E Vinte E Um Mil Doze',
+    'Novecentos E Oitenta E Sete Bilhões Seiscentos E Cinquenta E Quatro Milhões Trezentos E Vinte E Um Mil E Doze',
   ],
   [
     9876543210123,
@@ -321,8 +321,8 @@ const testOrdinals: [number, string][] = [
   [19, 'Décimo Nono'],
   [20, 'Vigésimo'],
   // Composite numbers (21, 22, 30, 40, 50, 60, 70, 80, 90)
-  [21, 'Vinte E Primeiro'],
-  [22, 'Vinte E Segundo'],
+  [21, 'Vigésimo Primeiro'],
+  [22, 'Vigésimo Segundo'],
   [30, 'Trigésimo'],
   [40, 'Quadragésimo'],
   [50, 'Quinquagésimo'],
@@ -336,9 +336,9 @@ const testOrdinals: [number, string][] = [
   [1000, 'Milésimo'],
   [1000000, 'Milionésimo'],
   // Complex numbers (101, 123, 1234)
-  [101, 'Cento E Primeiro'],
-  [123, 'Cento E Vinte E Terceiro'],
-  [1234, 'Mil Duzentos E Trinta E Quarto'],
+  [101, 'Centésimo Primeiro'],
+  [123, 'Centésimo Vigésimo Terceiro'],
+  [1234, 'Milésimo Ducentésimo Trigésimo Quarto'],
 ];
 
 describe('Test Ordinal Numbers', () => {
@@ -390,15 +390,15 @@ const testBoundaries: [number, string][] = [
   [101, 'Cento E Um'],
   [999, 'Novecentos E Noventa E Nove'],
   [1000, 'Mil'],
-  [1001, 'Mil Um'],
+  [1001, 'Mil E Um'],
   [9999, 'Nove Mil Novecentos E Noventa E Nove'],
   [10000, 'Dez Mil'],
-  [10001, 'Dez Mil Um'],
+  [10001, 'Dez Mil E Um'],
   [99999, 'Noventa E Nove Mil Novecentos E Noventa E Nove'],
   [100000, 'Cem Mil'],
   [999999, 'Novecentos E Noventa E Nove Mil Novecentos E Noventa E Nove'],
   [1000000, 'Um Milhão'],
-  [1000001, 'Um Milhões Um'],
+  [1000001, 'Um Milhão E Um'],
 ];
 
 describe('Test Boundary Values', () => {
@@ -663,10 +663,10 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
 
   test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
     expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
-      'Um Vírgula Um Milhões Duzentos E Trinta E Quatro Mil Quinhentos E Sessenta E Sete',
+      'Um Vírgula Um Milhão Duzentos E Trinta E Quatro Mil Quinhentos E Sessenta E Sete',
     );
     expect(toWords.convert(1.1234567)).toBe(
-      'Um Vírgula Um Milhões Duzentos E Trinta E Quatro Mil Quinhentos E Sessenta E Sete',
+      'Um Vírgula Um Milhão Duzentos E Trinta E Quatro Mil Quinhentos E Sessenta E Sete',
     );
   });
 

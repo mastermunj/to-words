@@ -73,6 +73,9 @@ export default class Locale implements LocaleInterface {
       { number: 1000000000000, value: 'Trillionth' },
       { number: 1000000000, value: 'Billionth' },
       { number: 1000000, value: 'Millionth' },
+      // en.wiktionary «croreth», «lakhth» (South Asia).
+      { number: 10000000, value: 'Croreth' },
+      { number: 100000, value: 'Lakhth' },
       { number: 1000, value: 'Thousandth' },
       { number: 100, value: 'Hundredth' },
       { number: 90, value: 'Ninetieth' },

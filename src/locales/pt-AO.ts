@@ -29,10 +29,9 @@ export default class Locale implements LocaleInterface {
       point: 'Vírgula',
     },
     numberWordsMapping: [
-      { number: 1000000000000000, value: 'Quatrilhões' },
-      { number: 1000000000000, value: 'Trilhões' },
-      { number: 1000000000, value: 'Mil Milhões' },
-      { number: 1000000, value: 'Milhões' },
+      { number: 1000000000000000000n, value: 'Trilião' },
+      { number: 1000000000000, value: 'Bilião' },
+      { number: 1000000, value: 'Milhão' },
       { number: 1000, value: 'Mil' },
       { number: 900, value: 'Novecentos', feminineValue: 'Novecentas' },
       { number: 800, value: 'Oitocentos', feminineValue: 'Oitocentas' },
@@ -72,13 +71,14 @@ export default class Locale implements LocaleInterface {
       { number: 1, value: 'Um', feminineValue: 'Uma' },
       { number: 0, value: 'Zero' },
     ],
-    exactWordsMapping: [
-      { number: 100, value: 'Cem' },
-      { number: 1000000000000000, value: 'Um Quatrilhão' },
-      { number: 1000000000000, value: 'Um Trilhão' },
-      { number: 1000000000, value: 'Mil Milhões' },
-      { number: 1000000, value: 'Um Milhão' },
-    ],
+    exactWordsMapping: [{ number: 100, value: 'Cem' }],
+    // Ciberdúvidas / CLDR pt: scale nouns are singular after 1 (um milhão) and plural after 2+.
+    pluralRule: 'one-other',
+    pluralForms: {
+      1000000000000000000: { other: 'Triliões' },
+      1000000000000: { other: 'Biliões' },
+      1000000: { other: 'Milhões' },
+    },
     ignoreOneForWords: [
       'Mil',
       'Novecentos',
@@ -92,10 +92,15 @@ export default class Locale implements LocaleInterface {
       'Cento',
     ],
     splitWord: 'E',
-    noSplitWordAfter: ['Mil', 'Milhões', 'Mil Milhões', 'Trilhões', 'Quatrilhões'],
+    noSplitWordAfter: ['Mil', 'Trilião', 'Bilião', 'Milhão'],
+    splitWordBeforeSimpleGroup: true,
+    // Every component is ordinal (vigésimo primeiro, milésimo primeiro), as in es.
+    // «mil» agrees with the counted noun (duzentas mil pessoas; Ciberdúvidas «numerais feminino»).
+    multiplierFollowsGender: [1000],
+    ordinalComposition: 'every-component',
     ordinalWordsMapping: [
-      { number: 1000000000000, value: 'Trilionésimo' },
-      { number: 1000000000, value: 'Milésimo Milionésimo' },
+      { number: 1000000000000000000n, value: 'Trilionésimo' },
+      { number: 1000000000000, value: 'Bilionésimo' },
       { number: 1000000, value: 'Milionésimo' },
       { number: 1000, value: 'Milésimo' },
       { number: 900, value: 'Noningentésimo' },

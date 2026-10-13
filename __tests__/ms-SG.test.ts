@@ -84,7 +84,7 @@ const testIntegers: [number, string][] = [
   [100000, 'Seratus Ribu'],
   [123456, 'Seratus Dua Puluh Tiga Ribu Empat Ratus Lima Puluh Enam'],
   [792581, 'Tujuh Ratus Sembilan Puluh Dua Ribu Lima Ratus Lapan Puluh Satu'],
-  [1000000, 'Satu Juta'],
+  [1000000, 'Sejuta'],
   [2000000, 'Dua Juta'],
   [2741034, 'Dua Juta Tujuh Ratus Empat Puluh Satu Ribu Tiga Puluh Empat'],
   [10000000, 'Sepuluh Juta'],
@@ -93,7 +93,7 @@ const testIntegers: [number, string][] = [
   [975310864, 'Sembilan Ratus Tujuh Puluh Lima Juta Tiga Ratus Sepuluh Ribu Lapan Ratus Enam Puluh Empat'],
   [1000000000, 'Satu Bilion'],
   [9876543210, 'Sembilan Bilion Lapan Ratus Tujuh Puluh Enam Juta Lima Ratus Empat Puluh Tiga Ribu Dua Ratus Sepuluh'],
-  [1000000000000, 'Satu Triliun'],
+  [1000000000000, 'Satu Trilion'],
 ];
 
 describe('Test Integers with options = {}', () => {
@@ -303,7 +303,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
 const testOrdinalNumbers: [number, string][] = [
   // Numbers 1-20 (special ordinal forms)
   [0, 'Kesifar'],
-  [1, 'Kesatu'],
+  [1, 'Pertama'],
   [2, 'Kedua'],
   [3, 'Ketiga'],
   [4, 'Keempat'],
@@ -325,9 +325,9 @@ const testOrdinalNumbers: [number, string][] = [
   [20, 'Kedua Puluh'],
 
   // Composite numbers (21-29, 30, 40, 50, etc.)
-  [21, 'Dua Puluh Kesatu'],
-  [22, 'Dua Puluh Kedua'],
-  [23, 'Dua Puluh Ketiga'],
+  [21, 'Kedua Puluh Satu'],
+  [22, 'Kedua Puluh Dua'],
+  [23, 'Kedua Puluh Tiga'],
   [30, 'Ketiga Puluh'],
   [40, 'Keempat Puluh'],
   [50, 'Kelima Puluh'],
@@ -337,39 +337,39 @@ const testOrdinalNumbers: [number, string][] = [
   [90, 'Kesembilan Puluh'],
 
   // Numbers ending in 1, 2, 3 (various decades)
-  [31, 'Tiga Puluh Kesatu'],
-  [32, 'Tiga Puluh Kedua'],
-  [33, 'Tiga Puluh Ketiga'],
-  [41, 'Empat Puluh Kesatu'],
-  [42, 'Empat Puluh Kedua'],
-  [43, 'Empat Puluh Ketiga'],
-  [51, 'Lima Puluh Kesatu'],
-  [52, 'Lima Puluh Kedua'],
-  [53, 'Lima Puluh Ketiga'],
+  [31, 'Ketiga Puluh Satu'],
+  [32, 'Ketiga Puluh Dua'],
+  [33, 'Ketiga Puluh Tiga'],
+  [41, 'Keempat Puluh Satu'],
+  [42, 'Keempat Puluh Dua'],
+  [43, 'Keempat Puluh Tiga'],
+  [51, 'Kelima Puluh Satu'],
+  [52, 'Kelima Puluh Dua'],
+  [53, 'Kelima Puluh Tiga'],
 
   // Round numbers (100, 200, 1000, etc.)
   [100, 'Keseratus'],
-  [200, 'Dua Keratus'],
+  [200, 'Kedua Ratus'],
   [1000, 'Keseribu'],
-  [10000, 'Sepuluh Keribu'],
-  [100000, 'Seratus Keribu'],
-  [1000000, 'Satu Kejuta'],
-  [10000000, 'Sepuluh Kejuta'],
+  [10000, 'Kesepuluh Ribu'],
+  [100000, 'Keseratus Ribu'],
+  [1000000, 'Kesejuta'],
+  [10000000, 'Kesepuluh Juta'],
 
   // Numbers in the hundreds with endings
-  [101, 'Seratus Kesatu'],
-  [102, 'Seratus Kedua'],
-  [103, 'Seratus Ketiga'],
-  [111, 'Seratus Kesebelas'],
-  [112, 'Seratus Kedua Belas'],
-  [113, 'Seratus Ketiga Belas'],
-  [123, 'Seratus Dua Puluh Ketiga'],
+  [101, 'Keseratus Satu'],
+  [102, 'Keseratus Dua'],
+  [103, 'Keseratus Tiga'],
+  [111, 'Keseratus Sebelas'],
+  [112, 'Keseratus Dua Belas'],
+  [113, 'Keseratus Tiga Belas'],
+  [123, 'Keseratus Dua Puluh Tiga'],
 
   // Complex numbers
-  [1001, 'Seribu Kesatu'],
-  [1111, 'Seribu Seratus Kesebelas'],
-  [1234, 'Seribu Dua Ratus Tiga Puluh Keempat'],
-  [12345, 'Dua Belas Ribu Tiga Ratus Empat Puluh Kelima'],
+  [1001, 'Keseribu Satu'],
+  [1111, 'Keseribu Seratus Sebelas'],
+  [1234, 'Keseribu Dua Ratus Tiga Puluh Empat'],
+  [12345, 'Kedua Belas Ribu Tiga Ratus Empat Puluh Lima'],
 ];
 
 describe('Test Ordinal Numbers', () => {
@@ -407,7 +407,7 @@ const testPowersOfTen: [number, string][] = [
   [1000, 'Seribu'],
   [10000, 'Sepuluh Ribu'],
   [100000, 'Seratus Ribu'],
-  [1000000, 'Satu Juta'],
+  [1000000, 'Sejuta'],
 ];
 
 describe('Test Powers of Ten', () => {
@@ -542,10 +542,10 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
 
   test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
     expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
-      'Satu Perpuluhan Satu Juta Dua Ratus Tiga Puluh Empat Ribu Lima Ratus Enam Puluh Tujuh',
+      'Satu Perpuluhan Sejuta Dua Ratus Tiga Puluh Empat Ribu Lima Ratus Enam Puluh Tujuh',
     );
     expect(toWords.convert(1.1234567)).toBe(
-      'Satu Perpuluhan Satu Juta Dua Ratus Tiga Puluh Empat Ribu Lima Ratus Enam Puluh Tujuh',
+      'Satu Perpuluhan Sejuta Dua Ratus Tiga Puluh Empat Ribu Lima Ratus Enam Puluh Tujuh',
     );
   });
 

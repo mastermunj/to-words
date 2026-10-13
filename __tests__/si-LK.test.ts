@@ -36,7 +36,7 @@ describe('Test Locale', () => {
 const testIntegers: [number, string][] = [
   [0, 'ශූන්‍ය'],
   [1, 'එක'],
-  [2, 'දෙ'],
+  [2, 'දෙක'],
   [3, 'තුන'],
   [4, 'හතර'],
   [5, 'පහ'],
@@ -45,46 +45,46 @@ const testIntegers: [number, string][] = [
   [8, 'අට'],
   [9, 'නවය'],
   [10, 'දහය'],
-  [11, 'එකොළොස'],
-  [12, 'දොළොස'],
-  [13, 'දහය තුන'],
-  [14, 'දහය හතර'],
-  [15, 'දහය පහ'],
-  [16, 'දහය හය'],
-  [17, 'දහය හත'],
-  [18, 'දහය අට'],
-  [19, 'දහය නවය'],
-  [20, 'විස'],
-  [21, 'විස එක'],
-  [25, 'විස පහ'],
-  [30, 'තිස'],
-  [40, 'හතළිස'],
-  [50, 'පනස'],
+  [11, 'එකොළහ'],
+  [12, 'දොළහ'],
+  [13, 'දහතුන'],
+  [14, 'දාහතර'],
+  [15, 'පහළොව'],
+  [16, 'දහසය'],
+  [17, 'දහහත'],
+  [18, 'දහඅට'],
+  [19, 'දහනවය'],
+  [20, 'විස්ස'],
+  [21, 'විසි එක'],
+  [25, 'විසි පහ'],
+  [30, 'තිහ'],
+  [40, 'හතලිහ'],
+  [50, 'පනහ'],
   [60, 'හැට'],
-  [70, 'හැත්තෑ'],
-  [80, 'අසූ'],
-  [90, 'අනූ'],
+  [70, 'හැත්තෑව'],
+  [80, 'අසූව'],
+  [90, 'අනූව'],
   [99, 'අනූ නවය'],
-  [100, 'සිය'],
-  [101, 'සිය එක'],
-  [137, 'සිය තිස හත'],
-  [200, 'දෙ සිය'],
-  [500, 'පහ සිය'],
-  [700, 'හත සිය'],
-  [999, 'නවය සිය අනූ නවය'],
-  [1000, 'දාහ'],
-  [1001, 'දාහ එක'],
-  [1100, 'දාහ සිය'],
-  [2000, 'දෙ දාහ'],
-  [4680, 'හතර දාහ හය සිය අසූ'],
-  [10000, 'දහය දාහ'],
-  [50000, 'පනස දාහ'],
+  [100, 'සියය'],
+  [101, 'එකසිය එක'],
+  [137, 'එකසිය තිස් හත'],
+  [200, 'දෙසිය'],
+  [500, 'පන්සියය'],
+  [700, 'හත්සීය'],
+  [999, 'නවසිය අනූ නවය'],
+  [1000, 'දහස'],
+  [1001, 'දහස් එක'],
+  [1100, 'දහස් සියය'],
+  [2000, 'දෙදහස'],
+  [4680, 'හාරදහස් හයසිය අසූව'],
+  [10000, 'දස දහස'],
+  [50000, 'පනහ දහස'],
   [100000, 'ලක්ෂය'],
   [200000, 'දෙ ලක්ෂය'],
-  [250000, 'දෙ ලක්ෂය පනස දාහ'],
-  [500000, 'පහ ලක්ෂය'],
-  [1000000, 'එක මිලියනය'],
-  [5000000, 'පහ මිලියනය'],
+  [250000, 'දෙ ලක්ෂය පනහ දහස'],
+  [500000, 'පන් ලක්ෂය'],
+  [1000000, 'එක් මිලියනය'],
+  [5000000, 'පන් මිලියනය'],
 ];
 
 describe('Test Integers with options = {}', () => {
@@ -111,7 +111,7 @@ describe('Test Negative Integers with options = {}', () => {
 describe('Test Integers with options = { currency: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} රුපියල`;
+    row[1] = `${row[0] === 1 ? 'රුපියල' : 'රුපියල්'} ${row[1]}`;
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -121,10 +121,10 @@ describe('Test Integers with options = { currency: true }', () => {
 
 describe('Test Negative Integers with options = { currency: true }', () => {
   const testData = [
-    [-1, 'ඍණ එක රුපියල'],
-    [-10, 'ඍණ දහය රුපියල'],
-    [-100, 'ඍණ සිය රුපියල'],
-    [-1000, 'ඍණ දාහ රුපියල'],
+    [-1, 'ඍණ රුපියල එක'],
+    [-10, 'ඍණ රුපියල් දහය'],
+    [-100, 'ඍණ රුපියල් සියය'],
+    [-1000, 'ඍණ රුපියල් දහස'],
   ];
 
   test.concurrent.each(testData)('convert %d => %s', (input, expected) => {
@@ -135,8 +135,8 @@ describe('Test Negative Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, ignoreZeroCurrency: true }', () => {
   const testData = [
     [0, ''],
-    [5, 'පහ රුපියල'],
-    [100, 'සිය රුපියල'],
+    [5, 'රුපියල් පහ'],
+    [100, 'රුපියල් සියය'],
   ];
 
   test.concurrent.each(testData)('convert %d => %s', (input, expected) => {
@@ -148,20 +148,20 @@ const testFloats: [number, string][] = [
   [0.5, 'ශූන්‍ය දශම පහ'],
   [1.5, 'එක දශම පහ'],
   [10.5, 'දහය දශම පහ'],
-  [12.34, 'දොළොස දශම තිස හතර'],
-  [37.68, 'තිස හත දශම හැට අට'],
+  [12.34, 'දොළහ දශම තිස් හතර'],
+  [37.68, 'තිස් හත දශම හැට අට'],
   [0.04, 'ශූන්‍ය දශම ශූන්‍ය හතර'],
 ];
 
 describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
   const testIncludeZeroFractional: [number | string, string][] = [
-    [123, `සිය විස තුන රුපියල`],
-    ['123', `සිය විස තුන රුපියල`],
-    ['123.0', `සිය විස තුන රුපියල සහ ශූන්‍ය සත`],
-    ['123.00', `සිය විස තුන රුපියල සහ ශූන්‍ය සත`],
-    ['0.00', `ශූන්‍ය රුපියල සහ ශූන්‍ය සත`],
-    ['-123.00', `ඍණ සිය විස තුන රුපියල සහ ශූන්‍ය සත`],
-    ['37.68', `තිස හත රුපියල සහ හැට අට සත`],
+    [123, `රුපියල් එකසිය විසි තුන`],
+    ['123', `රුපියල් එකසිය විසි තුන`],
+    ['123.0', `රුපියල් එකසිය විසි තුන සහ සත ශූන්‍ය`],
+    ['123.00', `රුපියල් එකසිය විසි තුන සහ සත ශූන්‍ය`],
+    ['0.00', `රුපියල් ශූන්‍ය සහ සත ශූන්‍ය`],
+    ['-123.00', `ඍණ රුපියල් එකසිය විසි තුන සහ සත ශූන්‍ය`],
+    ['37.68', `රුපියල් තිස් හත සහ සත හැට අට`],
   ];
 
   test.concurrent.each(testIncludeZeroFractional)('convert %s => %s', (input, expected) => {
@@ -181,10 +181,10 @@ describe('Test Floats with options = {}', () => {
 });
 
 const testFloatsWithCurrency = [
-  [0.5, 'ශූන්‍ය රුපියල සහ පනස සත'],
-  [1.5, 'එක රුපියල සහ පනස සත'],
-  [37.68, 'තිස හත රුපියල සහ හැට අට සත'],
-  [0.04, 'ශූන්‍ය රුපියල සහ හතර සත'],
+  [0.5, 'රුපියල් ශූන්‍ය සහ සත පනහ'],
+  [1.5, 'රුපියල එක සහ සත පනහ'],
+  [37.68, 'රුපියල් තිස් හත සහ සත හැට අට'],
+  [0.04, 'රුපියල් ශූන්‍ය සහ සත හාර'],
 ];
 
 describe('Test Floats with options = { currency: true }', () => {
@@ -195,8 +195,8 @@ describe('Test Floats with options = { currency: true }', () => {
 
 describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true }', () => {
   const testData = [
-    [1.5, 'එක රුපියල සහ පනස සත'],
-    [37.68, 'තිස හත රුපියල සහ හැට අට සත'],
+    [1.5, 'රුපියල එක සහ සත පනහ'],
+    [37.68, 'රුපියල් තිස් හත සහ සත හැට අට'],
   ];
 
   test.concurrent.each(testData)('convert %d => %s', (input, expected) => {
@@ -206,8 +206,8 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true 
 
 describe('Test Floats with options = { currency: true, ignoreDecimal: true }', () => {
   const testData = [
-    [10.99, 'දහය රුපියල'],
-    [37.68, 'තිස හත රුපියල'],
+    [10.99, 'රුපියල් දහය'],
+    [37.68, 'රුපියල් තිස් හත'],
   ];
 
   test.concurrent.each(testData)('convert %d => %s', (input, expected) => {
@@ -224,16 +224,16 @@ describe('Test Ordinal', () => {
 
   test('toOrdinal uses suffix for other values', () => {
     expect(localeToOrdinal(4)).toBe('හතරවැනි');
-    expect(localeToOrdinal(21)).toBe('විස එකවැනි');
+    expect(localeToOrdinal(21)).toBe('විසි එකවැනි');
   });
 });
 
 describe('Test Locale Functional API', () => {
   test('localeToWords', () => {
-    expect(localeToWords(11)).toBe('එකොළොස');
+    expect(localeToWords(11)).toBe('එකොළහ');
   });
 
   test('localeToCurrency', () => {
-    expect(localeToCurrency(100)).toBe('සිය රුපියල');
+    expect(localeToCurrency(100)).toBe('රුපියල් සියය');
   });
 });

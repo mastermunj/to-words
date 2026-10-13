@@ -55,19 +55,19 @@ const testIntegers: [number, string][] = [
   [18, 'Осемнадесет'],
   [19, 'Деветнадесет'],
   [20, 'Двадесет'],
-  [21, 'Двадесет Едно'],
-  [22, 'Двадесет Две'],
+  [21, 'Двадесет И Едно'],
+  [22, 'Двадесет И Две'],
   [30, 'Тридесет'],
-  [35, 'Тридесет Пет'],
+  [35, 'Тридесет И Пет'],
   [40, 'Четиридесет'],
   [50, 'Петдесет'],
   [60, 'Шестдесет'],
   [70, 'Седемдесет'],
   [80, 'Осемдесет'],
   [90, 'Деветдесет'],
-  [99, 'Деветдесет Девет'],
+  [99, 'Деветдесет И Девет'],
   [100, 'Сто'],
-  [137, 'Сто Тридесет Седем'],
+  [137, 'Сто Тридесет И Седем'],
   [200, 'Двеста'],
   [300, 'Триста'],
   [400, 'Четиристотин'],
@@ -77,22 +77,22 @@ const testIntegers: [number, string][] = [
   [800, 'Осемстотин'],
   [900, 'Деветстотин'],
   [1000, 'Хиляда'],
-  [1100, 'Хиляда Сто'],
+  [1100, 'Хиляда И Сто'],
   [2000, 'Две Хиляди'],
   [3000, 'Три Хиляди'],
   [4000, 'Четири Хиляди'],
-  [5000, 'Пет Хиляда'],
-  [4680, 'Четири Хиляди Шестстотин Осемдесет'],
-  [10000, 'Десет Хиляда'],
-  [63892, 'Шестдесет Три Хиляди Осемстотин Деветдесет Две'],
+  [5000, 'Пет Хиляди'],
+  [4680, 'Четири Хиляди Шестстотин И Осемдесет'],
+  [10000, 'Десет Хиляди'],
+  [63892, 'Шестдесет И Три Хиляди Осемстотин Деветдесет И Две'],
   [100000, 'Сто Хиляди'],
   [1000000, 'Милион'],
-  [2000000, 'Две Милиона'],
-  [5000000, 'Пет Милион'],
-  [2741034, 'Две Милиона Седемстотин Четиридесет Едно Хиляди Тридесет Четири'],
+  [2000000, 'Два Милиона'],
+  [5000000, 'Пет Милиона'],
+  [2741034, 'Два Милиона Седемстотин Четиридесет И Една Хиляди Тридесет И Четири'],
   [1000000000, 'Милиард'],
-  [2000000000, 'Две Милиарда'],
-  [5000000000, 'Пет Милиард'],
+  [2000000000, 'Два Милиарда'],
+  [5000000000, 'Пет Милиарда'],
 ];
 
 describe('Test Integers with options = {}', () => {
@@ -117,19 +117,13 @@ describe('Test Negative Integers with options = {}', () => {
 });
 
 // Helper function to get Bulgarian currency form
-function getCurrencyName(words: string): string {
-  // Check for singular (1)
-  if (words === 'Едно') {
-    return 'Лев';
-  }
-  // Default plural for all other numbers
-  return 'Лева';
-}
+// Bulgaria uses the euro since 2026-01-01. Евро is invariable and neuter, so the amount keeps its
+// default (neuter) form: Едно Евро, Две Евро, Пет Евро.
+const currencyName = 'Евро';
 
 describe('Test Integers with options = { currency: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    const currencyName = getCurrencyName(row[1] as string);
     row[1] = `${row[1]} ${currencyName} Само`;
   });
 
@@ -141,7 +135,6 @@ describe('Test Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, doNotAddOnly: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    const currencyName = getCurrencyName(row[1] as string);
     row[1] = `${row[1]} ${currencyName}`;
   });
 
@@ -154,11 +147,10 @@ describe('Test Negative Integers with options = { currency: true }', () => {
   const testNegativeIntegersWithCurrency = cloneDeep(testIntegers);
   testNegativeIntegersWithCurrency.map((row, i) => {
     if (i === 0) {
-      row[1] = `${row[1]} Лева Само`;
+      row[1] = `${row[1]} Евро Само`;
       return;
     }
     row[0] = -row[0];
-    const currencyName = getCurrencyName(row[1] as string);
     row[1] = `Минус ${row[1]} ${currencyName} Само`;
   });
 
@@ -173,7 +165,6 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
     if (i === 0) {
       row[1] = '';
     } else {
-      const currencyName = getCurrencyName(row[1] as string);
       row[1] = `${row[1]} ${currencyName} Само`;
     }
   });
@@ -190,22 +181,22 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
 
 const testFloats: [number, string][] = [
   [0.0, 'Нула'],
-  [0.04, 'Нула Цяло Нула Четири'],
-  [0.4, 'Нула Цяло Четири'],
-  [0.63, 'Нула Цяло Шестдесет Три'],
-  [37.06, 'Тридесет Седем Цяло Нула Шест'],
-  [37.68, 'Тридесет Седем Цяло Шестдесет Осем'],
+  [0.04, 'Нула Цяло И Четири Стотни'],
+  [0.4, 'Нула Цяло И Четири Десети'],
+  [0.63, 'Нула Цяло И Шестдесет И Три Стотни'],
+  [37.06, 'Тридесет И Седем Цяло И Шест Стотни'],
+  [37.68, 'Тридесет И Седем Цяло И Шестдесет И Осем Стотни'],
 ];
 
 describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
   const testIncludeZeroFractional: [number | string, string][] = [
-    [123, `Сто Двадесет Три Лева Само`],
-    ['123', `Сто Двадесет Три Лева Само`],
-    ['123.0', `Сто Двадесет Три Лева И Нула Стотинки Само`],
-    ['123.00', `Сто Двадесет Три Лева И Нула Стотинки Само`],
-    ['0.00', `Нула Лева И Нула Стотинки Само`],
-    ['-123.00', `Минус Сто Двадесет Три Лева И Нула Стотинки Само`],
-    ['37.68', `Тридесет Седем Лева И Шестдесет Осем Стотинки Само`],
+    [123, `Сто Двадесет И Три Евро Само`],
+    ['123', `Сто Двадесет И Три Евро Само`],
+    ['123.0', `Сто Двадесет И Три Евро И Нула Евроцента Само`],
+    ['123.00', `Сто Двадесет И Три Евро И Нула Евроцента Само`],
+    ['0.00', `Нула Евро И Нула Евроцента Само`],
+    ['-123.00', `Минус Сто Двадесет И Три Евро И Нула Евроцента Само`],
+    ['37.68', `Тридесет И Седем Евро И Шестдесет И Осем Евроцента Само`],
   ];
 
   test.concurrent.each(testIncludeZeroFractional)('convert %s => %s', (input, expected) => {
@@ -225,13 +216,13 @@ describe('Test Floats with options = {}', () => {
 });
 
 const testFloatsWithCurrency: [number, string][] = [
-  [0.0, 'Нула Лева Само'],
-  [0.04, 'Нула Лева И Четири Стотинки Само'],
-  [0.4, 'Нула Лева И Четиридесет Стотинки Само'],
-  [0.63, 'Нула Лева И Шестдесет Три Стотинки Само'],
-  [0.999, 'Едно Лев Само'],
-  [37.06, 'Тридесет Седем Лева И Шест Стотинки Само'],
-  [37.68, 'Тридесет Седем Лева И Шестдесет Осем Стотинки Само'],
+  [0.0, 'Нула Евро Само'],
+  [0.04, 'Нула Евро И Четири Евроцента Само'],
+  [0.4, 'Нула Евро И Четиридесет Евроцента Само'],
+  [0.63, 'Нула Евро И Шестдесет И Три Евроцента Само'],
+  [0.999, 'Едно Евро Само'],
+  [37.06, 'Тридесет И Седем Евро И Шест Евроцента Само'],
+  [37.68, 'Тридесет И Седем Евро И Шестдесет И Осем Евроцента Само'],
 ];
 
 describe('Test Floats with options = { currency: true }', () => {
@@ -249,7 +240,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true 
       return;
     }
     if (row[0] > 0 && row[0] < 1) {
-      row[1] = (row[1] as string).replace('Нула Лева И ', '');
+      row[1] = (row[1] as string).replace('Нула Евро И ', '');
     }
   });
 
@@ -267,9 +258,9 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
   const testFloatsWithCurrencyAndIgnoreDecimal = cloneDeep(testFloatsWithCurrency);
   testFloatsWithCurrencyAndIgnoreDecimal.map((row) => {
     if (row[0] === 0.999) {
-      row[1] = 'Нула Лева Само';
+      row[1] = 'Нула Евро Само';
     } else {
-      row[1] = (row[1] as string).replace(new RegExp(` И [\\u0400-\\u04FF ]+ Стотинк[иа]*`), '');
+      row[1] = (row[1] as string).replace(new RegExp(` (Евро) И [\\u0400-\\u04FF ]+ Евроцента?`), ' $1');
     }
   });
 
@@ -310,8 +301,8 @@ const testOrdinalNumbers: [number, string][] = [
 
   // Tens
   [20, 'Двадесети'],
-  [21, 'Двадесет Първи'],
-  [22, 'Двадесет Втори'],
+  [21, 'Двадесет И Първи'],
+  [22, 'Двадесет И Втори'],
   [30, 'Тридесети'],
   [40, 'Четиридесети'],
   [50, 'Петдесети'],
@@ -322,13 +313,13 @@ const testOrdinalNumbers: [number, string][] = [
 
   // Hundreds
   [100, 'Стотен'],
-  [101, 'Сто Първи'],
+  [101, 'Сто И Първи'],
   [200, 'Двестотен'],
   [300, 'Тристотен'],
 
   // Thousands
   [1000, 'Хиляден'],
-  [1001, 'Хиляда Първи'],
+  [1001, 'Хиляда И Първи'],
 
   // Millions
   [1000000, 'Милионен'],
@@ -367,13 +358,13 @@ const testPowersOfTen: [number, string][] = [
   [10, 'Десет'],
   [100, 'Сто'],
   [1000, 'Хиляда'],
-  [10000, 'Десет Хиляда'],
+  [10000, 'Десет Хиляди'],
   [100000, 'Сто Хиляди'],
   [1000000, 'Милион'],
-  [10000000, 'Десет Милион'],
+  [10000000, 'Десет Милиона'],
   [100000000, 'Сто Милиона'],
   [1000000000, 'Милиард'],
-  [10000000000, 'Десет Милиард'],
+  [10000000000, 'Десет Милиарда'],
   [100000000000, 'Сто Милиарда'],
   [1000000000000, 'Трилион'],
 ];
@@ -450,8 +441,8 @@ describe('Test Zero Variants', () => {
     expect(toWords.convert('0')).toBe('Нула');
   });
 
-  test('convert 0 with currency => Нула Лева Само', () => {
-    expect(toWords.convert(0, { currency: true })).toBe('Нула Лева Само');
+  test('convert 0 with currency => Нула Евро Само', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('Нула Евро Само');
   });
 });
 
@@ -498,20 +489,20 @@ describe('Functional helpers (locale-level)', () => {
 });
 
 const testFractionStyleBgBG: [number, string][] = [
-  [1.1, 'Едно И Едно Десетина'],
-  [2.5, 'Две И Пет Десетини'],
-  [1.01, 'Едно И Едно Стотина'],
-  [1.45, 'Едно И Четиридесет Пет Стотини'],
-  [0.05, 'Нула И Пет Стотини'],
-  [1.001, 'Едно И Едно Хилядна'],
-  [1.005, 'Едно И Пет Хиляди'],
-  [1.0001, 'Едно И Едно Десетохилядна'],
-  [1.0005, 'Едно И Пет Десетохиляди'],
-  [1.00001, 'Едно И Едно Стохилядна'],
-  [1.00005, 'Едно И Пет Стохиляди'],
-  [1.000001, 'Едно И Едно Милионна'],
-  [1.000005, 'Едно И Пет Милиони'],
-  [123.45, 'Сто Двадесет Три И Четиридесет Пет Стотини'],
+  [1.1, 'Едно Цяло И Една Десета'],
+  [2.5, 'Две Цяло И Пет Десети'],
+  [1.01, 'Едно Цяло И Една Стотна'],
+  [1.45, 'Едно Цяло И Четиридесет И Пет Стотни'],
+  [0.05, 'Нула Цяло И Пет Стотни'],
+  [1.001, 'Едно Цяло И Една Хилядна'],
+  [1.005, 'Едно Цяло И Пет Хилядни'],
+  [1.0001, 'Едно Цяло И Една Десетхилядна'],
+  [1.0005, 'Едно Цяло И Пет Десетхилядни'],
+  [1.00001, 'Едно Цяло И Една Стохилядна'],
+  [1.00005, 'Едно Цяло И Пет Стохилядни'],
+  [1.000001, 'Едно Цяло И Една Милионна'],
+  [1.000005, 'Едно Цяло И Пет Милионни'],
+  [123.45, 'Сто Двадесет И Три Цяло И Четиридесет И Пет Стотни'],
 ];
 
 describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
@@ -521,13 +512,42 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
 
   test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
     expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
-      'Едно Цяло Милион Двеста Тридесет Четири Хиляди Петстотин Шестдесет Седем',
+      'Едно Цяло Милион Двеста Тридесет И Четири Хиляди Петстотин Шестдесет И Седем',
     );
-    expect(toWords.convert(1.1234567)).toBe('Едно Цяло Милион Двеста Тридесет Четири Хиляди Петстотин Шестдесет Седем');
+    expect(toWords.convert(1.1234567)).toBe(
+      'Едно Цяло Милион Двеста Тридесет И Четири Хиляди Петстотин Шестдесет И Седем',
+    );
   });
 
-  test('digit-by-digit style works without decimalStyle option', () => {
-    expect(toWords.convert(1.5)).toBe('Едно Цяло Пет');
-    expect(toWords.convert(0.05)).toBe('Нула Цяло Нула Пет');
+  test("fraction reading is the default; decimalStyle: 'digit' keeps the old reading", () => {
+    // en.wiktionary «цяло»: пет цяло и две десети
+    expect(toWords.convert(5.2)).toBe('Пет Цяло И Две Десети');
+    expect(toWords.convert(1.5)).toBe('Едно Цяло И Пет Десети');
+    expect(toWords.convert(0.05)).toBe('Нула Цяло И Пет Стотни');
+    expect(toWords.convert(1.5, { decimalStyle: 'digit' })).toBe('Едно Цяло Пет');
+  });
+});
+
+describe('«и» before the last component (bg.wikipedia number articles)', () => {
+  test.each([
+    [120, 'Сто И Двадесет'],
+    [121, 'Сто Двадесет И Едно'],
+    [1001, 'Хиляда И Едно'],
+    [1100, 'Хиляда И Сто'],
+    [1133, 'Хиляда Сто Тридесет И Три'],
+    [2500000, 'Два Милиона И Петстотин Хиляди'],
+  ])('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+    expect(toWords.convert(input, { useAnd: true })).toBe(expected);
+  });
+
+  test.each([
+    [121, 'Сто Двадесет И Първи'],
+    [156, 'Сто Петдесет И Шести'],
+    [1001, 'Хиляда И Първи'],
+    [2000, 'Двухиляден'],
+    [1100000, 'Милион И Стохиляден'],
+  ])('toOrdinal %d => %s', (input, expected) => {
+    expect(toWords.toOrdinal(input)).toBe(expected);
   });
 });

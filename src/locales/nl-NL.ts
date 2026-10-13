@@ -24,15 +24,17 @@ export default class Locale implements LocaleInterface {
     },
     texts: {
       and: 'En',
-      minus: 'Negatief',
+      // CLDR nl «min vijf»; Taaladvies reads −5 as «min vijf».
+      minus: 'Min',
       only: '',
-      point: 'Punt',
+      // Dutch uses the decimal comma, read «komma» (acht komma vijf).
+      point: 'Komma',
     },
     numberWordsMapping: [
-      { number: 1000000000000000, value: 'Biljard' },
-      { number: 1000000000000, value: 'Biljoen' },
-      { number: 1000000000, value: 'Miljard' },
-      { number: 1000000, value: 'Miljoen' },
+      { number: 1000000000000000, value: 'Biljard', multiplierForms: { 1: 'Een' } },
+      { number: 1000000000000, value: 'Biljoen', multiplierForms: { 1: 'Een' } },
+      { number: 1000000000, value: 'Miljard', multiplierForms: { 1: 'Een' } },
+      { number: 1000000, value: 'Miljoen', multiplierForms: { 1: 'Een' } },
       { number: 1000, value: 'Duizend' },
       { number: 100, value: 'Honderd' },
       { number: 99, value: 'Negenennegentig' },
@@ -137,6 +139,11 @@ export default class Locale implements LocaleInterface {
       { number: 0, value: 'Nul' },
     ],
     exactWordsMapping: [{ number: 100, value: 'Honderd' }],
+    // Taalunie Leidraad 6.9: hoofdtelwoorden aaneen tot aan «duizend» (tweehonderdenzeven); «tweeduizend vier».
+    ignoreOneForWords: ['Honderd', 'Duizend'],
+    wordJoining: { compoundBelow: 1000000, separateAfter: [1000], compoundOrdinals: true },
+    // Rangtelwoorden: -de/-ste aan het hoofdtelwoord (eenentwintigste, honderdeerste).
+    ordinalSuffix: 'ste',
     ordinalWordsMapping: [
       { number: 1000000000000, value: 'Biljoenste' },
       { number: 1000000000, value: 'Miljardste' },

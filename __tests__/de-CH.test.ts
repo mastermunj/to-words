@@ -68,40 +68,37 @@ const testIntegers: [number, string][] = [
   [90, 'Neunzig'],
   [99, 'Neunundneunzig'],
   [100, 'Hundert'],
-  [137, 'Hundert Siebenunddreißig'],
-  [200, 'Zwei Hundert'],
-  [700, 'Sieben Hundert'],
+  [137, 'Hundertsiebenunddreißig'],
+  [200, 'Zweihundert'],
+  [700, 'Siebenhundert'],
   [1000, 'Tausend'],
-  [1100, 'Tausend Hundert'],
-  [4680, 'Vier Tausend Sechs Hundert Achtzig'],
-  [63892, 'Dreiundsechzig Tausend Acht Hundert Zweiundneunzig'],
-  [86100, 'Sechsundachtzig Tausend Hundert'],
-  [792581, 'Sieben Hundert Zweiundneunzig Tausend Fünf Hundert Einundachtzig'],
-  [1000000, 'Eins Million'],
-  [2000000, 'Zwei Million'],
-  [2741034, 'Zwei Million Sieben Hundert Einundvierzig Tausend Vierunddreißig'],
-  [86429753, 'Sechsundachtzig Million Vier Hundert Neunundzwanzig Tausend Sieben Hundert Dreiundfünfzig'],
-  [975310864, 'Neun Hundert Fünfundsiebzig Million Drei Hundert Zehn Tausend Acht Hundert Vierundsechzig'],
-  [1000000000, 'Eins Milliarde'],
-  [
-    9876543210,
-    'Neun Milliarde Acht Hundert Sechsundsiebzig Million Fünf Hundert Dreiundvierzig Tausend Zwei Hundert Zehn',
-  ],
+  [1100, 'Tausendhundert'],
+  [4680, 'Viertausendsechshundertachtzig'],
+  [63892, 'Dreiundsechzigtausendachthundertzweiundneunzig'],
+  [86100, 'Sechsundachtzigtausendhundert'],
+  [792581, 'Siebenhundertzweiundneunzigtausendfünfhunderteinundachtzig'],
+  [1000000, 'Eine Million'],
+  [2000000, 'Zwei Millionen'],
+  [2741034, 'Zwei Millionen Siebenhunderteinundvierzigtausendvierunddreißig'],
+  [86429753, 'Sechsundachtzig Millionen Vierhundertneunundzwanzigtausendsiebenhundertdreiundfünfzig'],
+  [975310864, 'Neunhundertfünfundsiebzig Millionen Dreihundertzehntausendachthundertvierundsechzig'],
+  [1000000000, 'Eine Milliarde'],
+  [9876543210, 'Neun Milliarden Achthundertsechsundsiebzig Millionen Fünfhundertdreiundvierzigtausendzweihundertzehn'],
   [
     98765432101,
-    'Achtundneunzig Milliarde Sieben Hundert Fünfundsechzig Million Vier Hundert Zweiunddreißig Tausend Hundert Eins',
+    'Achtundneunzig Milliarden Siebenhundertfünfundsechzig Millionen Vierhundertzweiunddreißigtausendhunderteins',
   ],
   [
     987654321012,
-    'Neun Hundert Siebenundachtzig Milliarde Sechs Hundert Vierundfünfzig Million Drei Hundert Einundzwanzig Tausend Zwölf',
+    'Neunhundertsiebenundachtzig Milliarden Sechshundertvierundfünfzig Millionen Dreihunderteinundzwanzigtausendzwölf',
   ],
   [
     9876543210123,
-    'Neun Billion Acht Hundert Sechsundsiebzig Milliarde Fünf Hundert Dreiundvierzig Million Zwei Hundert Zehn Tausend Hundert Dreiundzwanzig',
+    'Neun Billionen Achthundertsechsundsiebzig Milliarden Fünfhundertdreiundvierzig Millionen Zweihundertzehntausendhundertdreiundzwanzig',
   ],
   [
     98765432101234,
-    'Achtundneunzig Billion Sieben Hundert Fünfundsechzig Milliarde Vier Hundert Zweiunddreißig Million Hundert Eins Tausend Zwei Hundert Vierunddreißig',
+    'Achtundneunzig Billionen Siebenhundertfünfundsechzig Milliarden Vierhundertzweiunddreißig Millionen Hunderteintausendzweihundertvierunddreißig',
   ],
 ];
 
@@ -129,7 +126,7 @@ describe('Test Negative Integers with options = {}', () => {
 describe('Test Integers with options = { currency: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} Franken`;
+    row[1] = `${(row[1] as string).replace(/([Ee])ins$/, '$1in')} Franken`;
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -140,7 +137,7 @@ describe('Test Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, doNotAddOnly: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} Franken`;
+    row[1] = `${(row[1] as string).replace(/([Ee])ins$/, '$1in')} Franken`;
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -152,11 +149,11 @@ describe('Test Negative Integers with options = { currency: true }', () => {
   const testNegativeIntegersWithCurrency = cloneDeep(testIntegers);
   testNegativeIntegersWithCurrency.map((row, i) => {
     if (i === 0) {
-      row[1] = `${row[1]} Franken`;
+      row[1] = `${(row[1] as string).replace(/([Ee])ins$/, '$1in')} Franken`;
       return;
     }
     row[0] = -row[0];
-    row[1] = `Minus ${row[1]} Franken`;
+    row[1] = `Minus ${(row[1] as string).replace(/([Ee])ins$/, '$1in')} Franken`;
   });
 
   test.concurrent.each(testNegativeIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -167,7 +164,7 @@ describe('Test Negative Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, ignoreZeroCurrency: true }', () => {
   const testIntegersWithCurrencyAndIgnoreZeroCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrencyAndIgnoreZeroCurrency.map((row, i) => {
-    row[1] = i === 0 ? '' : `${row[1]} Franken`;
+    row[1] = i === 0 ? '' : `${(row[1] as string).replace(/([Ee])ins$/, '$1in')} Franken`;
   });
 
   test.concurrent.each(testIntegersWithCurrencyAndIgnoreZeroCurrency)('convert %d => %s', (input, expected) => {
@@ -185,22 +182,22 @@ const testFloats: [number, string][] = [
   [0.04, 'Null Komma Null Vier'],
   [0.0468, 'Null Komma Null Vier Sechs Acht'],
   [0.4, 'Null Komma Vier'],
-  [0.973, 'Null Komma Neun Hundert Dreiundsiebzig'],
-  [0.999, 'Null Komma Neun Hundert Neunundneunzig'],
+  [0.973, 'Null Komma Neunhundertdreiundsiebzig'],
+  [0.999, 'Null Komma Neunhundertneunundneunzig'],
   [37.06, 'Siebenunddreißig Komma Null Sechs'],
   [37.068, 'Siebenunddreißig Komma Null Sechs Acht'],
   [37.68, 'Siebenunddreißig Komma Achtundsechzig'],
-  [37.683, 'Siebenunddreißig Komma Sechs Hundert Dreiundachtzig'],
+  [37.683, 'Siebenunddreißig Komma Sechshundertdreiundachtzig'],
 ];
 
 describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
   const testIncludeZeroFractional: [number | string, string][] = [
-    [123, `Hundert Dreiundzwanzig Franken`],
-    ['123', `Hundert Dreiundzwanzig Franken`],
-    ['123.0', `Hundert Dreiundzwanzig Franken Und Null Rappen`],
-    ['123.00', `Hundert Dreiundzwanzig Franken Und Null Rappen`],
+    [123, `Hundertdreiundzwanzig Franken`],
+    ['123', `Hundertdreiundzwanzig Franken`],
+    ['123.0', `Hundertdreiundzwanzig Franken Und Null Rappen`],
+    ['123.00', `Hundertdreiundzwanzig Franken Und Null Rappen`],
     ['0.00', `Null Franken Und Null Rappen`],
-    ['-123.00', `Minus Hundert Dreiundzwanzig Franken Und Null Rappen`],
+    ['-123.00', `Minus Hundertdreiundzwanzig Franken Und Null Rappen`],
     ['37.68', `Siebenunddreißig Franken Und Achtundsechzig Rappen`],
   ];
 
@@ -226,7 +223,7 @@ const testFloatsWithCurrency: [number, string][] = [
   [0.0468, `Null Franken Und Fünf Rappen`],
   [0.4, `Null Franken Und Vierzig Rappen`],
   [0.973, `Null Franken Und Siebenundneunzig Rappen`],
-  [0.999, `Eins Franken`],
+  [0.999, `Ein Franken`],
   [37.06, `Siebenunddreißig Franken Und Sechs Rappen`],
   [37.068, `Siebenunddreißig Franken Und Sieben Rappen`],
   [37.68, `Siebenunddreißig Franken Und Achtundsechzig Rappen`],
@@ -321,24 +318,24 @@ const testOrdinals: [number, string][] = [
   [90, 'Neunzigste'],
   // Round numbers (100, 200, 1000, etc.)
   [100, 'Hundertste'],
-  [200, 'Zwei Hundertste'],
-  [300, 'Drei Hundertste'],
+  [200, 'Zweihundertste'],
+  [300, 'Dreihundertste'],
   [1000, 'Tausendste'],
-  [2000, 'Zwei Tausendste'],
-  [1000000, 'Eins Millionste'],
-  [2000000, 'Zwei Millionste'],
+  [2000, 'Zweitausendste'],
+  [1000000, 'Millionste'],
+  [2000000, 'Zweimillionste'],
   // Complex numbers
-  [101, 'Hundert Erste'],
-  [102, 'Hundert Zweite'],
-  [111, 'Hundert Elfte'],
-  [123, 'Hundert Dreiundzwanzigste'],
-  [150, 'Hundert Fünfzigste'],
-  [1001, 'Tausend Erste'],
-  [1234, 'Tausend Zwei Hundert Vierunddreißigste'],
-  [1500, 'Tausend Fünf Hundertste'],
-  [10000, 'Zehn Tausendste'],
-  [100000, 'Hundert Tausendste'],
-  [1000001, 'Eins Million Erste'],
+  [101, 'Hunderterste'],
+  [102, 'Hundertzweite'],
+  [111, 'Hundertelfte'],
+  [123, 'Hundertdreiundzwanzigste'],
+  [150, 'Hundertfünfzigste'],
+  [1001, 'Tausenderste'],
+  [1234, 'Tausendzweihundertvierunddreißigste'],
+  [1500, 'Tausendfünfhundertste'],
+  [10000, 'Zehntausendste'],
+  [100000, 'Hunderttausendste'],
+  [1000001, 'Millionerste'],
 ];
 
 describe('Test Ordinals with toOrdinal()', () => {
@@ -378,15 +375,15 @@ const testPowersOfTen: [number, string][] = [
   [10, 'Zehn'],
   [100, 'Hundert'],
   [1000, 'Tausend'],
-  [10000, 'Zehn Tausend'],
-  [100000, 'Hundert Tausend'],
-  [1000000, 'Eins Million'],
-  [10000000, 'Zehn Million'],
-  [100000000, 'Hundert Million'],
-  [1000000000, 'Eins Milliarde'],
-  [10000000000, 'Zehn Milliarde'],
-  [100000000000, 'Hundert Milliarde'],
-  [1000000000000, 'Eins Billion'],
+  [10000, 'Zehntausend'],
+  [100000, 'Hunderttausend'],
+  [1000000, 'Eine Million'],
+  [10000000, 'Zehn Millionen'],
+  [100000000, 'Hundert Millionen'],
+  [1000000000, 'Eine Milliarde'],
+  [10000000000, 'Zehn Milliarden'],
+  [100000000000, 'Hundert Milliarden'],
+  [1000000000000, 'Eine Billion'],
 ];
 
 describe('Test Powers of Ten (German System)', () => {
@@ -399,17 +396,17 @@ describe('Test Powers of Ten (German System)', () => {
 const testBoundaries: [number, string][] = [
   [99, 'Neunundneunzig'],
   [100, 'Hundert'],
-  [101, 'Hundert Eins'],
-  [999, 'Neun Hundert Neunundneunzig'],
+  [101, 'Hunderteins'],
+  [999, 'Neunhundertneunundneunzig'],
   [1000, 'Tausend'],
-  [1001, 'Tausend Eins'],
-  [9999, 'Neun Tausend Neun Hundert Neunundneunzig'],
-  [10000, 'Zehn Tausend'],
-  [99999, 'Neunundneunzig Tausend Neun Hundert Neunundneunzig'],
-  [100000, 'Hundert Tausend'],
-  [999999, 'Neun Hundert Neunundneunzig Tausend Neun Hundert Neunundneunzig'],
-  [1000000, 'Eins Million'],
-  [1000001, 'Eins Million Eins'],
+  [1001, 'Tausendeins'],
+  [9999, 'Neuntausendneunhundertneunundneunzig'],
+  [10000, 'Zehntausend'],
+  [99999, 'Neunundneunzigtausendneunhundertneunundneunzig'],
+  [100000, 'Hunderttausend'],
+  [999999, 'Neunhundertneunundneunzigtausendneunhundertneunundneunzig'],
+  [1000000, 'Eine Million'],
+  [1000001, 'Eine Million Eins'],
 ];
 
 describe('Test Boundary Values', () => {
@@ -439,8 +436,8 @@ describe('Test Negative Floats', () => {
 const testNegativeFloatsWithCurrency: [number, string][] = [
   [-0.5, 'Minus Null Franken Und Fünfzig Rappen'],
   [-0.99, 'Minus Null Franken Und Neunundneunzig Rappen'],
-  [-1.5, 'Minus Eins Franken Und Fünfzig Rappen'],
-  [-1.01, 'Minus Eins Franken Und Eins Rappen'],
+  [-1.5, 'Minus Ein Franken Und Fünfzig Rappen'],
+  [-1.01, 'Minus Ein Franken Und Ein Rappen'],
   [-100.5, 'Minus Hundert Franken Und Fünfzig Rappen'],
 ];
 
@@ -456,9 +453,9 @@ const testBigInts: [bigint, string][] = [
   [1n, 'Eins'],
   [100n, 'Hundert'],
   [1000n, 'Tausend'],
-  [1000000n, 'Eins Million'],
-  [1000000000n, 'Eins Milliarde'],
-  [1000000000000n, 'Eins Billion'],
+  [1000000n, 'Eine Million'],
+  [1000000000n, 'Eine Milliarde'],
+  [1000000000000n, 'Eine Billion'],
 ];
 
 describe('Test BigInt Values', () => {
@@ -472,8 +469,8 @@ const testNegativeBigInts: [bigint, string][] = [
   [-1n, 'Minus Eins'],
   [-100n, 'Minus Hundert'],
   [-1000n, 'Minus Tausend'],
-  [-1000000n, 'Minus Eins Million'],
-  [-1000000000n, 'Minus Eins Milliarde'],
+  [-1000000n, 'Minus Eine Million'],
+  [-1000000000n, 'Minus Eine Milliarde'],
 ];
 
 describe('Test Negative BigInt Values', () => {
@@ -485,11 +482,11 @@ describe('Test Negative BigInt Values', () => {
 // BigInt with Currency
 const testBigIntsWithCurrency: [bigint, string][] = [
   [0n, 'Null Franken'],
-  [1n, 'Eins Franken'],
+  [1n, 'Ein Franken'],
   [2n, 'Zwei Franken'],
   [100n, 'Hundert Franken'],
   [1000n, 'Tausend Franken'],
-  [1000000n, 'Eins Million Franken'],
+  [1000000n, 'Eine Million Franken'],
 ];
 
 describe('Test BigInt with Currency', () => {
@@ -508,7 +505,7 @@ const testStringInputs: [string, string][] = [
   ['3.14', 'Drei Komma Vierzehn'],
   ['-3.14', 'Minus Drei Komma Vierzehn'],
   ['  100  ', 'Hundert'],
-  ['1000000', 'Eins Million'],
+  ['1000000', 'Eine Million'],
 ];
 
 describe('Test String Number Inputs', () => {
@@ -616,20 +613,20 @@ describe('Functional helpers (locale-level)', () => {
 });
 
 const testFractionStyleDeCH: [number, string][] = [
-  [1.1, 'Eins Und Eins Zehntel'],
+  [1.1, 'Eins Und Ein Zehntel'],
   [2.5, 'Zwei Und Fünf Zehntel'],
-  [1.01, 'Eins Und Eins Hundertstel'],
+  [1.01, 'Eins Und Ein Hundertstel'],
   [1.45, 'Eins Und Fünfundvierzig Hundertstel'],
   [0.05, 'Null Und Fünf Hundertstel'],
-  [1.001, 'Eins Und Eins Tausendstel'],
+  [1.001, 'Eins Und Ein Tausendstel'],
   [1.005, 'Eins Und Fünf Tausendstel'],
-  [1.0001, 'Eins Und Eins Zehntausendstel'],
+  [1.0001, 'Eins Und Ein Zehntausendstel'],
   [1.0005, 'Eins Und Fünf Zehntausendstel'],
-  [1.00001, 'Eins Und Eins Hunderttausendstel'],
+  [1.00001, 'Eins Und Ein Hunderttausendstel'],
   [1.00005, 'Eins Und Fünf Hunderttausendstel'],
-  [1.000001, 'Eins Und Eins Millionstel'],
+  [1.000001, 'Eins Und Ein Millionstel'],
   [1.000005, 'Eins Und Fünf Millionstel'],
-  [123.45, 'Hundert Dreiundzwanzig Und Fünfundvierzig Hundertstel'],
+  [123.45, 'Hundertdreiundzwanzig Und Fünfundvierzig Hundertstel'],
 ];
 
 describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
@@ -639,10 +636,10 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
 
   test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
     expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
-      'Eins Komma Eins Million Zwei Hundert Vierunddreißig Tausend Fünf Hundert Siebenundsechzig',
+      'Eins Komma Eine Million Zweihundertvierunddreißigtausendfünfhundertsiebenundsechzig',
     );
     expect(toWords.convert(1.1234567)).toBe(
-      'Eins Komma Eins Million Zwei Hundert Vierunddreißig Tausend Fünf Hundert Siebenundsechzig',
+      'Eins Komma Eine Million Zweihundertvierunddreißigtausendfünfhundertsiebenundsechzig',
     );
   });
 

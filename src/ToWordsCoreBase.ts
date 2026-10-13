@@ -32,6 +32,46 @@ import {
   type ToWordsOptions,
 } from './types.js';
 import { NumberOutOfRangeError } from './errors.js';
+import { pickPluralForm, selectPluralCategory, type PluralCategory } from './plural-rules.js';
+
+/**
+ * Internal word-list marker: the words on either side are written as one compound word.
+ * Only emitted when a locale sets `wordJoining.compoundBelow`; removed by joinWords().
+ */
+const GLUE = '\uE000';
+
+const VOWEL_INITIAL = /^[aeiouyàâäéèêëîïôöùûüœæ]/iu;
+
+/**
+ * True when the number is one additive component: a unit, a teen, a round ten or a round hundred,
+ * optionally times one power of 1000 with nothing below it (100, 20, 15, 100 000, 2 000 000).
+ */
+function isSingleComponent(value: bigint): boolean {
+  let rest = value;
+  while (rest >= 1000n && rest % 1000n === 0n) {
+    rest /= 1000n;
+  }
+  return rest < 1000n && (rest <= 20n || (rest < 100n ? rest % 10n === 0n : rest % 100n === 0n));
+}
+
+/** One non-zero group of three, below 100 or a whole hundred, then only zeros (pt mil e cem, um milhão e duzentos mil). */
+function isSimpleLastGroup(value: bigint): boolean {
+  let rest = value;
+  while (rest >= 1000n && rest % 1000n === 0n) {
+    rest /= 1000n;
+  }
+  return rest < 1000n && (rest < 100n || rest % 100n === 0n);
+}
+
+/** ro «de»: a number whose last two digits are 00 or 20–99 takes «de» before its noun (douăzeci de mii, o sută de lei). */
+function takesNounConnector(value: bigint): boolean {
+  const lastTwo = value % 100n;
+  return value > 0n && (lastTwo === 0n || lastTwo >= 20n);
+}
+
+function lowerFirst(word: string): string {
+  return word.charAt(0).toLowerCase() + word.slice(1);
+}
 
 export const DefaultConverterOptions: Readonly<ConverterOptions> = Object.freeze({
   currency: false,
@@ -70,6 +110,14 @@ interface LocaleCache {
   ignoreOneForWordsSet: Set<string>;
   noSplitWordAfterSet: Set<string>;
   maximumSupported: Readonly<Record<'cardinal' | 'ordinal' | 'currency', bigint>>;
+  /** Word for zero, used by `zeroForSkippedPlaces`. */
+  zeroWord: string;
+  /** Ordinal mapping keys, descending, for `ordinalComposition: 'every-component'`. */
+  ordinalUnitsDescending: bigint[];
+  /** Cardinal word → number, for `ordinalComposition: 'last-token'`. */
+  cardinalWordNumbers: Map<string, bigint>;
+  compoundBelow: bigint | undefined;
+  separateAfterSet: Set<bigint>;
 }
 
 interface ParsedNumberParts {
@@ -173,7 +221,11 @@ export class ToWordsCore {
     entry: CachedNumberWordMap,
     gender: 'masculine' | 'feminine' | undefined,
     trailing: boolean,
+    leading = true,
   ): string {
+    if (!leading && entry.nonLeadingValue) {
+      return entry.nonLeadingValue;
+    }
     if (gender === 'feminine' && entry.feminineValue) {
       return entry.feminineValue;
     }
@@ -356,6 +408,30 @@ export class ToWordsCore {
     const noSplitWordAfterSet = new Set<string>(config.noSplitWordAfter ?? []);
     const maximumSupportedValues = this.getMaximumSupportedValues(config);
 
+    const cardinalWordNumbers = new Map<string, bigint>();
+    for (const elem of numberWordsMappingBigInt) {
+      // nonLeadingValue too (it 103 → Cento Tré), so last-token ordinals find the compound form.
+      const forms = [
+        ...(Array.isArray(elem.value) ? elem.value : [elem.value]),
+        ...(elem.nonLeadingValue ? [elem.nonLeadingValue] : []),
+      ];
+      for (const form of forms) {
+        if (!cardinalWordNumbers.has(form)) {
+          cardinalWordNumbers.set(form, elem.numberBigInt);
+        }
+      }
+    }
+    // Plural scale forms too (ro Două Milioane), so last-token ordinals find them.
+    for (const [value, forms] of Object.entries(config.pluralForms ?? {})) {
+      for (const form of Object.values(forms)) {
+        if (typeof form === 'string' && !cardinalWordNumbers.has(form)) {
+          // Keys of large scales stringify in exponent form (1e+21); powers of ten are exact doubles.
+          cardinalWordNumbers.set(form, BigInt(Number(value)));
+        }
+      }
+    }
+    const compoundBelow = config.wordJoining?.compoundBelow;
+
     localeCache.set(locale, {
       numberWordsMappingBigInt,
       exactWordsMap,
@@ -373,6 +449,12 @@ export class ToWordsCore {
         ordinal: BigInt(maximumSupportedValues.ordinal),
         currency: BigInt(maximumSupportedValues.currency),
       }),
+      // The contract guarantees a zero entry.
+      zeroWord: smallNumbersMap.get(BIGINT_0)!.resolvedValue,
+      ordinalUnitsDescending: [...ordinalWordsMap.keys()].sort((left, right) => Number(right - left)),
+      cardinalWordNumbers,
+      compoundBelow: compoundBelow === undefined ? undefined : BigInt(compoundBelow),
+      separateAfterSet: new Set((config.wordJoining?.separateAfter ?? []).map((value) => BigInt(value))),
     });
   }
 
@@ -431,11 +513,7 @@ export class ToWordsCore {
       words = this.convertNumber(number, mergedOptions, localeOverride);
     }
 
-    if (localeOverride.config.trim) {
-      return words.join('');
-    }
-
-    return words.join(' ');
+    return this.joinWords(words, localeOverride.config);
   }
 
   public toOrdinal(number: NumberInput, options: OrdinalOptions = {}): string {
@@ -470,11 +548,107 @@ export class ToWordsCore {
         ? this.convertOrdinal(Number(parsed.integerPart), options, locale)
         : this.convertOrdinalBigInt(parsed.integerPart, options, locale);
 
-    if (localeConfig.trim) {
-      return words.join('');
+    // wordJoining.compoundOrdinals: an ordinal is one word even past a million, and a scale's
+    // spoken "one" is dropped (de 2 000 000. → Zweimillionste, 1 000 000. → Millionste; Duden D 65).
+    if (localeConfig.wordJoining?.compoundOrdinals) {
+      const ones = new Set(
+        localeConfig.numberWordsMapping.map((entry) => entry.multiplierForms?.[1]).filter((form) => form !== undefined),
+      );
+      const parts = words.filter((word, index) => word !== GLUE && !(ones.has(word) && index < words.length - 1));
+      return this.joinWords(
+        parts.flatMap((word, index) => (index === 0 ? [word] : [GLUE, word])),
+        localeConfig,
+      );
     }
+    return this.joinWords(words, localeConfig);
+  }
 
-    return words.join(' ');
+  /**
+   * ligature: link a number to the scale word or unit it counts (fil Dalawang Libo, Isang Daang
+   * Libo, Apat Na Libo). Without the setting the words are returned unchanged.
+   */
+  private link(words: string[], config: LocaleConfig): string[] {
+    const ligature = config.ligature;
+    if (!ligature || words.length === 0) {
+      return words;
+    }
+    const last = words[words.length - 1];
+    if (/[aeiou]$/iu.test(last)) {
+      return [...words.slice(0, -1), last + ligature.vowel];
+    }
+    if (/n$/iu.test(last)) {
+      return [...words.slice(0, -1), last + ligature.n];
+    }
+    return [...words, ligature.word];
+  }
+
+  /**
+   * splitWordAfterVowel: write the contracted splitWord onto the last word when it ends in a
+   * vowel (fil Dalawampu't). Returns whether it did, so the caller skips the separate connector.
+   */
+  private contractSplitWord(words: string[], connector: string, config: LocaleConfig): boolean {
+    const form = config.splitWordAfterVowel;
+    const last = words[words.length - 1];
+    if (form === undefined || connector !== config.splitWord || last === undefined || !/[aeiou]$/iu.test(last)) {
+      return false;
+    }
+    words[words.length - 1] = last + form;
+    return true;
+  }
+
+  /**
+   * Join a word list into the output string. Without `wordJoining` this is exactly the
+   * historical behaviour (space, or nothing when `trim` is set). With it, empty words are
+   * dropped and GLUE markers join their neighbours into one compound word.
+   */
+  private joinWords(words: string[], config: LocaleConfig): string {
+    // connectorPrefix: the connector is written onto the next word (he ו: עשרים ואחת).
+    if (config.connectorPrefix) {
+      const prefix = config.connectorPrefix;
+      words = words.reduce<string[]>((out, word, index) => {
+        if (index > 0 && words[index - 1] === prefix) {
+          out[out.length - 1] = prefix + word;
+        } else {
+          out.push(word);
+        }
+        return out;
+      }, []);
+    }
+    const joining = config.wordJoining;
+    if (!joining) {
+      return words.join(config.trim ? '' : ' ');
+    }
+    const separator = joining.separator ?? (config.trim ? '' : ' ');
+    const lowercaseParts = joining.lowercaseCompoundParts !== false;
+    let output = '';
+    let started = false;
+    let glued = false;
+    for (const word of words) {
+      if (word === GLUE) {
+        glued = true;
+        continue;
+      }
+      if (!started) {
+        output = word;
+        started = true;
+      } else if (glued) {
+        let part = lowercaseParts ? lowerFirst(word) : word;
+        // reduceTripleConsonants: three equal consonants at a compound seam become two (sv ett + tusen → ettusen).
+        if (
+          joining.reduceTripleConsonants &&
+          part.length > 0 &&
+          output.endsWith(part[0].repeat(2)) &&
+          !/[aeiouyåäö]/iu.test(part[0])
+        ) {
+          part = part.slice(1);
+        }
+        output += part;
+      } else {
+        output += separator + word;
+      }
+      glued = false;
+    }
+    return output;
   }
 
   private assertWithinRange(
@@ -529,7 +703,54 @@ export class ToWordsCore {
 
     // For composite numbers (like 21, 1000, 1234), convert to cardinal then modify last component
     // Strategy: Convert the number to cardinal, then find the last component and replace it with ordinal
+    if (localeConfig.ordinalComposition === 'every-component') {
+      const composed = this.composeEveryComponentOrdinal(number, options.gender, localeInstance);
+      if (composed) {
+        return composed;
+      }
+    }
+
+    if (localeConfig.ordinalScaleStems) {
+      const fused = this.composeScaleStemOrdinal(
+        number,
+        localeConfig.ordinalScaleStems,
+        options.gender,
+        localeInstance,
+      );
+      if (fused) {
+        return fused;
+      }
+    }
+
     const cardinalWords = this.convertInternal(number, true, undefined, localeInstance, options.gender);
+
+    // cardinal: past the ordinal words the ordinal is the masculine cardinal (he 21st → עשרים ואחד),
+    // with `ordinalPrefix` written onto its first word when set (he definite ה: העשרים ואחד).
+    if (localeConfig.ordinalComposition === 'cardinal') {
+      const [first, ...rest] = this.convertInternal(
+        number,
+        true,
+        undefined,
+        localeInstance,
+        options.gender ?? 'masculine',
+      );
+      return [(localeConfig.ordinalPrefix ?? '') + first, ...rest];
+    }
+
+    // fused-prefix: the prefix joins the whole cardinal (id 21 → Kedua Puluh Satu, 100 → Keseratus).
+    if (localeConfig.ordinalComposition === 'fused-prefix' && localeConfig.ordinalPrefix) {
+      const [first, ...rest] = cardinalWords;
+      // A prefix ending in a space is its own word (sw «wa ishirini na moja»).
+      const prefix = localeConfig.ordinalPrefix;
+      return [prefix.endsWith(' ') ? prefix + first : prefix + lowerFirst(first), ...rest];
+    }
+
+    if (localeConfig.ordinalComposition === 'last-token') {
+      const composed = this.ordinalizeLastToken(number, cardinalWords, options.gender, localeInstance);
+      if (composed) {
+        return composed;
+      }
+    }
 
     // Convert the last word to its ordinal form.
     // For composite numbers like 21 (Twenty One), only "One" should become "First".
@@ -542,10 +763,39 @@ export class ToWordsCore {
 
     // Try to find ordinal mapping for the last component
     let transformed = false;
-    const ordinalMatch = cache.ordinalWordsMap.get(lastNumberComponent);
+    // A last word written from exactWordsMapping (en 100 → One Hundred) takes the matching exact
+    // ordinal (One Hundredth), so 1100 → One Thousand One Hundredth, not One Thousand Hundredth.
+    const exactOrdinal =
+      lastWord === cache.exactWordsMap.get(lastNumberComponent)?.resolvedValue
+        ? cache.ordinalExactWordsMap.get(lastNumberComponent)
+        : undefined;
+    const ordinalMatch = exactOrdinal ?? cache.ordinalWordsMap.get(lastNumberComponent);
     if (ordinalMatch) {
       cardinalWords[lastWordIndex] = this.resolveOrdinalValue(ordinalMatch, options.gender, localeConfig);
       transformed = true;
+    }
+
+    // ordinalTensAndUnits: the tens word before an ordinal unit is ordinal too
+    // (pl 21 → Dwudziesty Pierwszy). Larger components stay cardinal.
+    if (transformed && localeConfig.ordinalTensAndUnits) {
+      const lastTwo = number % BIGINT_100;
+      const tens = lastTwo - (lastTwo % BIGINT_10);
+      const tensOrdinal = cache.ordinalWordsMap.get(tens);
+      // Step over a compound GLUE marker between the tens and the unit.
+      const tensIndex = cardinalWords[lastWordIndex - 1] === GLUE ? lastWordIndex - 2 : lastWordIndex - 1;
+      if (
+        tens >= 20n &&
+        tens !== lastTwo &&
+        tensOrdinal &&
+        cardinalWords[tensIndex] === cache.smallNumbersMap.get(tens)?.resolvedValue
+      ) {
+        cardinalWords[tensIndex] = this.resolveOrdinalValue(tensOrdinal, options.gender, localeConfig);
+        // wordJoining.separateOrdinalUnit: the unit after the ordinal tens is its own word
+        // (sk 124. → Stodvadsiaty Štvrtý, PSP).
+        if (tensIndex === lastWordIndex - 2 && localeConfig.wordJoining?.separateOrdinalUnit) {
+          cardinalWords.splice(lastWordIndex - 1, 1);
+        }
+      }
     }
 
     // If ordinalSuffix is available, use it
@@ -560,6 +810,165 @@ export class ToWordsCore {
     }
 
     return cardinalWords;
+  }
+
+  /**
+   * `ordinalScaleStems`: an ordinal ending in a round scale group fuses that group's multiplier,
+   * in its combining stem, with the scale's ordinal word (ru 25 000 → Двадцатипятитысячный,
+   * 2 100 000 → Два Миллиона Стотысячный). Higher groups stay cardinal. Returns undefined when the
+   * number does not end in a scale group or a stem is missing, so the caller falls back.
+   */
+  private composeScaleStemOrdinal(
+    number: bigint,
+    stems: Record<number, string>,
+    gender: OrdinalOptions['gender'],
+    localeInstance: InstanceType<ConstructorOf<LocaleInterface>>,
+  ): string[] | undefined {
+    const localeConfig = localeInstance.config;
+    const cache = this.getLocaleCache(localeInstance);
+    // numberWordsMappingBigInt is sorted descending, so the first dividing scale is the largest.
+    const scales = cache.numberWordsMappingBigInt
+      .map((entry) => entry.numberBigInt)
+      .filter((value) => value >= BIGINT_1000);
+    const index = scales.findIndex((scale) => number % scale === BIGINT_0);
+    const scale = scales[index];
+    const ordinalScale = scale === undefined ? undefined : cache.ordinalWordsMap.get(scale);
+    if (!ordinalScale) {
+      return undefined;
+    }
+    const group = index > 0 ? (number % scales[index - 1]) / scale : number / scale;
+    // A multiplier of 1000+ only occurs past the largest scale (compose mode); stems cannot express
+    // it, so the caller's last-word path handles it (ru 6·10²⁴ → Шесть Тысяч Секстиллионный).
+    if (group >= BIGINT_1000) {
+      return undefined;
+    }
+    let stem = '';
+    if (group > BIGINT_1) {
+      let rest = group;
+      const keys = Object.keys(stems)
+        .map(BigInt)
+        .sort((left, right) => Number(right - left));
+      for (const key of keys) {
+        if (key <= rest) {
+          // A hundreds component followed by more of the group may take its own stem
+          // (uk 530 000 → П'ятсоттридцятитисячний, Український правопис 2019 §38); a component
+          // after more of the group may too (sk 2000. → Dvojtisíci, but 22 000. → Dvadsaťdvatisíci).
+          const beforeMore = rest > key ? localeConfig.ordinalScaleStemsBeforeMore?.[Number(key)] : undefined;
+          const afterMore = rest < group ? localeConfig.ordinalScaleStemsAfterMore?.[Number(key)] : undefined;
+          stem += beforeMore ?? afterMore ?? stems[Number(key)];
+          rest -= key;
+        }
+      }
+      if (rest !== BIGINT_0) {
+        return undefined;
+      }
+    }
+    const scaleWord = this.resolveOrdinalValue(ordinalScale, gender, localeConfig);
+    const fused = stem
+      ? stem.charAt(0).toUpperCase() + stem.slice(1) + scaleWord.charAt(0).toLowerCase() + scaleWord.slice(1)
+      : scaleWord;
+    const higher = number - group * scale;
+    const prefix = higher > BIGINT_0 ? this.convertInternal(higher, false, undefined, localeInstance) : [];
+    // andBeforeLastComponent: bg 1 100 000 → Милион И Стохиляден.
+    if (prefix.length > 0 && localeConfig.andBeforeLastComponent && isSingleComponent(group * scale)) {
+      prefix.push(localeConfig.texts.and);
+    }
+    return [...prefix, fused];
+  }
+
+  /**
+   * `ordinalComposition: 'every-component'`: every additive component takes its ordinal word
+   * (es 121 → Centésimo Vigésimo Primero). Below 1000 each component must have its own ordinal
+   * word; a multiplier above one in front of a larger scale stays cardinal (es 2000 → Dos Milésimo).
+   * Returns undefined when the table cannot express the number, so the caller falls back.
+   */
+  private composeEveryComponentOrdinal(
+    number: bigint,
+    gender: OrdinalOptions['gender'],
+    localeInstance: InstanceType<ConstructorOf<LocaleInterface>>,
+  ): string[] | undefined {
+    const localeConfig = localeInstance.config;
+    const cache = this.getLocaleCache(localeInstance);
+    const words: string[] = [];
+    let rest = number;
+    while (rest > BIGINT_0) {
+      const direct = cache.ordinalExactWordsMap.get(rest) ?? cache.ordinalWordsMap.get(rest);
+      if (direct) {
+        words.push(this.resolveOrdinalValue(direct, gender, localeConfig));
+        return words;
+      }
+      const unit = cache.ordinalUnitsDescending.find((candidate) => candidate > BIGINT_0 && candidate <= rest);
+      if (unit === undefined) {
+        return undefined;
+      }
+      const quotient = rest / unit;
+      const ordinalMultiplier = localeConfig.ordinalMultipliers === true;
+      if (unit < BIGINT_1000 && quotient !== BIGINT_1 && !ordinalMultiplier) {
+        return undefined;
+      }
+      const unitWord = this.resolveOrdinalValue(cache.ordinalWordsMap.get(unit)!, gender, localeConfig);
+      // A multiplier with its own entry in `ordinalScaleStems` fuses with the scale word
+      // (cs 2000 → Dvoutisící, 100 000 → Stotisící); any other multiplier stays cardinal.
+      const stemAllowed =
+        localeConfig.ordinalScaleStemsMaxScale === undefined || unit <= BigInt(localeConfig.ordinalScaleStemsMaxScale);
+      const stem = quotient > BIGINT_1 && stemAllowed ? localeConfig.ordinalScaleStems?.[Number(quotient)] : undefined;
+      if (stem) {
+        words.push(stem.charAt(0).toUpperCase() + stem.slice(1) + unitWord.charAt(0).toLowerCase() + unitWord.slice(1));
+      } else {
+        if (quotient > BIGINT_1 && ordinalMultiplier) {
+          // ordinalMultipliers: the multiplier is ordinal too (fi 2000 → Kahdes Tuhannes).
+          // A lone multiplier takes its compound form when it has one (fi 2 → Kahdes, not Toinen).
+          const compound = cache.ordinalWordsMap.get(quotient)?.compoundValue;
+          const multiplier = compound
+            ? [compound]
+            : this.composeEveryComponentOrdinal(quotient, gender, localeInstance);
+          if (!multiplier) {
+            return undefined;
+          }
+          words.push(...multiplier);
+        } else if (quotient > BIGINT_1) {
+          const multiplierGender = localeConfig.multiplierFollowsGender?.includes(Number(unit)) ? gender : undefined;
+          words.push(...this.convertInternal(quotient, false, undefined, localeInstance, multiplierGender));
+        }
+        words.push(unitWord);
+      }
+      rest %= unit;
+    }
+    return words;
+  }
+
+  /**
+   * `ordinalComposition: 'last-token'`: ordinalize the last token of the final cardinal word,
+   * using the ordinal entry's `compoundValue` when the number is longer than that token
+   * (fr 21 Vingt Et Un → Vingt Et Unième, 22 Vingt-Deux → Vingt-Deuxième).
+   */
+  private ordinalizeLastToken(
+    number: bigint,
+    cardinalWords: string[],
+    gender: OrdinalOptions['gender'],
+    localeInstance: InstanceType<ConstructorOf<LocaleInterface>>,
+  ): string[] | undefined {
+    const cache = this.getLocaleCache(localeInstance);
+    // Always matches: an optional head ending in a space or hyphen, then the last token.
+    const [, head = '', token] = /^(.*[\s-])?([^\s-]*)$/su.exec(cardinalWords[cardinalWords.length - 1])!;
+    // ordinalLastTokenForms: the ordinal form of the last word itself (ro Sute → Sutelea, Unu → Unulea).
+    const tokenForm = localeInstance.config.ordinalLastTokenForms?.[token];
+    if (tokenForm !== undefined) {
+      const prefix = localeInstance.config.ordinalCompoundPrefix;
+      const formed = [...cardinalWords.slice(0, -1), head + tokenForm];
+      return prefix ? [prefix, ...formed] : formed;
+    }
+    const tokenNumber = cache.cardinalWordNumbers.get(token);
+    // Map.get(undefined) is simply undefined, so an unknown token needs no separate check.
+    const entry = cache.ordinalWordsMap.get(tokenNumber as bigint);
+    if (!entry) {
+      return undefined;
+    }
+    const ordinal =
+      tokenNumber !== number && entry.compoundValue
+        ? entry.compoundValue
+        : this.resolveOrdinalValue(entry, gender, localeInstance.config);
+    return [...cardinalWords.slice(0, -1), head + ordinal];
   }
 
   protected getLastNumberComponent(
@@ -595,13 +1004,18 @@ export class ToWordsCore {
             numberBigInt: BigInt(mapping.number),
           }));
 
-    // Find if this is a round number ending in a unit
-    for (const mapping of unitMappings) {
-      const unit = mapping.numberBigInt;
-      if (number % unit === BIGINT_0) {
-        // This number is a multiple of this unit
-        // Return the unit itself (e.g., for 1000000 = 10 × 100000, return 100000)
-        return unit;
+    // A round number ends in a unit word. Walk the same greedy decomposition the cardinal uses,
+    // so atomic hundreds are not mistaken for the last word (ru 2100 = Две Тысячи Сто, whose
+    // last word is 100 even though 2100 is also a multiple of 700).
+    if (unitMappings.some((mapping) => number % mapping.numberBigInt === BIGINT_0)) {
+      let rest = number;
+      for (let match = unitMappings.find((m) => m.numberBigInt <= rest); match;) {
+        const remainder = rest % match.numberBigInt;
+        if (remainder === BIGINT_0) {
+          return match.numberBigInt;
+        }
+        rest = remainder;
+        match = unitMappings.find((m) => m.numberBigInt <= rest);
       }
     }
 
@@ -751,7 +1165,7 @@ export class ToWordsCore {
     const locale = localeOverride ?? this.getLocale();
     const localeConfig = locale.config;
     const gender = options.gender;
-    const useAnd = options.useAnd;
+    const useAnd = options.useAnd ?? localeConfig.useAndByDefault;
 
     let isNegativeNumber: boolean;
     let integerPart: bigint;
@@ -799,10 +1213,39 @@ export class ToWordsCore {
 
     const wordsWithDecimal: string[] = [];
     if (isFloat) {
-      const fracValue = Number.parseInt(fractionalPart, 10);
+      const reading = localeConfig.fractionReading;
+      // fractionReading.isDefault: the digit reading is ungrammatical in this locale, so the
+      // fraction reading applies unless the caller asks for `decimalStyle: 'digit'`.
+      const decimalStyle = options.decimalStyle ?? (reading?.isDefault ? 'fraction' : 'digit');
       const denominator = localeConfig.fractionDenominatorMapping?.[fractionalPart.length];
-      if (options.decimalStyle === 'fraction' && denominator) {
+      if (decimalStyle === 'fraction' && denominator && reading && localeConfig.pluralRule) {
+        // fractionReading: the whole part agrees with a whole-unit noun and both numbers take the
+        // fraction's gender (ru 1.5 → Одна Целая Пять Десятых, 2.001 → Две Целых Одна Тысячная).
+        const rule = localeConfig.pluralRule;
+        const fractionGender = gender ?? reading.gender;
+        if (!ignoreZero) {
+          if (reading.wholeForms) {
+            // wholeUsesDefaultGender: the whole part keeps the locale's default form (bg Едно Цяло).
+            const wholeGender = reading.wholeUsesDefaultGender ? gender : fractionGender;
+            words = this.convertInternal(integerPart, true, undefined, locale, wholeGender, useAnd);
+          }
+          wordsWithDecimal.push(
+            reading.wholeForms
+              ? this.selectUnitForm({ plural: localeConfig.texts.and }, reading.wholeForms, integerPart, rule)
+              : localeConfig.texts.and,
+          );
+        }
+        const numerator = BigInt(fractionalPart);
+        // The numerator is followed by its noun, so it takes the non-final form (de ein Hundertstel).
+        wordsWithDecimal.push(...this.convertInternal(numerator, false, undefined, locale, fractionGender));
+        const denominatorForms = reading.denominatorForms?.[fractionalPart.length] ?? {
+          one: denominator.singular,
+          other: denominator.plural,
+        };
+        wordsWithDecimal.push(this.selectUnitForm(denominator, denominatorForms, numerator, rule));
+      } else if (decimalStyle === 'fraction' && denominator) {
         // Fractional style: "One Hundred Twenty Three and Forty-Five Hundredths"
+        const fracValue = Number.parseInt(fractionalPart, 10);
         if (!ignoreZero) {
           wordsWithDecimal.push(localeConfig.texts.and);
         }
@@ -848,7 +1291,7 @@ export class ToWordsCore {
     const locale = localeOverride ?? this.getLocale();
     const localeConfig = locale.config;
     const gender = options.gender;
-    const useAnd = options.useAnd;
+    const useAnd = options.useAnd ?? localeConfig.useAndByDefault;
 
     const currencyOptions = options.currencyOptions ?? localeConfig.currency;
     const precision = currencyOptions.precision ?? 2;
@@ -874,11 +1317,34 @@ export class ToWordsCore {
       // French needs trailing=true to get "Quatre-Vingts Euros" (with 's')
       // Spanish needs trailing=false to get "Un Euro" (not "Uno Euro")
       const trailing = localeConfig.useTrailingForCurrency ?? false;
-      words = [...this.convertInternal(mainAmount, trailing, undefined, locale, gender, useAnd)];
-      if (mainAmount === 1n && currencyOptions.singular) {
-        words.push(currencyOptions.singular);
-      } else if (currencyOptions.plural) {
-        words.push(currencyOptions.plural);
+      // A unit's declared gender is grammar and wins over the gender option (ru Один Рубль).
+      words = [
+        ...this.convertInternal(mainAmount, trailing, undefined, locale, currencyOptions.gender ?? gender, useAnd),
+      ];
+      const connector = localeConfig.currencyScaleConnector;
+      const unitName =
+        localeConfig.pluralRule && currencyOptions.pluralForms
+          ? this.selectUnitForm(currencyOptions, currencyOptions.pluralForms, mainAmount, localeConfig.pluralRule)
+          : mainAmount === 1n && currencyOptions.singular
+            ? currencyOptions.singular
+            : currencyOptions.plural;
+      const connect =
+        connector !== undefined && mainAmount > BIGINT_0 && mainAmount % BigInt(connector.minScale) === BIGINT_0;
+      if (connect && unitName && connector.elidedWord && VOWEL_INITIAL.test(unitName)) {
+        words.push(connector.elidedWord + lowerFirst(unitName));
+      } else {
+        if (connect) {
+          words.push(connector.word);
+        } else if (localeConfig.nounConnector && unitName && takesNounConnector(mainAmount)) {
+          words.push(localeConfig.nounConnector);
+        }
+        if (unitName && localeConfig.currencyUnitFirst) {
+          // currencyUnitFirst: sw shilingi ishirini na moja.
+          words.unshift(unitName);
+        } else if (unitName) {
+          // ligature: fil Dalawampu't Isang Piso.
+          words = [...this.link(words, localeConfig), unitName];
+        }
       }
     }
     const totalIsNonZero = mainAmount !== BIGINT_0 || isFloat;
@@ -891,7 +1357,8 @@ export class ToWordsCore {
 
     const wordsWithDecimal = [];
     if (isFloat) {
-      if (!ignoreZero) {
+      // An empty «and» joins the units with nothing (tr bir lira elli kuruş).
+      if (!ignoreZero && localeConfig.texts.and) {
         wordsWithDecimal.push(localeConfig.texts.and);
       }
       const decimalBase =
@@ -903,19 +1370,41 @@ export class ToWordsCore {
 
       const decimalLengthWord = localeConfig?.decimalLengthWordMapping?.[fractionalPart.length];
 
-      if (decimalPartNumber !== -1 && currencyOptions.fractionalUnit.numberSpecificForms?.[decimalPartNumber]) {
-        wordsWithDecimal.push(currencyOptions.fractionalUnit.numberSpecificForms[decimalPartNumber]);
+      const fractionalUnit = currencyOptions.fractionalUnit;
+      const fractionalGender = fractionalUnit.gender ?? gender;
+      const largerUnit = localeConfig.decimalLengthWordMapping ? undefined : fractionalUnit.largerUnit;
+      if (decimalPartNumber !== -1 && fractionalUnit.numberSpecificForms?.[decimalPartNumber]) {
+        wordsWithDecimal.push(fractionalUnit.numberSpecificForms[decimalPartNumber]);
+      } else if (largerUnit) {
+        const factor = BigInt(largerUnit.factor);
+        const larger = decimalPart / factor;
+        const smaller = decimalPart % factor;
+        if (larger > BIGINT_0) {
+          wordsWithDecimal.push(...this.convertInternal(larger, false, undefined, locale, fractionalGender));
+          wordsWithDecimal.push(largerUnit.name);
+        }
+        if (smaller > BIGINT_0) {
+          wordsWithDecimal.push(...this.convertInternal(smaller, false, undefined, locale, fractionalGender));
+          wordsWithDecimal.push(this.selectFractionalUnitName(fractionalUnit, smaller, localeConfig));
+        }
       } else {
-        wordsWithDecimal.push(...this.convertInternal(decimalPart, false, undefined, locale, gender));
+        const unitFirst = localeConfig.currencyUnitFirst === true && !decimalLengthWord?.length;
+        if (unitFirst) {
+          wordsWithDecimal.push(this.selectFractionalUnitName(fractionalUnit, decimalPart, localeConfig));
+        }
+        const amountWords = this.convertInternal(decimalPart, false, undefined, locale, fractionalGender);
+        wordsWithDecimal.push(
+          ...(unitFirst || decimalLengthWord?.length ? amountWords : this.link(amountWords, localeConfig)),
+        );
 
         if (decimalLengthWord?.length) {
           wordsWithDecimal.push(decimalLengthWord);
+        } else if (localeConfig.nounConnector && takesNounConnector(decimalPart)) {
+          wordsWithDecimal.push(localeConfig.nounConnector);
         }
 
-        if (decimalPart === BIGINT_1 && currencyOptions.fractionalUnit.singular) {
-          wordsWithDecimal.push(currencyOptions.fractionalUnit.singular);
-        } else {
-          wordsWithDecimal.push(currencyOptions.fractionalUnit.plural);
+        if (!unitFirst) {
+          wordsWithDecimal.push(this.selectFractionalUnitName(fractionalUnit, decimalPart, localeConfig));
         }
       }
     } else if (
@@ -924,12 +1413,17 @@ export class ToWordsCore {
       !localeConfig.decimalLengthWordMapping &&
       !!currencyOptions.fractionalUnit.plural
     ) {
-      wordsWithDecimal.push(localeConfig.texts.and);
+      if (localeConfig.texts.and) {
+        wordsWithDecimal.push(localeConfig.texts.and);
+      }
       if (currencyOptions.fractionalUnit.numberSpecificForms?.[0]) {
         wordsWithDecimal.push(currencyOptions.fractionalUnit.numberSpecificForms[0]);
       } else {
-        wordsWithDecimal.push(...this.convertInternal(0n, false, undefined, locale, gender));
-        wordsWithDecimal.push(currencyOptions.fractionalUnit.plural);
+        const zeroWords = this.convertInternal(0n, false, undefined, locale, gender);
+        const unit = currencyOptions.fractionalUnit.plural;
+        wordsWithDecimal.push(
+          ...(localeConfig.currencyUnitFirst ? [unit, ...zeroWords] : [...this.link(zeroWords, localeConfig), unit]),
+        );
       }
     } else if (localeConfig.decimalLengthWordMapping && words.length) {
       wordsWithDecimal.push(currencyOptions.fractionalUnit.plural);
@@ -948,8 +1442,36 @@ export class ToWordsCore {
     if (!isEmpty && !options.doNotAddOnly && localeConfig.onlyInFront) {
       words.splice(0, 0, localeConfig.texts.only);
     }
+    if (!isEmpty && !options.doNotAddOnly && localeConfig.texts.onlyBefore) {
+      words.unshift(localeConfig.texts.onlyBefore);
+    }
 
     return words;
+  }
+
+  /**
+   * Unit name for an amount under a plural rule, falling back to `singular` (one) or `plural`.
+   * An explicit `zero` form applies to the amount 0 whatever the rule (cs 0,5 → Nula Celá Pět Desetin).
+   */
+  private selectUnitForm(
+    unit: { singular?: string; plural: string },
+    forms: Partial<Record<PluralCategory, string>>,
+    amount: bigint,
+    rule: NonNullable<LocaleConfig['pluralRule']>,
+  ): string {
+    const category = amount === BIGINT_0 && forms.zero ? 'zero' : selectPluralCategory(rule, amount);
+    return pickPluralForm(forms, category) ?? (category === 'one' ? (unit.singular ?? unit.plural) : unit.plural);
+  }
+
+  private selectFractionalUnitName(
+    unit: LocaleConfig['currency']['fractionalUnit'],
+    amount: bigint,
+    localeConfig: LocaleConfig,
+  ): string {
+    if (localeConfig.pluralRule && unit.pluralForms) {
+      return this.selectUnitForm(unit, unit.pluralForms, amount, localeConfig.pluralRule);
+    }
+    return amount === BIGINT_1 && unit.singular ? unit.singular : unit.plural;
   }
 
   protected convertInternal(
@@ -959,12 +1481,22 @@ export class ToWordsCore {
     localeInstance?: InstanceType<ConstructorOf<LocaleInterface>>,
     gender?: 'masculine' | 'feminine',
     useAnd?: boolean,
+    leading: boolean = true,
   ): string[] {
     const locale = localeInstance ?? this.getLocale();
     const localeConfig = locale.config;
     const cache = this.getLocaleCache(locale);
 
-    // Check overrides - avoid Object.keys() when overrides is undefined/empty
+    // invariableOneInCompounds: a 1 inside a larger number keeps its base form whatever the
+    // gender (pl dwadzieścia jeden kobiet, tysiąc jeden); only a lone 1 inflects (jedna).
+    // invariableTwoInCompounds does the same for 2 (sk dvadsaťdva kníh; only a lone 2 is dve).
+    if (
+      !leading &&
+      ((number === BIGINT_1 && localeConfig.invariableOneInCompounds) ||
+        (number === BIGINT_2 && localeConfig.invariableTwoInCompounds))
+    ) {
+      gender = undefined;
+    }
     if (overrides) {
       const numberAsNum = number <= BIGINT_MAX_SAFE ? Number(number) : -1;
       if (numberAsNum !== -1 && overrides[numberAsNum]) {
@@ -975,7 +1507,7 @@ export class ToWordsCore {
     // Check exactWordsMapping using O(1) Map lookup
     const exactMatch = cache.exactWordsMap.get(number);
     if (exactMatch) {
-      return [this.resolveGenderedValue(exactMatch, gender, trailing)];
+      return [this.resolveGenderedValue(exactMatch, gender, trailing, leading)];
     }
 
     // Fast path: Use O(1) Map lookup for small numbers (0-100)
@@ -983,7 +1515,7 @@ export class ToWordsCore {
     if (number <= BIGINT_100) {
       const directMatch = cache.smallNumbersMap.get(number);
       if (directMatch) {
-        return [this.resolveGenderedValue(directMatch, gender, trailing)];
+        return [this.resolveGenderedValue(directMatch, gender, trailing, leading)];
       }
       // Number not directly in map, use binary search (e.g., 21 = 20 + 1)
       match = this.binarySearchDescending(cache.numberWordsMappingBigInt, number);
@@ -994,17 +1526,35 @@ export class ToWordsCore {
 
     const matchNumber = match.numberBigInt;
     const words: string[] = [];
+    // Compounding (wordJoining.compoundBelow): every part of this number joins into one word.
+    const glue = cache.compoundBelow !== undefined && number < cache.compoundBelow;
 
     if (number <= BIGINT_100 || (number < BIGINT_1000 && localeConfig.namedLessThan1000)) {
-      words.push(this.resolveGenderedValue(match, gender, trailing));
       const remainder = number - matchNumber;
+      // beforeRemainderValue: the form used when more of the number follows (ar مائتا ريال but
+      // مائتان وخمسون ريالًا: the construct form only touches the noun directly).
+      words.push(
+        remainder > BIGINT_0 && match.beforeRemainderValue
+          ? match.beforeRemainderValue
+          : this.resolveGenderedValue(match, gender, trailing, leading),
+      );
       if (remainder > BIGINT_0) {
-        if (localeConfig.splitWord) {
-          words.push(localeConfig.splitWord);
+        const remainderWords = this.convertInternal(remainder, trailing, overrides, locale, gender, useAnd, false);
+        // splitWord (pt Vinte E Um) or andBeforeLastComponent (bg Двадесет И Едно) joins tens and units.
+        const connector =
+          localeConfig.splitWord ?? (localeConfig.andBeforeLastComponent ? localeConfig.texts.and : undefined);
+        // splitWordAfterVowel: fil Dalawampu't Isa.
+        if (connector !== undefined && this.contractSplitWord(words, connector, localeConfig)) {
+          words.push(...remainderWords);
+          return words;
         }
-        const remainderWords = this.convertInternal(remainder, trailing, overrides, locale, gender, useAnd);
-        for (const remainderWord of remainderWords) {
-          words.push(remainderWord);
+        const tail = connector ? [connector, ...remainderWords] : remainderWords;
+        const glued = connector ? 2 : 1;
+        for (let index = 0; index < tail.length; index++) {
+          if (glue && index < glued) {
+            words.push(GLUE);
+          }
+          words.push(tail[index]);
         }
       }
       return words;
@@ -1020,9 +1570,35 @@ export class ToWordsCore {
     let usedPluralForm = false;
 
     // Check if this word uses ignoreOneForWords - use O(1) Set lookup
-    const usesIgnoreOne = cache.ignoreOneForWordsSet.has(originalMatchValue);
+    // keepOneBeforeInnerScales: only the leading scale word drops its "one" (ru 1 001 000 →
+    // Миллион Одна Тысяча); hundreds and smaller words follow ignoreOneForWords everywhere.
+    const usesIgnoreOne =
+      cache.ignoreOneForWordsSet.has(originalMatchValue) &&
+      !(localeConfig.keepOneBeforeInnerScales && !leading && matchNumber >= BIGINT_1000);
+    const usesPluralRule = Boolean(pluralForms && localeConfig.pluralRule);
 
-    if (pluralForms) {
+    if (pluralForms && localeConfig.pluralRule) {
+      // CLDR-style categories; legacy keys stand in for the matching categories.
+      const category = selectPluralCategory(localeConfig.pluralRule, quotient);
+      matchValue =
+        category === 'one'
+          ? (pluralForms.one ?? match.singularValue ?? match.resolvedValue)
+          : (pickPluralForm(
+              {
+                zero: pluralForms.zero ?? pluralForms.plural,
+                two: pluralForms.two ?? pluralForms.dual,
+                few: pluralForms.few ?? pluralForms.paucal,
+                many: pluralForms.many ?? pluralForms.plural,
+                other: pluralForms.other ?? pluralForms.plural,
+              },
+              category,
+            ) ?? match.resolvedValue);
+      // pluralFormsBeforeNoun: the form a scale word ending the number takes before a counted noun
+      // (ar أحد عشر ألفًا, but أحد عشر ألف ريال).
+      const nounForms =
+        !trailing && remainder === BIGINT_0 ? localeConfig.pluralFormsBeforeNoun?.[matchNumberNum] : undefined;
+      matchValue = (nounForms && pickPluralForm(nounForms, category)) ?? matchValue;
+    } else if (pluralForms) {
       const lastTwoDigits = Number(quotient % BIGINT_100);
       const useLastDigits = quotient >= BIGINT_11 && lastTwoDigits >= 3 && lastTwoDigits <= 10;
 
@@ -1049,7 +1625,7 @@ export class ToWordsCore {
       if (
         quotient > BIGINT_1 &&
         localeConfig.pluralMark &&
-        (isInPluralWords || (isInTrailingOnlyPluralWords && remainder === BIGINT_0))
+        (isInPluralWords || (isInTrailingOnlyPluralWords && remainder === BIGINT_0 && trailing))
       ) {
         matchValue += localeConfig.pluralMark;
       }
@@ -1064,48 +1640,119 @@ export class ToWordsCore {
     if ((quotient === BIGINT_1 && usesIgnoreOne) || usedPluralForm) {
       // When ignoring "one" and quotient is exactly 1, use singularValue if available
       let valueToUse: string;
-      if (usedPluralForm) {
-        valueToUse = matchValue;
+      if (usedPluralForm || usesPluralRule) {
+        // withoutOneValue: the form used when the "one" is not spoken (hr 1000 → Tisuću).
+        valueToUse = quotient === BIGINT_1 && usesIgnoreOne ? (match.withoutOneValue ?? matchValue) : matchValue;
       } else if (match.singularValue) {
         valueToUse = match.singularValue;
       } else {
         // Gender-resolve the value (e.g. Spanish "Doscientos" → "Doscientas")
-        valueToUse = this.resolveGenderedValue(match, gender, trailing);
+        valueToUse = this.resolveGenderedValue(match, gender, trailing, leading);
       }
-      words.push(valueToUse);
+      // beforeRemainderValue: the short form when more of the number follows (ka ასი → ას ერთი).
+      words.push(remainder > BIGINT_0 && match.beforeRemainderValue ? match.beforeRemainderValue : valueToUse);
     } else {
-      // Quotient does NOT get gender — gender applies to the number being described, not scale multipliers
-      const quotientWords = this.convertInternal(quotient, false, overrides, locale, undefined, useAnd);
-      if (localeConfig.scaleFirst) {
-        // Scale-first ordering (e.g. Igbo: "Puku Abụọ" = Thousand Two = 2000)
-        words.push(matchValue);
-        for (const quotientWord of quotientWords) {
-          words.push(quotientWord);
-        }
+      // The multiplier agrees with the scale word's own gender when the locale declares one
+      // (ru Тысяча: Две Тысячи), never with the gender of the number being described.
+      // multiplierForms: an exact multiplier word for this scale (sk 2000 → Dvetisíc).
+      const multiplierForm = match.multiplierForms?.[Number(quotient)];
+      // multiplierPhrases: the whole multiplier-and-scale phrase (he 3000 → שלושת אלפים, 2000 → אלפיים);
+      // multiplierPhrasesBeforeRemainder when more of the number follows (ml രണ്ടായിരം, രണ്ടായിരത്തി അഞ്ഞൂറ്).
+      const phrase =
+        (remainder > BIGINT_0 ? match.multiplierPhrasesBeforeRemainder?.[Number(quotient)] : undefined) ??
+        match.multiplierPhrases?.[Number(quotient)];
+      const quotientWords =
+        multiplierForm === undefined
+          ? this.convertInternal(
+              quotient,
+              // trailingBeforeScales: a multiplier before a noun scale ends the numeral adjective
+              // (fr deux cents millions, but deux cent mille).
+              localeConfig.trailingBeforeScales?.includes(Number(match.numberBigInt)) ?? false,
+              match.multiplierOverrides ? { ...overrides, ...match.multiplierOverrides } : overrides,
+              locale,
+              localeConfig.multiplierFollowsGender?.includes(Number(match.numberBigInt)) ? gender : match.gender,
+              useAnd,
+              leading,
+            )
+          : [multiplierForm];
+      // Scale-first ordering (e.g. Igbo: "Puku Abụọ" = Thousand Two = 2000)
+      // nounConnector: ro douăzeci de mii, o sută de milioane.
+      const multiplierWords =
+        localeConfig.nounConnector && !localeConfig.scaleFirst && takesNounConnector(quotient)
+          ? [...quotientWords, localeConfig.nounConnector]
+          : localeConfig.scaleFirst
+            ? quotientWords
+            : this.link(quotientWords, localeConfig);
+      // beforeRemainderPluralValue also stands before a counted noun or a larger scale word
+      // (te రెండు వందల రూపాయలు, రెండు వందల లక్షలు).
+      const plural = quotient > BIGINT_1 ? match.beforeRemainderPluralValue : undefined;
+      const scaleWord =
+        plural && (remainder > BIGINT_0 || !trailing)
+          ? plural
+          : remainder > BIGINT_0 && match.beforeRemainderValue
+            ? match.beforeRemainderValue
+            : matchValue;
+      const [first, second] = localeConfig.scaleFirst ? [[scaleWord], quotientWords] : [multiplierWords, [scaleWord]];
+      if (phrase !== undefined) {
+        words.push(phrase);
       } else {
-        for (const quotientWord of quotientWords) {
-          words.push(quotientWord);
+        words.push(...first);
+        if (glue) {
+          words.push(GLUE);
         }
-        words.push(matchValue);
+        words.push(...second);
       }
     }
 
     if (remainder > BIGINT_0) {
+      // Connector words between the scale word and the remainder.
+      const connectors: string[] = [];
       // useAnd: insert "And" between unit word and remainder when remainder < 100
       // Skip if locale already uses splitWord (e.g. Portuguese "E")
       const andWord = localeConfig.texts.and?.trim();
-      if (useAnd && remainder < BIGINT_100 && !localeConfig.splitWord && andWord) {
-        words.push(localeConfig.texts.and);
+      // andBeforeLastComponent: the conjunction always precedes the last component instead
+      // (bg сто и двадесет, сто двадесет и едно, хиляда и сто, два милиона и петстотин хиляди).
+      const andAdded = localeConfig.andBeforeLastComponent
+        ? isSingleComponent(remainder)
+        : Boolean(useAnd && remainder < BIGINT_100 && !localeConfig.splitWord && andWord);
+      if (andAdded) {
+        connectors.push(localeConfig.texts.and);
       }
-      if (localeConfig.splitWord) {
-        // Use O(1) Set lookup instead of array.includes()
-        if (!cache.noSplitWordAfterSet.has(match.resolvedValue)) {
-          words.push(localeConfig.splitWord);
+      // Use O(1) Set lookup instead of array.includes()
+      // splitWordBeforeSimpleGroup: after a scale word the connector still appears when only one
+      // simple group follows (pt mil e um, mil e cem, but mil cento e um).
+      if (
+        localeConfig.splitWord &&
+        (!cache.noSplitWordAfterSet.has(match.resolvedValue) ||
+          (localeConfig.splitWordBeforeSimpleGroup && isSimpleLastGroup(remainder)))
+      ) {
+        connectors.push(localeConfig.splitWord);
+      }
+      // zeroForSkippedPlaces: the remainder starts below the next lower place (zh 101 → 一百零一).
+      if (localeConfig.zeroForSkippedPlaces && remainder * BIGINT_10 < matchNumber) {
+        connectors.push(cache.zeroWord);
+      }
+      // unitsAfterScaleWord: a remainder below ten after a hundred or larger scale (vi một trăm lẻ một).
+      if (localeConfig.unitsAfterScaleWord && remainder < BIGINT_10 && matchNumber >= BIGINT_100) {
+        connectors.push(localeConfig.unitsAfterScaleWord);
+      }
+      const remainderWords = this.convertInternal(remainder, trailing, overrides, locale, gender, useAnd, false);
+      // splitWordAfterVowel: fil Isang Libo't Isa.
+      if (connectors.length === 1 && this.contractSplitWord(words, connectors[0], localeConfig)) {
+        connectors.length = 0;
+      }
+      // In a compound, glue each connector and the first remainder word; the remainder's own
+      // words already carry their internal glue.
+      const glueRemainder = glue && !cache.separateAfterSet.has(matchNumber);
+      // wordJoining.separateAnd: the useAnd word splits the compound (sk Tisíc A Jeden,
+      // as in «Tisíc a jedna noc») instead of being glued into it (de Hundertundeins).
+      const andSplits = andAdded && localeConfig.wordJoining?.separateAnd === true;
+      const tail = [...connectors, ...remainderWords];
+      for (let index = 0; index < tail.length; index++) {
+        if (glueRemainder && index <= connectors.length && !(andSplits && index <= 1)) {
+          words.push(GLUE);
         }
-      }
-      const remainderWords = this.convertInternal(remainder, trailing, overrides, locale, gender, useAnd);
-      for (const remainderWord of remainderWords) {
-        words.push(remainderWord);
+        words.push(tail[index]);
       }
     }
     return words;

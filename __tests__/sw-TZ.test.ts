@@ -35,29 +35,35 @@ describe('Test Locale', () => {
 
 const testIntegers: [number, string][] = [
   [0, 'Sifuri'],
-  [137, 'Moja Mia Thelathini Saba'],
-  [700, 'Saba Mia'],
-  [1100, 'Moja Elfu Mia Moja'],
-  [4680, 'Nne Elfu Sita Mia Themanini'],
-  [63892, 'Sitini Tatu Elfu Nane Mia Tisini Mbili'],
-  [86100, 'Themanini Sita Elfu Mia Moja'],
-  [792581, 'Saba Mia Tisini Mbili Elfu Tano Mia Themanini Moja'],
-  [2741034, 'Mbili Milioni Saba Mia Arobaini Moja Elfu Thelathini Nne'],
-  [86429753, 'Themanini Sita Milioni Nne Mia Ishirini Tisa Elfu Saba Mia Hamsini Tatu'],
-  [975310864, 'Tisa Mia Sabini Tano Milioni Tatu Mia Kumi Elfu Nane Mia Sitini Nne'],
-  [9876543210, 'Tisa Bilioni Nane Mia Sabini Sita Milioni Tano Mia Arobaini Tatu Elfu Mbili Mia Kumi'],
-  [98765432101, 'Tisini Nane Bilioni Saba Mia Sitini Tano Milioni Nne Mia Thelathini Mbili Elfu Moja Mia Moja'],
+  [137, 'Mia Moja Na Thelathini Na Saba'],
+  [700, 'Mia Saba'],
+  [1100, 'Elfu Moja Na Mia Moja'],
+  [4680, 'Elfu Nne Na Mia Sita Na Themanini'],
+  [63892, 'Elfu Sitini Na Tatu Na Mia Nane Na Tisini Na Mbili'],
+  [86100, 'Elfu Themanini Na Sita Na Mia Moja'],
+  [792581, 'Elfu Mia Saba Na Tisini Na Mbili Na Mia Tano Na Themanini Na Moja'],
+  [2741034, 'Milioni Mbili Na Elfu Mia Saba Na Arobaini Na Moja Na Thelathini Na Nne'],
+  [86429753, 'Milioni Themanini Na Sita Na Elfu Mia Nne Na Ishirini Na Tisa Na Mia Saba Na Hamsini Na Tatu'],
+  [975310864, 'Milioni Mia Tisa Na Sabini Na Tano Na Elfu Mia Tatu Na Kumi Na Mia Nane Na Sitini Na Nne'],
+  [
+    9876543210,
+    'Bilioni Tisa Na Milioni Mia Nane Na Sabini Na Sita Na Elfu Mia Tano Na Arobaini Na Tatu Na Mia Mbili Na Kumi',
+  ],
+  [
+    98765432101,
+    'Bilioni Tisini Na Nane Na Milioni Mia Saba Na Sitini Na Tano Na Elfu Mia Nne Na Thelathini Na Mbili Na Mia Moja Na Moja',
+  ],
   [
     987654321012,
-    'Tisa Mia Themanini Saba Bilioni Sita Mia Hamsini Nne Milioni Tatu Mia Ishirini Moja Elfu Kumi Na Mbili',
+    'Bilioni Mia Tisa Na Themanini Na Saba Na Milioni Mia Sita Na Hamsini Na Nne Na Elfu Mia Tatu Na Ishirini Na Moja Na Kumi Na Mbili',
   ],
   [
     9876543210123,
-    'Tisa Trilioni Nane Mia Sabini Sita Bilioni Tano Mia Arobaini Tatu Milioni Mbili Mia Kumi Elfu Moja Mia Ishirini Tatu',
+    'Trilioni Tisa Na Bilioni Mia Nane Na Sabini Na Sita Na Milioni Mia Tano Na Arobaini Na Tatu Na Elfu Mia Mbili Na Kumi Na Mia Moja Na Ishirini Na Tatu',
   ],
   [
     98765432101234,
-    'Tisini Nane Trilioni Saba Mia Sitini Tano Bilioni Nne Mia Thelathini Mbili Milioni Moja Mia Moja Elfu Mbili Mia Thelathini Nne',
+    'Trilioni Tisini Na Nane Na Bilioni Mia Saba Na Sitini Na Tano Na Milioni Mia Nne Na Thelathini Na Mbili Na Elfu Mia Moja Na Moja Na Mia Mbili Na Thelathini Na Nne',
   ],
 ];
 
@@ -85,7 +91,7 @@ describe('Test Negative Integers with options = {}', () => {
 describe('Test Integers with options = { currency: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} Shilingi Tu`;
+    row[1] = `Shilingi ${row[1]} Tu`;
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -96,7 +102,7 @@ describe('Test Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, doNotAddOnly: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} Shilingi`;
+    row[1] = `Shilingi ${row[1]}`;
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -108,11 +114,11 @@ describe('Test Negative Integers with options = { currency: true }', () => {
   const testNegativeIntegersWithCurrency = cloneDeep(testIntegers);
   testNegativeIntegersWithCurrency.map((row, i) => {
     if (i === 0) {
-      row[1] = `${row[1]} Shilingi Tu`;
+      row[1] = `Shilingi ${row[1]} Tu`;
       return;
     }
     row[0] = -row[0];
-    row[1] = `Hasi ${row[1]} Shilingi Tu`;
+    row[1] = `Hasi Shilingi ${row[1]} Tu`;
   });
 
   test.concurrent.each(testNegativeIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -123,7 +129,7 @@ describe('Test Negative Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, ignoreZeroCurrency: true }', () => {
   const testIntegersWithCurrencyAndIgnoreZeroCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrencyAndIgnoreZeroCurrency.map((row, i) => {
-    row[1] = i === 0 ? '' : `${row[1]} Shilingi Tu`;
+    row[1] = i === 0 ? '' : `Shilingi ${row[1]} Tu`;
   });
 
   test.concurrent.each(testIntegersWithCurrencyAndIgnoreZeroCurrency)('convert %d => %s', (input, expected) => {
@@ -141,24 +147,24 @@ const testFloats: [number, string][] = [
   [0.04, 'Sifuri Nukta Sifuri Nne'],
   [0.0468, 'Sifuri Nukta Sifuri Nne Sita Nane'],
   [0.4, 'Sifuri Nukta Nne'],
-  [0.63, 'Sifuri Nukta Sitini Tatu'],
-  [0.973, 'Sifuri Nukta Tisa Mia Sabini Tatu'],
-  [0.999, 'Sifuri Nukta Tisa Mia Tisini Tisa'],
-  [37.06, 'Thelathini Saba Nukta Sifuri Sita'],
-  [37.068, 'Thelathini Saba Nukta Sifuri Sita Nane'],
-  [37.68, 'Thelathini Saba Nukta Sitini Nane'],
-  [37.683, 'Thelathini Saba Nukta Sita Mia Themanini Tatu'],
+  [0.63, 'Sifuri Nukta Sitini Na Tatu'],
+  [0.973, 'Sifuri Nukta Mia Tisa Na Sabini Na Tatu'],
+  [0.999, 'Sifuri Nukta Mia Tisa Na Tisini Na Tisa'],
+  [37.06, 'Thelathini Na Saba Nukta Sifuri Sita'],
+  [37.068, 'Thelathini Na Saba Nukta Sifuri Sita Nane'],
+  [37.68, 'Thelathini Na Saba Nukta Sitini Na Nane'],
+  [37.683, 'Thelathini Na Saba Nukta Mia Sita Na Themanini Na Tatu'],
 ];
 
 describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
   const testIncludeZeroFractional: [number | string, string][] = [
-    [123, `Moja Mia Ishirini Tatu Shilingi Tu`],
-    ['123', `Moja Mia Ishirini Tatu Shilingi Tu`],
-    ['123.0', `Moja Mia Ishirini Tatu Shilingi Na Sifuri Senti Tu`],
-    ['123.00', `Moja Mia Ishirini Tatu Shilingi Na Sifuri Senti Tu`],
-    ['0.00', `Sifuri Shilingi Na Sifuri Senti Tu`],
-    ['-123.00', `Hasi Moja Mia Ishirini Tatu Shilingi Na Sifuri Senti Tu`],
-    ['37.68', `Thelathini Saba Shilingi Na Sitini Nane Senti Tu`],
+    [123, `Shilingi Mia Moja Na Ishirini Na Tatu Tu`],
+    ['123', `Shilingi Mia Moja Na Ishirini Na Tatu Tu`],
+    ['123.0', `Shilingi Mia Moja Na Ishirini Na Tatu Na Senti Sifuri Tu`],
+    ['123.00', `Shilingi Mia Moja Na Ishirini Na Tatu Na Senti Sifuri Tu`],
+    ['0.00', `Shilingi Sifuri Na Senti Sifuri Tu`],
+    ['-123.00', `Hasi Shilingi Mia Moja Na Ishirini Na Tatu Na Senti Sifuri Tu`],
+    ['37.68', `Shilingi Thelathini Na Saba Na Senti Sitini Na Nane Tu`],
   ];
 
   test.concurrent.each(testIncludeZeroFractional)('convert %s => %s', (input, expected) => {
@@ -178,17 +184,17 @@ describe('Test Floats with options = {}', () => {
 });
 
 const testFloatsWithCurrency: [number, string][] = [
-  [0.0, `Sifuri Shilingi Tu`],
-  [0.04, `Sifuri Shilingi Na Nne Senti Tu`],
-  [0.0468, `Sifuri Shilingi Na Tano Senti Tu`],
-  [0.4, `Sifuri Shilingi Na Arobaini Senti Tu`],
-  [0.63, `Sifuri Shilingi Na Sitini Tatu Senti Tu`],
-  [0.973, `Sifuri Shilingi Na Tisini Saba Senti Tu`],
-  [0.999, `Moja Shilingi Tu`],
-  [37.06, `Thelathini Saba Shilingi Na Sita Senti Tu`],
-  [37.068, `Thelathini Saba Shilingi Na Saba Senti Tu`],
-  [37.68, `Thelathini Saba Shilingi Na Sitini Nane Senti Tu`],
-  [37.683, `Thelathini Saba Shilingi Na Sitini Nane Senti Tu`],
+  [0.0, `Shilingi Sifuri Tu`],
+  [0.04, `Shilingi Sifuri Na Senti Nne Tu`],
+  [0.0468, `Shilingi Sifuri Na Senti Tano Tu`],
+  [0.4, `Shilingi Sifuri Na Senti Arobaini Tu`],
+  [0.63, `Shilingi Sifuri Na Senti Sitini Na Tatu Tu`],
+  [0.973, `Shilingi Sifuri Na Senti Tisini Na Saba Tu`],
+  [0.999, `Shilingi Moja Tu`],
+  [37.06, `Shilingi Thelathini Na Saba Na Senti Sita Tu`],
+  [37.068, `Shilingi Thelathini Na Saba Na Senti Saba Tu`],
+  [37.68, `Shilingi Thelathini Na Saba Na Senti Sitini Na Nane Tu`],
+  [37.683, `Shilingi Thelathini Na Saba Na Senti Sitini Na Nane Tu`],
 ];
 
 describe('Test Floats with options = { currency: true }', () => {
@@ -206,7 +212,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true 
       return;
     }
     if (row[0] > 0 && row[0] < 1) {
-      row[1] = (row[1] as string).replace(`Sifuri Shilingi Na `, '');
+      row[1] = (row[1] as string).replace(`Shilingi Sifuri Na `, '');
     }
   });
 
@@ -224,9 +230,9 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
   const testFloatsWithCurrencyAndIgnoreDecimal = cloneDeep(testFloatsWithCurrency);
   testFloatsWithCurrencyAndIgnoreDecimal.map((row) => {
     if (row[0] === 0.999) {
-      row[1] = `Sifuri Shilingi Tu`;
+      row[1] = `Shilingi Sifuri Tu`;
     } else {
-      row[1] = (row[1] as string).replace(new RegExp(` Na [\\w ]+ Senti`), '');
+      row[1] = (row[1] as string).replace(new RegExp(` Na Senti [\\w ]+?(?= Tu$)`), '');
     }
   });
 
@@ -247,7 +253,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
     if (row[0] > 0 && row[0] < 1) {
       row[1] = '';
     }
-    row[1] = (row[1] as string).replace(new RegExp(` Na [\\w ]+ Senti`), '');
+    row[1] = (row[1] as string).replace(new RegExp(` Na Senti [\\w ]+?(?= Tu$)`), '');
   });
 
   test.concurrent.each(testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals)(
@@ -265,17 +271,17 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
 });
 
 const testFloatsWithDollarCurrency = [
-  [0.0, `Sifuri Dola Tu`],
-  [0.04, `Sifuri Dola Na Nne Senti Tu`],
-  [0.0468, `Sifuri Dola Na Tano Senti Tu`],
-  [0.4, `Sifuri Dola Na Arobaini Senti Tu`],
-  [0.63, `Sifuri Dola Na Sitini Tatu Senti Tu`],
-  [0.973, `Sifuri Dola Na Tisini Saba Senti Tu`],
-  [0.999, `Moja Dola Tu`],
-  [37.06, `Thelathini Saba Dola Na Sita Senti Tu`],
-  [37.068, `Thelathini Saba Dola Na Saba Senti Tu`],
-  [37.68, `Thelathini Saba Dola Na Sitini Nane Senti Tu`],
-  [37.683, `Thelathini Saba Dola Na Sitini Nane Senti Tu`],
+  [0.0, `Dola Sifuri Tu`],
+  [0.04, `Dola Sifuri Na Senti Nne Tu`],
+  [0.0468, `Dola Sifuri Na Senti Tano Tu`],
+  [0.4, `Dola Sifuri Na Senti Arobaini Tu`],
+  [0.63, `Dola Sifuri Na Senti Sitini Na Tatu Tu`],
+  [0.973, `Dola Sifuri Na Senti Tisini Na Saba Tu`],
+  [0.999, `Dola Moja Tu`],
+  [37.06, `Dola Thelathini Na Saba Na Senti Sita Tu`],
+  [37.068, `Dola Thelathini Na Saba Na Senti Saba Tu`],
+  [37.68, `Dola Thelathini Na Saba Na Senti Sitini Na Nane Tu`],
+  [37.683, `Dola Thelathini Na Saba Na Senti Sitini Na Nane Tu`],
 ];
 
 const dollarCurrencyOptions = {
@@ -322,9 +328,9 @@ const testOrdinalNumbers: [number, string][] = [
   [20, 'Wa Ishirini'],
 
   // Composite numbers (21-29, 30, 40, 50, etc.)
-  [21, 'Ishirini Wa Kwanza'],
-  [22, 'Ishirini Wa Pili'],
-  [23, 'Ishirini Wa Tatu'],
+  [21, 'Wa Ishirini Na Moja'],
+  [22, 'Wa Ishirini Na Mbili'],
+  [23, 'Wa Ishirini Na Tatu'],
   [30, 'Wa Thelathini'],
   [40, 'Wa Arobaini'],
   [50, 'Wa Hamsini'],
@@ -334,39 +340,39 @@ const testOrdinalNumbers: [number, string][] = [
   [90, 'Wa Tisini'],
 
   // Numbers ending in 1, 2, 3 (various decades)
-  [31, 'Thelathini Wa Kwanza'],
-  [32, 'Thelathini Wa Pili'],
-  [33, 'Thelathini Wa Tatu'],
-  [41, 'Arobaini Wa Kwanza'],
-  [42, 'Arobaini Wa Pili'],
-  [43, 'Arobaini Wa Tatu'],
-  [51, 'Hamsini Wa Kwanza'],
-  [52, 'Hamsini Wa Pili'],
-  [53, 'Hamsini Wa Tatu'],
+  [31, 'Wa Thelathini Na Moja'],
+  [32, 'Wa Thelathini Na Mbili'],
+  [33, 'Wa Thelathini Na Tatu'],
+  [41, 'Wa Arobaini Na Moja'],
+  [42, 'Wa Arobaini Na Mbili'],
+  [43, 'Wa Arobaini Na Tatu'],
+  [51, 'Wa Hamsini Na Moja'],
+  [52, 'Wa Hamsini Na Mbili'],
+  [53, 'Wa Hamsini Na Tatu'],
 
   // Round numbers (100, 200, 1000, etc.)
   [100, 'Wa Mia Moja'],
-  [200, 'Mbili Wa Mia'],
+  [200, 'Wa Mia Mbili'],
   [1000, 'Wa Elfu Moja'],
-  [10000, 'Kumi Wa Elfu'],
-  [100000, 'Mia Moja Wa Elfu'],
+  [10000, 'Wa Elfu Kumi'],
+  [100000, 'Wa Elfu Mia Moja'],
   [1000000, 'Wa Milioni Moja'],
-  [10000000, 'Kumi Wa Milioni'],
+  [10000000, 'Wa Milioni Kumi'],
 
   // Numbers in the hundreds with endings
-  [101, 'Moja Mia Wa Kwanza'],
-  [102, 'Moja Mia Wa Pili'],
-  [103, 'Moja Mia Wa Tatu'],
-  [111, 'Moja Mia Wa Kumi Na Moja'],
-  [112, 'Moja Mia Wa Kumi Na Mbili'],
-  [113, 'Moja Mia Wa Kumi Na Tatu'],
-  [123, 'Moja Mia Ishirini Wa Tatu'],
+  [101, 'Wa Mia Moja Na Moja'],
+  [102, 'Wa Mia Moja Na Mbili'],
+  [103, 'Wa Mia Moja Na Tatu'],
+  [111, 'Wa Mia Moja Na Kumi Na Moja'],
+  [112, 'Wa Mia Moja Na Kumi Na Mbili'],
+  [113, 'Wa Mia Moja Na Kumi Na Tatu'],
+  [123, 'Wa Mia Moja Na Ishirini Na Tatu'],
 
   // Complex numbers
-  [1001, 'Moja Elfu Wa Kwanza'],
-  [1111, 'Moja Elfu Moja Mia Wa Kumi Na Moja'],
-  [1234, 'Moja Elfu Mbili Mia Thelathini Wa Nne'],
-  [12345, 'Kumi Na Mbili Elfu Tatu Mia Arobaini Wa Tano'],
+  [1001, 'Wa Elfu Moja Na Moja'],
+  [1111, 'Wa Elfu Moja Na Mia Moja Na Kumi Na Moja'],
+  [1234, 'Wa Elfu Moja Na Mia Mbili Na Thelathini Na Nne'],
+  [12345, 'Wa Elfu Kumi Na Mbili Na Mia Tatu Na Arobaini Na Tano'],
 ];
 
 describe('Test Ordinal Numbers', () => {
@@ -402,8 +408,8 @@ const testPowersOfTen: [number, string][] = [
   [10, 'Kumi'],
   [100, 'Mia Moja'],
   [1000, 'Elfu Moja'],
-  [10000, 'Kumi Elfu'],
-  [100000, 'Mia Moja Elfu'],
+  [10000, 'Elfu Kumi'],
+  [100000, 'Elfu Mia Moja'],
   [1000000, 'Milioni Moja'],
 ];
 
@@ -477,7 +483,7 @@ describe('Test Zero Variants', () => {
   });
 
   test('convert 0 with currency => Sifuri Shilingi Tu', () => {
-    expect(toWords.convert(0, { currency: true })).toBe('Sifuri Shilingi Tu');
+    expect(toWords.convert(0, { currency: true })).toBe('Shilingi Sifuri Tu');
   });
 });
 

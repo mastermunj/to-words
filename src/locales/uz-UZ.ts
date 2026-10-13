@@ -67,7 +67,7 @@ export default class Locale implements LocaleInterface {
       { number: 80, value: 'Saksoninchi' },
       { number: 70, value: 'Yetmishinchi' },
       { number: 60, value: 'Oltmishinchi' },
-      { number: 50, value: 'Ellikinchi' },
+      { number: 50, value: 'Elliginchi' },
       { number: 40, value: 'Qirqinchi' },
       { number: 30, value: "O'ttizinchi" },
       { number: 20, value: 'Yigirmanchi' },

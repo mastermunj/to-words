@@ -50,7 +50,7 @@ const testIntegers: [number, string][] = [
     'Üheksa Miljardit Üheksasada Üheksakümmend Üheksa Miljonit Üheksasada Kakskümmend Kolm Tuhat Sada Kakskümmend Kaheksa',
   ],
   [100000000000, 'Ükssada Miljardit'],
-  [1000000000000, 'Üks Triljon'],
+  [1000000000000, 'Üks Biljon'],
 ];
 
 describe('Test Integers with options = {}', () => {

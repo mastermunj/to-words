@@ -1,0 +1,36 @@
+{
+  "locale": "nb-NO",
+  "sources": {
+    "wikt-million": {
+      "title": "Wiktionary — million (Norwegian Bokmål: masculine, plural millioner)",
+      "url": "https://en.wiktionary.org/wiki/million#Norwegian_Bokmål",
+      "accessed": "2026-10-08"
+    }
+  },
+  "cases": [
+    {
+      "id": "scale-1000000",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "1000000",
+      "expected": "En Million",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "wikt-million"
+      ]
+    },
+    {
+      "id": "scale-2000000",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "2000000",
+      "expected": "To Millioner",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "wikt-million"
+      ]
+    }
+  ]
+}

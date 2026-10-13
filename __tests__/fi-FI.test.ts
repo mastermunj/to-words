@@ -78,17 +78,17 @@ const testIntegers: [number, string][] = [
   [900, 'Yhdeksänsataa'],
   [1000, 'Tuhat'],
   [1100, 'Tuhat Sata'],
-  [2000, 'Kaksi Tuhat'],
-  [3000, 'Kolme Tuhat'],
-  [4680, 'Neljä Tuhat Kuusisataa Kahdeksankymmentä'],
-  [10000, 'Kymmenen Tuhat'],
-  [63892, 'Kuusikymmentä Kolme Tuhat Kahdeksansataa Yhdeksänkymmentä Kaksi'],
-  [100000, 'Sata Tuhat'],
+  [2000, 'Kaksi Tuhatta'],
+  [3000, 'Kolme Tuhatta'],
+  [4680, 'Neljä Tuhatta Kuusisataa Kahdeksankymmentä'],
+  [10000, 'Kymmenen Tuhatta'],
+  [63892, 'Kuusikymmentä Kolme Tuhatta Kahdeksansataa Yhdeksänkymmentä Kaksi'],
+  [100000, 'Sata Tuhatta'],
   [1000000, 'Yksi Miljoona'],
-  [2000000, 'Kaksi Miljoona'],
-  [2741034, 'Kaksi Miljoona Seitsemänsataa Neljäkymmentä Yksi Tuhat Kolmekymmentä Neljä'],
+  [2000000, 'Kaksi Miljoonaa'],
+  [2741034, 'Kaksi Miljoonaa Seitsemänsataa Neljäkymmentä Yksi Tuhatta Kolmekymmentä Neljä'],
   [1000000000, 'Yksi Miljardi'],
-  [2000000000, 'Kaksi Miljardi'],
+  [2000000000, 'Kaksi Miljardia'],
 ];
 
 describe('Test Integers with options = {}', () => {
@@ -288,8 +288,8 @@ const testOrdinalNumbers: [number, string][] = [
   [18, 'Kahdeksastoista'],
   [19, 'Yhdeksästoista'],
   [20, 'Kahdeskymmenes'],
-  [21, 'Kaksikymmentä Ensimmäinen'],
-  [22, 'Kaksikymmentä Toinen'],
+  [21, 'Kahdeskymmenes Ensimmäinen'],
+  [22, 'Kahdeskymmenes Toinen'],
   [30, 'Kolmaskymmenes'],
   [40, 'Neljäskymmenes'],
   [50, 'Viideskymmenes'],
@@ -298,11 +298,11 @@ const testOrdinalNumbers: [number, string][] = [
   [80, 'Kahdeksaskymmenes'],
   [90, 'Yhdeksäskymmenes'],
   [100, 'Sadas'],
-  [101, 'Sata Ensimmäinen'],
+  [101, 'Sadas Ensimmäinen'],
   [200, 'Kahdessadas'],
   [1000, 'Tuhannes'],
-  [1001, 'Tuhat Ensimmäinen'],
-  [1000000, 'Yksi Miljoonas'],
+  [1001, 'Tuhannes Ensimmäinen'],
+  [1000000, 'Miljoonas'],
 ];
 
 describe('Test Ordinal Numbers', () => {
@@ -358,8 +358,8 @@ describe('Test Finnish-specific numbers', () => {
   test('Large numbers', () => {
     expect(toWords.convert(1000000)).toBe('Yksi Miljoona');
     expect(toWords.convert(1000000000)).toBe('Yksi Miljardi');
-    expect(toWords.convert(2000000)).toBe('Kaksi Miljoona');
-    expect(toWords.convert(2000000000)).toBe('Kaksi Miljardi');
+    expect(toWords.convert(2000000)).toBe('Kaksi Miljoonaa');
+    expect(toWords.convert(2000000000)).toBe('Kaksi Miljardia');
   });
 });
 
@@ -368,8 +368,8 @@ describe('Powers of Ten', () => {
     [10, 'Kymmenen'],
     [100, 'Sata'],
     [1000, 'Tuhat'],
-    [10000, 'Kymmenen Tuhat'],
-    [100000, 'Sata Tuhat'],
+    [10000, 'Kymmenen Tuhatta'],
+    [100000, 'Sata Tuhatta'],
     [1000000, 'Yksi Miljoona'],
   ];
 

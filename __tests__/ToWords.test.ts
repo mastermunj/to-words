@@ -55,10 +55,10 @@ describe('Test BigInt Inputs', () => {
   });
 
   test('Large BigInt beyond MAX_SAFE_INTEGER', () => {
-    // 9007199254740992n is Number.MAX_SAFE_INTEGER + 1
+    // 9007199254740992n is Number.MAX_SAFE_INTEGER + 1; above a crore en-IN composes crore-based words.
     const result = toWords.convert(9007199254740992n);
     expect(result).toBe(
-      'Nine Padma Seventy One Kharab Ninety Nine Arab Twenty Five Crore Forty Seven Lakh Forty Thousand Nine Hundred Ninety Two',
+      'Ninety Crore Seven Lakh Nineteen Thousand Nine Hundred Twenty Five Crore Forty Seven Lakh Forty Thousand Nine Hundred Ninety Two',
     );
   });
 

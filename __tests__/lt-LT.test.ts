@@ -83,13 +83,13 @@ const testIntegers: [number, string][] = [
   [4000, 'Keturi Tūkstančiai'],
   [5000, 'Penki Tūkstančiai'],
   [4680, 'Keturi Tūkstančiai Šeši Šimtai Aštuoniasdešimt'],
-  [10000, 'Dešimt Tūkstantis'],
-  [63892, 'Šešiasdešimt Trys Tūkstančių Aštuoni Šimtai Devyniasdešimt Du'],
+  [10000, 'Dešimt Tūkstančių'],
+  [63892, 'Šešiasdešimt Trys Tūkstančiai Aštuoni Šimtai Devyniasdešimt Du'],
   [100000, 'Šimtas Tūkstančių'],
   [1000000, 'Milijonas'],
   [2000000, 'Du Milijonai'],
   [5000000, 'Penki Milijonai'],
-  [2741034, 'Du Milijonai Septyni Šimtai Keturiasdešimt Vienas Tūkstančių Trisdešimt Keturi'],
+  [2741034, 'Du Milijonai Septyni Šimtai Keturiasdešimt Vienas Tūkstantis Trisdešimt Keturi'],
   [1000000000, 'Milijardas'],
   [2000000000, 'Du Milijardai'],
   [5000000000, 'Penki Milijardai'],
@@ -117,19 +117,23 @@ describe('Test Negative Integers with options = {}', () => {
 });
 
 // Helper function to get Lithuanian currency form
-function getCurrencyName(words: string): string {
-  // Check for singular (1)
-  if (words === 'Vienas') {
+// Lithuanian unit form by CLDR category (one: …1 except 11-19; few: …2-9 except 11-19; other).
+function getCurrencyName(amount: number): string {
+  const n = Math.abs(amount);
+  const teen = n % 100 >= 11 && n % 100 <= 19;
+  if (n % 10 === 1 && !teen) {
     return 'Euras';
   }
-  // Default plural for all other numbers
+  if (n % 10 >= 2 && !teen) {
+    return 'Eurai';
+  }
   return 'Eurų';
 }
 
 describe('Test Integers with options = { currency: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    const currencyName = getCurrencyName(row[1] as string);
+    const currencyName = getCurrencyName(row[0] as number);
     row[1] = `${row[1]} ${currencyName} Tik`;
   });
 
@@ -141,7 +145,7 @@ describe('Test Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, doNotAddOnly: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    const currencyName = getCurrencyName(row[1] as string);
+    const currencyName = getCurrencyName(row[0] as number);
     row[1] = `${row[1]} ${currencyName}`;
   });
 
@@ -158,7 +162,7 @@ describe('Test Negative Integers with options = { currency: true }', () => {
       return;
     }
     row[0] = -row[0];
-    const currencyName = getCurrencyName(row[1] as string);
+    const currencyName = getCurrencyName(row[0] as number);
     row[1] = `Minus ${row[1]} ${currencyName} Tik`;
   });
 
@@ -173,7 +177,7 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
     if (i === 0) {
       row[1] = '';
     } else {
-      const currencyName = getCurrencyName(row[1] as string);
+      const currencyName = getCurrencyName(row[0] as number);
       row[1] = `${row[1]} ${currencyName} Tik`;
     }
   });
@@ -199,13 +203,13 @@ const testFloats: [number, string][] = [
 
 describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
   const testIncludeZeroFractional: [number | string, string][] = [
-    [123, `Šimtas Dvidešimt Trys Eurų Tik`],
-    ['123', `Šimtas Dvidešimt Trys Eurų Tik`],
-    ['123.0', `Šimtas Dvidešimt Trys Eurų Ir Nulis Centų Tik`],
-    ['123.00', `Šimtas Dvidešimt Trys Eurų Ir Nulis Centų Tik`],
+    [123, `Šimtas Dvidešimt Trys Eurai Tik`],
+    ['123', `Šimtas Dvidešimt Trys Eurai Tik`],
+    ['123.0', `Šimtas Dvidešimt Trys Eurai Ir Nulis Centų Tik`],
+    ['123.00', `Šimtas Dvidešimt Trys Eurai Ir Nulis Centų Tik`],
     ['0.00', `Nulis Eurų Ir Nulis Centų Tik`],
-    ['-123.00', `Minus Šimtas Dvidešimt Trys Eurų Ir Nulis Centų Tik`],
-    ['37.68', `Trisdešimt Septyni Eurų Ir Šešiasdešimt Aštuoni Centų Tik`],
+    ['-123.00', `Minus Šimtas Dvidešimt Trys Eurai Ir Nulis Centų Tik`],
+    ['37.68', `Trisdešimt Septyni Eurai Ir Šešiasdešimt Aštuoni Centai Tik`],
   ];
 
   test.concurrent.each(testIncludeZeroFractional)('convert %s => %s', (input, expected) => {
@@ -226,12 +230,12 @@ describe('Test Floats with options = {}', () => {
 
 const testFloatsWithCurrency: [number, string][] = [
   [0.0, 'Nulis Eurų Tik'],
-  [0.04, 'Nulis Eurų Ir Keturi Centų Tik'],
+  [0.04, 'Nulis Eurų Ir Keturi Centai Tik'],
   [0.4, 'Nulis Eurų Ir Keturiasdešimt Centų Tik'],
-  [0.63, 'Nulis Eurų Ir Šešiasdešimt Trys Centų Tik'],
+  [0.63, 'Nulis Eurų Ir Šešiasdešimt Trys Centai Tik'],
   [0.999, 'Vienas Euras Tik'],
-  [37.06, 'Trisdešimt Septyni Eurų Ir Šeši Centų Tik'],
-  [37.68, 'Trisdešimt Septyni Eurų Ir Šešiasdešimt Aštuoni Centų Tik'],
+  [37.06, 'Trisdešimt Septyni Eurai Ir Šeši Centai Tik'],
+  [37.68, 'Trisdešimt Septyni Eurai Ir Šešiasdešimt Aštuoni Centai Tik'],
 ];
 
 describe('Test Floats with options = { currency: true }', () => {
@@ -269,7 +273,7 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
     if (row[0] === 0.999) {
       row[1] = 'Nulis Eurų Tik';
     } else {
-      row[1] = (row[1] as string).replace(new RegExp(` Ir [\\wąčęėįšųūžĄČĘĖĮŠŲŪŽ ]+ Cent[ųas]*`), '');
+      row[1] = (row[1] as string).replace(new RegExp(` Ir [\\wąčęėįšųūžĄČĘĖĮŠŲŪŽ ]+ Cent(ų|ai|as)`), '');
     }
   });
 
@@ -367,7 +371,7 @@ describe('Test Powers of Ten', () => {
     [10, 'Dešimt'],
     [100, 'Šimtas'],
     [1000, 'Tūkstantis'],
-    [10000, 'Dešimt Tūkstantis'],
+    [10000, 'Dešimt Tūkstančių'],
     [100000, 'Šimtas Tūkstančių'],
     [1000000, 'Milijonas'],
   ];
@@ -471,5 +475,36 @@ describe('Functional helpers (locale-level)', () => {
     const tw = new LocaleToWords();
     expect(localeToCurrency(1)).toBe(tw.convert(1, { currency: true }));
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
+  });
+});
+
+describe('Sourced forms (lt.wikipedia, en.wiktionary, CLDR lt)', () => {
+  const tw = new ToWords({ localeCode: 'lt-LT' });
+
+  test.each([
+    [21, 'Dvidešimt Vienas'],
+    [144, 'Šimtas Keturiasdešimt Keturi'],
+    [1000000000000, 'Trilijonas'],
+    [1000000000000000, 'Kvadrilijonas'],
+  ])('convert %d => %s', (input, expected) => {
+    expect(tw.convert(input)).toBe(expected);
+  });
+
+  test('feminine forms of 1-9', () => {
+    expect(tw.convert(4, { gender: 'feminine' })).toBe('Keturios');
+    expect(tw.convert(29, { gender: 'feminine' })).toBe('Dvidešimt Devynios');
+    expect(tw.convert(3, { gender: 'feminine' })).toBe('Trys');
+  });
+
+  test('currency ignores the gender option', () => {
+    expect(tw.convert(21, { currency: true, gender: 'feminine' })).toBe('Dvidešimt Vienas Euras Tik');
+  });
+
+  test.each([
+    [22, 'Dvidešimt Antrasis'],
+    [2000, 'Dutūkstantasis'],
+    [9000, 'Devynitūkstantasis'],
+  ])('toOrdinal %d => %s', (input, expected) => {
+    expect(tw.toOrdinal(input)).toBe(expected);
   });
 });

@@ -429,11 +429,11 @@ describe('Gender-aware cardinals', () => {
     });
 
     test('composite: 21 feminine', () => {
-      expect(toWords.convert(21, { gender: 'feminine' })).toBe('واحدة و عشرون');
+      expect(toWords.convert(21, { gender: 'feminine' })).toBe('إحدى وعشرون');
     });
 
     test('composite: 99 feminine', () => {
-      expect(toWords.convert(99, { gender: 'feminine' })).toBe('تسع و تسعون');
+      expect(toWords.convert(99, { gender: 'feminine' })).toBe('تسع وتسعون');
     });
 
     test('100 is ungendered', () => {
@@ -441,11 +441,11 @@ describe('Gender-aware cardinals', () => {
     });
 
     test('composite: 101 feminine', () => {
-      expect(toWords.convert(101, { gender: 'feminine' })).toBe('مائة و واحدة');
+      expect(toWords.convert(101, { gender: 'feminine' })).toBe('مائة وواحدة');
     });
 
     test('composite: 1001 feminine', () => {
-      expect(toWords.convert(1001, { gender: 'feminine' })).toBe('ألف و واحدة');
+      expect(toWords.convert(1001, { gender: 'feminine' })).toBe('ألف وواحدة');
     });
   });
 
@@ -465,15 +465,15 @@ describe('Gender-aware cardinals', () => {
     });
 
     test('21 feminine', () => {
-      expect(toWords.convert(21, { gender: 'feminine' })).toBe('واحدة و عشرون');
+      expect(toWords.convert(21, { gender: 'feminine' })).toBe('إحدى وعشرون');
     });
 
     test('99 feminine', () => {
-      expect(toWords.convert(99, { gender: 'feminine' })).toBe('تسع و تسعون');
+      expect(toWords.convert(99, { gender: 'feminine' })).toBe('تسع وتسعون');
     });
 
     test('composite: 101 feminine', () => {
-      expect(toWords.convert(101, { gender: 'feminine' })).toBe('مائة و واحدة');
+      expect(toWords.convert(101, { gender: 'feminine' })).toBe('مائة وواحدة');
     });
   });
 
@@ -489,7 +489,7 @@ describe('Gender-aware cardinals', () => {
     });
 
     test('composite: 21 feminine', () => {
-      expect(toWords.convert(21, { gender: 'feminine' })).toBe('واحدة و عشرون');
+      expect(toWords.convert(21, { gender: 'feminine' })).toBe('إحدى وعشرون');
     });
   });
 
@@ -509,15 +509,15 @@ describe('Gender-aware cardinals', () => {
     });
 
     test('21 feminine', () => {
-      expect(toWords.convert(21, { gender: 'feminine' })).toBe('واحدة و عشرون');
+      expect(toWords.convert(21, { gender: 'feminine' })).toBe('إحدى وعشرون');
     });
 
     test('99 feminine', () => {
-      expect(toWords.convert(99, { gender: 'feminine' })).toBe('تسع و تسعون');
+      expect(toWords.convert(99, { gender: 'feminine' })).toBe('تسع وتسعون');
     });
 
     test('composite: 1001 feminine', () => {
-      expect(toWords.convert(1001, { gender: 'feminine' })).toBe('ألف و واحدة');
+      expect(toWords.convert(1001, { gender: 'feminine' })).toBe('ألف وواحدة');
     });
   });
 
@@ -557,7 +557,7 @@ describe('Gender-aware cardinals', () => {
     });
 
     test('composite: 21 masculine', () => {
-      expect(toWords.convert(21, { gender: 'masculine' })).toBe('עשרים ו אחד');
+      expect(toWords.convert(21, { gender: 'masculine' })).toBe('עשרים ואחד');
     });
 
     test('100 is ungendered', () => {
@@ -565,7 +565,7 @@ describe('Gender-aware cardinals', () => {
     });
 
     test('composite: 101 masculine', () => {
-      expect(toWords.convert(101, { gender: 'masculine' })).toBe('אחת מאה ו אחד');
+      expect(toWords.convert(101, { gender: 'masculine' })).toBe('מאה ואחד');
     });
   });
 
@@ -589,7 +589,7 @@ describe('Gender-aware cardinals', () => {
     });
 
     test('composite: 21 masculine', () => {
-      expect(toWords.convert(21, { gender: 'masculine' })).toBe('עשרים אחד');
+      expect(toWords.convert(21, { gender: 'masculine' })).toBe('עשרים ואחד');
     });
   });
 
@@ -600,8 +600,8 @@ describe('Gender-aware cardinals', () => {
       expect(toWords.convert(1)).toBe('Ena');
     });
 
-    test('1 masculine', () => {
-      expect(toWords.convert(1, { gender: 'masculine' })).toBe('Eden');
+    test('1 masculine (en before a noun; en.wiktionary «eden»)', () => {
+      expect(toWords.convert(1, { gender: 'masculine' })).toBe('En');
     });
 
     test('1 feminine (explicit)', () => {
@@ -612,16 +612,16 @@ describe('Gender-aware cardinals', () => {
       expect(toWords.convert(2, { gender: 'feminine' })).toBe('Dve');
     });
 
-    test('2 masculine (default)', () => {
-      expect(toWords.convert(2)).toBe('Dva');
+    test('2 default is the feminine counting form', () => {
+      expect(toWords.convert(2)).toBe('Dve');
     });
 
     test('composite: 21 masculine', () => {
-      expect(toWords.convert(21, { gender: 'masculine' })).toBe('Dvajset Eden');
+      expect(toWords.convert(21, { gender: 'masculine' })).toBe('Enaindvajset');
     });
 
     test('composite: 101 masculine', () => {
-      expect(toWords.convert(101, { gender: 'masculine' })).toBe('Sto Eden');
+      expect(toWords.convert(101, { gender: 'masculine' })).toBe('Sto En');
     });
   });
 
@@ -672,7 +672,7 @@ describe('Gender-aware ordinals', () => {
       expect(toWords.toOrdinal(1, { gender: 'masculine' })).toBe('Primero');
       expect(toWords.toOrdinal(1, { gender: 'feminine' })).toBe('Primera');
       expect(toWords.toOrdinal(10, { gender: 'feminine' })).toBe('Décima');
-      expect(toWords.toOrdinal(101, { gender: 'feminine' })).toBe('Ciento Primera');
+      expect(toWords.toOrdinal(101, { gender: 'feminine' })).toBe('Centésima Primera');
       expect(toWords.toOrdinal(0, { gender: 'feminine' })).toBe('Cero');
     },
   );
