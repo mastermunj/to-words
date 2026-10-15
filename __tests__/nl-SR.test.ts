@@ -508,3 +508,38 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
     expect(toWords.convert(0.05)).toBe('Nul Komma Nul Vijf');
   });
 });
+
+describe('Taaladvies / CLDR cited (nl-SR)', () => {
+  // Spelling rules are shared with nl-NL (Taalunie Leidraad 6.9, Team Taaladvies).
+  test.each([
+    [37, 'Zevenendertig'],
+    [207, 'Tweehonderdzeven'],
+    [2004, 'Tweeduizend Vier'],
+    [1006, 'Duizend Zes'],
+  ])('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+
+  test.each([
+    [8, 'Achtste'],
+    [104, 'Honderdvierde'],
+    [200, 'Tweehonderdste'],
+  ])('toOrdinal %d => %s', (input, expected) => {
+    expect(toWords.toOrdinal(input)).toBe(expected);
+  });
+
+  // CLDR rbnf nl: «x. x: << komma >>» and «-x: min >>».
+  test('decimal comma', () => {
+    expect(toWords.convert(8.5)).toBe('Acht Komma Vijf');
+  });
+
+  test('negative reads min (CLDR)', () => {
+    expect(toWords.convert(-5)).toBe('Min Vijf');
+  });
+
+  // nl-SR currency: Surinaamse dollar(s) / Cent(en).
+  test('currency Surinaamse dollar', () => {
+    expect(toWords.convert(1, { currency: true })).toBe('Een Surinaamse dollar');
+    expect(toWords.convert(2.42, { currency: true })).toBe('Twee Surinaamse dollars En Tweeënveertig Centen');
+  });
+});

@@ -689,4 +689,9 @@ describe('Taaladvies (Taalunie Leidraad 6.9, Team Taaladvies)', () => {
   test('decimal comma', () => {
     expect(toWords.convert(8.5)).toBe('Acht Komma Vijf');
   });
+
+  // CLDR rbnf nl %spellout-cardinal «-x: min >>» — negative read «min».
+  test('negative reads min (CLDR)', () => {
+    expect(toWords.convert(-5)).toBe('Min Vijf');
+  });
 });
