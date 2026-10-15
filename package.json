@@ -1,6 +1,6 @@
 {
   "name": "to-words",
-  "version": "7.1.0",
+  "version": "7.2.0",
   "description": "Convert numbers to words in 135 locales with currency, ordinal, and BigInt support (TypeScript, ESM/CJS/UMD).",
   "keywords": [
     "amount in words",
