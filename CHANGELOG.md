@@ -2,6 +2,24 @@
 
 All notable changes to this project are documented here. Releases and this changelog are managed by [Release Please](https://github.com/googleapis/release-please).
 
+## [7.2.0](https://github.com/mastermunj/to-words/compare/v7.1.0...v7.2.0) (2026-10-15)
+
+
+### Features
+
+* verify all 136 locales against independent sources ([8b75be5](https://github.com/mastermunj/to-words/commit/8b75be5c8c643f91d6f35289aa8aafb7de4e3b90))
+* verify all 136 locales against independent sources ([f42d288](https://github.com/mastermunj/to-words/commit/f42d28864eee2eb7f0c1400ca5e28d681ad33458))
+
+
+### Bug Fixes
+
+* **zh:** space a lone hundred like other numbers ([0422252](https://github.com/mastermunj/to-words/commit/04222521af5e17ae5d67a8dd68948b02902136db))
+
+
+### Documentation
+
+* restructure README and refresh docs for current output ([708698a](https://github.com/mastermunj/to-words/commit/708698a0ee96e5f3587f5626a2f07f329670ad71))
+
 ## [7.1.0](https://github.com/mastermunj/to-words/compare/v7.0.0...v7.1.0) (2026-08-30)
 
 
