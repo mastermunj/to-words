@@ -38,10 +38,10 @@ import { ToWords } from 'to-words';
 const tw = new ToWords({ localeCode: 'de-DE' });
 
 tw.convert(12345);
-// "Zwölf Tausend Drei Hundert Fünf Und Vierzig"
+// "Zwölftausenddreihundertfünfundvierzig"
 
 tw.convert(1234.56, { currency: true });
-// "Ein Tausend Zwei Hundert Vier Und Dreißig Euro Und Sechsundfünfzig Cent"
+// "Tausendzweihundertvierunddreißig Euro Und Sechsundfünfzig Cent"
 ```
 
 ## FAQ

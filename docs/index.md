@@ -97,7 +97,7 @@ tw.toOrdinal(3); // "Third"
 ```js
 import { toWords, toCurrency, toOrdinal } from 'to-words';
 
-toWords(12345, { localeCode: 'hi-IN' }); // "बारह हजार तीन सौ पैंतालीस"
+toWords(12345, { localeCode: 'hi-IN' }); // "बारह हज़ार तीन सौ पैंतालीस"
 toCurrency(452.36, { localeCode: 'hi-IN' }); // "चार सौ बावन रुपये और छत्तीस पैसे"
 ```
 

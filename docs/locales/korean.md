@@ -28,8 +28,8 @@ npm install to-words
 import { ToWords } from 'to-words';
 
 const tw = new ToWords({ localeCode: 'ko-KR' });
-tw.convert(12345); // "만 이천삼백사십오"
-tw.convert(1234, { currency: true }); // "천이백삼십사 원"
+tw.convert(12345); // "만이천삼백사십오"
+tw.convert(1234, { currency: true }); // "천이백삼십사원"
 ```
 
 ## East Asian Scale

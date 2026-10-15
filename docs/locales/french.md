@@ -47,15 +47,18 @@ const tw = new ToWords({ localeCode: 'fr-FR' });
 tw.convert(70); // "Soixante-Dix"
 tw.convert(80); // "Quatre-Vingts"
 tw.convert(1234.56, { currency: true });
-// "Mille Deux Cent Trente Quatre Euros Et Cinquante Six Centimes"
+// "Mille Deux Cent Trente-Quatre Euros Et Cinquante-Six Centimes"
 ```
 
 ## Belgium / Switzerland
 
 ```js
-const tw = new ToWords({ localeCode: 'fr-BE' });
-tw.convert(70); // "Septante"
-tw.convert(80); // "Huitante"
+const be = new ToWords({ localeCode: 'fr-BE' });
+be.convert(70); // "Septante"
+be.convert(80); // "Quatre-Vingts"
+
+const ch = new ToWords({ localeCode: 'fr-CH' });
+ch.convert(80); // "Huitante"
 ```
 
 ## FAQ

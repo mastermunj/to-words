@@ -28,10 +28,10 @@ invoiceWords(1234.56, 'en-US');
 // "One Thousand Two Hundred Thirty Four Dollars And Fifty Six Cents Only"
 
 invoiceWords(1234.56, 'hi-IN');
-// "बारह सौ चौंतीस रुपये और छप्पन पैसे"
+// "एक हज़ार दो सौ चौंतीस रुपये और छप्पन पैसे"
 
 invoiceWords(1234.56, 'ar-SA');
-// "ألف ومئتان وأربعة وثلاثون ريالاً وستة وخمسون هللة"
+// "فقط ألف ومائتان وأربعة وثلاثون ريالًا وست وخمسون هللةً لا غير"
 ```
 
 ## Multi-Locale Invoice Example

@@ -36,13 +36,13 @@ npm install to-words
 import { ToWords } from 'to-words';
 
 const tw = new ToWords({ localeCode: 'zh-CN' });
-tw.convert(12345); // "一万二千三百四十五"
+tw.convert(12345); // "一 万 二 千 三 百 四十 五"
 ```
 
 ## Formal Characters (大写 / Anti-fraud)
 
 ```js
-tw.convert(12345, { formal: true }); // "壹万贰仟叁佰肆拾伍"
+tw.convert(12345, { formal: true }); // "壹 萬 贰 仟 叁 佰 肆拾 伍"
 ```
 
 ## FAQ

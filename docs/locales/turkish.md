@@ -26,8 +26,8 @@ import { ToWords } from 'to-words';
 
 const tw = new ToWords({ localeCode: 'tr-TR' });
 
-tw.convert(137); // "yüz otuz yedi"
-tw.convert(4680); // "dört bin altı yüz seksen"
+tw.convert(137); // "Yüz Otuz Yedi"
+tw.convert(4680); // "Dört Bin Altı Yüz Seksen"
 tw.convert(1000000);
 ```
 

@@ -31,6 +31,13 @@ tw.convert(1000);
 tw.convert(1000000);
 ```
 
+Written Danish puts "og" before the last part of a number, so `da-DK` includes it by default:
+
+```js
+tw.convert(120); // "Hundrede Og Tyve"
+tw.convert(120, { useAnd: false }); // "Hundrede Tyve"
+```
+
 ## Currency - Krone / Øre
 
 ```js

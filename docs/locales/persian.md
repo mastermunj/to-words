@@ -51,7 +51,7 @@ tw.toOrdinal(1000000);
 ## RTL and Fraction Style
 
 - Render output in an RTL container for correct web layout
-- `fa-IR` supports fraction-style decimals, so legal and financial wording can avoid raw digit-by-digit decimal output
+- `fa-IR` supports fraction-style decimals, so legal and financial wording can avoid the default "Point …" decimal reading
 - This locale is useful anywhere you would otherwise reach for a bespoke `عدد به حروف` utility
 
 ## Locale Codes

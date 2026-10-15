@@ -146,6 +146,7 @@ toWords(1000, { localeCode: requestLocale });
 currencyOptions: {
   name: 'Kuwaiti Dinar',
   plural: 'Kuwaiti Dinars',
+  singular: 'Kuwaiti Dinar',
   symbol: 'KWD',
   precision: 3,
   fractionalUnit: {
@@ -156,7 +157,7 @@ currencyOptions: {
 }
 ```
 
-Use `precision: 3` for currencies such as OMR, IQD, KWD, and BHD.
+Use `precision: 3` for currencies such as OMR, IQD, KWD, and BHD. `singular` is the form used for an amount of exactly one; without it, `plural` is used for every amount.
 
 ## Per-Locale Imports
 

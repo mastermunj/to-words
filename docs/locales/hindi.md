@@ -36,7 +36,7 @@ import { ToWords } from 'to-words';
 
 const tw = new ToWords({ localeCode: 'hi-IN' });
 
-tw.convert(12345); // "बारह हजार तीन सौ पैंतालीस"
+tw.convert(12345); // "बारह हज़ार तीन सौ पैंतालीस"
 tw.convert(100000); // "एक लाख"
 tw.convert(10000000); // "एक करोड़"
 ```
@@ -45,7 +45,7 @@ tw.convert(10000000); // "एक करोड़"
 
 ```js
 tw.convert(1234.56, { currency: true });
-// "बारह सौ चौंतीस रुपये और छप्पन पैसे"
+// "एक हज़ार दो सौ चौंतीस रुपये और छप्पन पैसे"
 ```
 
 ## Ordinal Numbers
@@ -74,7 +74,7 @@ Above a crore, amounts are composed from crore, as Government of India budget do
 ```js
 import { toWords, toCurrency, toOrdinal } from 'to-words/hi-IN';
 
-toWords(50000); // "पचास हजार"
+toWords(50000); // "पचास हज़ार"
 toCurrency(999.99); // "नौ सौ निन्यानवे रुपये और निन्यानवे पैसे"
 ```
 
