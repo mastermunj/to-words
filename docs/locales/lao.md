@@ -82,9 +82,9 @@ toCurrency(999.99);
 
 ## Locale Codes
 
-| Locale code | Country | Currency  | Notes      |
-| ----------- | ------- | --------- | ---------- |
-| `lo-LA`     | Laos    | ກີບ / ອັດ | Lao script |
+| Locale code | Country | Currency | Notes      |
+| ----------- | ------- | -------- | ---------- |
+| `lo-LA`     | Laos    | ກີບ / ອັດ  | Lao script |
 
 ## Related
 

@@ -57,11 +57,11 @@ tw.toOrdinal(21);
 
 ## Indian Scale
 
-| Value             | English           | Hindi        |
-| ----------------- | ----------------- | ------------ |
-| 100               | One Hundred       | एक सौ        |
-| 1,000             | One Thousand      | एक हजार      |
-| 100,000           | One Lakh          | एक लाख       |
+| Value             | English           | Hindi       |
+| ----------------- | ----------------- | ----------- |
+| 100               | One Hundred       | एक सौ       |
+| 1,000             | One Thousand      | एक हजार     |
+| 100,000           | One Lakh          | एक लाख      |
 | 10,000,000        | One Crore         | एक करोड़     |
 | 1,000,000,000     | One Hundred Crore | सौ करोड़     |
 | 1,000,000,000,000 | One Lakh Crore    | एक लाख करोड़ |

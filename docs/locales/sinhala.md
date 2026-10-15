@@ -56,8 +56,8 @@ toCurrency(999.99);
 
 ## Locale Codes
 
-| Locale code | Country   | Currency    | Notes                        |
-| ----------- | --------- | ----------- | ---------------------------- |
+| Locale code | Country   | Currency  | Notes                        |
+| ----------- | --------- | --------- | ---------------------------- |
 | `si-LK`     | Sri Lanka | රුපියල / සත | Indian scale; Sinhala script |
 
 ## Related

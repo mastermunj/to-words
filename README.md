@@ -549,12 +549,12 @@ Every locale supports cardinals, ordinals and currency. Each language has a [doc
 | ar-SA  | Arabic          | Saudi Arabia        | ريال          |
 | ar-SD  | Arabic          | Sudan               | جنيه          |
 | ar-YE  | Arabic          | Yemen               | ريال          |
-| as-IN  | Assamese        | India               | টকা           |
+| as-IN  | Assamese        | India               | টকা            |
 | az-AZ  | Azerbaijani     | Azerbaijan          | Manat         |
 | be-BY  | Belarusian      | Belarus             | Рубель        |
 | bg-BG  | Bulgarian       | Bulgaria            | Евро          |
-| bn-BD  | Bengali         | Bangladesh          | টাকা          |
-| bn-IN  | Bengali         | India               | টাকা          |
+| bn-BD  | Bengali         | Bangladesh          | টাকা            |
+| bn-IN  | Bengali         | India               | টাকা            |
 | ca-ES  | Catalan         | Spain               | Euro          |
 | cs-CZ  | Czech           | Czech Republic      | Koruna        |
 | da-DK  | Danish          | Denmark             | Krone         |
@@ -615,11 +615,11 @@ Every locale supports cardinals, ordinals and currency. Each language has a [doc
 | fr-MA  | French          | Morocco             | Dirham        |
 | fr-MG  | French          | Madagascar          | Ariary        |
 | fr-SA  | French          | Saudi Arabia        | Riyal         |
-| gu-IN  | Gujarati        | India               | રૂપિયો        |
+| gu-IN  | Gujarati        | India               | રૂપિયો         |
 | ha-NG  | Hausa           | Nigeria             | Naira         |
 | hbo-IL | Biblical Hebrew | Israel              | שקל           |
 | he-IL  | Hebrew          | Israel              | שקל           |
-| hi-IN  | Hindi           | India               | रुपया         |
+| hi-IN  | Hindi           | India               | रुपया          |
 | hr-HR  | Croatian        | Croatia             | Euro          |
 | hu-HU  | Hungarian       | Hungary             | Forint        |
 | id-ID  | Indonesian      | Indonesia           | Rupiah        |
@@ -630,22 +630,22 @@ Every locale supports cardinals, ordinals and currency. Each language has a [doc
 | jv-ID  | Javanese        | Indonesia           | Rupiah        |
 | ka-GE  | Georgian        | Georgia             | ლარი          |
 | km-KH  | Khmer           | Cambodia            | រៀល           |
-| kn-IN  | Kannada         | India               | ರೂಪಾಯಿ        |
+| kn-IN  | Kannada         | India               | ರೂಪಾಯಿ          |
 | ko-KR  | Korean          | South Korea         | 원            |
-| lo-LA  | Lao             | Laos                | ກີບ           |
+| lo-LA  | Lao             | Laos                | ກີບ            |
 | lt-LT  | Lithuanian      | Lithuania           | Euras         |
 | lv-LV  | Latvian         | Latvia              | Eiro          |
-| ml-IN  | Malayalam       | India               | രൂപ           |
-| mr-IN  | Marathi         | India               | रुपया         |
+| ml-IN  | Malayalam       | India               | രൂപ            |
+| mr-IN  | Marathi         | India               | रुपया          |
 | ms-MY  | Malay           | Malaysia            | Ringgit       |
 | ms-SG  | Malay           | Singapore           | Dolar         |
-| my-MM  | Burmese         | Myanmar             | ကျပ်          |
+| my-MM  | Burmese         | Myanmar             | ကျပ်           |
 | nb-NO  | Norwegian       | Norway              | Krone         |
 | nl-NL  | Dutch           | Netherlands         | Euro          |
 | nl-SR  | Dutch           | Suriname            | Dollar        |
-| ne-NP  | Nepali          | Nepal               | रुपैयाँ       |
-| or-IN  | Odia            | India               | ଟଙ୍କା         |
-| pa-IN  | Punjabi         | India               | ਰੁਪਇਆ         |
+| ne-NP  | Nepali          | Nepal               | रुपैयाँ          |
+| or-IN  | Odia            | India               | ଟଙ୍କା           |
+| pa-IN  | Punjabi         | India               | ਰੁਪਇਆ          |
 | pl-PL  | Polish          | Poland              | Złoty         |
 | pt-AO  | Portuguese      | Angola              | Kwanza        |
 | pt-BR  | Portuguese      | Brazil              | Real          |
@@ -653,7 +653,7 @@ Every locale supports cardinals, ordinals and currency. Each language has a [doc
 | pt-PT  | Portuguese      | Portugal            | Euro          |
 | ro-RO  | Romanian        | Romania             | Leu           |
 | ru-RU  | Russian         | Russia              | Рубль         |
-| si-LK  | Sinhala         | Sri Lanka           | රුපියල        |
+| si-LK  | Sinhala         | Sri Lanka           | රුපියල          |
 | sk-SK  | Slovak          | Slovakia            | Euro          |
 | sl-SI  | Slovenian       | Slovenia            | Evro          |
 | sq-AL  | Albanian        | Albania             | Lek           |
@@ -661,8 +661,8 @@ Every locale supports cardinals, ordinals and currency. Each language has a [doc
 | sv-SE  | Swedish         | Sweden              | Krona         |
 | sw-KE  | Swahili         | Kenya               | Shilingi      |
 | sw-TZ  | Swahili         | Tanzania            | Shilingi      |
-| ta-IN  | Tamil           | India               | ரூபாய்        |
-| te-IN  | Telugu          | India               | రూపాయి        |
+| ta-IN  | Tamil           | India               | ரூபாய்          |
+| te-IN  | Telugu          | India               | రూపాయి          |
 | th-TH  | Thai            | Thailand            | บาท           |
 | tr-TR  | Turkish         | Turkey              | Lira          |
 | uk-UA  | Ukrainian       | Ukraine             | Гривня        |

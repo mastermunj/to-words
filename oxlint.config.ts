@@ -11,5 +11,12 @@ export default defineConfig({
         'typescript/no-unsafe-argument': 'off',
       },
     },
+    {
+      // Benchmark tests measure with the `bench` fixture rather than assert.
+      files: ['bench/**'],
+      rules: {
+        'vitest/expect-expect': 'off',
+      },
+    },
   ],
 });

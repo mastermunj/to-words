@@ -56,8 +56,8 @@ toCurrency(999.99);
 
 ## Locale Codes
 
-| Locale code | Country | Currency      | Notes                       |
-| ----------- | ------- | ------------- | --------------------------- |
+| Locale code | Country | Currency  | Notes                       |
+| ----------- | ------- | --------- | --------------------------- |
 | `te-IN`     | India   | రూపాయి / పైసా | Indian scale; Telugu script |
 
 ## Related
