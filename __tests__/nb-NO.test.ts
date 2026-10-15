@@ -35,26 +35,29 @@ describe('Test Locale', () => {
 
 const testIntegers: [number, string][] = [
   [0, 'Null'],
-  [137, 'Hundre Trettisju'],
+  [137, 'Hundre Og Trettisju'],
   [700, 'Sju Hundre'],
   [1100, 'Tusen Hundre'],
-  [4680, 'Fire Tusen Seks Hundre Åtti'],
-  [63892, 'Sekstitre Tusen Åtte Hundre Nittito'],
+  [4680, 'Fire Tusen Seks Hundre Og Åtti'],
+  [63892, 'Sekstitre Tusen Åtte Hundre Og Nittito'],
   [86100, 'Åttiseks Tusen Hundre'],
-  [792581, 'Sju Hundre Nittito Tusen Fem Hundre Åttien'],
-  [2741034, 'To Million Sju Hundre Førtien Tusen Trettifire'],
-  [86429753, 'Åttiseks Million Fire Hundre Tjueni Tusen Sju Hundre Femtitre'],
-  [975310864, 'Ni Hundre Syttifem Million Tre Hundre Ti Tusen Åtte Hundre Sekstifire'],
-  [9876543210, 'Ni Milliard Åtte Hundre Syttiseks Million Fem Hundre Førtitre Tusen To Hundre Ti'],
-  [98765432101, 'Nittiåtte Milliard Sju Hundre Sekstifem Million Fire Hundre Trettito Tusen Hundre En'],
-  [987654321012, 'Ni Hundre Åttisju Milliard Seks Hundre Femtifire Million Tre Hundre Tjueen Tusen Tolv'],
+  [792581, 'Sju Hundre Og Nittito Tusen Fem Hundre Og Åttien'],
+  [2741034, 'To Millioner Sju Hundre Og Førtien Tusen Og Trettifire'],
+  [86429753, 'Åttiseks Millioner Fire Hundre Og Tjueni Tusen Sju Hundre Og Femtitre'],
+  [975310864, 'Ni Hundre Og Syttifem Millioner Tre Hundre Og Ti Tusen Åtte Hundre Og Sekstifire'],
+  [9876543210, 'Ni Milliarder Åtte Hundre Og Syttiseks Millioner Fem Hundre Og Førtitre Tusen To Hundre Og Ti'],
+  [98765432101, 'Nittiåtte Milliarder Sju Hundre Og Sekstifem Millioner Fire Hundre Og Trettito Tusen Hundre Og En'],
+  [
+    987654321012,
+    'Ni Hundre Og Åttisju Milliarder Seks Hundre Og Femtifire Millioner Tre Hundre Og Tjueen Tusen Og Tolv',
+  ],
   [
     9876543210123,
-    'Ni Billion Åtte Hundre Syttiseks Milliard Fem Hundre Førtitre Million To Hundre Ti Tusen Hundre Tjuetre',
+    'Ni Billioner Åtte Hundre Og Syttiseks Milliarder Fem Hundre Og Førtitre Millioner To Hundre Og Ti Tusen Hundre Og Tjuetre',
   ],
   [
     98765432101234,
-    'Nittiåtte Billion Sju Hundre Sekstifem Milliard Fire Hundre Trettito Million Hundre En Tusen To Hundre Trettifire',
+    'Nittiåtte Billioner Sju Hundre Og Sekstifem Milliarder Fire Hundre Og Trettito Millioner Hundre Og En Tusen To Hundre Og Trettifire',
   ],
 ];
 
@@ -148,12 +151,12 @@ const testFloats: [number, string][] = [
 
 describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
   const testIncludeZeroFractional: [number | string, string][] = [
-    [123, `Hundre Tjuetre Kroner`],
-    ['123', `Hundre Tjuetre Kroner`],
-    ['123.0', `Hundre Tjuetre Kroner Og Null Øre`],
-    ['123.00', `Hundre Tjuetre Kroner Og Null Øre`],
+    [123, `Hundre Og Tjuetre Kroner`],
+    ['123', `Hundre Og Tjuetre Kroner`],
+    ['123.0', `Hundre Og Tjuetre Kroner Og Null Øre`],
+    ['123.00', `Hundre Og Tjuetre Kroner Og Null Øre`],
     ['0.00', `Null Kroner Og Null Øre`],
-    ['-123.00', `Minus Hundre Tjuetre Kroner Og Null Øre`],
+    ['-123.00', `Minus Hundre Og Tjuetre Kroner Og Null Øre`],
     ['37.68', `Trettisju Kroner Og Sekstiåtte Øre`],
   ];
 
@@ -355,8 +358,8 @@ describe('Test Norwegian-specific numbers', () => {
   test('Large numbers', () => {
     expect(toWords.convert(1000000)).toBe('En Million');
     expect(toWords.convert(1000000000)).toBe('En Milliard');
-    expect(toWords.convert(2000000)).toBe('To Million');
-    expect(toWords.convert(2000000000)).toBe('To Milliard');
+    expect(toWords.convert(2000000)).toBe('To Millioner');
+    expect(toWords.convert(2000000000)).toBe('To Milliarder');
   });
 });
 
@@ -486,7 +489,7 @@ const testFractionStyleNbNO: [number, string][] = [
   [1.00005, 'En Og Fem Hundretusendeler'],
   [1.000001, 'En Og En Milliondel'],
   [1.000005, 'En Og Fem Milliondeler'],
-  [123.45, 'Hundre Tjuetre Og Førtifem Hundredeler'],
+  [123.45, 'Hundre Og Tjuetre Og Førtifem Hundredeler'],
 ];
 
 describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
@@ -504,5 +507,29 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
   test('digit-by-digit style works without decimalStyle option', () => {
     expect(toWords.convert(1.5)).toBe('En Komma Fem');
     expect(toWords.convert(0.05)).toBe('Null Komma Null Fem');
+  });
+});
+
+describe('Sourced examples (Bokmål number grammar)', () => {
+  // Scale nouns million/milliard/billion/billiard pluralise with -er when the multiplier is not 1
+  // (en.wiktionary nb-noun-m1 «millioner»/«milliarder»; ordbokene.no milliard «tusen millioner»;
+  // elon.io Norwegian grammar «to millioner, tre milliarder»). hundre/tusen never pluralise.
+  test.each([
+    [1000000, 'En Million'],
+    [2000000, 'To Millioner'],
+    [3000000000, 'Tre Milliarder'],
+    [1000000000, 'En Milliard'],
+    [100, 'Hundre'],
+    [700, 'Sju Hundre'],
+    [1000, 'Tusen'],
+  ])('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+
+  // Ordinals: no.wiktionary «hundrede = ordenstallet til hundre», «andre = ordenstall til to».
+  test('ordinals follow the dictionary', () => {
+    expect(toWords.toOrdinal(100)).toBe('Hundrede');
+    expect(toWords.toOrdinal(2)).toBe('Andre');
+    expect(toWords.toOrdinal(1000000)).toBe('En Millionte');
   });
 });

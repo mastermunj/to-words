@@ -31,6 +31,13 @@ tw.convert(1000);
 tw.convert(1000000);
 ```
 
+Written Norwegian puts "og" before the last part of a number, so `nb-NO` includes it by default:
+
+```js
+tw.convert(120); // "Hundre Og Tjue"
+tw.convert(120, { useAnd: false }); // "Hundre Tjue"
+```
+
 ## Currency - Krone / Øre
 
 ```js

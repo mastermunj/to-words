@@ -1,0 +1,78 @@
+{
+  "locale": "it-IT",
+  "sources": {
+    "wikt-duemila": {
+      "title": "Wiktionary — duemila (two thousand)",
+      "url": "https://en.wiktionary.org/wiki/duemila",
+      "accessed": "2026-10-08"
+    },
+    "wikt-cinquecento": {
+      "title": "Wiktionary — cinquecento (five hundred)",
+      "url": "https://en.wiktionary.org/wiki/cinquecento",
+      "accessed": "2026-10-08"
+    },
+    "wikt-centouno": {
+      "title": "Wiktionary — centouno (one hundred and one)",
+      "url": "https://en.wiktionary.org/wiki/centouno",
+      "accessed": "2026-10-08"
+    },
+    "wikt-milione": {
+      "title": "Wiktionary — milione (plural milioni)",
+      "url": "https://en.wiktionary.org/wiki/milione",
+      "accessed": "2026-10-08"
+    }
+  },
+  "cases": [
+    {
+      "id": "card-101",
+      "capability": "cardinal",
+      "form": "cardinal",
+      "input": "101",
+      "expected": "Centouno",
+      "status": "known-wrong",
+      "defect": "E",
+      "attested": true,
+      "sources": [
+        "wikt-centouno"
+      ]
+    },
+    {
+      "id": "card-500",
+      "capability": "cardinal",
+      "form": "cardinal",
+      "input": "500",
+      "expected": "Cinquecento",
+      "status": "known-wrong",
+      "defect": "E",
+      "attested": true,
+      "sources": [
+        "wikt-cinquecento"
+      ]
+    },
+    {
+      "id": "scale-2000",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "2000",
+      "expected": "Duemila",
+      "status": "known-wrong",
+      "defect": "E",
+      "attested": true,
+      "sources": [
+        "wikt-duemila"
+      ]
+    },
+    {
+      "id": "scale-2000000",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "2000000",
+      "expected": "Due Milioni",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "wikt-milione"
+      ]
+    }
+  ]
+}

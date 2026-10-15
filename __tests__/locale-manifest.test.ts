@@ -33,8 +33,8 @@ describe('locale capability manifest', () => {
   test('publishes verified numbering-system counts and immutable range metadata', () => {
     const metadata = SUPPORTED_LOCALES.map((localeCode) => LOCALE_MANIFEST[localeCode].metadata);
 
-    expect(metadata.filter(({ numbering }) => numbering.system === 'base-thousand')).toHaveLength(107);
-    expect(metadata.filter(({ numbering }) => numbering.system === 'indian')).toHaveLength(19);
+    expect(metadata.filter(({ numbering }) => numbering.system === 'base-thousand')).toHaveLength(109);
+    expect(metadata.filter(({ numbering }) => numbering.system === 'indian')).toHaveLength(17);
     expect(metadata.filter(({ numbering }) => numbering.system === 'east-asian')).toHaveLength(5);
     expect(metadata.filter(({ numbering }) => numbering.system === 'locale-specific')).toHaveLength(5);
     expect(metadata.every(({ range }) => range.composeModeAvailable)).toBe(true);
@@ -55,8 +55,8 @@ describe('locale capability manifest', () => {
 
     expect(capabilities.filter(({ ordinal }) => ordinal)).toHaveLength(136);
     expect(capabilities.filter(({ formal }) => formal)).toHaveLength(2);
-    expect(capabilities.filter(({ gender }) => gender.cardinal)).toHaveLength(37);
-    expect(capabilities.filter(({ gender }) => gender.ordinal)).toHaveLength(8);
+    expect(capabilities.filter(({ gender }) => gender.cardinal)).toHaveLength(40);
+    expect(capabilities.filter(({ gender }) => gender.ordinal)).toHaveLength(9);
     expect(capabilities.filter(({ decimals }) => decimals.fraction)).toHaveLength(100);
     expect(capabilities.filter(({ currencyPrecision }) => currencyPrecision === 3)).toHaveLength(3);
   });

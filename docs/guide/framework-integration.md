@@ -54,6 +54,21 @@ export class ToWordsPipe implements PipeTransform {
 }
 ```
 
+## Svelte
+
+```svelte
+<script lang="ts">
+  import { ToWords } from 'to-words/en-US';
+
+  export let amount: number;
+
+  const tw = new ToWords();
+  $: words = tw.convert(amount, { currency: true });
+</script>
+
+<span>{words}</span>
+```
+
 ## Next.js and SSR
 
 ```tsx
@@ -66,6 +81,30 @@ export default function AmountInWords({ amount, locale }: { amount: number; loca
 
 Use the full bundle in SSR when locale comes from request headers, cookies, or user preferences.
 
+A client component can let the user switch locale:
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+import { toCurrency, detectLocale } from 'to-words';
+
+export function CurrencyDisplay({ amount }: { amount: number }) {
+  const [locale, setLocale] = useState(detectLocale('en-US'));
+  return (
+    <div>
+      <select value={locale} onChange={(e) => setLocale(e.target.value)}>
+        <option value="en-US">English (US)</option>
+        <option value="fr-FR">French</option>
+        <option value="hi-IN">Hindi</option>
+        <option value="ar-AE">Arabic</option>
+      </select>
+      <p>{toCurrency(amount, { localeCode: locale })}</p>
+    </div>
+  );
+}
+```
+
 ## Express or Node.js APIs
 
 ```ts
@@ -77,7 +116,11 @@ const app = express();
 app.get('/convert', (req, res) => {
   const locale = String(req.query.locale ?? req.headers['accept-language']?.split(',')[0] ?? 'en-US');
   const number = String(req.query.number ?? '0');
-  res.json({ result: toWords(number, { localeCode: locale }) });
+  try {
+    res.json({ result: toWords(number, { localeCode: locale }) });
+  } catch (e) {
+    res.status(400).json({ error: (e as Error).message });
+  }
 });
 ```
 

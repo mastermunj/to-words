@@ -87,8 +87,8 @@ const testIntegers: [number, string][] = [
   [63892, 'Seixanta Tres Mil Vuit-Cents Noranta Dos'],
   [100000, 'Cent Mil'],
   [1000000, 'Un Milió'],
-  [2000000, 'Dos Milións'],
-  [2741034, 'Dos Milións Set-Cents Quaranta Un Mil Trenta Quatre'],
+  [2000000, 'Dos Milions'],
+  [2741034, 'Dos Milions Set-Cents Quaranta Un Mil Trenta Quatre'],
   [1000000000, 'Mil Milions'],
   [2000000000, 'Dos Mil Milions'],
 ];
@@ -280,15 +280,15 @@ const testOrdinals: [number, string][] = [
   [13, 'Tretzè'],
   [19, 'Dinovè'],
   [20, 'Vintè'],
-  [21, 'Vint-I-Un'],
+  [21, 'Vint-I-Unè'],
   [30, 'Trentè'],
   [50, 'Cinquantè'],
   [100, 'Centèsim'],
-  [101, 'Cent Primer'],
+  [101, 'Cent Unè'],
   [110, 'Cent Desè'],
   [200, 'Dos-Centèsim'],
   [1000, 'Mil·lèsim'],
-  [1001, 'Mil Primer'],
+  [1001, 'Mil Unè'],
 ];
 
 describe('Test Ordinals', () => {

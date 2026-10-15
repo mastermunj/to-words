@@ -36,7 +36,7 @@ import { ToWords } from 'to-words';
 
 const tw = new ToWords({ localeCode: 'hi-IN' });
 
-tw.convert(12345); // "बारह हजार तीन सौ पैंतालीस"
+tw.convert(12345); // "बारह हज़ार तीन सौ पैंतालीस"
 tw.convert(100000); // "एक लाख"
 tw.convert(10000000); // "एक करोड़"
 ```
@@ -45,7 +45,7 @@ tw.convert(10000000); // "एक करोड़"
 
 ```js
 tw.convert(1234.56, { currency: true });
-// "बारह सौ चौंतीस रुपये और छप्पन पैसे"
+// "एक हज़ार दो सौ चौंतीस रुपये और छप्पन पैसे"
 ```
 
 ## Ordinal Numbers
@@ -57,24 +57,24 @@ tw.toOrdinal(21);
 
 ## Indian Scale
 
-| Value                   | English      | Hindi    |
-| ----------------------- | ------------ | -------- |
-| 100                     | One Hundred  | एक सौ    |
-| 1,000                   | One Thousand | एक हजार  |
-| 100,000                 | One Lakh     | एक लाख   |
-| 10,000,000              | One Crore    | एक करोड़ |
-| 1,000,000,000           | One Arab     | एक अरब   |
-| 100,000,000,000         | One Kharab   | एक खरब   |
-| 10,000,000,000,000      | One Neel     | एक नील   |
-| 1,000,000,000,000,000   | One Padma    | एक पद्म  |
-| 100,000,000,000,000,000 | One Shankh   | एक शंख   |
+| Value             | English           | Hindi       |
+| ----------------- | ----------------- | ----------- |
+| 100               | One Hundred       | एक सौ       |
+| 1,000             | One Thousand      | एक हजार     |
+| 100,000           | One Lakh          | एक लाख      |
+| 10,000,000        | One Crore         | एक करोड़     |
+| 1,000,000,000     | One Hundred Crore | सौ करोड़     |
+| 1,000,000,000,000 | One Lakh Crore    | एक लाख करोड़ |
+
+Above a crore, amounts are composed from crore, as Government of India budget documents write them
+(«₹53.5 लाख करोड़»).
 
 ## Tree-shakeable (single-locale) import
 
 ```js
 import { toWords, toCurrency, toOrdinal } from 'to-words/hi-IN';
 
-toWords(50000); // "पचास हजार"
+toWords(50000); // "पचास हज़ार"
 toCurrency(999.99); // "नौ सौ निन्यानवे रुपये और निन्यानवे पैसे"
 ```
 

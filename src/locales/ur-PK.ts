@@ -29,11 +29,14 @@ export default class Locale implements LocaleInterface {
       point: 'اعشاریہ',
     },
     numberWordsMapping: [
+      // Pakistani Urdu counts large amounts in ارب (10^9) and composes above it with ہزار ارب
+      // (ur.wikipedia «ارب روپے» 122, «ہزار ارب» 9, «کھرب روپے» 1, «لاکھ کروڑ» 16 hits, all Indian).
+      { number: 1000000000, value: 'ارب' },
       { number: 10000000, value: 'کروڑ' },
       { number: 100000, value: 'لاکھ' },
       { number: 1000, value: 'ہزار' },
       { number: 100, value: 'سو' },
-      { number: 99, value: 'نناوے' },
+      { number: 99, value: 'ننانوے' },
       { number: 98, value: 'اٹھانوے' },
       { number: 97, value: 'ستانوے' },
       { number: 96, value: 'چھیانوے' },
@@ -139,7 +142,7 @@ export default class Locale implements LocaleInterface {
       { number: 100000, value: 'لاکھواں' },
       { number: 1000, value: 'ہزارواں' },
       { number: 100, value: 'سَوواں' },
-      { number: 99, value: 'نناویواں' },
+      { number: 99, value: 'ننانویواں' },
       { number: 98, value: 'اٹھانویواں' },
       { number: 97, value: 'ستانویواں' },
       { number: 96, value: 'چھیانویواں' },

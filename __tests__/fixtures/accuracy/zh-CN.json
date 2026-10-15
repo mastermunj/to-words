@@ -1,0 +1,84 @@
+{
+  "locale": "zh-CN",
+  "sources": {
+    "wp-zh-numerals": {
+      "title": "Wikipedia — Chinese numerals, Reading and transcribing numbers (十四; 一百一十四; 一千一百五十八; 二百零五; 一千零五万零二十六; 一 required from 100 upward)",
+      "url": "https://en.wikipedia.org/wiki/Chinese_numerals#Whole_numbers",
+      "accessed": "2026-10-08"
+    },
+    "wp-renminbi": {
+      "title": "Wikipedia — Renminbi (1 元 = 10 角 = 100 分)",
+      "url": "https://en.wikipedia.org/wiki/Renminbi",
+      "accessed": "2026-10-08"
+    }
+  },
+  "cases": [
+    {
+      "id": "card-14",
+      "capability": "cardinal",
+      "form": "cardinal",
+      "input": "14",
+      "expected": "十四",
+      "status": "known-wrong",
+      "defect": "F",
+      "attested": true,
+      "sources": ["wp-zh-numerals"]
+    },
+    {
+      "id": "card-114",
+      "capability": "cardinal",
+      "form": "cardinal",
+      "input": "114",
+      "expected": "一百一十四",
+      "status": "known-wrong",
+      "defect": "F",
+      "attested": true,
+      "sources": ["wp-zh-numerals"]
+    },
+    {
+      "id": "card-205",
+      "capability": "cardinal",
+      "form": "cardinal",
+      "input": "205",
+      "expected": "二百零五",
+      "status": "known-wrong",
+      "defect": "F",
+      "attested": true,
+      "sources": ["wp-zh-numerals"]
+    },
+    {
+      "id": "scale-1158",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "1158",
+      "expected": "一千一百五十八",
+      "status": "known-wrong",
+      "defect": "F",
+      "attested": true,
+      "sources": ["wp-zh-numerals"]
+    },
+    {
+      "id": "scale-10050026",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "10050026",
+      "expected": "一千零五万零二十六",
+      "status": "known-wrong",
+      "defect": "F",
+      "attested": true,
+      "sources": ["wp-zh-numerals"]
+    },
+    {
+      "id": "cur-2.5",
+      "capability": "currency",
+      "form": "currency",
+      "input": "2.5",
+      "options": { "doNotAddOnly": true },
+      "expected": "二元五角",
+      "status": "known-wrong",
+      "defect": "H",
+      "attested": false,
+      "sources": ["wp-renminbi", "wp-zh-numerals"]
+    }
+  ]
+}

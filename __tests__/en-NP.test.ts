@@ -313,9 +313,9 @@ const testOrdinalNumbers: [number, string][] = [
   [200, 'Two Hundredth'],
   [1000, 'One Thousandth'],
   [10000, 'Ten Thousandth'],
-  [100000, 'One Lakh'],
-  [1000000, 'Ten Lakh'],
-  [10000000, 'One Crore'],
+  [100000, 'One Lakhth'],
+  [1000000, 'Ten Lakhth'],
+  [10000000, 'One Croreth'],
 
   // Numbers in the hundreds with endings
   [101, 'One Hundred First'],

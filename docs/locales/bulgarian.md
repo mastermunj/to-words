@@ -1,17 +1,17 @@
 ---
 title: Bulgarian Number to Words in JavaScript (bg-BG) | to-words
-description: Convert numbers to Bulgarian words in JavaScript with bg-BG support, gender-aware forms, Bulgarian Lev currency, and ordinal numbers. npm install to-words.
+description: Convert numbers to Bulgarian words in JavaScript with bg-BG support, gender-aware forms, euro currency, and ordinal numbers. npm install to-words.
 head:
   - - meta
     - name: keywords
-      content: bulgarian number to words javascript, bg-BG number to words npm, числа с думи български, bulgarian lev in words
+      content: bulgarian number to words javascript, bg-BG number to words npm, числа с думи български, bulgarian euro in words
 ---
 
 # Bulgarian Number to Words in JavaScript (bg-BG)
 
-Use `bg-BG` when your application needs Bulgarian number words with gender-aware forms and Lev currency wording.
+Use `bg-BG` when your application needs Bulgarian number words with gender-aware forms and euro currency wording (Bulgaria adopted the euro on 1 January 2026).
 
-> **Locale codes:** `bg-BG` · **Numbering system:** Short scale · **Currency:** Лев (Lev) / Стотинка (Stotinka) · **Script:** Cyrillic
+> **Locale codes:** `bg-BG` · **Numbering system:** Short scale · **Currency:** Евро (Euro) / Евроцент (Euro cent) · **Script:** Cyrillic
 
 ## Install
 
@@ -31,7 +31,7 @@ tw.convert(1000);
 tw.convert(1000000);
 ```
 
-## Currency - Lev / Stotinka
+## Currency - Euro / Euro cent
 
 ```js
 tw.convert(1234.56, { currency: true });
@@ -57,9 +57,9 @@ tw.toOrdinal(100);
 
 ## Locale Codes
 
-| Locale code | Country  | Currency       | Notes                               |
-| ----------- | -------- | -------------- | ----------------------------------- |
-| `bg-BG`     | Bulgaria | Лев / Стотинка | Cyrillic script; gender-aware forms |
+| Locale code | Country  | Currency        | Notes                               |
+| ----------- | -------- | --------------- | ----------------------------------- |
+| `bg-BG`     | Bulgaria | Евро / Евроцент | Cyrillic script; gender-aware forms |
 
 ## Related
 

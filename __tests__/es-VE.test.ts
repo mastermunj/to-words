@@ -49,7 +49,7 @@ const testIntegers: [number, string][] = [
   [98765432101, 'Noventa Y Ocho Mil Setecientos Sesenta Y Cinco Millones Cuatrocientos Treinta Y Dos Mil Ciento Uno'],
   [
     987654321012,
-    'Novecientos Ochenta Y Siete Mil Seiscientos Cincuenta Y Cuatro Millones Trescientos Veintiuno Mil Doce',
+    'Novecientos Ochenta Y Siete Mil Seiscientos Cincuenta Y Cuatro Millones Trescientos Veintiún Mil Doce',
   ],
   [
     9876543210123,
@@ -99,7 +99,7 @@ const testIntegersCurrency: [number, string][] = [
   [98765432101, 'Noventa Y Ocho Mil Setecientos Sesenta Y Cinco Millones Cuatrocientos Treinta Y Dos Mil Ciento Un'],
   [
     987654321012,
-    'Novecientos Ochenta Y Siete Mil Seiscientos Cincuenta Y Cuatro Millones Trescientos Veintiuno Mil Doce',
+    'Novecientos Ochenta Y Siete Mil Seiscientos Cincuenta Y Cuatro Millones Trescientos Veintiún Mil Doce',
   ],
   [
     9876543210123,
@@ -350,11 +350,11 @@ const testOrdinals: [number, string][] = [
   [19, 'Decimonoveno'],
   [20, 'Vigésimo'],
   // Composite numbers (21-29)
-  [21, 'Veintiuno'],
-  [22, 'Veintidós'],
-  [23, 'Veintitrés'],
-  [24, 'Veinticuatro'],
-  [25, 'Veinticinco'],
+  [21, 'Vigésimo Primero'],
+  [22, 'Vigésimo Segundo'],
+  [23, 'Vigésimo Tercero'],
+  [24, 'Vigésimo Cuarto'],
+  [25, 'Vigésimo Quinto'],
   // Tens
   [30, 'Trigésimo'],
   [40, 'Cuadragésimo'],
@@ -374,23 +374,23 @@ const testOrdinals: [number, string][] = [
   [800, 'Octingentésimo'],
   [900, 'Noningentésimo'],
   [1000, 'Milésimo'],
-  [1000000, 'Un Millonésimo'],
+  [1000000, 'Millonésimo'],
   // Complex numbers
-  [101, 'Ciento Primero'],
-  [110, 'Ciento Décimo'],
-  [111, 'Ciento Decimoprimero'],
-  [123, 'Ciento Veintitrés'],
-  [150, 'Ciento Quincuagésimo'],
-  [199, 'Ciento Noventa Y Noveno'],
-  [256, 'Doscientos Cincuenta Y Sexto'],
-  [1001, 'Mil Primero'],
-  [1010, 'Mil Décimo'],
-  [1100, 'Mil Centésimo'],
-  [1234, 'Mil Doscientos Treinta Y Cuarto'],
+  [101, 'Centésimo Primero'],
+  [110, 'Centésimo Décimo'],
+  [111, 'Centésimo Decimoprimero'],
+  [123, 'Centésimo Vigésimo Tercero'],
+  [150, 'Centésimo Quincuagésimo'],
+  [199, 'Centésimo Nonagésimo Noveno'],
+  [256, 'Ducentésimo Quincuagésimo Sexto'],
+  [1001, 'Milésimo Primero'],
+  [1010, 'Milésimo Décimo'],
+  [1100, 'Milésimo Centésimo'],
+  [1234, 'Milésimo Ducentésimo Trigésimo Cuarto'],
   [2000, 'Dos Milésimo'],
   [10000, 'Diez Milésimo'],
   [100000, 'Cien Milésimo'],
-  [1000001, 'Un Millon Primero'],
+  [1000001, 'Millonésimo Primero'],
 ];
 
 describe('Test Ordinals', () => {
@@ -428,7 +428,7 @@ describe('Test Powers of Ten', () => {
     [1000, 'Mil'],
     [10000, 'Diez Mil'],
     [100000, 'Cien Mil'],
-    [1000000, 'Un Millon'],
+    [1000000, 'Un Millón'],
   ];
 
   test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
@@ -557,10 +557,10 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
 
   test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
     expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
-      'Uno Coma Un Millon Doscientos Treinta Y Cuatro Mil Quinientos Sesenta Y Siete',
+      'Uno Coma Un Millón Doscientos Treinta Y Cuatro Mil Quinientos Sesenta Y Siete',
     );
     expect(toWords.convert(1.1234567)).toBe(
-      'Uno Coma Un Millon Doscientos Treinta Y Cuatro Mil Quinientos Sesenta Y Siete',
+      'Uno Coma Un Millón Doscientos Treinta Y Cuatro Mil Quinientos Sesenta Y Siete',
     );
   });
 

@@ -1,0 +1,79 @@
+{
+  "locale": "fr-FR",
+  "sources": {
+    "wikt-vingt-et-unieme": {
+      "title": "Wiktionary — vingt et unième (twenty-first)",
+      "url": "https://en.wiktionary.org/wiki/vingt_et_unième",
+      "accessed": "2026-10-08"
+    },
+    "wikt-quatre-vingts": {
+      "title": "Wiktionary — quatre-vingts (eighty)",
+      "url": "https://en.wiktionary.org/wiki/quatre-vingts",
+      "accessed": "2026-10-08"
+    },
+    "wikt-quatre-vingt-un": {
+      "title": "Wiktionary — quatre-vingt-un (eighty-one)",
+      "url": "https://en.wiktionary.org/wiki/quatre-vingt-un",
+      "accessed": "2026-10-08"
+    },
+    "frwikt-million": {
+      "title": "Wiktionnaire — million (\"un million d’euros\")",
+      "url": "https://fr.wiktionary.org/wiki/million",
+      "accessed": "2026-10-08"
+    }
+  },
+  "cases": [
+    {
+      "id": "card-80",
+      "capability": "cardinal",
+      "form": "cardinal",
+      "input": "80",
+      "expected": "Quatre-Vingts",
+      "status": "verified",
+      "attested": true,
+      "sources": [
+        "wikt-quatre-vingts"
+      ]
+    },
+    {
+      "id": "card-81",
+      "capability": "cardinal",
+      "form": "cardinal",
+      "input": "81",
+      "expected": "Quatre-Vingt-Un",
+      "status": "verified",
+      "attested": true,
+      "sources": [
+        "wikt-quatre-vingt-un"
+      ]
+    },
+    {
+      "id": "ord-21",
+      "capability": "ordinal",
+      "form": "ordinal",
+      "input": "21",
+      "expected": "Vingt Et Unième",
+      "status": "verified",
+      "attested": true,
+      "sources": [
+        "wikt-vingt-et-unieme"
+      ]
+    },
+    {
+      "id": "cur-1000000",
+      "capability": "currency",
+      "form": "currency",
+      "input": "1000000",
+      "options": {
+        "doNotAddOnly": true
+      },
+      "expected": "Un Million D'euros",
+      "status": "known-wrong",
+      "defect": "H",
+      "attested": true,
+      "sources": [
+        "frwikt-million"
+      ]
+    }
+  ]
+}

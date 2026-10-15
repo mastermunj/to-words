@@ -57,8 +57,8 @@ toCurrency(999.99);
 
 ## Locale Codes
 
-| Locale code | Country | Currency    | Notes          |
-| ----------- | ------- | ----------- | -------------- |
+| Locale code | Country | Currency   | Notes          |
+| ----------- | ------- | ---------- | -------------- |
 | `my-MM`     | Myanmar | ကျပ် / ပြား | Burmese script |
 
 ## Related

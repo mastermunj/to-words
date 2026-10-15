@@ -34,22 +34,22 @@ describe('Test Locale', () => {
 });
 
 const testIntegers: [number, string][] = [
-  [0, 'sıfır'],
-  [137, 'yüz otuz yedi'],
-  [700, 'yedi yüz'],
-  [4680, 'dört bin altı yüz seksen'],
-  [63892, 'altmış üç bin sekiz yüz doksan iki'],
-  [792581, 'yedi yüz doksan iki bin beş yüz seksen bir'],
-  [2741034, 'iki milyon yedi yüz kırk bir bin otuz dört'],
-  [86429753, 'seksen altı milyon dört yüz yirmi dokuz bin yedi yüz elli üç'],
-  [975310864, 'dokuz yüz yetmiş beş milyon üç yüz on bin sekiz yüz altmış dört'],
-  [9876543210, 'dokuz milyar sekiz yüz yetmiş altı milyon beş yüz kırk üç bin iki yüz on'],
-  [98765432101, 'doksan sekiz milyar yedi yüz altmış beş milyon dört yüz otuz iki bin yüz bir'],
-  [987654321012, 'dokuz yüz seksen yedi milyar altı yüz elli dört milyon üç yüz yirmi bir bin on iki'],
-  [9876543210123, 'dokuz trilyon sekiz yüz yetmiş altı milyar beş yüz kırk üç milyon iki yüz on bin yüz yirmi üç'],
+  [0, 'Sıfır'],
+  [137, 'Yüz Otuz Yedi'],
+  [700, 'Yedi Yüz'],
+  [4680, 'Dört Bin Altı Yüz Seksen'],
+  [63892, 'Altmış Üç Bin Sekiz Yüz Doksan İki'],
+  [792581, 'Yedi Yüz Doksan İki Bin Beş Yüz Seksen Bir'],
+  [2741034, 'İki Milyon Yedi Yüz Kırk Bir Bin Otuz Dört'],
+  [86429753, 'Seksen Altı Milyon Dört Yüz Yirmi Dokuz Bin Yedi Yüz Elli Üç'],
+  [975310864, 'Dokuz Yüz Yetmiş Beş Milyon Üç Yüz On Bin Sekiz Yüz Altmış Dört'],
+  [9876543210, 'Dokuz Milyar Sekiz Yüz Yetmiş Altı Milyon Beş Yüz Kırk Üç Bin İki Yüz On'],
+  [98765432101, 'Doksan Sekiz Milyar Yedi Yüz Altmış Beş Milyon Dört Yüz Otuz İki Bin Yüz Bir'],
+  [987654321012, 'Dokuz Yüz Seksen Yedi Milyar Altı Yüz Elli Dört Milyon Üç Yüz Yirmi Bir Bin On İki'],
+  [9876543210123, 'Dokuz Trilyon Sekiz Yüz Yetmiş Altı Milyar Beş Yüz Kırk Üç Milyon İki Yüz On Bin Yüz Yirmi Üç'],
   [
     98765432101234,
-    'doksan sekiz trilyon yedi yüz altmış beş milyar dört yüz otuz iki milyon yüz bir bin iki yüz otuz dört',
+    'Doksan Sekiz Trilyon Yedi Yüz Altmış Beş Milyar Dört Yüz Otuz İki Milyon Yüz Bir Bin İki Yüz Otuz Dört',
   ],
 ];
 
@@ -66,7 +66,7 @@ describe('Test Negative Integers with options = {}', () => {
       return;
     }
     row[0] = -row[0];
-    row[1] = `eksi ${row[1]}`;
+    row[1] = `Eksi ${row[1]}`;
   });
 
   test.each(testNegativeIntegers)('convert %d => %s', (input, expected) => {
@@ -77,7 +77,7 @@ describe('Test Negative Integers with options = {}', () => {
 describe('Test Integers with options = { currency: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} lira`;
+    row[1] = `${row[1]} Lira`;
   });
 
   test.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -88,7 +88,7 @@ describe('Test Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, doNotAddOnly: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} lira`;
+    row[1] = `${row[1]} Lira`;
   });
 
   test.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -99,7 +99,7 @@ describe('Test Integers with options = { currency: true, doNotAddOnly: true }', 
 describe('Test Integers with options = { currency: true, ignoreZeroCurrency: true }', () => {
   const testIntegersWithCurrencyAndIgnoreZeroCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrencyAndIgnoreZeroCurrency.map((row, i) => {
-    row[1] = i === 0 ? '' : `${row[1]} lira`;
+    row[1] = i === 0 ? '' : `${row[1]} Lira`;
   });
 
   test.each(testIntegersWithCurrencyAndIgnoreZeroCurrency)('convert %d => %s', (input, expected) => {
@@ -113,28 +113,28 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
 });
 
 const testFloats: [number, string][] = [
-  [0.0, 'sıfır'],
-  [0.04, 'dört yüzüncü'],
-  [0.0468, 'dört yüz altmış sekiz on bininci'],
-  [0.4, 'dört onuncu'],
-  [0.63, 'altmış üç yüzüncü'],
-  [0.973, 'dokuz yüz yetmiş üç bininci'],
-  [0.999, 'dokuz yüz doksan dokuz bininci'],
-  [37.06, 'otuz yedi virgül altı yüzüncü'],
-  [37.068, 'otuz yedi virgül altmış sekiz bininci'],
-  [37.68, 'otuz yedi virgül altmış sekiz yüzüncü'],
-  [37.683, 'otuz yedi virgül altı yüz seksen üç bininci'],
+  [0.0, 'Sıfır'],
+  [0.04, 'Sıfır Virgül Sıfır Dört'],
+  [0.0468, 'Sıfır Virgül Sıfır Dört Altı Sekiz'],
+  [0.4, 'Sıfır Virgül Dört'],
+  [0.63, 'Sıfır Virgül Altmış Üç'],
+  [0.973, 'Sıfır Virgül Dokuz Yüz Yetmiş Üç'],
+  [0.999, 'Sıfır Virgül Dokuz Yüz Doksan Dokuz'],
+  [37.06, 'Otuz Yedi Virgül Sıfır Altı'],
+  [37.068, 'Otuz Yedi Virgül Sıfır Altı Sekiz'],
+  [37.68, 'Otuz Yedi Virgül Altmış Sekiz'],
+  [37.683, 'Otuz Yedi Virgül Altı Yüz Seksen Üç'],
 ];
 
 describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
   const testIncludeZeroFractional: [number | string, string][] = [
-    [123, `yüz yirmi üç lira`],
-    ['123', `yüz yirmi üç lira`],
-    ['123.0', `yüz yirmi üç lira`],
-    ['123.00', `yüz yirmi üç lira`],
-    ['0.00', `sıfır lira`],
-    ['-123.00', `eksi yüz yirmi üç lira`],
-    ['37.68', `otuz yedi virgül altmış sekiz yüzüncü lira`],
+    [123, `Yüz Yirmi Üç Lira`],
+    ['123', `Yüz Yirmi Üç Lira`],
+    ['123.0', `Yüz Yirmi Üç Lira Sıfır Kuruş`],
+    ['123.00', `Yüz Yirmi Üç Lira Sıfır Kuruş`],
+    ['0.00', `Sıfır Lira Sıfır Kuruş`],
+    ['-123.00', `Eksi Yüz Yirmi Üç Lira Sıfır Kuruş`],
+    ['37.68', `Otuz Yedi Lira Altmış Sekiz Kuruş`],
   ];
 
   test.concurrent.each(testIncludeZeroFractional)('convert %s => %s', (input, expected) => {
@@ -153,22 +153,22 @@ describe('Test Floats with options = {}', () => {
   });
 
   test.each([-0.5, '-0.5'])('preserves the sign for negative sub-unit input %s', (input) => {
-    expect(toWords.convert(input)).toBe('eksi beş onuncu');
+    expect(toWords.convert(input)).toBe('Eksi Sıfır Virgül Beş');
   });
 });
 
 const testFloatsWithCurrency: [number, string][] = [
-  [0.0, 'sıfır lira'],
-  [0.04, 'dört yüzüncü lira'],
-  [0.0468, 'beş yüzüncü lira'],
-  [0.4, 'dört onuncu lira'],
-  [0.63, 'altmış üç yüzüncü lira'],
-  [0.973, 'doksan yedi yüzüncü lira'],
-  [0.999, 'bir lira'],
-  [37.06, 'otuz yedi virgül altı yüzüncü lira'],
-  [37.068, 'otuz yedi virgül yedi yüzüncü lira'],
-  [37.68, 'otuz yedi virgül altmış sekiz yüzüncü lira'],
-  [37.683, 'otuz yedi virgül altmış sekiz yüzüncü lira'],
+  [0.0, 'Sıfır Lira'],
+  [0.04, 'Sıfır Lira Dört Kuruş'],
+  [0.0468, 'Sıfır Lira Beş Kuruş'],
+  [0.4, 'Sıfır Lira Kırk Kuruş'],
+  [0.63, 'Sıfır Lira Altmış Üç Kuruş'],
+  [0.973, 'Sıfır Lira Doksan Yedi Kuruş'],
+  [0.999, 'Bir Lira'],
+  [37.06, 'Otuz Yedi Lira Altı Kuruş'],
+  [37.068, 'Otuz Yedi Lira Yedi Kuruş'],
+  [37.68, 'Otuz Yedi Lira Altmış Sekiz Kuruş'],
+  [37.683, 'Otuz Yedi Lira Altmış Sekiz Kuruş'],
 ];
 
 describe('Test Floats with options = { currency: true }', () => {
@@ -186,7 +186,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true 
       return;
     }
     if (row[0] > 0 && row[0] < 1) {
-      row[1] = (row[1] as string).replace(`sıfır lira`, '');
+      row[1] = (row[1] as string).replace('Sıfır Lira ', '');
     }
   });
 
@@ -203,9 +203,9 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true 
 describe('Test Floats with options = { currency: true, ignoreDecimal: true }', () => {
   const testFloatsWithCurrencyAndIgnoreDecimal = cloneDeep(testFloatsWithCurrency).map((row) => {
     if (row[0] >= 0 && row[0] < 1) {
-      return [row[0], 'sıfır lira'];
+      return [row[0], 'Sıfır Lira'];
     }
-    return [row[0], 'otuz yedi lira'];
+    return [row[0], 'Otuz Yedi Lira'];
   });
 
   test.each(testFloatsWithCurrencyAndIgnoreDecimal)('convert %d => %s', (input, expected) => {
@@ -223,7 +223,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
     if (row[0] >= 0 && row[0] < 1) {
       return [row[0], ''];
     }
-    return [row[0], 'otuz yedi lira'];
+    return [row[0], 'Otuz Yedi Lira'];
   });
 
   test.each(testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals)('convert %d => %s', (input, expected) => {
@@ -260,8 +260,8 @@ const testOrdinals: [number, string][] = [
   [19, 'On Dokuzuncu'],
   [20, 'Yirminci'],
   // Composite numbers (21, 22, etc.)
-  [21, 'yirmi Birinci'],
-  [22, 'yirmi İkinci'],
+  [21, 'Yirmi Birinci'],
+  [22, 'Yirmi İkinci'],
   // Decade numbers (30, 40, 50, etc.)
   [30, 'Otuzuncu'],
   [40, 'Kırkıncı'],
@@ -272,13 +272,13 @@ const testOrdinals: [number, string][] = [
   [90, 'Doksanıncı'],
   // Round numbers (100, 200, 1000, etc.)
   [100, 'Yüzüncü'],
-  [200, 'iki yüz'],
-  [1000, 'bir Bininci'],
-  [1000000, 'bir Milyonuncu'],
+  [200, 'İki Yüzüncü'],
+  [1000, 'Bininci'],
+  [1000000, 'Bir Milyonuncu'],
   // Complex numbers
-  [101, 'yüz Birinci'],
-  [123, 'yüz yirmi Üçüncü'],
-  [1234, 'bir bin iki yüz otuz Dördüncü'],
+  [101, 'Yüz Birinci'],
+  [123, 'Yüz Yirmi Üçüncü'],
+  [1234, 'Bin İki Yüz Otuz Dördüncü'],
 ];
 
 describe('Test Ordinals', () => {
@@ -303,18 +303,18 @@ describe('Test Ordinal Error Cases', () => {
 
 // Powers of Ten (Turkish)
 const testPowersOfTen: [number, string][] = [
-  [10, 'on'],
-  [100, 'yüz'],
-  [1000, 'bir bin'],
-  [10000, 'on bin'],
-  [100000, 'yüz bin'],
-  [1000000, 'bir milyon'],
-  [10000000, 'on milyon'],
-  [100000000, 'yüz milyon'],
-  [1000000000, 'bir milyar'],
-  [10000000000, 'on milyar'],
-  [100000000000, 'yüz milyar'],
-  [1000000000000, 'bir trilyon'],
+  [10, 'On'],
+  [100, 'Yüz'],
+  [1000, 'Bin'],
+  [10000, 'On Bin'],
+  [100000, 'Yüz Bin'],
+  [1000000, 'Bir Milyon'],
+  [10000000, 'On Milyon'],
+  [100000000, 'Yüz Milyon'],
+  [1000000000, 'Bir Milyar'],
+  [10000000000, 'On Milyar'],
+  [100000000000, 'Yüz Milyar'],
+  [1000000000000, 'Bir Trilyon'],
 ];
 
 describe('Test Powers of Ten (Turkish System)', () => {
@@ -325,13 +325,13 @@ describe('Test Powers of Ten (Turkish System)', () => {
 
 // BigInt Tests
 const testBigInts: [bigint, string][] = [
-  [0n, 'sıfır'],
-  [1n, 'bir'],
-  [100n, 'yüz'],
-  [1000n, 'bir bin'],
-  [1000000n, 'bir milyon'],
-  [1000000000n, 'bir milyar'],
-  [1000000000000n, 'bir trilyon'],
+  [0n, 'Sıfır'],
+  [1n, 'Bir'],
+  [100n, 'Yüz'],
+  [1000n, 'Bin'],
+  [1000000n, 'Bir Milyon'],
+  [1000000000n, 'Bir Milyar'],
+  [1000000000000n, 'Bir Trilyon'],
 ];
 
 describe('Test BigInt Values', () => {
@@ -342,11 +342,11 @@ describe('Test BigInt Values', () => {
 
 // Negative BigInt Tests
 const testNegativeBigInts: [bigint, string][] = [
-  [-1n, 'eksi bir'],
-  [-100n, 'eksi yüz'],
-  [-1000n, 'eksi bir bin'],
-  [-1000000n, 'eksi bir milyon'],
-  [-1000000000n, 'eksi bir milyar'],
+  [-1n, 'Eksi Bir'],
+  [-100n, 'Eksi Yüz'],
+  [-1000n, 'Eksi Bin'],
+  [-1000000n, 'Eksi Bir Milyon'],
+  [-1000000000n, 'Eksi Bir Milyar'],
 ];
 
 describe('Test Negative BigInt Values', () => {
@@ -357,13 +357,13 @@ describe('Test Negative BigInt Values', () => {
 
 // String Input Tests
 const testStringInputs: [string, string][] = [
-  ['0', 'sıfır'],
-  ['1', 'bir'],
-  ['100', 'yüz'],
-  ['1000', 'bir bin'],
-  ['-100', 'eksi yüz'],
-  ['  100  ', 'yüz'],
-  ['1000000', 'bir milyon'],
+  ['0', 'Sıfır'],
+  ['1', 'Bir'],
+  ['100', 'Yüz'],
+  ['1000', 'Bin'],
+  ['-100', 'Eksi Yüz'],
+  ['  100  ', 'Yüz'],
+  ['1000000', 'Bir Milyon'],
 ];
 
 describe('Test String Number Inputs', () => {
@@ -375,27 +375,27 @@ describe('Test String Number Inputs', () => {
 // Zero Variants
 describe('Test Zero Variants', () => {
   test('converts 0 correctly', () => {
-    expect(toWords.convert(0)).toBe('sıfır');
+    expect(toWords.convert(0)).toBe('Sıfır');
   });
 
   test('converts -0 as sıfır', () => {
-    expect(toWords.convert(-0)).toBe('sıfır');
+    expect(toWords.convert(-0)).toBe('Sıfır');
   });
 
   test('converts 0.0 as sıfır', () => {
-    expect(toWords.convert(0.0)).toBe('sıfır');
+    expect(toWords.convert(0.0)).toBe('Sıfır');
   });
 
   test('converts 0n as sıfır', () => {
-    expect(toWords.convert(0n)).toBe('sıfır');
+    expect(toWords.convert(0n)).toBe('Sıfır');
   });
 
   test('converts "0" as sıfır', () => {
-    expect(toWords.convert('0')).toBe('sıfır');
+    expect(toWords.convert('0')).toBe('Sıfır');
   });
 
   test('converts 0 with currency', () => {
-    expect(toWords.convert(0, { currency: true })).toBe('sıfır lira');
+    expect(toWords.convert(0, { currency: true })).toBe('Sıfır Lira');
   });
 
   test('converts 0 with currency and ignoreZeroCurrency', () => {

@@ -29,9 +29,9 @@ export default class Locale implements LocaleInterface {
       point: 'Coma',
     },
     numberWordsMapping: [
-      { number: 1000000000000000, value: 'Bilió' },
+      // Long scale (CLDR ca): bilió 10¹², trilió 10¹⁸; 10⁹ = mil milions, 10¹⁵ = mil bilions.
+      { number: 1000000000000000000n, value: 'Trilió' },
       { number: 1000000000000, value: 'Bilió' },
-      { number: 1000000000, value: 'Mil Milions' },
       { number: 1000000, value: 'Milió' },
       { number: 1000, value: 'Mil' },
       { number: 900, value: 'Nou-Cents', feminineValue: 'Nou-Centes' },
@@ -58,7 +58,7 @@ export default class Locale implements LocaleInterface {
       { number: 24, value: 'Vint-I-Quatre' },
       { number: 23, value: 'Vint-I-Tres' },
       { number: 22, value: 'Vint-I-Dos' },
-      { number: 21, value: 'Vint-I-Un' },
+      { number: 21, value: 'Vint-I-Un', feminineValue: 'Vint-I-Una' },
       { number: 20, value: 'Vint' },
       { number: 19, value: 'Dinou' },
       { number: 18, value: 'Divuit' },
@@ -92,15 +92,21 @@ export default class Locale implements LocaleInterface {
       'Vuit-Cents',
       'Nou-Cents',
       'Mil',
-      'Mil Milions',
     ],
-    pluralMark: 'ns',
-    pluralWords: ['Milió', 'Bilió'],
+    // milió → milions (the accent goes in the plural; library had «Milións»).
+    pluralRule: 'one-other',
+    pluralForms: {
+      1000000: { other: 'Milions' },
+      1000000000000: { other: 'Bilions' },
+      1000000000000000000: { other: 'Trilions' },
+    },
     exactWordsMapping: [
       { number: 100, value: 'Cent' },
       { number: 1000000, value: 'Un Milió' },
       { number: 1000000000000, value: 'Un Bilió' },
     ],
+    // Only the last word turns ordinal; in compounds 1–4 are unè, dosè, tresè, quatrè (vint-i-unè; GIEC).
+    ordinalComposition: 'last-token',
     ordinalWordsMapping: [
       { number: 1000000000000, value: 'Bilionèsim' },
       { number: 1000000, value: 'Milionèsim' },
@@ -137,10 +143,10 @@ export default class Locale implements LocaleInterface {
       { number: 7, value: 'Setè' },
       { number: 6, value: 'Sisè' },
       { number: 5, value: 'Cinquè' },
-      { number: 4, value: 'Quart' },
-      { number: 3, value: 'Tercer' },
-      { number: 2, value: 'Segon' },
-      { number: 1, value: 'Primer' },
+      { number: 4, value: 'Quart', compoundValue: 'Quatrè' },
+      { number: 3, value: 'Tercer', compoundValue: 'Tresè' },
+      { number: 2, value: 'Segon', compoundValue: 'Dosè' },
+      { number: 1, value: 'Primer', compoundValue: 'Unè' },
       { number: 0, value: 'Zero' },
     ],
     fractionDenominatorMapping: {

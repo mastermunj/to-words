@@ -81,18 +81,18 @@ const testIntegers: [number, string][] = [
   [2000, 'Dwa Tysiące'],
   [3000, 'Trzy Tysiące'],
   [4000, 'Cztery Tysiące'],
-  [5000, 'Pięć Tysiąc'],
+  [5000, 'Pięć Tysięcy'],
   [4680, 'Cztery Tysiące Sześćset Osiemdziesiąt'],
-  [10000, 'Dziesięć Tysiąc'],
-  [63892, 'Sześćdziesiąt Trzy Tysięcy Osiemset Dziewięćdziesiąt Dwa'],
+  [10000, 'Dziesięć Tysięcy'],
+  [63892, 'Sześćdziesiąt Trzy Tysiące Osiemset Dziewięćdziesiąt Dwa'],
   [100000, 'Sto Tysięcy'],
   [1000000, 'Milion'],
   [2000000, 'Dwa Miliony'],
-  [5000000, 'Pięć Milion'],
+  [5000000, 'Pięć Milionów'],
   [2741034, 'Dwa Miliony Siedemset Czterdzieści Jeden Tysięcy Trzydzieści Cztery'],
   [1000000000, 'Miliard'],
   [2000000000, 'Dwa Miliardy'],
-  [5000000000, 'Pięć Miliard'],
+  [5000000000, 'Pięć Miliardów'],
 ];
 
 describe('Test Integers with options = {}', () => {
@@ -117,19 +117,22 @@ describe('Test Negative Integers with options = {}', () => {
 });
 
 // Helper function to get Polish currency form
-function getCurrencyName(words: string): string {
-  // Check for singular (1)
-  if (words === 'Jeden') {
+// Polish unit form by plural category (CLDR pl: one = 1 only; few = …2-4 except 12-14; many = rest)
+function getCurrencyName(amount: number): string {
+  const n = Math.abs(amount);
+  if (n === 1) {
     return 'Złoty';
   }
-  // Default plural for all other numbers
+  if (n % 10 >= 2 && n % 10 <= 4 && !(n % 100 >= 12 && n % 100 <= 14)) {
+    return 'Złote';
+  }
   return 'Złotych';
 }
 
 describe('Test Integers with options = { currency: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    const currencyName = getCurrencyName(row[1] as string);
+    const currencyName = getCurrencyName(row[0] as number);
     row[1] = `${row[1]} ${currencyName} Tylko`;
   });
 
@@ -141,7 +144,7 @@ describe('Test Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, doNotAddOnly: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    const currencyName = getCurrencyName(row[1] as string);
+    const currencyName = getCurrencyName(row[0] as number);
     row[1] = `${row[1]} ${currencyName}`;
   });
 
@@ -158,7 +161,7 @@ describe('Test Negative Integers with options = { currency: true }', () => {
       return;
     }
     row[0] = -row[0];
-    const currencyName = getCurrencyName(row[1] as string);
+    const currencyName = getCurrencyName(row[0] as number);
     row[1] = `Minus ${row[1]} ${currencyName} Tylko`;
   });
 
@@ -173,7 +176,7 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
     if (i === 0) {
       row[1] = '';
     } else {
-      const currencyName = getCurrencyName(row[1] as string);
+      const currencyName = getCurrencyName(row[0] as number);
       row[1] = `${row[1]} ${currencyName} Tylko`;
     }
   });
@@ -199,12 +202,12 @@ const testFloats: [number, string][] = [
 
 describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
   const testIncludeZeroFractional: [number | string, string][] = [
-    [123, `Sto Dwadzieścia Trzy Złotych Tylko`],
-    ['123', `Sto Dwadzieścia Trzy Złotych Tylko`],
-    ['123.0', `Sto Dwadzieścia Trzy Złotych I Zero Groszy Tylko`],
-    ['123.00', `Sto Dwadzieścia Trzy Złotych I Zero Groszy Tylko`],
+    [123, `Sto Dwadzieścia Trzy Złote Tylko`],
+    ['123', `Sto Dwadzieścia Trzy Złote Tylko`],
+    ['123.0', `Sto Dwadzieścia Trzy Złote I Zero Groszy Tylko`],
+    ['123.00', `Sto Dwadzieścia Trzy Złote I Zero Groszy Tylko`],
     ['0.00', `Zero Złotych I Zero Groszy Tylko`],
-    ['-123.00', `Minus Sto Dwadzieścia Trzy Złotych I Zero Groszy Tylko`],
+    ['-123.00', `Minus Sto Dwadzieścia Trzy Złote I Zero Groszy Tylko`],
     ['37.68', `Trzydzieści Siedem Złotych I Sześćdziesiąt Osiem Groszy Tylko`],
   ];
 
@@ -226,9 +229,9 @@ describe('Test Floats with options = {}', () => {
 
 const testFloatsWithCurrency: [number, string][] = [
   [0.0, 'Zero Złotych Tylko'],
-  [0.04, 'Zero Złotych I Cztery Groszy Tylko'],
+  [0.04, 'Zero Złotych I Cztery Grosze Tylko'],
   [0.4, 'Zero Złotych I Czterdzieści Groszy Tylko'],
-  [0.63, 'Zero Złotych I Sześćdziesiąt Trzy Groszy Tylko'],
+  [0.63, 'Zero Złotych I Sześćdziesiąt Trzy Grosze Tylko'],
   [0.999, 'Jeden Złoty Tylko'],
   [37.06, 'Trzydzieści Siedem Złotych I Sześć Groszy Tylko'],
   [37.68, 'Trzydzieści Siedem Złotych I Sześćdziesiąt Osiem Groszy Tylko'],
@@ -310,8 +313,8 @@ const testOrdinalNumbers: [number, string][] = [
 
   // Tens
   [20, 'Dwudziesty'],
-  [21, 'Dwadzieścia Pierwszy'],
-  [22, 'Dwadzieścia Drugi'],
+  [21, 'Dwudziesty Pierwszy'],
+  [22, 'Dwudziesty Drugi'],
   [30, 'Trzydziesty'],
   [40, 'Czterdziesty'],
   [50, 'Pięćdziesiąty'],
@@ -371,13 +374,13 @@ const testPowersOfTen: [number, string][] = [
   [10, 'Dziesięć'],
   [100, 'Sto'],
   [1000, 'Tysiąc'],
-  [10000, 'Dziesięć Tysiąc'],
+  [10000, 'Dziesięć Tysięcy'],
   [100000, 'Sto Tysięcy'],
   [1000000, 'Milion'],
-  [10000000, 'Dziesięć Milion'],
+  [10000000, 'Dziesięć Milionów'],
   [100000000, 'Sto Milionów'],
   [1000000000, 'Miliard'],
-  [10000000000, 'Dziesięć Miliard'],
+  [10000000000, 'Dziesięć Miliardów'],
   [100000000000, 'Sto Miliardów'],
   [1000000000000, 'Bilion'],
 ];
@@ -511,20 +514,20 @@ describe('Functional helpers (locale-level)', () => {
 });
 
 const testFractionStylePlPL: [number, string][] = [
-  [1.1, 'Jeden I Jeden Dziesiąta'],
-  [2.5, 'Dwa I Pięć Dziesiąte'],
-  [1.01, 'Jeden I Jeden Setna'],
-  [1.45, 'Jeden I Czterdzieści Pięć Setne'],
-  [0.05, 'Zero I Pięć Setne'],
-  [1.001, 'Jeden I Jeden Tysięczna'],
-  [1.005, 'Jeden I Pięć Tysięczne'],
-  [1.0001, 'Jeden I Jeden Dziesięciotysięczna'],
-  [1.0005, 'Jeden I Pięć Dziesięciotysięczne'],
-  [1.00001, 'Jeden I Jeden Stutysięczna'],
-  [1.00005, 'Jeden I Pięć Stutysięczne'],
-  [1.000001, 'Jeden I Jeden Milionowa'],
-  [1.000005, 'Jeden I Pięć Milionowe'],
-  [123.45, 'Sto Dwadzieścia Trzy I Czterdzieści Pięć Setne'],
+  [1.1, 'Jeden I Jedna Dziesiąta'],
+  [2.5, 'Dwa I Pięć Dziesiątych'],
+  [1.01, 'Jeden I Jedna Setna'],
+  [1.45, 'Jeden I Czterdzieści Pięć Setnych'],
+  [0.05, 'Zero I Pięć Setnych'],
+  [1.001, 'Jeden I Jedna Tysięczna'],
+  [1.005, 'Jeden I Pięć Tysięcznych'],
+  [1.0001, 'Jeden I Jedna Dziesięciotysięczna'],
+  [1.0005, 'Jeden I Pięć Dziesięciotysięcznych'],
+  [1.00001, 'Jeden I Jedna Stutysięczna'],
+  [1.00005, 'Jeden I Pięć Stutysięcznych'],
+  [1.000001, 'Jeden I Jedna Milionowa'],
+  [1.000005, 'Jeden I Pięć Milionowych'],
+  [123.45, 'Sto Dwadzieścia Trzy I Czterdzieści Pięć Setnych'],
 ];
 
 describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
@@ -532,17 +535,51 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
     expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
   });
 
-  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+  test('7 decimal places use the ten-millionths denominator; the default stays «przecinek»', () => {
     expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
-      'Jeden Przecinek Milion Dwieście Trzydzieści Cztery Tysięcy Pięćset Sześćdziesiąt Siedem',
+      'Jeden I Milion Dwieście Trzydzieści Cztery Tysiące Pięćset Sześćdziesiąt Siedem Dziesięciomilionowych',
     );
     expect(toWords.convert(1.1234567)).toBe(
-      'Jeden Przecinek Milion Dwieście Trzydzieści Cztery Tysięcy Pięćset Sześćdziesiąt Siedem',
+      'Jeden Przecinek Milion Dwieście Trzydzieści Cztery Tysiące Pięćset Sześćdziesiąt Siedem',
     );
+  });
+
+  // pl.wiktionary «jeden»: w złożeniach „dwadzieścia jeden” itp. nieodmienne.
+  test.each([
+    ['21', { gender: 'feminine' }, 'Dwadzieścia Jeden'],
+    ['1001', { gender: 'feminine' }, 'Tysiąc Jeden'],
+    ['1', { gender: 'feminine' }, 'Jedna'],
+    ['0.21', { decimalStyle: 'fraction' }, 'Zero I Dwadzieścia Jeden Setnych'],
+    ['0.01', { decimalStyle: 'fraction' }, 'Zero I Jedna Setna'],
+  ] as const)('convert %s %o => %s', (input, options, expected) => {
+    expect(toWords.convert(input, options)).toBe(expected);
   });
 
   test('digit-by-digit style works without decimalStyle option', () => {
     expect(toWords.convert(1.5)).toBe('Jeden Przecinek Pięć');
     expect(toWords.convert(0.05)).toBe('Zero Przecinek Zero Pięć');
+  });
+});
+
+// pl.wiktionary: dwusetny, trzechsetny, czterechsetny («czterysetny» jest niepoprawna — Markowski), trylion, tryliard.
+describe('Test sourced pl-PL forms', () => {
+  test.each([
+    [200, 'Dwusetny'],
+    [300, 'Trzechsetny'],
+    [400, 'Czterechsetny'],
+    [100000, 'Stutysięczny'],
+  ])('ordinal %d => %s', (input, expected) => {
+    expect(toWords.toOrdinal(input)).toBe(expected);
+  });
+
+  test.each([
+    [10n ** 18n, 'Trylion'],
+    [2n * 10n ** 21n, 'Dwa Tryliardy'],
+  ])('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+
+  test('złoty and grosz are masculine whatever the gender option says', () => {
+    expect(toWords.convert('1.01', { currency: true, gender: 'feminine' })).toBe('Jeden Złoty I Jeden Grosz Tylko');
   });
 });

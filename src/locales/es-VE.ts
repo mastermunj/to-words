@@ -29,9 +29,9 @@ export default class Locale implements LocaleInterface {
     },
     ordinalGenderSuffixMapping: { masculine: 'o', feminine: 'a' },
     numberWordsMapping: [
-      { number: 1000000000000000, value: 'Trillon' },
-      { number: 1000000000000, value: 'Billon' },
-      { number: 1000000, value: 'Millon' },
+      { number: 1000000000000000000, value: 'Trillón', gender: 'masculine' },
+      { number: 1000000000000, value: 'Billón', gender: 'masculine' },
+      { number: 1000000, value: 'Millón', gender: 'masculine' },
       { number: 1000, value: 'Mil' },
       { number: 900, value: 'Novecientos', feminineValue: 'Novecientas' },
       { number: 800, value: 'Ochocientos', feminineValue: 'Ochocientas' },
@@ -93,8 +93,12 @@ export default class Locale implements LocaleInterface {
       'Novecientos',
       'Mil',
     ],
-    pluralMark: 'es',
-    pluralWords: ['Millon', 'Billon', 'Trillon'],
+    pluralRule: 'one-other',
+    pluralForms: {
+      1000000: { plural: 'Millones' },
+      1000000000000: { plural: 'Billones' },
+      1000000000000000000: { plural: 'Trillones' },
+    },
     exactWordsMapping: [
       { number: 100, value: 'Cien' },
       { number: 90, value: 'Noventa' },
@@ -104,9 +108,11 @@ export default class Locale implements LocaleInterface {
       { number: 50, value: 'Cincuenta' },
       { number: 40, value: 'Cuarenta' },
       { number: 30, value: 'Treinta' },
+      { number: 21, value: ['Veintiún', 'Veintiuno'], feminineValue: 'Veintiuna' },
       { number: 1, value: ['Un', 'Uno'], feminineValue: 'Una' },
     ],
     ordinalWordsMapping: [
+      { number: 1000000000000000000, value: 'Trillonésimo' },
       { number: 1000000000000, value: 'Billonésimo' },
       { number: 1000000, value: 'Millonésimo' },
       { number: 1000, value: 'Milésimo' },
@@ -156,6 +162,15 @@ export default class Locale implements LocaleInterface {
       5: { singular: 'Cienmilésimo', plural: 'Cienmilésimos' },
       6: { singular: 'Millonésimo', plural: 'Millonésimos' },
     },
+    // Spanish ordinals of compounds ordinalize every additive component
+    // (121 -> Centésimo Vigésimo Primero); a scale multiplier above one stays cardinal
+    // (2000 -> Dos Milésimo). RAE / Wiktionary «vigésimo primero».
+    // «mil» is invariable; its multiplier agrees with the counted noun (doscientas mil).
+    multiplierFollowsGender: [1000],
+    ordinalComposition: 'every-component',
+    // "De" between a round-million amount and the unit noun (Un Millón De Euros).
+    // RAE / Wikipedia «un millón de ...».
+    currencyScaleConnector: { word: 'De', minScale: 1000000 },
   };
 }
 

@@ -29,12 +29,16 @@ export default class Locale implements LocaleInterface {
       only: '',
       point: 'દશાંશ',
     },
+    // A lone hundred is એક સો like એક હજાર (the library said સો alone but એક સો inside numbers; CLDR gu).
+    exactWordsMapping: [{ number: 100, value: 'એક સો' }],
+    // Above a crore, official Indian usage composes crore-based amounts (Union Budget 2026-27:
+    // «₹53.5 lakh crore», no arab/kharab). The range keeps its earlier ceiling, composing «Crore Crore» above.
+    maximumSupportedValues: {
+      cardinal: '9999999999999999999',
+      ordinal: '9999999999999999999',
+      currency: '9999999999999999999',
+    },
     numberWordsMapping: [
-      { number: 100000000000000000n, value: 'શંખ' },
-      { number: 1000000000000000n, value: 'પદ્મ' },
-      { number: 10000000000000n, value: 'નીલ' },
-      { number: 100000000000n, value: 'ખર્વ' },
-      { number: 1000000000n, value: 'અબજ' },
       { number: 10000000, value: 'કરોડ' },
       { number: 100000, value: 'લાખ' },
       { number: 1000, value: 'હજાર' },
@@ -119,7 +123,8 @@ export default class Locale implements LocaleInterface {
       { number: 22, value: 'બાવીસ' },
       { number: 21, value: 'એકવીસ' },
       { number: 20, value: 'વીસ' },
-      { number: 19, value: 'ઓગણિસ' },
+      // CLDR gu: ઓગણીસ (long ī; the library had ઓગણિસ).
+      { number: 19, value: 'ઓગણીસ' },
       { number: 18, value: 'અઢાર' },
       { number: 17, value: 'સત્તર' },
       { number: 16, value: 'સોળ' },

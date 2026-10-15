@@ -55,8 +55,8 @@ toCurrency(999.99);
 
 ## Locale Codes
 
-| Locale code | Country | Currency   | Notes                                 |
-| ----------- | ------- | ---------- | ------------------------------------- |
+| Locale code | Country | Currency | Notes                                 |
+| ----------- | ------- | -------- | ------------------------------------- |
 | `as-IN`     | India   | টকা / পইচা | Indian scale; Bengali-Assamese script |
 
 ## Related

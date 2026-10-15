@@ -56,8 +56,8 @@ toCurrency(999.99);
 
 ## Locale Codes
 
-| Locale code | Country | Currency     | Notes                     |
-| ----------- | ------- | ------------ | ------------------------- |
+| Locale code | Country | Currency  | Notes                     |
+| ----------- | ------- | --------- | ------------------------- |
 | `or-IN`     | India   | ଟଙ୍କା / ପଇସା | Indian scale; Odia script |
 
 ## Related

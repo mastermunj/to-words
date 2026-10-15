@@ -224,7 +224,7 @@ Create `__tests__/<locale-code>.test.ts`. Copy an existing test file and adjust 
 
 ### 4. Update documentation
 
-Add a row for your locale in the **Supported Locales** table in [README.md](README.md).
+In [README.md](README.md), add your locale to its group in the **Supported Locales** table and add a row to the full country-and-currency table below it.
 
 ### 5. Verify everything works
 
@@ -360,5 +360,5 @@ Before a release, verify that the `RELEASE_PLEASE_TOKEN` repository secret is ac
 
 - **Bug or feature?** [Open an issue](https://github.com/mastermunj/to-words/issues)
 - **General question?** [Start a discussion](https://github.com/mastermunj/to-words/discussions)
-- **Full API docs:** [README.md](README.md)
+- **Full API docs:** [README.md](README.md) and the [API reference](https://mastermunj.github.io/to-words/guide/api-reference)
 - **Migration from another package:** [MIGRATION.md](MIGRATION.md)

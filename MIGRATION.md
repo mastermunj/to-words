@@ -416,5 +416,5 @@ When migrating, verify at least these inputs in your app tests:
 ## Need Help?
 
 - **Questions or bugs:** [open an issue](https://github.com/mastermunj/to-words/issues)
-- **Full API reference:** [README.md](README.md)
+- **Full API reference:** [README.md](README.md) and the [API reference](https://mastermunj.github.io/to-words/guide/api-reference)
 - **Locale-specific behaviour:** browse [`src/locales/`](src/locales/)

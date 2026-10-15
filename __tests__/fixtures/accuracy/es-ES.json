@@ -1,0 +1,80 @@
+{
+  "locale": "es-ES",
+  "sources": {
+    "wikt-veintiun": {
+      "title": "Wiktionary — veintiún (apocopic form of veintiuno before a noun; ordinal vigésimo primero)",
+      "url": "https://en.wiktionary.org/wiki/veintiún",
+      "accessed": "2026-10-08"
+    },
+    "eswp-millon": {
+      "title": "Wikipedia (es) — Millón (\"un millón de puntos\", \"un millón de marcos\")",
+      "url": "https://es.wikipedia.org/wiki/Millón",
+      "accessed": "2026-10-08"
+    }
+  },
+  "cases": [
+    {
+      "id": "card-21",
+      "capability": "cardinal",
+      "form": "cardinal",
+      "input": "21",
+      "expected": "Veintiuno",
+      "status": "verified",
+      "attested": true,
+      "sources": [
+        "wikt-veintiun"
+      ]
+    },
+    {
+      "id": "scale-21000",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "21000",
+      "expected": "Veintiún Mil",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "wikt-veintiun"
+      ]
+    },
+    {
+      "id": "scale-1000000",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "1000000",
+      "expected": "Un Millón",
+      "status": "verified",
+      "attested": true,
+      "sources": [
+        "eswp-millon"
+      ]
+    },
+    {
+      "id": "ord-21",
+      "capability": "ordinal",
+      "form": "ordinal",
+      "input": "21",
+      "expected": "Vigésimo Primero",
+      "status": "verified",
+      "attested": true,
+      "sources": [
+        "wikt-veintiun"
+      ]
+    },
+    {
+      "id": "cur-1000000",
+      "capability": "currency",
+      "form": "currency",
+      "input": "1000000",
+      "options": {
+        "doNotAddOnly": true
+      },
+      "expected": "Un Millón De Euros",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "eswp-millon"
+      ]
+    }
+  ]
+}

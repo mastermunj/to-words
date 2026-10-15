@@ -10,16 +10,22 @@ import { ToWordsCore } from '../ToWordsCoreBase.js';
 
 export default class Locale implements LocaleInterface {
   public config: LocaleConfig = {
+    // Bulgaria adopted the euro on 2026-01-01 (ECB, BNB); the lev stopped being legal tender on 2026-02-01.
+    // «евро» is an invariable neuter noun, so the numeral takes its default (neuter) form: едно евро, две евро.
+    // BNB names the subunit «евроцент»; after a numeral it takes the count form «евроцента» (5 евроцента).
     currency: {
-      name: 'Лев',
-      plural: 'Лева',
-      singular: 'Лев',
-      symbol: 'лв',
+      name: 'Евро',
+      plural: 'Евро',
+      singular: 'Евро',
+      symbol: '€',
+      pluralForms: { one: 'Евро', other: 'Евро' },
       fractionalUnit: {
-        name: 'Стотинка',
-        singular: 'Стотинка',
-        plural: 'Стотинки',
-        symbol: 'ст.',
+        name: 'Евроцент',
+        singular: 'Евроцент',
+        plural: 'Евроцента',
+        symbol: 'ct',
+        gender: 'masculine',
+        pluralForms: { one: 'Евроцент', other: 'Евроцента' },
       },
     },
     texts: {
@@ -29,11 +35,11 @@ export default class Locale implements LocaleInterface {
       point: 'Цяло',
     },
     numberWordsMapping: [
-      { number: 1000000000000000, value: 'Квадрилион' },
-      { number: 1000000000000, value: 'Трилион' },
-      { number: 1000000000, value: 'Милиард' },
-      { number: 1000000, value: 'Милион' },
-      { number: 1000, value: 'Хиляда', singularValue: 'Хиляда' },
+      { number: 1000000000000000, value: 'Квадрилион', gender: 'masculine' },
+      { number: 1000000000000, value: 'Трилион', gender: 'masculine' },
+      { number: 1000000000, value: 'Милиард', gender: 'masculine' },
+      { number: 1000000, value: 'Милион', gender: 'masculine' },
+      { number: 1000, value: 'Хиляда', singularValue: 'Хиляда', gender: 'feminine' },
       { number: 900, value: 'Деветстотин' },
       { number: 800, value: 'Осемстотин' },
       { number: 700, value: 'Седемстотин' },
@@ -68,8 +74,8 @@ export default class Locale implements LocaleInterface {
       { number: 5, value: 'Пет' },
       { number: 4, value: 'Четири' },
       { number: 3, value: 'Три' },
-      { number: 2, value: 'Две' },
-      { number: 1, value: 'Едно', feminineValue: 'Една' },
+      { number: 2, value: 'Две', masculineValue: 'Два' },
+      { number: 1, value: 'Едно', feminineValue: 'Една', masculineValue: 'Един' },
       { number: 0, value: 'Нула' },
     ],
     exactWordsMapping: [{ number: 100, value: 'Сто' }],
@@ -95,10 +101,9 @@ export default class Locale implements LocaleInterface {
         plural: 'Квадрилиона',
       },
     },
-    paucalConfig: {
-      min: 2,
-      max: 4,
-    },
+    pluralRule: 'one-other',
+    // «и» before the last component (bg.wikipedia: сто и едно, сто и двадесет, сто двадесет и едно, хиляда и едно).
+    andBeforeLastComponent: true,
     ignoreOneForWords: [
       'Сто',
       'Двеста',
@@ -161,12 +166,32 @@ export default class Locale implements LocaleInterface {
     ],
     ordinalExactWordsMapping: [{ number: 100, value: 'Стотен' }],
     fractionDenominatorMapping: {
-      1: { singular: 'Десетина', plural: 'Десетини' },
-      2: { singular: 'Стотина', plural: 'Стотини' },
-      3: { singular: 'Хилядна', plural: 'Хиляди' },
-      4: { singular: 'Десетохилядна', plural: 'Десетохиляди' },
-      5: { singular: 'Стохилядна', plural: 'Стохиляди' },
-      6: { singular: 'Милионна', plural: 'Милиони' },
+      1: { singular: 'Десета', plural: 'Десети' },
+      2: { singular: 'Стотна', plural: 'Стотни' },
+      3: { singular: 'Хилядна', plural: 'Хилядни' },
+      4: { singular: 'Десетхилядна', plural: 'Десетхилядни' },
+      5: { singular: 'Стохилядна', plural: 'Стохилядни' },
+      6: { singular: 'Милионна', plural: 'Милионни' },
+    },
+    // en.wiktionary «цяло»: пет цяло и две десети (5.2); the digit reading «Едно Цяло Пет» is ungrammatical.
+    fractionReading: {
+      isDefault: true,
+      wholeForms: { one: 'Цяло И', other: 'Цяло И' },
+      gender: 'feminine',
+      wholeUsesDefaultGender: true,
+    },
+    // A round scale ordinal fuses a single-word multiplier (двухиляден, десетхиляден, стохиляден).
+    ordinalScaleStems: {
+      2: 'дву',
+      3: 'три',
+      4: 'четири',
+      5: 'пет',
+      6: 'шест',
+      7: 'седем',
+      8: 'осем',
+      9: 'девет',
+      10: 'десет',
+      100: 'сто',
     },
   };
 }

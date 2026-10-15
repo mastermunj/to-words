@@ -48,7 +48,7 @@ tw.convert(12345);
 // "Doce Mil Trescientos Cuarenta Y Cinco"
 
 tw.convert(1234.56, { currency: true });
-// "Mil Doscientos Treinta Y Cuatro Euros Con Cincuenta Y Seis Céntimos"
+// "Mil Doscientos Treinta Y Cuatro Euros Y Cincuenta Y Seis Céntimos"
 ```
 
 ## Gender Support

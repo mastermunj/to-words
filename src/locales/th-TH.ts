@@ -31,9 +31,7 @@ export default class Locale implements LocaleInterface {
     trim: true,
     onlyInFront: false,
     numberWordsMapping: [
-      { number: 1000000000000000, value: 'พันล้านล้าน' },
       { number: 1000000000000, value: 'ล้านล้าน' },
-      { number: 1000000000, value: 'พันล้าน' },
       { number: 1000000, value: 'ล้าน' },
       { number: 100000, value: 'แสน' },
       { number: 10000, value: 'หมื่น' },
@@ -68,8 +66,21 @@ export default class Locale implements LocaleInterface {
       { number: 1, value: 'หนึ่ง' },
       { number: 0, value: 'ศูนย์' },
     ],
-    exactWordsMapping: [{ number: 100, value: 'หนึ่งร้อย' }],
-    ordinalSuffix: '',
+    exactWordsMapping: [
+      { number: 100, value: 'หนึ่งร้อย' },
+      { number: 91, value: 'เก้าสิบเอ็ด' },
+      { number: 81, value: 'แปดสิบเอ็ด' },
+      { number: 71, value: 'เจ็ดสิบเอ็ด' },
+      { number: 61, value: 'หกสิบเอ็ด' },
+      { number: 51, value: 'ห้าสิบเอ็ด' },
+      { number: 41, value: 'สี่สิบเอ็ด' },
+      { number: 31, value: 'สามสิบเอ็ด' },
+      { number: 21, value: 'ยี่สิบเอ็ด' },
+    ],
+    // CLDR th: 1 after a ten is เอ็ด (ยี่สิบเอ็ด); a thousand million is พันล้าน built from ล้าน
+    // (หนึ่งพันสิบล้าน); ordinals are ที่ + the cardinal (ที่ยี่สิบสอง).
+    ordinalPrefix: 'ที่',
+    ordinalComposition: 'fused-prefix',
     ordinalExactWordsMapping: [
       { number: 10, value: 'ที่สิบ' },
       { number: 9, value: 'ที่เก้า' },

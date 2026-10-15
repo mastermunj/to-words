@@ -15,11 +15,15 @@ export default class Locale implements LocaleInterface {
       plural: 'Kronor',
       singular: 'Krona',
       symbol: 'kr',
+      // krona is common gender (en krona); öre is neuter (ett öre).
+      gender: 'feminine',
       fractionalUnit: {
         name: 'Öre',
         singular: 'Öre',
         plural: 'Öre',
         symbol: 'öre',
+        // öre is neuter: keep «ett» whatever the gender option says.
+        gender: 'masculine',
       },
     },
     texts: {
@@ -29,10 +33,10 @@ export default class Locale implements LocaleInterface {
       point: 'Komma',
     },
     numberWordsMapping: [
-      { number: 1000000000000000, value: 'Biljard' },
-      { number: 1000000000000, value: 'Biljon' },
-      { number: 1000000000, value: 'Miljard' },
-      { number: 1000000, value: 'Miljon' },
+      { number: 1000000000000000, value: 'Biljard', multiplierForms: { 1: 'En' } },
+      { number: 1000000000000, value: 'Biljon', multiplierForms: { 1: 'En' } },
+      { number: 1000000000, value: 'Miljard', multiplierForms: { 1: 'En' } },
+      { number: 1000000, value: 'Miljon', multiplierForms: { 1: 'En' } },
       { number: 1000, value: 'Tusen' },
       { number: 100, value: 'Hundra' },
       { number: 99, value: 'Nittionio' },
@@ -133,15 +137,26 @@ export default class Locale implements LocaleInterface {
       { number: 4, value: 'Fyra' },
       { number: 3, value: 'Tre' },
       { number: 2, value: 'Två' },
-      { number: 1, value: 'Ett' },
+      // «en» with common-gender nouns (en krona, en hundradel), selected through gender: 'feminine'.
+      { number: 1, value: 'Ett', feminineValue: 'En' },
       { number: 0, value: 'Noll' },
     ],
     exactWordsMapping: [{ number: 100, value: 'Hundra' }],
     ignoreOneForWords: ['Hundra', 'Tusen'],
+    // sv.wikipedia «Räkneord»: åttatusenfyrahundrasextiotre (one word below a million), 5 miljoner, 2 miljarder.
+    // sv.wikipedia «Räkneord»: ettusentjugosju — three equal consonants become two at the seam.
+    wordJoining: { compoundBelow: 1000000, compoundOrdinals: true, reduceTripleConsonants: true },
+    pluralRule: 'one-other',
+    pluralForms: {
+      1000000: { other: 'Miljoner' },
+      1000000000: { other: 'Miljarder' },
+      1000000000000: { other: 'Biljoner' },
+      1000000000000000: { other: 'Biljarder' },
+    },
     ordinalWordsMapping: [
-      { number: 1000000000000000, value: 'Biljardste' },
+      { number: 1000000000000000, value: 'Biljardte' },
       { number: 1000000000000, value: 'Biljonte' },
-      { number: 1000000000, value: 'Miljardste' },
+      { number: 1000000000, value: 'Miljardte' },
       { number: 1000000, value: 'Miljonte' },
       { number: 1000, value: 'Tusende' },
       { number: 100, value: 'Hundrade' },
@@ -248,12 +263,14 @@ export default class Locale implements LocaleInterface {
     ],
     fractionDenominatorMapping: {
       1: { singular: 'Tiondel', plural: 'Tiondelar' },
-      2: { singular: 'Hundradel', plural: 'Hundradedelar' },
+      2: { singular: 'Hundradel', plural: 'Hundradelar' },
       3: { singular: 'Tusendel', plural: 'Tusendelar' },
-      4: { singular: 'Tiotusendel', plural: 'Tiotunsendelar' },
+      4: { singular: 'Tiotusendel', plural: 'Tiotusendelar' },
       5: { singular: 'Hundratusendel', plural: 'Hundratusendelar' },
-      6: { singular: 'Milliondel', plural: 'Miljondelar' },
+      6: { singular: 'Miljondel', plural: 'Miljondelar' },
     },
+    // decimalStyle 'fraction': en hundradel, fem tiondelar (-del is common gender).
+    fractionReading: { gender: 'feminine' },
   };
 }
 

@@ -31,6 +31,12 @@ tw.convert(1000);
 tw.convert(1000000);
 ```
 
+Igbo puts the scale word before its multiplier, so 2000 reads "thousand two":
+
+```js
+tw.convert(2000); // "Puku Abụọ"
+```
+
 ## Currency - Naira / Kobo
 
 ```js

@@ -28,12 +28,14 @@ export default class Locale implements LocaleInterface {
       only: '',
       point: 'पूर्णांक',
     },
+    // Above a crore, official Indian usage composes crore-based amounts (Union Budget 2026-27:
+    // «₹53.5 lakh crore», no arab/kharab). The range keeps its earlier ceiling, composing «Crore Crore» above.
+    maximumSupportedValues: {
+      cardinal: '9999999999999999999',
+      ordinal: '9999999999999999999',
+      currency: '9999999999999999999',
+    },
     numberWordsMapping: [
-      { number: 100000000000000000n, value: 'शंख' },
-      { number: 1000000000000000n, value: 'पद्म' },
-      { number: 10000000000000n, value: 'नील' },
-      { number: 100000000000n, value: 'खर्व' },
-      { number: 1000000000n, value: 'अब्ज' },
       { number: 10000000, value: 'कोटी' },
       { number: 100000, value: 'लाख' },
       { number: 1000, value: 'हजार' },
@@ -147,6 +149,8 @@ export default class Locale implements LocaleInterface {
       { number: 1, value: 'एक' },
       { number: 0, value: 'शून्य' },
     ],
+    // en.wiktionary mr: 100 on its own is शंभर; एकशे only begins a larger number (एकशे एक).
+    exactWordsMapping: [{ number: 100, value: 'शंभर' }],
     ordinalWordsMapping: [
       { number: 10000000, value: 'कोटीवा' },
       { number: 100000, value: 'लाखावा' },

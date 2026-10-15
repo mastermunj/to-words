@@ -78,21 +78,21 @@ const testIntegers: [number, string][] = [
   [900, 'Дзевяцьсот'],
   [1000, 'Тысяча'],
   [1100, 'Тысяча Сто'],
-  [2000, 'Два Тысячы'],
+  [2000, 'Дзве Тысячы'],
   [3000, 'Тры Тысячы'],
   [4000, 'Чатыры Тысячы'],
-  [5000, 'Пяць Тысяча'],
+  [5000, 'Пяць Тысяч'],
   [4680, 'Чатыры Тысячы Шэсцьсот Восемдзесят'],
-  [10000, 'Дзесяць Тысяча'],
-  [63892, 'Шэсцьдзясят Тры Тысяч Восемсот Дзевяноста Два'],
+  [10000, 'Дзесяць Тысяч'],
+  [63892, 'Шэсцьдзясят Тры Тысячы Восемсот Дзевяноста Два'],
   [100000, 'Сто Тысяч'],
   [1000000, 'Мільён'],
   [2000000, 'Два Мільёны'],
-  [5000000, 'Пяць Мільён'],
-  [2741034, 'Два Мільёны Семсот Сорак Адзін Тысяч Трыццаць Чатыры'],
+  [5000000, 'Пяць Мільёнаў'],
+  [2741034, 'Два Мільёны Семсот Сорак Адна Тысяча Трыццаць Чатыры'],
   [1000000000, 'Мільярд'],
   [2000000000, 'Два Мільярды'],
-  [5000000000, 'Пяць Мільярд'],
+  [5000000000, 'Пяць Мільярдаў'],
 ];
 
 describe('Test Integers with options = {}', () => {
@@ -117,9 +117,13 @@ describe('Test Negative Integers with options = {}', () => {
 });
 
 // Helper function to get Belarusian currency form
-function getCurrencyName(words: string): string {
-  if (words === 'Адзін') {
+function getCurrencyName(amount: number): string {
+  const n = Math.abs(amount);
+  if (n % 10 === 1 && n % 100 !== 11) {
     return 'Рубель';
+  }
+  if (n % 10 >= 2 && n % 10 <= 4 && !(n % 100 >= 12 && n % 100 <= 14)) {
+    return 'Рублі';
   }
   return 'Рублёў';
 }
@@ -127,7 +131,7 @@ function getCurrencyName(words: string): string {
 describe('Test Integers with options = { currency: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    const currencyName = getCurrencyName(row[1] as string);
+    const currencyName = getCurrencyName(row[0] as number);
     row[1] = `${row[1]} ${currencyName} Толькі`;
   });
 
@@ -139,7 +143,7 @@ describe('Test Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, doNotAddOnly: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    const currencyName = getCurrencyName(row[1] as string);
+    const currencyName = getCurrencyName(row[0] as number);
     row[1] = `${row[1]} ${currencyName}`;
   });
 
@@ -156,7 +160,7 @@ describe('Test Negative Integers with options = { currency: true }', () => {
       return;
     }
     row[0] = -row[0];
-    const currencyName = getCurrencyName(row[1] as string);
+    const currencyName = getCurrencyName(row[0] as number);
     row[1] = `Мінус ${row[1]} ${currencyName} Толькі`;
   });
 
@@ -171,7 +175,7 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
     if (i === 0) {
       row[1] = '';
     } else {
-      const currencyName = getCurrencyName(row[1] as string);
+      const currencyName = getCurrencyName(row[0] as number);
       row[1] = `${row[1]} ${currencyName} Толькі`;
     }
   });
@@ -188,21 +192,21 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
 
 const testFloats: [number, string][] = [
   [0.0, 'Нуль'],
-  [0.04, 'Нуль Цэлых Нуль Чатыры'],
-  [0.4, 'Нуль Цэлых Чатыры'],
-  [0.63, 'Нуль Цэлых Шэсцьдзясят Тры'],
-  [37.06, 'Трыццаць Сем Цэлых Нуль Шэсць'],
-  [37.68, 'Трыццаць Сем Цэлых Шэсцьдзясят Восем'],
+  [0.04, 'Нуль Цэлых Чатыры Сотыя'],
+  [0.4, 'Нуль Цэлых Чатыры Дзясятыя'],
+  [0.63, 'Нуль Цэлых Шэсцьдзясят Тры Сотыя'],
+  [37.06, 'Трыццаць Сем Цэлых Шэсць Сотых'],
+  [37.68, 'Трыццаць Сем Цэлых Шэсцьдзясят Восем Сотых'],
 ];
 
 describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
   const testIncludeZeroFractional: [number | string, string][] = [
-    [123, `Сто Дваццаць Тры Рублёў Толькі`],
-    ['123', `Сто Дваццаць Тры Рублёў Толькі`],
-    ['123.0', `Сто Дваццаць Тры Рублёў І Нуль Капеек Толькі`],
-    ['123.00', `Сто Дваццаць Тры Рублёў І Нуль Капеек Толькі`],
+    [123, `Сто Дваццаць Тры Рублі Толькі`],
+    ['123', `Сто Дваццаць Тры Рублі Толькі`],
+    ['123.0', `Сто Дваццаць Тры Рублі І Нуль Капеек Толькі`],
+    ['123.00', `Сто Дваццаць Тры Рублі І Нуль Капеек Толькі`],
     ['0.00', `Нуль Рублёў І Нуль Капеек Толькі`],
-    ['-123.00', `Мінус Сто Дваццаць Тры Рублёў І Нуль Капеек Толькі`],
+    ['-123.00', `Мінус Сто Дваццаць Тры Рублі І Нуль Капеек Толькі`],
     ['37.68', `Трыццаць Сем Рублёў І Шэсцьдзясят Восем Капеек Толькі`],
   ];
 
@@ -224,9 +228,9 @@ describe('Test Floats with options = {}', () => {
 
 const testFloatsWithCurrency: [number, string][] = [
   [0.0, 'Нуль Рублёў Толькі'],
-  [0.04, 'Нуль Рублёў І Чатыры Капеек Толькі'],
+  [0.04, 'Нуль Рублёў І Чатыры Капейкі Толькі'],
   [0.4, 'Нуль Рублёў І Сорак Капеек Толькі'],
-  [0.63, 'Нуль Рублёў І Шэсцьдзясят Тры Капеек Толькі'],
+  [0.63, 'Нуль Рублёў І Шэсцьдзясят Тры Капейкі Толькі'],
   [0.999, 'Адзін Рубель Толькі'],
   [37.06, 'Трыццаць Сем Рублёў І Шэсць Капеек Толькі'],
   [37.68, 'Трыццаць Сем Рублёў І Шэсцьдзясят Восем Капеек Толькі'],
@@ -267,7 +271,7 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
     if (row[0] === 0.999) {
       row[1] = 'Нуль Рублёў Толькі';
     } else {
-      row[1] = (row[1] as string).replace(new RegExp(` І [\\wа-яА-ЯёЁ ]+ Капеек`), '');
+      row[1] = (row[1] as string).replace(new RegExp(` І [\\wа-яА-ЯёЁ ]+ Капе(ек|йкі|йка)`), '');
     }
   });
 
@@ -354,13 +358,13 @@ const testPowersOfTen: [number, string][] = [
   [10, 'Дзесяць'],
   [100, 'Сто'],
   [1000, 'Тысяча'],
-  [10000, 'Дзесяць Тысяча'],
+  [10000, 'Дзесяць Тысяч'],
   [100000, 'Сто Тысяч'],
   [1000000, 'Мільён'],
-  [10000000, 'Дзесяць Мільён'],
+  [10000000, 'Дзесяць Мільёнаў'],
   [100000000, 'Сто Мільёнаў'],
   [1000000000, 'Мільярд'],
-  [10000000000, 'Дзесяць Мільярд'],
+  [10000000000, 'Дзесяць Мільярдаў'],
   [100000000000, 'Сто Мільярдаў'],
   [1000000000000, 'Трыльён'],
 ];
@@ -485,22 +489,22 @@ describe('Functional helpers (locale-level)', () => {
 });
 
 const testFractionStyleBeBY: [number, string][] = [
-  [1.1, 'Адзін І Адзін Дзясятая'],
-  [2.5, 'Два І Пяць Дзясятых'],
-  [1.01, 'Адзін І Адзін Сотая'],
-  [1.45, 'Адзін І Сорак Пяць Сотых'],
-  [0.05, 'Нуль І Пяць Сотых'],
-  [1.001, 'Адзін І Адзін Тысячная'],
-  [1.005, 'Адзін І Пяць Тысячных'],
-  [1.0001, 'Адзін І Адзін Дзесяцітысячная'],
-  [1.0005, 'Адзін І Пяць Дзесяцітысачных'],
-  [1.00001, 'Адзін І Адзін Статысачная'],
-  [1.00005, 'Адзін І Пяць Статысачных'],
-  [1.000001, 'Адзін І Адзін Мільённая'],
-  [1.000005, 'Адзін І Пяць Мільённых'],
-  [123.45, 'Сто Дваццаць Тры І Сорак Пяць Сотых'],
-  [1.21, 'Адзін І Дваццаць Адзін Сотая'],
-  [1.11, 'Адзін І Адзінаццаць Сотых'],
+  [1.1, 'Адна Цэлая Адна Дзясятая'],
+  [2.5, 'Дзве Цэлыя Пяць Дзясятых'],
+  [1.01, 'Адна Цэлая Адна Сотая'],
+  [1.45, 'Адна Цэлая Сорак Пяць Сотых'],
+  [0.05, 'Нуль Цэлых Пяць Сотых'],
+  [1.001, 'Адна Цэлая Адна Тысячная'],
+  [1.005, 'Адна Цэлая Пяць Тысячных'],
+  [1.0001, 'Адна Цэлая Адна Дзесяцітысячная'],
+  [1.0005, 'Адна Цэлая Пяць Дзесяцітысячных'],
+  [1.00001, 'Адна Цэлая Адна Статысячная'],
+  [1.00005, 'Адна Цэлая Пяць Статысячных'],
+  [1.000001, 'Адна Цэлая Адна Мільённая'],
+  [1.000005, 'Адна Цэлая Пяць Мільённых'],
+  [123.45, 'Сто Дваццаць Тры Цэлыя Сорак Пяць Сотых'],
+  [1.21, 'Адна Цэлая Дваццаць Адна Сотая'],
+  [1.11, 'Адна Цэлая Адзінаццаць Сотых'],
 ];
 
 describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
@@ -508,15 +512,37 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
     expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
   });
 
-  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+  test('7 decimal places use the ten-millionths denominator', () => {
     expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
-      'Адзін Цэлых Мільён Дзвесце Трыццаць Чатыры Тысяч Пяцьсот Шэсцьдзясят Сем',
+      'Адна Цэлая Мільён Дзвесце Трыццаць Чатыры Тысячы Пяцьсот Шэсцьдзясят Сем Дзесяцімільённых',
     );
-    expect(toWords.convert(1.1234567)).toBe('Адзін Цэлых Мільён Дзвесце Трыццаць Чатыры Тысяч Пяцьсот Шэсцьдзясят Сем');
   });
 
-  test('digit-by-digit style works without decimalStyle option', () => {
-    expect(toWords.convert(1.5)).toBe('Адзін Цэлых Пяць');
-    expect(toWords.convert(0.05)).toBe('Нуль Цэлых Нуль Пяць');
+  test('the fraction reading is the default; digit style is opt-in', () => {
+    expect(toWords.convert(1.5)).toBe('Адна Цэлая Пяць Дзясятых');
+    expect(toWords.convert(1.5, { decimalStyle: 'digit' })).toBe('Адзін Цэлых Пяць');
+    expect(toWords.convert(0.05, { decimalStyle: 'digit' })).toBe('Нуль Цэлых Нуль Пяць');
+  });
+
+  // be.wikipedia «Лічэбнік»: дзве цэлыя пятнаццаць сотых; сем цэлых (і) пяць дзясятых.
+  test.each([
+    ['2.15', 'Дзве Цэлыя Пятнаццаць Сотых'],
+    ['7.5', 'Сем Цэлых Пяць Дзясятых'],
+    ['0.04', 'Нуль Цэлых Чатыры Сотыя'],
+  ])('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+describe('Test scale words above a quadrillion', () => {
+  test.each([
+    [10n ** 18n, 'Квінтыльён'],
+    [2n * 10n ** 21n, 'Два Секстыльёны'],
+  ])('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+
+  test('the rouble is masculine whatever the gender option says', () => {
+    expect(toWords.convert(1, { currency: true, gender: 'feminine' })).toBe('Адзін Рубель Толькі');
   });
 });

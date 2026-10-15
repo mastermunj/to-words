@@ -1,0 +1,65 @@
+{
+  "locale": "ja-JP",
+  "sources": {
+    "wp-ja-numerals": {
+      "title": "Wikipedia — Japanese numerals, Powers of 10 (百; 千; 一万, not 万; 一千万 for 10,000,000; 千五百万 for 15,000,000)",
+      "url": "https://en.wikipedia.org/wiki/Japanese_numerals#Powers_of_10",
+      "accessed": "2026-10-08"
+    }
+  },
+  "cases": [
+    {
+      "id": "card-100",
+      "capability": "cardinal",
+      "form": "cardinal",
+      "input": "100",
+      "expected": "百",
+      "status": "verified",
+      "attested": true,
+      "sources": ["wp-ja-numerals"]
+    },
+    {
+      "id": "scale-1000",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "1000",
+      "expected": "千",
+      "status": "verified",
+      "attested": true,
+      "sources": ["wp-ja-numerals"]
+    },
+    {
+      "id": "scale-10000",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "10000",
+      "expected": "一万",
+      "status": "known-wrong",
+      "defect": "F",
+      "attested": true,
+      "sources": ["wp-ja-numerals"]
+    },
+    {
+      "id": "scale-10000000",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "10000000",
+      "expected": "一千万",
+      "status": "known-wrong",
+      "defect": "F",
+      "attested": true,
+      "sources": ["wp-ja-numerals"]
+    },
+    {
+      "id": "scale-15000000",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "15000000",
+      "expected": "千五百万",
+      "status": "known-wrong",
+      "defect": "F",
+      "attested": true,
+      "sources": ["wp-ja-numerals"]
+    }
+  ]
+}

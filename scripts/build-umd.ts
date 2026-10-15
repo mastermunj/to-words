@@ -54,9 +54,14 @@ const SIZE_BUDGETS = Object.freeze({
   // v7 strict ranges add roughly 0.4 KiB gzip to expose structured errors and
   // per-form limits in both full and standalone browser builds. Adding lo-LA
   // (Lao) pushed the full bundle just past the previous 70.5 KiB ceiling.
-  fullGzipped: 71 * 1024,
-  averageLocaleGzipped: 5.75 * 1024,
-  largestLocaleGzipped: 6.5 * 1024,
+  // The opt-in accuracy capabilities (plural rules, gender agreement, word
+  // joining, CJK forms, ordinal composition, currency connectors) add about
+  // 2 KiB gzip to every bundle, and the Slavic/Baltic adoption (fused ordinals,
+  // multiplier words, plural data) about 0.5 KiB more. Accepted for now; reducing
+  // it is tracked separately (e.g. loading a capability only where it is enabled).
+  fullGzipped: 90.5 * 1024,
+  averageLocaleGzipped: 9.25 * 1024,
+  largestLocaleGzipped: 10.5 * 1024,
 });
 
 function assertSizeBudgets(

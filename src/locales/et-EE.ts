@@ -29,8 +29,9 @@ export default class Locale implements LocaleInterface {
       point: 'Koma',
     },
     numberWordsMapping: [
-      { number: 1000000000000000, value: 'Kvadriljon' },
-      { number: 1000000000000, value: 'Triljon' },
+      // Long scale (CLDR et): biljon 10¹², biljard 10¹⁵ (library had Triljon at 10¹²).
+      { number: 1000000000000000, value: 'Biljard' },
+      { number: 1000000000000, value: 'Biljon' },
       { number: 1000000000, value: 'Miljard' },
       { number: 1000000, value: 'Miljon' },
       { number: 1000, value: 'Tuhat' },
@@ -121,7 +122,7 @@ export default class Locale implements LocaleInterface {
         value: 'Ükssada',
       },
     ],
-    pluralWords: ['Miljon', 'Miljard', 'Triljon', 'Kvadriljon'],
+    pluralWords: ['Miljon', 'Miljard', 'Biljon', 'Biljard'],
     pluralMark: 'it',
     onlyInFront: true,
   };

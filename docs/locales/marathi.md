@@ -56,8 +56,8 @@ toCurrency(999.99);
 
 ## Locale Codes
 
-| Locale code | Country | Currency     | Notes                           |
-| ----------- | ------- | ------------ | ------------------------------- |
+| Locale code | Country | Currency   | Notes                           |
+| ----------- | ------- | ---------- | ------------------------------- |
 | `mr-IN`     | India   | रुपया / पैसा | Indian scale; Devanagari script |
 
 ## Related

@@ -35,7 +35,7 @@ describe('Test Locale', () => {
 
 const testIntegers: [number, string][] = [
   [0, 'Sıfır'],
-  [137, 'Bir Yüz Otuz Yeddi'],
+  [137, 'Yüz Otuz Yeddi'],
   [700, 'Yeddi Yüz'],
   [1100, 'Min Yüz'],
   [4680, 'Dörd Min Altı Yüz Səksən'],
@@ -143,12 +143,12 @@ const testFloats: [number, string][] = [
 
 describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
   const testIncludeZeroFractional: [number | string, string][] = [
-    [123, `Bir Yüz İyirmi Üç Manat`],
-    ['123', `Bir Yüz İyirmi Üç Manat`],
-    ['123.0', `Bir Yüz İyirmi Üç Manat Və Sıfır Qəpik`],
-    ['123.00', `Bir Yüz İyirmi Üç Manat Və Sıfır Qəpik`],
+    [123, `Yüz İyirmi Üç Manat`],
+    ['123', `Yüz İyirmi Üç Manat`],
+    ['123.0', `Yüz İyirmi Üç Manat Və Sıfır Qəpik`],
+    ['123.00', `Yüz İyirmi Üç Manat Və Sıfır Qəpik`],
     ['0.00', `Sıfır Manat Və Sıfır Qəpik`],
-    ['-123.00', `Mənfi Bir Yüz İyirmi Üç Manat Və Sıfır Qəpik`],
+    ['-123.00', `Mənfi Yüz İyirmi Üç Manat Və Sıfır Qəpik`],
     ['37.68', `Otuz Yeddi Manat Və Altmış Səkkiz Qəpik`],
   ];
 
@@ -331,13 +331,13 @@ const testOrdinalNumbers: [number, string][] = [
   [100003, 'Yüz Min Üçüncü'],
 
   // Numbers in the hundreds with endings
-  [101, 'Bir Yüz Birinci'],
-  [102, 'Bir Yüz İkinci'],
-  [103, 'Bir Yüz Üçüncü'],
-  [111, 'Bir Yüz On Birinci'],
-  [112, 'Bir Yüz On İkinci'],
-  [113, 'Bir Yüz On Üçüncü'],
-  [123, 'Bir Yüz İyirmi Üçüncü'],
+  [101, 'Yüz Birinci'],
+  [102, 'Yüz İkinci'],
+  [103, 'Yüz Üçüncü'],
+  [111, 'Yüz On Birinci'],
+  [112, 'Yüz On İkinci'],
+  [113, 'Yüz On Üçüncü'],
+  [123, 'Yüz İyirmi Üçüncü'],
 
   // Complex numbers
   [1001, 'Min Birinci'],

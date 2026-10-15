@@ -85,17 +85,17 @@ const testIntegers: [number, string][] = [
   [900, 'Kilencszáz'],
   [1000, 'Ezer'],
   [1100, 'Ezer Száz'],
-  [2000, 'Kettő Ezer'],
+  [2000, 'Két Ezer'],
   [3000, 'Három Ezer'],
   [4680, 'Négy Ezer Hatszáz Nyolcvan'],
   [10000, 'Tíz Ezer'],
   [63892, 'Hatvan Három Ezer Nyolcszáz Kilencven Kettő'],
   [100000, 'Száz Ezer'],
   [1000000, 'Egy Millió'],
-  [2000000, 'Kettő Millió'],
-  [2741034, 'Kettő Millió Hétszáz Negyven Egy Ezer Harminc Négy'],
+  [2000000, 'Két Millió'],
+  [2741034, 'Két Millió Hétszáz Negyven Egy Ezer Harminc Négy'],
   [1000000000, 'Egy Milliárd'],
-  [2000000000, 'Kettő Milliárd'],
+  [2000000000, 'Két Milliárd'],
 ];
 
 describe('Test Integers with options = {}', () => {
@@ -122,7 +122,7 @@ describe('Test Negative Integers with options = {}', () => {
 describe('Test Integers with options = { currency: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} Forint`;
+    row[1] = `${(row[1] as string).replace(/ettő$/, 'ét')} Forint`;
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -133,7 +133,7 @@ describe('Test Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, doNotAddOnly: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} Forint`;
+    row[1] = `${(row[1] as string).replace(/ettő$/, 'ét')} Forint`;
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -145,11 +145,11 @@ describe('Test Negative Integers with options = { currency: true }', () => {
   const testNegativeIntegersWithCurrency = cloneDeep(testIntegers);
   testNegativeIntegersWithCurrency.map((row, i) => {
     if (i === 0) {
-      row[1] = `${row[1]} Forint`;
+      row[1] = `${(row[1] as string).replace(/ettő$/, 'ét')} Forint`;
       return;
     }
     row[0] = -row[0];
-    row[1] = `Mínusz ${row[1]} Forint`;
+    row[1] = `Mínusz ${(row[1] as string).replace(/ettő$/, 'ét')} Forint`;
   });
 
   test.concurrent.each(testNegativeIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -163,7 +163,7 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
     if (i === 0) {
       row[1] = '';
     } else {
-      row[1] = `${row[1]} Forint`;
+      row[1] = `${(row[1] as string).replace(/ettő$/, 'ét')} Forint`;
     }
   });
 
@@ -298,10 +298,10 @@ const testOrdinalNumbers: [number, string][] = [
   [80, 'Nyolcvanadik'],
   [90, 'Kilencvenedik'],
   [100, 'Századik'],
-  [101, 'Száz Első'],
+  [101, 'Száz Egyedik'],
   [200, 'Kétszázadik'],
   [1000, 'Ezredik'],
-  [1001, 'Ezer Első'],
+  [1001, 'Ezer Egyedik'],
   [1000000, 'Egy Milliomodik'],
 ];
 

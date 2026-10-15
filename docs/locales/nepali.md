@@ -56,8 +56,8 @@ toCurrency(999.99);
 
 ## Locale Codes
 
-| Locale code | Country | Currency       | Notes                           |
-| ----------- | ------- | -------------- | ------------------------------- |
+| Locale code | Country | Currency   | Notes                           |
+| ----------- | ------- | ---------- | ------------------------------- |
 | `ne-NP`     | Nepal   | रुपैयाँ / पैसा | Indian scale; Devanagari script |
 
 ## Related

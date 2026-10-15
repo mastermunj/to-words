@@ -41,20 +41,26 @@ const testIntegers: [number, string][] = [
   [4680, 'Four Thousand Six Hundred Eighty'],
   [63892, 'Sixty Three Thousand Eight Hundred Ninety Two'],
   [86100, 'Eighty Six Thousand One Hundred'],
-  [792581, 'Seven Lakh Ninety Two Thousand Five Hundred Eighty One'],
-  [2741034, 'Twenty Seven Lakh Forty One Thousand Thirty Four'],
-  [86429753, 'Eight Crore Sixty Four Lakh Twenty Nine Thousand Seven Hundred Fifty Three'],
-  [975310864, 'Ninety Seven Crore Fifty Three Lakh Ten Thousand Eight Hundred Sixty Four'],
-  [9876543210, 'Nine Hundred Eighty Seven Crore Sixty Five Lakh Forty Three Thousand Two Hundred Ten'],
-  [98765432101, 'Nine Thousand Eight Hundred Seventy Six Crore Fifty Four Lakh Thirty Two Thousand One Hundred One'],
-  [987654321012, 'Ninety Eight Thousand Seven Hundred Sixty Five Crore Forty Three Lakh Twenty One Thousand Twelve'],
+  [792581, 'Seven Hundred Ninety Two Thousand Five Hundred Eighty One'],
+  [2741034, 'Two Million Seven Hundred Forty One Thousand Thirty Four'],
+  [86429753, 'Eighty Six Million Four Hundred Twenty Nine Thousand Seven Hundred Fifty Three'],
+  [975310864, 'Nine Hundred Seventy Five Million Three Hundred Ten Thousand Eight Hundred Sixty Four'],
+  [9876543210, 'Nine Billion Eight Hundred Seventy Six Million Five Hundred Forty Three Thousand Two Hundred Ten'],
+  [
+    98765432101,
+    'Ninety Eight Billion Seven Hundred Sixty Five Million Four Hundred Thirty Two Thousand One Hundred One',
+  ],
+  [
+    987654321012,
+    'Nine Hundred Eighty Seven Billion Six Hundred Fifty Four Million Three Hundred Twenty One Thousand Twelve',
+  ],
   [
     9876543210123,
-    'Nine Lakh Eighty Seven Thousand Six Hundred Fifty Four Crore Thirty Two Lakh Ten Thousand One Hundred Twenty Three',
+    'Nine Trillion Eight Hundred Seventy Six Billion Five Hundred Forty Three Million Two Hundred Ten Thousand One Hundred Twenty Three',
   ],
   [
     98765432101234,
-    'Ninety Eight Lakh Seventy Six Thousand Five Hundred Forty Three Crore Twenty One Lakh One Thousand Two Hundred Thirty Four',
+    'Ninety Eight Trillion Seven Hundred Sixty Five Billion Four Hundred Thirty Two Million One Hundred One Thousand Two Hundred Thirty Four',
   ],
 ];
 
@@ -262,7 +268,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
   );
 });
 
-// Comprehensive Ordinal Tests (Indian Numbering System - Lakhs, Crores)
+// Comprehensive Ordinal Tests (international scale: Million, Billion)
 const testOrdinalNumbers: [number, string][] = [
   // Numbers 1-20 (special ordinal forms)
   [1, 'First'],
@@ -315,24 +321,24 @@ const testOrdinalNumbers: [number, string][] = [
   [1000, 'One Thousandth'],
   [10000, 'Ten Thousandth'],
 
-  // Indian numbering system - Lakhs
-  [100000, 'One Lakh'],
-  [200000, 'Two Lakh'],
-  [100001, 'One Lakh First'],
-  [100002, 'One Lakh Second'],
-  [100003, 'One Lakh Third'],
-  [100011, 'One Lakh Eleventh'],
-  [100021, 'One Lakh Twenty First'],
-  [100100, 'One Lakh Hundredth'],
+  // Hundred thousands
+  [100000, 'One Hundred Thousandth'],
+  [200000, 'Two Hundred Thousandth'],
+  [100001, 'One Hundred Thousand First'],
+  [100002, 'One Hundred Thousand Second'],
+  [100003, 'One Hundred Thousand Third'],
+  [100011, 'One Hundred Thousand Eleventh'],
+  [100021, 'One Hundred Thousand Twenty First'],
+  [100100, 'One Hundred Thousand One Hundredth'],
 
-  // Indian numbering system - Ten Lakhs
-  [1000000, 'Ten Lakh'],
-  [1000001, 'Ten Lakh First'],
+  // Millions
+  [1000000, 'One Millionth'],
+  [1000001, 'One Million First'],
 
-  // Indian numbering system - Crores
-  [10000000, 'One Crore'],
-  [10000001, 'One Crore First'],
-  [100000000, 'Ten Crore'],
+  // Ten millions
+  [10000000, 'Ten Millionth'],
+  [10000001, 'Ten Million First'],
+  [100000000, 'One Hundred Millionth'],
 
   // Numbers in the hundreds with endings
   [101, 'One Hundred First'],
@@ -382,9 +388,9 @@ const testPowersOfTen: [number, string][] = [
   [100, 'One Hundred'],
   [1000, 'One Thousand'],
   [10000, 'Ten Thousand'],
-  [100000, 'One Lakh'],
-  [1000000, 'Ten Lakh'],
-  [10000000, 'One Crore'],
+  [100000, 'One Hundred Thousand'],
+  [1000000, 'One Million'],
+  [10000000, 'Ten Million'],
 ];
 
 describe('Test Powers of Ten', () => {
@@ -399,7 +405,7 @@ const testBigInts: [bigint, string][] = [
   [1n, 'One'],
   [100n, 'One Hundred'],
   [1000n, 'One Thousand'],
-  [100000n, 'One Lakh'],
+  [100000n, 'One Hundred Thousand'],
 ];
 
 describe('Test BigInt Inputs', () => {
@@ -528,9 +534,11 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
 
   test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
     expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
-      'One Point Twelve Lakh Thirty Four Thousand Five Hundred Sixty Seven',
+      'One Point One Million Two Hundred Thirty Four Thousand Five Hundred Sixty Seven',
     );
-    expect(toWords.convert(1.1234567)).toBe('One Point Twelve Lakh Thirty Four Thousand Five Hundred Sixty Seven');
+    expect(toWords.convert(1.1234567)).toBe(
+      'One Point One Million Two Hundred Thirty Four Thousand Five Hundred Sixty Seven',
+    );
   });
 
   test('digit-by-digit style works without decimalStyle option', () => {

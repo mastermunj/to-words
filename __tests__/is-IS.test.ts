@@ -33,37 +33,47 @@ describe('Test Locale', () => {
   });
 });
 
+// Currency phrase for an integer amount: króna is feminine and singular after …1 except 11.
+const kronur = (amount: number, words: string): string => {
+  const n = Math.abs(amount);
+  const feminine = words.replace(
+    /(Einn|Tveir|Þrír|Fjórir)$/,
+    (unit) => ({ Einn: 'Ein', Tveir: 'Tvær', Þrír: 'Þrjár', Fjórir: 'Fjórar' })[unit]!,
+  );
+  return `${feminine} ${n % 10 === 1 && n % 100 !== 11 ? 'Króna' : 'Krónur'}`;
+};
+
 const testIntegers: [number, string][] = [
   [0, 'Núll'],
   [137, 'Hundrað Þrjátíu Og Sjö'],
-  [700, 'Sjö Hundrað'],
-  [1100, 'Þúsund Hundrað'],
-  [4680, 'Fjórir Þúsund Sex Hundrað Áttatíu'],
-  [63892, 'Sextíu Og Þrír Þúsund Átta Hundrað Níutíu Og Tveir'],
-  [86100, 'Áttatíu Og Sex Þúsund Hundrað'],
-  [792581, 'Sjö Hundrað Níutíu Og Tveir Þúsund Fimm Hundrað Áttatíu Og Einn'],
-  [2741034, 'Tveir Milljón Sjö Hundrað Fjörutíu Og Einn Þúsund Þrjátíu Og Fjórir'],
-  [86429753, 'Áttatíu Og Sex Milljón Fjórir Hundrað Tuttugu Og Níu Þúsund Sjö Hundrað Fimmtíu Og Þrír'],
-  [975310864, 'Níu Hundrað Sjötíu Og Fimm Milljón Þrír Hundrað Tíu Þúsund Átta Hundrað Sextíu Og Fjórir'],
+  [700, 'Sjö Hundruð'],
+  [1100, 'Þúsund Og Hundrað'],
+  [4680, 'Fjögur Þúsund Sex Hundruð Og Áttatíu'],
+  [63892, 'Sextíu Og Þrjú Þúsund Átta Hundruð Níutíu Og Tveir'],
+  [86100, 'Áttatíu Og Sex Þúsund Og Hundrað'],
+  [792581, 'Sjö Hundruð Níutíu Og Tvö Þúsund Fimm Hundruð Áttatíu Og Einn'],
+  [2741034, 'Tvær Milljónir Sjö Hundruð Fjörutíu Og Eitt Þúsund Þrjátíu Og Fjórir'],
+  [86429753, 'Áttatíu Og Sex Milljónir Fjögur Hundruð Tuttugu Og Níu Þúsund Sjö Hundruð Fimmtíu Og Þrír'],
+  [975310864, 'Níu Hundruð Sjötíu Og Fimm Milljónir Þrjú Hundruð Og Tíu Þúsund Átta Hundruð Sextíu Og Fjórir'],
   [
     9876543210,
-    'Níu Milljarður Átta Hundrað Sjötíu Og Sex Milljón Fimm Hundrað Fjörutíu Og Þrír Þúsund Tveir Hundrað Tíu',
+    'Níu Milljarðar Átta Hundruð Sjötíu Og Sex Milljónir Fimm Hundruð Fjörutíu Og Þrjú Þúsund Tvö Hundruð Og Tíu',
   ],
   [
     98765432101,
-    'Níutíu Og Átta Milljarður Sjö Hundrað Sextíu Og Fimm Milljón Fjórir Hundrað Þrjátíu Og Tveir Þúsund Hundrað Einn',
+    'Níutíu Og Átta Milljarðar Sjö Hundruð Sextíu Og Fimm Milljónir Fjögur Hundruð Þrjátíu Og Tvö Þúsund Hundrað Og Einn',
   ],
   [
     987654321012,
-    'Níu Hundrað Áttatíu Og Sjö Milljarður Sex Hundrað Fimmtíu Og Fjórir Milljón Þrír Hundrað Tuttugu Og Einn Þúsund Tólf',
+    'Níu Hundruð Áttatíu Og Sjö Milljarðar Sex Hundruð Fimmtíu Og Fjórar Milljónir Þrjú Hundruð Tuttugu Og Eitt Þúsund Og Tólf',
   ],
   [
     9876543210123,
-    'Níu Billjón Átta Hundrað Sjötíu Og Sex Milljarður Fimm Hundrað Fjörutíu Og Þrír Milljón Tveir Hundrað Tíu Þúsund Hundrað Tuttugu Og Þrír',
+    'Níu Billjónir Átta Hundruð Sjötíu Og Sex Milljarðar Fimm Hundruð Fjörutíu Og Þrjár Milljónir Tvö Hundruð Og Tíu Þúsund Hundrað Tuttugu Og Þrír',
   ],
   [
     98765432101234,
-    'Níutíu Og Átta Billjón Sjö Hundrað Sextíu Og Fimm Milljarður Fjórir Hundrað Þrjátíu Og Tveir Milljón Hundrað Einn Þúsund Tveir Hundrað Þrjátíu Og Fjórir',
+    'Níutíu Og Átta Billjónir Sjö Hundruð Sextíu Og Fimm Milljarðar Fjögur Hundruð Þrjátíu Og Tvær Milljónir Hundrað Og Eitt Þúsund Tvö Hundruð Þrjátíu Og Fjórir',
   ],
 ];
 
@@ -91,7 +101,7 @@ describe('Test Negative Integers with options = {}', () => {
 describe('Test Integers with options = { currency: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} Krónur`;
+    row[1] = kronur(row[0] as number, row[1] as string);
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -102,7 +112,7 @@ describe('Test Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, doNotAddOnly: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} Krónur`;
+    row[1] = kronur(row[0] as number, row[1] as string);
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -114,11 +124,11 @@ describe('Test Negative Integers with options = { currency: true }', () => {
   const testNegativeIntegersWithCurrency = cloneDeep(testIntegers);
   testNegativeIntegersWithCurrency.map((row, i) => {
     if (i === 0) {
-      row[1] = `${row[1]} Krónur`;
+      row[1] = kronur(row[0] as number, row[1] as string);
       return;
     }
     row[0] = -row[0];
-    row[1] = `Mínus ${row[1]} Krónur`;
+    row[1] = `Mínus ${kronur(row[0] as number, row[1] as string)}`;
   });
 
   test.concurrent.each(testNegativeIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -129,7 +139,7 @@ describe('Test Negative Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, ignoreZeroCurrency: true }', () => {
   const testIntegersWithCurrencyAndIgnoreZeroCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrencyAndIgnoreZeroCurrency.map((row, i) => {
-    row[1] = i === 0 ? '' : `${row[1]} Krónur`;
+    row[1] = i === 0 ? '' : kronur(row[0] as number, row[1] as string);
   });
 
   test.concurrent.each(testIntegersWithCurrencyAndIgnoreZeroCurrency)('convert %d => %s', (input, expected) => {
@@ -147,22 +157,22 @@ const testFloats: [number, string][] = [
   [0.04, 'Núll Komma Núll Fjórir'],
   [0.0468, 'Núll Komma Núll Fjórir Sex Átta'],
   [0.4, 'Núll Komma Fjórir'],
-  [0.973, 'Núll Komma Níu Hundrað Sjötíu Og Þrír'],
-  [0.999, 'Núll Komma Níu Hundrað Níutíu Og Níu'],
+  [0.973, 'Núll Komma Níu Hundruð Sjötíu Og Þrír'],
+  [0.999, 'Núll Komma Níu Hundruð Níutíu Og Níu'],
   [37.06, 'Þrjátíu Og Sjö Komma Núll Sex'],
   [37.068, 'Þrjátíu Og Sjö Komma Núll Sex Átta'],
   [37.68, 'Þrjátíu Og Sjö Komma Sextíu Og Átta'],
-  [37.683, 'Þrjátíu Og Sjö Komma Sex Hundrað Áttatíu Og Þrír'],
+  [37.683, 'Þrjátíu Og Sjö Komma Sex Hundruð Áttatíu Og Þrír'],
 ];
 
 describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
   const testIncludeZeroFractional: [number | string, string][] = [
-    [123, `Hundrað Tuttugu Og Þrír Krónur`],
-    ['123', `Hundrað Tuttugu Og Þrír Krónur`],
-    ['123.0', `Hundrað Tuttugu Og Þrír Krónur Og Núll Aurar`],
-    ['123.00', `Hundrað Tuttugu Og Þrír Krónur Og Núll Aurar`],
+    [123, `Hundrað Tuttugu Og Þrjár Krónur`],
+    ['123', `Hundrað Tuttugu Og Þrjár Krónur`],
+    ['123.0', `Hundrað Tuttugu Og Þrjár Krónur Og Núll Aurar`],
+    ['123.00', `Hundrað Tuttugu Og Þrjár Krónur Og Núll Aurar`],
     ['0.00', `Núll Krónur Og Núll Aurar`],
-    ['-123.00', `Mínus Hundrað Tuttugu Og Þrír Krónur Og Núll Aurar`],
+    ['-123.00', `Mínus Hundrað Tuttugu Og Þrjár Krónur Og Núll Aurar`],
     ['37.68', `Þrjátíu Og Sjö Krónur Og Sextíu Og Átta Aurar`],
   ];
 
@@ -188,7 +198,7 @@ const testFloatsWithCurrency: [number, string][] = [
   [0.0468, `Núll Krónur Og Fimm Aurar`],
   [0.4, `Núll Krónur Og Fjörutíu Aurar`],
   [0.973, `Núll Krónur Og Níutíu Og Sjö Aurar`],
-  [0.999, `Einn Króna`],
+  [0.999, `Ein Króna`],
   [37.06, `Þrjátíu Og Sjö Krónur Og Sex Aurar`],
   [37.068, `Þrjátíu Og Sjö Krónur Og Sjö Aurar`],
   [37.68, `Þrjátíu Og Sjö Krónur Og Sextíu Og Átta Aurar`],
@@ -268,11 +278,11 @@ const testOrdinals: [number, string][] = [
   [19, 'Nítjándi'],
   [20, 'Tuttugasti'],
   // Composite numbers (21, 22, etc.)
-  [21, 'Tuttugu Og Einn'],
-  [22, 'Tuttugu Og Tveir'],
-  [23, 'Tuttugu Og Þrír'],
-  [24, 'Tuttugu Og Fjórir'],
-  [25, 'Tuttugu Og Fimm'],
+  [21, 'Tuttugasti Og Fyrsti'],
+  [22, 'Tuttugasti Og Annar'],
+  [23, 'Tuttugasti Og Þriðji'],
+  [24, 'Tuttugasti Og Fjórði'],
+  [25, 'Tuttugasti Og Fimmti'],
   // Tens
   [30, 'Þrítugasti'],
   [40, 'Fertugasti'],
@@ -283,24 +293,24 @@ const testOrdinals: [number, string][] = [
   [90, 'Níutugasti'],
   // Round numbers (100, 200, 1000, etc.)
   [100, 'Hundraðasti'],
-  [200, 'Tveir Hundraðasti'],
-  [300, 'Þrír Hundraðasti'],
+  [200, 'Tvö Hundraðasti'],
+  [300, 'Þrjú Hundraðasti'],
   [1000, 'Þúsundasti'],
-  [2000, 'Tveir Þúsundasti'],
-  [1000000, 'Einn Milljónasti'],
-  [2000000, 'Tveir Milljónasti'],
+  [2000, 'Tvö Þúsundasti'],
+  [1000000, 'Ein Milljónasti'],
+  [2000000, 'Tvær Milljónasti'],
   // Complex numbers
-  [101, 'Hundrað Fyrsti'],
-  [102, 'Hundrað Annar'],
-  [111, 'Hundrað Ellefti'],
-  [123, 'Hundrað Tuttugu Og Þrír'],
-  [150, 'Hundrað Fimmtugasti'],
-  [1001, 'Þúsund Fyrsti'],
-  [1234, 'Þúsund Tveir Hundrað Þrjátíu Og Fjórir'],
-  [1500, 'Þúsund Fimm Hundraðasti'],
+  [101, 'Hundrað Og Fyrsti'],
+  [102, 'Hundrað Og Annar'],
+  [111, 'Hundrað Og Ellefti'],
+  [123, 'Hundrað Tuttugasti Og Þriðji'],
+  [150, 'Hundrað Og Fimmtugasti'],
+  [1001, 'Þúsund Og Fyrsti'],
+  [1234, 'Þúsund Tvö Hundruð Þrítugasti Og Fjórði'],
+  [1500, 'Þúsund Og Fimm Hundraðasti'],
   [10000, 'Tíu Þúsundasti'],
   [100000, 'Hundrað Þúsundasti'],
-  [1000001, 'Einn Milljón Fyrsti'],
+  [1000001, 'Ein Milljón Og Fyrsti'],
 ];
 
 describe('Test Ordinals with toOrdinal()', () => {
@@ -337,7 +347,7 @@ const testPowersOfTen: [number, string][] = [
   [1000, 'Þúsund'],
   [10000, 'Tíu Þúsund'],
   [100000, 'Hundrað Þúsund'],
-  [1000000, 'Einn Milljón'],
+  [1000000, 'Ein Milljón'],
 ];
 
 describe('Test Powers of Ten', () => {

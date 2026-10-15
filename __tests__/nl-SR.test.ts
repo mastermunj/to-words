@@ -35,32 +35,29 @@ describe('Test Locale', () => {
 
 const testIntegers: [number, string][] = [
   [0, 'Nul'],
-  [137, 'Een Honderd Zevenendertig'],
-  [700, 'Zeven Honderd'],
-  [1100, 'Een Duizend Honderd'],
-  [4680, 'Vier Duizend Zes Honderd Tachtig'],
-  [63892, 'Drieënzestig Duizend Acht Honderd Tweeënnegentig'],
-  [86100, 'Zesentachtig Duizend Honderd'],
-  [792581, 'Zeven Honderd Tweeënnegentig Duizend Vijf Honderd Eenentachtig'],
-  [2741034, 'Twee Miljoen Zeven Honderd Eenenveertig Duizend Vierendertig'],
-  [86429753, 'Zesentachtig Miljoen Vier Honderd Negenentwintig Duizend Zeven Honderd Drieënvijftig'],
-  [975310864, 'Negen Honderd Vijfenzeventig Miljoen Drie Honderd Tien Duizend Acht Honderd Vierenzestig'],
-  [9876543210, 'Negen Miljard Acht Honderd Zesenzeventig Miljoen Vijf Honderd Drieënveertig Duizend Twee Honderd Tien'],
-  [
-    98765432101,
-    'Achtennegentig Miljard Zeven Honderd Vijfenzestig Miljoen Vier Honderd Tweeëndertig Duizend Een Honderd Een',
-  ],
+  [137, 'Honderdzevenendertig'],
+  [700, 'Zevenhonderd'],
+  [1100, 'Duizend Honderd'],
+  [4680, 'Vierduizend Zeshonderdtachtig'],
+  [63892, 'Drieënzestigduizend Achthonderdtweeënnegentig'],
+  [86100, 'Zesentachtigduizend Honderd'],
+  [792581, 'Zevenhonderdtweeënnegentigduizend Vijfhonderdeenentachtig'],
+  [2741034, 'Twee Miljoen Zevenhonderdeenenveertigduizend Vierendertig'],
+  [86429753, 'Zesentachtig Miljoen Vierhonderdnegenentwintigduizend Zevenhonderddrieënvijftig'],
+  [975310864, 'Negenhonderdvijfenzeventig Miljoen Driehonderdtienduizend Achthonderdvierenzestig'],
+  [9876543210, 'Negen Miljard Achthonderdzesenzeventig Miljoen Vijfhonderddrieënveertigduizend Tweehonderdtien'],
+  [98765432101, 'Achtennegentig Miljard Zevenhonderdvijfenzestig Miljoen Vierhonderdtweeëndertigduizend Honderdeen'],
   [
     987654321012,
-    'Negen Honderd Zevenentachtig Miljard Zes Honderd Vierenvijftig Miljoen Drie Honderd Eenentwintig Duizend Twaalf',
+    'Negenhonderdzevenentachtig Miljard Zeshonderdvierenvijftig Miljoen Driehonderdeenentwintigduizend Twaalf',
   ],
   [
     9876543210123,
-    'Negen Biljoen Acht Honderd Zesenzeventig Miljard Vijf Honderd Drieënveertig Miljoen Twee Honderd Tien Duizend Een Honderd Drieëntwintig',
+    'Negen Biljoen Achthonderdzesenzeventig Miljard Vijfhonderddrieënveertig Miljoen Tweehonderdtienduizend Honderddrieëntwintig',
   ],
   [
     98765432101234,
-    'Achtennegentig Biljoen Zeven Honderd Vijfenzestig Miljard Vier Honderd Tweeëndertig Miljoen Een Honderd Een Duizend Twee Honderd Vierendertig',
+    'Achtennegentig Biljoen Zevenhonderdvijfenzestig Miljard Vierhonderdtweeëndertig Miljoen Honderdeenduizend Tweehonderdvierendertig',
   ],
 ];
 
@@ -77,7 +74,7 @@ describe('Test Negative Integers with options = {}', () => {
       return;
     }
     row[0] = -row[0];
-    row[1] = `Negatief ${row[1]}`;
+    row[1] = `Min ${row[1]}`;
   });
 
   test.concurrent.each(testNegativeIntegers)('convert %d => %s', (input, expected) => {
@@ -115,7 +112,7 @@ describe('Test Negative Integers with options = { currency: true }', () => {
       return;
     }
     row[0] = -row[0];
-    row[1] = `Negatief ${row[1]} Surinaamse dollars`;
+    row[1] = `Min ${row[1]} Surinaamse dollars`;
   });
 
   test.concurrent.each(testNegativeIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -141,27 +138,27 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
 
 const testFloats: [number, string][] = [
   [0.0, 'Nul'],
-  [0.04, 'Nul Punt Nul Vier'],
-  [0.0468, 'Nul Punt Nul Vier Zes Acht'],
-  [0.4, 'Nul Punt Vier'],
+  [0.04, 'Nul Komma Nul Vier'],
+  [0.0468, 'Nul Komma Nul Vier Zes Acht'],
+  [0.4, 'Nul Komma Vier'],
   // DEBUG Not recieving expected results
-  // [0.63, 'Nul Punt Drieënzestig'],
-  [0.973, 'Nul Punt Negen Honderd Drieënzeventig'],
-  [0.999, 'Nul Punt Negen Honderd Negenennegentig'],
-  [37.06, 'Zevenendertig Punt Nul Zes'],
-  [37.068, 'Zevenendertig Punt Nul Zes Acht'],
-  [37.68, 'Zevenendertig Punt Achtenzestig'],
-  [37.683, 'Zevenendertig Punt Zes Honderd Drieëntachtig'],
+  // [0.63, 'Nul Komma Drieënzestig'],
+  [0.973, 'Nul Komma Negenhonderddrieënzeventig'],
+  [0.999, 'Nul Komma Negenhonderdnegenennegentig'],
+  [37.06, 'Zevenendertig Komma Nul Zes'],
+  [37.068, 'Zevenendertig Komma Nul Zes Acht'],
+  [37.68, 'Zevenendertig Komma Achtenzestig'],
+  [37.683, 'Zevenendertig Komma Zeshonderddrieëntachtig'],
 ];
 
 describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
   const testIncludeZeroFractional: [number | string, string][] = [
-    [123, `Een Honderd Drieëntwintig Surinaamse dollars`],
-    ['123', `Een Honderd Drieëntwintig Surinaamse dollars`],
-    ['123.0', `Een Honderd Drieëntwintig Surinaamse dollars En Nul Centen`],
-    ['123.00', `Een Honderd Drieëntwintig Surinaamse dollars En Nul Centen`],
+    [123, `Honderddrieëntwintig Surinaamse dollars`],
+    ['123', `Honderddrieëntwintig Surinaamse dollars`],
+    ['123.0', `Honderddrieëntwintig Surinaamse dollars En Nul Centen`],
+    ['123.00', `Honderddrieëntwintig Surinaamse dollars En Nul Centen`],
     ['0.00', `Nul Surinaamse dollars En Nul Centen`],
-    ['-123.00', `Negatief Een Honderd Drieëntwintig Surinaamse dollars En Nul Centen`],
+    ['-123.00', `Min Honderddrieëntwintig Surinaamse dollars En Nul Centen`],
     ['37.68', `Zevenendertig Surinaamse dollars En Achtenzestig Centen`],
   ];
 
@@ -292,11 +289,11 @@ const testOrdinals: [number, string][] = [
   [19, 'Negentiende'],
   [20, 'Twintigste'],
   // Composite numbers (21, 22, etc.)
-  [21, 'Eenentwintig'],
-  [22, 'Tweeëntwintig'],
-  [23, 'Drieëntwintig'],
-  [24, 'Vierentwintig'],
-  [25, 'Vijfentwintig'],
+  [21, 'Eenentwintigste'],
+  [22, 'Tweeëntwintigste'],
+  [23, 'Drieëntwintigste'],
+  [24, 'Vierentwintigste'],
+  [25, 'Vijfentwintigste'],
   // Tens
   [30, 'Dertigste'],
   [40, 'Veertigste'],
@@ -307,24 +304,24 @@ const testOrdinals: [number, string][] = [
   [90, 'Negentigste'],
   // Round numbers (100, 200, 1000, etc.)
   [100, 'Honderdste'],
-  [200, 'Twee Honderdste'],
-  [300, 'Drie Honderdste'],
-  [1000, 'Een Duizendste'],
-  [2000, 'Twee Duizendste'],
-  [1000000, 'Een Miljoenste'],
-  [2000000, 'Twee Miljoenste'],
+  [200, 'Tweehonderdste'],
+  [300, 'Driehonderdste'],
+  [1000, 'Duizendste'],
+  [2000, 'Tweeduizendste'],
+  [1000000, 'Miljoenste'],
+  [2000000, 'Tweemiljoenste'],
   // Complex numbers
-  [101, 'Een Honderd Eerste'],
-  [102, 'Een Honderd Tweede'],
-  [111, 'Een Honderd Elfde'],
-  [123, 'Een Honderd Drieëntwintig'],
-  [150, 'Een Honderd Vijftigste'],
-  [1001, 'Een Duizend Eerste'],
-  [1234, 'Een Duizend Twee Honderd Vierendertig'],
-  [1500, 'Een Duizend Vijf Honderdste'],
-  [10000, 'Tien Duizendste'],
-  [100000, 'Honderd Duizendste'],
-  [1000001, 'Een Miljoen Eerste'],
+  [101, 'Honderdeerste'],
+  [102, 'Honderdtweede'],
+  [111, 'Honderdelfde'],
+  [123, 'Honderddrieëntwintigste'],
+  [150, 'Honderdvijftigste'],
+  [1001, 'Duizendeerste'],
+  [1234, 'Duizendtweehonderdvierendertigste'],
+  [1500, 'Duizendvijfhonderdste'],
+  [10000, 'Tienduizendste'],
+  [100000, 'Honderdduizendste'],
+  [1000001, 'Miljoeneerste'],
 ];
 
 describe('Test Ordinals with toOrdinal()', () => {
@@ -358,9 +355,9 @@ describe('Test Ordinal Error Cases', () => {
 const testPowersOfTen: [number, string][] = [
   [10, 'Tien'],
   [100, 'Honderd'],
-  [1000, 'Een Duizend'],
-  [10000, 'Tien Duizend'],
-  [100000, 'Honderd Duizend'],
+  [1000, 'Duizend'],
+  [10000, 'Tienduizend'],
+  [100000, 'Honderdduizend'],
   [1000000, 'Een Miljoen'],
 ];
 
@@ -374,7 +371,7 @@ const testBigInts: [bigint, string][] = [
   [0n, 'Nul'],
   [1n, 'Een'],
   [100n, 'Honderd'],
-  [1000n, 'Een Duizend'],
+  [1000n, 'Duizend'],
 ];
 
 describe('Test BigInt with options = {}', () => {
@@ -384,9 +381,9 @@ describe('Test BigInt with options = {}', () => {
 });
 
 const testNegativeBigInts: [bigint, string][] = [
-  [-1n, 'Negatief Een'],
-  [-100n, 'Negatief Honderd'],
-  [-1000n, 'Negatief Een Duizend'],
+  [-1n, 'Min Een'],
+  [-100n, 'Min Honderd'],
+  [-1000n, 'Min Duizend'],
 ];
 
 describe('Test Negative BigInt with options = {}', () => {
@@ -399,7 +396,7 @@ const testStringInputs: [string, string][] = [
   ['0', 'Nul'],
   ['1', 'Een'],
   ['100', 'Honderd'],
-  ['-100', 'Negatief Honderd'],
+  ['-100', 'Min Honderd'],
 ];
 
 describe('Test String Input with options = {}', () => {
@@ -489,7 +486,7 @@ const testFractionStyleNlSR: [number, string][] = [
   [1.00005, 'Een En Vijf Honderdduizendsten'],
   [1.000001, 'Een En Een Miljoenste'],
   [1.000005, 'Een En Vijf Miljoensten'],
-  [123.45, 'Een Honderd Drieëntwintig En Vijfenveertig Honderdsten'],
+  [123.45, 'Honderddrieëntwintig En Vijfenveertig Honderdsten'],
 ];
 
 describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
@@ -499,15 +496,50 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
 
   test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
     expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
-      'Een Punt Een Miljoen Twee Honderd Vierendertig Duizend Vijf Honderd Zevenenzestig',
+      'Een Komma Een Miljoen Tweehonderdvierendertigduizend Vijfhonderdzevenenzestig',
     );
     expect(toWords.convert(1.1234567)).toBe(
-      'Een Punt Een Miljoen Twee Honderd Vierendertig Duizend Vijf Honderd Zevenenzestig',
+      'Een Komma Een Miljoen Tweehonderdvierendertigduizend Vijfhonderdzevenenzestig',
     );
   });
 
   test('digit-by-digit style works without decimalStyle option', () => {
-    expect(toWords.convert(1.5)).toBe('Een Punt Vijf');
-    expect(toWords.convert(0.05)).toBe('Nul Punt Nul Vijf');
+    expect(toWords.convert(1.5)).toBe('Een Komma Vijf');
+    expect(toWords.convert(0.05)).toBe('Nul Komma Nul Vijf');
+  });
+});
+
+describe('Taaladvies / CLDR cited (nl-SR)', () => {
+  // Spelling rules are shared with nl-NL (Taalunie Leidraad 6.9, Team Taaladvies).
+  test.each([
+    [37, 'Zevenendertig'],
+    [207, 'Tweehonderdzeven'],
+    [2004, 'Tweeduizend Vier'],
+    [1006, 'Duizend Zes'],
+  ])('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+
+  test.each([
+    [8, 'Achtste'],
+    [104, 'Honderdvierde'],
+    [200, 'Tweehonderdste'],
+  ])('toOrdinal %d => %s', (input, expected) => {
+    expect(toWords.toOrdinal(input)).toBe(expected);
+  });
+
+  // CLDR rbnf nl: «x. x: << komma >>» and «-x: min >>».
+  test('decimal comma', () => {
+    expect(toWords.convert(8.5)).toBe('Acht Komma Vijf');
+  });
+
+  test('negative reads min (CLDR)', () => {
+    expect(toWords.convert(-5)).toBe('Min Vijf');
+  });
+
+  // nl-SR currency: Surinaamse dollar(s) / Cent(en).
+  test('currency Surinaamse dollar', () => {
+    expect(toWords.convert(1, { currency: true })).toBe('Een Surinaamse dollar');
+    expect(toWords.convert(2.42, { currency: true })).toBe('Twee Surinaamse dollars En Tweeënveertig Centen');
   });
 });

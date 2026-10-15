@@ -45,16 +45,16 @@ const testIntegers: [number, string][] = [
   [2741034, 'Twenty Seven Lakh Forty One Thousand Thirty Four'],
   [86429753, 'Eight Crore Sixty Four Lakh Twenty Nine Thousand Seven Hundred Fifty Three'],
   [975310864, 'Ninety Seven Crore Fifty Three Lakh Ten Thousand Eight Hundred Sixty Four'],
-  [9876543210, 'Nine Arab Eighty Seven Crore Sixty Five Lakh Forty Three Thousand Two Hundred Ten'],
-  [98765432101, 'Ninety Eight Arab Seventy Six Crore Fifty Four Lakh Thirty Two Thousand One Hundred One'],
-  [987654321012, 'Nine Kharab Eighty Seven Arab Sixty Five Crore Forty Three Lakh Twenty One Thousand Twelve'],
+  [9876543210, 'Nine Hundred Eighty Seven Crore Sixty Five Lakh Forty Three Thousand Two Hundred Ten'],
+  [98765432101, 'Nine Thousand Eight Hundred Seventy Six Crore Fifty Four Lakh Thirty Two Thousand One Hundred One'],
+  [987654321012, 'Ninety Eight Thousand Seven Hundred Sixty Five Crore Forty Three Lakh Twenty One Thousand Twelve'],
   [
     9876543210123,
-    'Ninety Eight Kharab Seventy Six Arab Fifty Four Crore Thirty Two Lakh Ten Thousand One Hundred Twenty Three',
+    'Nine Lakh Eighty Seven Thousand Six Hundred Fifty Four Crore Thirty Two Lakh Ten Thousand One Hundred Twenty Three',
   ],
   [
     98765432101234,
-    'Nine Neel Eighty Seven Kharab Sixty Five Arab Forty Three Crore Twenty One Lakh One Thousand Two Hundred Thirty Four',
+    'Ninety Eight Lakh Seventy Six Thousand Five Hundred Forty Three Crore Twenty One Lakh One Thousand Two Hundred Thirty Four',
   ],
 ];
 
@@ -368,23 +368,23 @@ const testOrdinalNumbers: [number, string][] = [
   [10000, 'Ten Thousandth'],
 
   // Indian numbering system - Lakhs
-  [100000, 'One Lakh'],
-  [200000, 'Two Lakh'],
+  [100000, 'One Lakhth'],
+  [200000, 'Two Lakhth'],
   [100001, 'One Lakh First'],
   [100002, 'One Lakh Second'],
   [100003, 'One Lakh Third'],
   [100011, 'One Lakh Eleventh'],
   [100021, 'One Lakh Twenty First'],
-  [100100, 'One Lakh Hundredth'],
+  [100100, 'One Lakh One Hundredth'],
 
   // Indian numbering system - Ten Lakhs
-  [1000000, 'Ten Lakh'],
+  [1000000, 'Ten Lakhth'],
   [1000001, 'Ten Lakh First'],
 
   // Indian numbering system - Crores
-  [10000000, 'One Crore'],
+  [10000000, 'One Croreth'],
   [10000001, 'One Crore First'],
-  [100000000, 'Ten Crore'],
+  [100000000, 'Ten Croreth'],
 
   // Numbers in the hundreds with endings
   [101, 'One Hundred First'],
@@ -493,10 +493,10 @@ const testPowersOfTen: [number, string][] = [
   [1000000, 'Ten Lakh'],
   [10000000, 'One Crore'],
   [100000000, 'Ten Crore'],
-  [1000000000, 'One Arab'],
-  [10000000000, 'Ten Arab'],
-  [100000000000, 'One Kharab'],
-  [1000000000000, 'Ten Kharab'],
+  [1000000000, 'One Hundred Crore'],
+  [10000000000, 'One Thousand Crore'],
+  [100000000000, 'Ten Thousand Crore'],
+  [1000000000000, 'One Lakh Crore'],
 ];
 
 describe('Test Powers of Ten (Indian System)', () => {
@@ -575,12 +575,12 @@ const testBigInts: [bigint, string][] = [
   [1000n, 'One Thousand'],
   [100000n, 'One Lakh'],
   [10000000n, 'One Crore'],
-  [1000000000n, 'One Arab'],
-  [100000000000n, 'One Kharab'],
-  [10000000000000n, 'One Neel'],
+  [1000000000n, 'One Hundred Crore'],
+  [100000000000n, 'Ten Thousand Crore'],
+  [10000000000000n, 'Ten Lakh Crore'],
   [
     1234567890123n,
-    'Twelve Kharab Thirty Four Arab Fifty Six Crore Seventy Eight Lakh Ninety Thousand One Hundred Twenty Three',
+    'One Lakh Twenty Three Thousand Four Hundred Fifty Six Crore Seventy Eight Lakh Ninety Thousand One Hundred Twenty Three',
   ],
 ];
 

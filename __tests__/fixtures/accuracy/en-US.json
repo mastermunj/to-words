@@ -1,0 +1,52 @@
+{
+  "locale": "en-US",
+  "sources": {
+    "wp-en-numerals": {
+      "title": "Wikipedia — English numerals (cardinal and ordinal tables)",
+      "url": "https://en.wikipedia.org/wiki/English_numerals",
+      "accessed": "2026-10-08"
+    }
+  },
+  "cases": [
+    {
+      "id": "card-0",
+      "capability": "cardinal",
+      "form": "cardinal",
+      "input": "0",
+      "expected": "Zero",
+      "status": "verified",
+      "attested": true,
+      "sources": ["wp-en-numerals"]
+    },
+    {
+      "id": "card-12",
+      "capability": "cardinal",
+      "form": "cardinal",
+      "input": "12",
+      "expected": "Twelve",
+      "status": "verified",
+      "attested": true,
+      "sources": ["wp-en-numerals"]
+    },
+    {
+      "id": "scale-1000000",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "1000000",
+      "expected": "One Million",
+      "status": "verified",
+      "attested": true,
+      "sources": ["wp-en-numerals"]
+    },
+    {
+      "id": "ord-12",
+      "capability": "ordinal",
+      "form": "ordinal",
+      "input": "12",
+      "expected": "Twelfth",
+      "status": "verified",
+      "attested": true,
+      "sources": ["wp-en-numerals"]
+    }
+  ]
+}

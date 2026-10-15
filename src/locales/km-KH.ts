@@ -38,7 +38,8 @@ export default class Locale implements LocaleInterface {
       { number: 1000000000, value: 'ប៊ីលាន' },
       { number: 1000000, value: 'លាន' },
       { number: 100000, value: 'សែន' },
-      { number: 10000, value: 'មុឺន' },
+      // CLDR km: ម៉ឺន (the library had the misspelling មុឺន).
+      { number: 10000, value: 'ម៉ឺន' },
       { number: 1000, value: 'ពាន់' },
       { number: 100, value: 'រយ' },
       { number: 90, value: 'កៅសិប' },

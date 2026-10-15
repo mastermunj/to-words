@@ -1,6 +1,6 @@
 ---
-title: Legal Decimal Style — Forty-Five Hundredths | to-words
-description: "Convert plain decimals to formal wording like Forty-Five Hundredths using decimalStyle: 'fraction'. Useful for legal and financial text."
+title: Legal Decimal Style — Forty Five Hundredths | to-words
+description: "Convert plain decimals to formal wording like Forty Five Hundredths using decimalStyle: 'fraction'. Useful for legal and financial text."
 head:
   - - meta
     - name: keywords
@@ -9,7 +9,7 @@ head:
 
 # Legal Decimal Style
 
-By default, decimals are read digit by digit. For legal and banking output you often need positional wording instead, such as `Forty-Five Hundredths`. Use `decimalStyle: 'fraction'` for that.
+By default, the digits after the point are read as a number (`Zero Point Forty Five`). For legal and banking output you often need positional wording instead, such as `Forty Five Hundredths`. Use `decimalStyle: 'fraction'` for that.
 
 ## Digit Style vs Fraction Style
 
@@ -18,9 +18,9 @@ import { ToWords } from 'to-words';
 
 const tw = new ToWords({ localeCode: 'en-US' });
 
-tw.convert(0.45); // "Zero Point Four Five"
+tw.convert(0.45); // "Zero Point Forty Five"
 tw.convert(0.45, { decimalStyle: 'fraction' });
-// "Forty Five Hundredths"
+// "Zero And Forty Five Hundredths"
 ```
 
 ## Currency and Cheque Flows
@@ -45,6 +45,39 @@ import { ToWords } from 'to-words';
 const pl = new ToWords({ localeCode: 'pl-PL' });
 pl.convert(0.21, { decimalStyle: 'fraction' });
 ```
+
+## Denominators
+
+The denominator is singular when the fractional value is 1 and plural otherwise, except where a locale's own plural rule applies (the Slavic locales above).
+
+| Decimal places | English                                  | French                         | German             |
+| -------------- | ---------------------------------------- | ------------------------------ | ------------------ |
+| 1              | Tenth / Tenths                           | Dixième / Dixièmes             | Zehntel            |
+| 2              | Hundredth / Hundredths                   | Centième / Centièmes           | Hundertstel        |
+| 3              | Thousandth / Thousandths                 | Millième / Millièmes           | Tausendstel        |
+| 4              | Ten-Thousandth / Ten-Thousandths         | Dix-Millième / Dix-Millièmes   | Zehntausendstel    |
+| 5              | Hundred-Thousandth / Hundred-Thousandths | Cent-Millième / Cent-Millièmes | Hunderttausendstel |
+| 6              | Millionth / Millionths                   | Millionième / Millionièmes     | Millionstel        |
+
+Russian, Ukrainian, Belarusian, Polish, Czech and Slovak go up to 15 decimal places. For more places than a locale has words for, the conversion falls back to the default style without an error.
+
+## Supported Locales (100)
+
+| Language group     | Locales                                                                                                                                                                                                                 |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **English**        | en-AE, en-AU, en-BD, en-CA, en-GB, en-GH, en-HK, en-IE, en-IN, en-IQ, en-JM, en-KE, en-LK, en-MA, en-MM, en-MU, en-MY, en-NG, en-NP, en-NZ, en-OM, en-PH, en-PK, en-SA, en-SG, en-TT, en-TZ, en-UG, en-US, en-ZA, en-ZW |
+| **German**         | de-AT, de-CH, de-DE                                                                                                                                                                                                     |
+| **French**         | fr-BE, fr-CA, fr-CH, fr-CI, fr-CM, fr-DZ, fr-FR, fr-MA, fr-MG, fr-SA                                                                                                                                                    |
+| **Spanish**        | es-AR, es-CL, es-CO, es-ES, es-MX, es-PE, es-US, es-VE                                                                                                                                                                  |
+| **Portuguese**     | pt-AO, pt-BR, pt-MZ, pt-PT                                                                                                                                                                                              |
+| **Italian**        | it-IT                                                                                                                                                                                                                   |
+| **Dutch**          | nl-NL, nl-SR                                                                                                                                                                                                            |
+| **Scandinavian**   | da-DK, nb-NO, sv-SE                                                                                                                                                                                                     |
+| **Other European** | be-BY, bg-BG, ca-ES, cs-CZ, el-GR, hr-HR, hu-HU, lv-LV, pl-PL, ro-RO, ru-RU, sk-SK, sl-SI, sq-AL, sr-RS, uk-UA                                                                                                          |
+| **Indic**          | as-IN, bn-BD, bn-IN, gu-IN, hi-IN, kn-IN, ml-IN, mr-IN, ne-NP, or-IN, pa-IN, ta-IN, te-IN                                                                                                                               |
+| **Others**         | af-ZA, fa-IR, he-IL, id-ID, ka-GE, ms-MY, ms-SG, ur-PK, vi-VN                                                                                                                                                           |
+
+Locales not listed (Arabic, East Asian and Turkic locales, among others) don't support fraction style yet; passing the option falls back to the default style. The [capability matrix](/guide/locale-capabilities) shows the same per locale.
 
 ## When To Use It
 

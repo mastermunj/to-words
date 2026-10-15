@@ -26,8 +26,8 @@ tw.convert('9007199254740993');
 
 // Indian system
 const hi = new ToWords({ localeCode: 'hi-IN' });
-hi.convert(100000000000000000n);
-// "एक शंख"
+hi.convert(1000000000000n);
+// "एक लाख करोड़"
 ```
 
 ## String Input For Precision

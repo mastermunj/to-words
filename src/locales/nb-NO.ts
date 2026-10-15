@@ -28,6 +28,8 @@ export default class Locale implements LocaleInterface {
       only: '',
       point: 'Komma',
     },
+    // Written norm puts «og» before a final part under 100 (CLDR nb «hundre og tjue», «tusen og fem»; no.wikipedia «hundre og tjue» 11 / «hundre tjue» 0).
+    useAndByDefault: true,
     numberWordsMapping: [
       { number: 1000000000000000, value: 'Billiard' },
       { number: 1000000000000, value: 'Billion' },
@@ -138,6 +140,16 @@ export default class Locale implements LocaleInterface {
     ],
     exactWordsMapping: [{ number: 100, value: 'Hundre' }],
     ignoreOneForWords: ['Hundre', 'Tusen'],
+    // Scale nouns million/milliard/billion/billiard are masculine nouns and pluralise with -er when
+    // the multiplier is not 1 (en.wiktionary nb-noun-m1 «millioner», «milliarder»; ordbokene.no;
+    // elon.io «to millioner, tre milliarder»). hundre/tusen are NOT nouns and never pluralise.
+    pluralRule: 'one-other',
+    pluralForms: {
+      1000000: { other: 'Millioner' },
+      1000000000: { other: 'Milliarder' },
+      1000000000000: { other: 'Billioner' },
+      1000000000000000: { other: 'Billiarder' },
+    },
     ordinalWordsMapping: [
       { number: 1000000000000000, value: 'Billiardte' },
       { number: 1000000000000, value: 'Billionte' },

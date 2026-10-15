@@ -28,9 +28,9 @@ npm install to-words
 import { ToWords } from 'to-words';
 
 const tw = new ToWords({ localeCode: 'ja-JP' });
-tw.convert(12345); // "一万二千三百四十五"
-tw.convert(100000000); // "一億"
-tw.convert(1234, { currency: true }); // "千二百三十四円"
+tw.convert(12345); // "一 万 二 千 三 百 四十 五"
+tw.convert(100000000); // "一 億"
+tw.convert(1234, { currency: true }); // "千 二 百 三十 四 円"
 ```
 
 ## East Asian Scale

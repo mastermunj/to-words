@@ -64,6 +64,13 @@ export default class Locale implements LocaleInterface {
       { number: 1, value: 'Moja' },
       { number: 0, value: 'Sifuri' },
     ],
+    // CLDR sw: the scale word comes first (mia moja, elfu mbili, milioni mbili), «na» joins the parts
+    // (ishirini na moja, mia moja na ishirini na moja), and an ordinal is «wa» + the cardinal.
+    scaleFirst: true,
+    currencyUnitFirst: true,
+    splitWord: 'Na',
+    ordinalPrefix: 'Wa ',
+    ordinalComposition: 'fused-prefix',
     exactWordsMapping: [
       { number: 100, value: 'Mia Moja' },
       { number: 1000, value: 'Elfu Moja' },

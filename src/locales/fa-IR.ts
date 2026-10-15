@@ -30,7 +30,8 @@ export default class Locale implements LocaleInterface {
     },
     numberWordsMapping: [
       { number: 1000000000000000, value: 'کوادریلیون' },
-      { number: 1000000000000, value: 'تیلیارد' },
+      // fa.wikipedia «تریلیون»: 10¹² (library had «تیلیارد», not a Persian word).
+      { number: 1000000000000, value: 'تریلیون' },
       { number: 1000000000, value: 'میلیارد' },
       { number: 1000000, value: 'میلیون' },
       { number: 1000, value: 'هزار' },

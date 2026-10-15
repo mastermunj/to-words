@@ -78,14 +78,14 @@ const testIntegers: [number, string][] = [
   [900, "Дев'ятсот"],
   [1000, 'Тисяча'],
   [1100, 'Тисяча Сто'],
-  [2000, 'Два Тисячі'],
+  [2000, 'Дві Тисячі'],
   [4680, 'Чотири Тисячі Шістсот Вісімдесят'],
-  [10000, 'Десять Тисяча'],
-  [63892, "Шістдесят Три Тисяч Вісімсот Дев'яносто Два"],
+  [10000, 'Десять Тисяч'],
+  [63892, "Шістдесят Три Тисячі Вісімсот Дев'яносто Два"],
   [100000, 'Сто Тисяч'],
   [1000000, 'Мільйон'],
   [2000000, 'Два Мільйони'],
-  [2741034, 'Два Мільйони Сімсот Сорок Один Тисяч Тридцять Чотири'],
+  [2741034, 'Два Мільйони Сімсот Сорок Одна Тисяча Тридцять Чотири'],
   [1000000000, 'Мільярд'],
   [2000000000, 'Два Мільярди'],
 ];
@@ -111,12 +111,23 @@ describe('Test Negative Integers with options = {}', () => {
   });
 });
 
+// Гривня is feminine: the amount agrees (Одна Гривня, Дві Гривні) and the unit follows
+// CLDR uk plural categories (one / few / many).
+function hryvnia(amount: number, words: string): string {
+  const n = Math.abs(amount);
+  const name =
+    n % 10 === 1 && n % 100 !== 11
+      ? 'Гривня'
+      : n % 10 >= 2 && n % 10 <= 4 && !(n % 100 >= 12 && n % 100 <= 14)
+        ? 'Гривні'
+        : 'Гривень';
+  return `${words.replace(/(^| )Один$/, '$1Одна').replace(/(^| )Два$/, '$1Дві')} ${name}`;
+}
+
 describe('Test Integers with options = { currency: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    // For 1, use singular "Гривня", otherwise use plural "Гривень"
-    const currencyName = row[1] === 'Один' ? 'Гривня' : 'Гривень';
-    row[1] = `${row[1]} ${currencyName} Тільки`;
+    row[1] = `${hryvnia(row[0] as number, row[1] as string)} Тільки`;
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -127,9 +138,7 @@ describe('Test Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, doNotAddOnly: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    // For 1, use singular "Гривня", otherwise use plural "Гривень"
-    const currencyName = row[1] === 'Один' ? 'Гривня' : 'Гривень';
-    row[1] = `${row[1]} ${currencyName}`;
+    row[1] = `${hryvnia(row[0] as number, row[1] as string)}`;
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -145,9 +154,7 @@ describe('Test Negative Integers with options = { currency: true }', () => {
       return;
     }
     row[0] = -row[0];
-    // For -1, use singular "Гривня", otherwise use plural "Гривень"
-    const currencyName = row[1] === 'Один' ? 'Гривня' : 'Гривень';
-    row[1] = `Мінус ${row[1]} ${currencyName} Тільки`;
+    row[1] = `Мінус ${hryvnia(row[0] as number, row[1] as string)} Тільки`;
   });
 
   test.concurrent.each(testNegativeIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -161,9 +168,7 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
     if (i === 0) {
       row[1] = '';
     } else {
-      // For 1, use singular "Гривня", otherwise use plural "Гривень"
-      const currencyName = row[1] === 'Один' ? 'Гривня' : 'Гривень';
-      row[1] = `${row[1]} ${currencyName} Тільки`;
+      row[1] = `${hryvnia(row[0] as number, row[1] as string)} Тільки`;
     }
   });
 
@@ -179,21 +184,21 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
 
 const testFloats: [number, string][] = [
   [0.0, 'Нуль'],
-  [0.04, 'Нуль Цілих Нуль Чотири'],
-  [0.4, 'Нуль Цілих Чотири'],
-  [0.63, 'Нуль Цілих Шістдесят Три'],
-  [37.06, 'Тридцять Сім Цілих Нуль Шість'],
-  [37.68, 'Тридцять Сім Цілих Шістдесят Вісім'],
+  [0.04, 'Нуль Цілих Чотири Сотих'],
+  [0.4, 'Нуль Цілих Чотири Десятих'],
+  [0.63, 'Нуль Цілих Шістдесят Три Сотих'],
+  [37.06, 'Тридцять Сім Цілих Шість Сотих'],
+  [37.68, 'Тридцять Сім Цілих Шістдесят Вісім Сотих'],
 ];
 
 describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
   const testIncludeZeroFractional: [number | string, string][] = [
-    [123, `Сто Двадцять Три Гривень Тільки`],
-    ['123', `Сто Двадцять Три Гривень Тільки`],
-    ['123.0', `Сто Двадцять Три Гривень І Нуль Копійок Тільки`],
-    ['123.00', `Сто Двадцять Три Гривень І Нуль Копійок Тільки`],
+    [123, `Сто Двадцять Три Гривні Тільки`],
+    ['123', `Сто Двадцять Три Гривні Тільки`],
+    ['123.0', `Сто Двадцять Три Гривні І Нуль Копійок Тільки`],
+    ['123.00', `Сто Двадцять Три Гривні І Нуль Копійок Тільки`],
     ['0.00', `Нуль Гривень І Нуль Копійок Тільки`],
-    ['-123.00', `Мінус Сто Двадцять Три Гривень І Нуль Копійок Тільки`],
+    ['-123.00', `Мінус Сто Двадцять Три Гривні І Нуль Копійок Тільки`],
     ['37.68', `Тридцять Сім Гривень І Шістдесят Вісім Копійок Тільки`],
   ];
 
@@ -215,10 +220,10 @@ describe('Test Floats with options = {}', () => {
 
 const testFloatsWithCurrency: [number, string][] = [
   [0.0, 'Нуль Гривень Тільки'],
-  [0.04, 'Нуль Гривень І Чотири Копійок Тільки'],
+  [0.04, 'Нуль Гривень І Чотири Копійки Тільки'],
   [0.4, 'Нуль Гривень І Сорок Копійок Тільки'],
-  [0.63, 'Нуль Гривень І Шістдесят Три Копійок Тільки'],
-  [0.999, 'Один Гривня Тільки'],
+  [0.63, 'Нуль Гривень І Шістдесят Три Копійки Тільки'],
+  [0.999, 'Одна Гривня Тільки'],
   [37.06, 'Тридцять Сім Гривень І Шість Копійок Тільки'],
   [37.68, 'Тридцять Сім Гривень І Шістдесят Вісім Копійок Тільки'],
 ];
@@ -258,7 +263,7 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
     if (row[0] === 0.999) {
       row[1] = 'Нуль Гривень Тільки';
     } else {
-      row[1] = (row[1] as string).replace(new RegExp(` І [\\u0400-\\u04FF' ]+ Копійок`), '');
+      row[1] = (row[1] as string).replace(new RegExp(` І [\\u0400-\\u04FF' ]+ Копій(ок|ки|ка)`), '');
     }
   });
 
@@ -355,7 +360,7 @@ const testPowersOfTen: [number, string][] = [
   [10, 'Десять'],
   [100, 'Сто'],
   [1000, 'Тисяча'],
-  [10000, 'Десять Тисяча'],
+  [10000, 'Десять Тисяч'],
   [100000, 'Сто Тисяч'],
   [1000000, 'Мільйон'],
 ];
@@ -472,22 +477,22 @@ describe('Functional helpers (locale-level)', () => {
 });
 
 const testFractionStyleUkUA: [number, string][] = [
-  [1.1, 'Один І Один Десята'],
-  [2.5, "Два І П'ять Десятих"],
-  [1.01, 'Один І Один Сота'],
-  [1.45, "Один І Сорок П'ять Сотих"],
-  [0.05, "Нуль І П'ять Сотих"],
-  [1.001, 'Один І Один Тисячна'],
-  [1.005, "Один І П'ять Тисячних"],
-  [1.0001, 'Один І Один Десятитисячна'],
-  [1.0005, "Один І П'ять Десятитисячних"],
-  [1.00001, 'Один І Один Стотисячна'],
-  [1.00005, "Один І П'ять Стотисячних"],
-  [1.000001, 'Один І Один Мільйонна'],
-  [1.000005, "Один І П'ять Мільйонних"],
-  [123.45, "Сто Двадцять Три І Сорок П'ять Сотих"],
-  [1.21, 'Один І Двадцять Один Сота'],
-  [1.11, 'Один І Одинадцять Сотих'],
+  [1.1, 'Одна Ціла Одна Десята'],
+  [2.5, "Дві Цілих П'ять Десятих"],
+  [1.01, 'Одна Ціла Одна Сота'],
+  [1.45, "Одна Ціла Сорок П'ять Сотих"],
+  [0.05, "Нуль Цілих П'ять Сотих"],
+  [1.001, 'Одна Ціла Одна Тисячна'],
+  [1.005, "Одна Ціла П'ять Тисячних"],
+  [1.0001, 'Одна Ціла Одна Десятитисячна'],
+  [1.0005, "Одна Ціла П'ять Десятитисячних"],
+  [1.00001, 'Одна Ціла Одна Стотисячна'],
+  [1.00005, "Одна Ціла П'ять Стотисячних"],
+  [1.000001, 'Одна Ціла Одна Мільйонна'],
+  [1.000005, "Одна Ціла П'ять Мільйонних"],
+  [123.45, "Сто Двадцять Три Цілих Сорок П'ять Сотих"],
+  [1.21, 'Одна Ціла Двадцять Одна Сота'],
+  [1.11, 'Одна Ціла Одинадцять Сотих'],
 ];
 
 describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
@@ -495,15 +500,37 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
     expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
   });
 
-  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+  test('7 decimal places use the ten-millionths denominator', () => {
     expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
-      "Один Цілих Мільйон Двісті Тридцять Чотири Тисяч П'ятсот Шістдесят Сім",
+      "Одна Ціла Мільйон Двісті Тридцять Чотири Тисячі П'ятсот Шістдесят Сім Десятимільйонних",
     );
-    expect(toWords.convert(1.1234567)).toBe("Один Цілих Мільйон Двісті Тридцять Чотири Тисяч П'ятсот Шістдесят Сім");
   });
 
-  test('digit-by-digit style works without decimalStyle option', () => {
-    expect(toWords.convert(1.5)).toBe("Один Цілих П'ять");
-    expect(toWords.convert(0.05)).toBe("Нуль Цілих Нуль П'ять");
+  test('the fraction reading is the default; digit style is opt-in', () => {
+    expect(toWords.convert(1.5)).toBe("Одна Ціла П'ять Десятих");
+    expect(toWords.convert(1.5, { decimalStyle: 'digit' })).toBe("Один Цілих П'ять");
+    expect(toWords.convert(0.05, { decimalStyle: 'digit' })).toBe("Нуль Цілих Нуль П'ять");
+  });
+});
+
+// Український правопис 2019 §38 and §106.
+describe('Test ordinals from the 2019 orthography', () => {
+  test.each([
+    [530000, "П'ятсоттридцятитисячний"],
+    [500000, "П'ятисоттисячний"],
+    [10000, 'Десятитисячний'],
+    [65000000, "Шістдесятип'ятимільйонний"],
+    [1003000, 'Мільйон Трьохтисячний'],
+    [1004000000, 'Мільярд Чотирьохмільйонний'],
+    [1988, "Тисяча Дев'ятсот Вісімдесят Восьмий"],
+  ])('ordinal %d => %s', (input, expected) => {
+    expect(toWords.toOrdinal(input)).toBe(expected);
+  });
+
+  test.each([
+    [10n ** 18n, 'Квінтильйон'],
+    [2n * 10n ** 21n, 'Два Секстильйони'],
+  ])('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
   });
 });

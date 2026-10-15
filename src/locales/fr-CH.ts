@@ -145,6 +145,11 @@ export default class Locale implements LocaleInterface {
     pluralWords: ['Billiard', 'Billion', 'Milliard', 'Million'],
     pluralWordsOnlyWhenTrailing: ['Cent'],
     useTrailingForCurrency: true,
+    // Only the last word turns ordinal (vingt-quatre → vingt-quatrième).
+    ordinalComposition: 'last-token',
+    // fr.wiktionary «cent»: cent/vingt take -s when multiplied and ending the numeral; million and
+    // milliard are nouns (deux cents millions), mille is not (deux cent mille).
+    trailingBeforeScales: [1000000, 1000000000, 1000000000000, 1000000000000000],
     ordinalWordsMapping: [
       { number: 1000000000000, value: 'Billionième' },
       { number: 1000000000, value: 'Milliardième' },
@@ -177,7 +182,8 @@ export default class Locale implements LocaleInterface {
       { number: 4, value: 'Quatrième' },
       { number: 3, value: 'Troisième' },
       { number: 2, value: 'Deuxième' },
-      { number: 1, value: 'Premier' },
+      // en.wiktionary «unième»: ordinal of un used in compounds (vingt et unième, cent unième).
+      { number: 1, value: 'Premier', compoundValue: 'Unième' },
       { number: 0, value: 'Zéroième' },
     ],
     fractionDenominatorMapping: {

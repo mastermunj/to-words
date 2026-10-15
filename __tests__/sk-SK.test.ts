@@ -55,19 +55,19 @@ const testIntegers: [number, string][] = [
   [18, 'Osemnásť'],
   [19, 'Devätnásť'],
   [20, 'Dvadsať'],
-  [21, 'Dvadsať Jeden'],
-  [22, 'Dvadsať Dva'],
+  [21, 'Dvadsaťjeden'],
+  [22, 'Dvadsaťdva'],
   [30, 'Tridsať'],
-  [35, 'Tridsať Päť'],
+  [35, 'Tridsaťpäť'],
   [40, 'Štyridsať'],
   [50, 'Päťdesiat'],
   [60, 'Šesťdesiat'],
   [70, 'Sedemdesiat'],
   [80, 'Osemdesiat'],
   [90, 'Deväťdesiat'],
-  [99, 'Deväťdesiat Deväť'],
+  [99, 'Deväťdesiatdeväť'],
   [100, 'Sto'],
-  [137, 'Sto Tridsať Sedem'],
+  [137, 'Stotridsaťsedem'],
   [200, 'Dvesto'],
   [300, 'Tristo'],
   [400, 'Štyristo'],
@@ -77,22 +77,22 @@ const testIntegers: [number, string][] = [
   [800, 'Osemsto'],
   [900, 'Deväťsto'],
   [1000, 'Tisíc'],
-  [1100, 'Tisíc Sto'],
-  [2000, 'Dva Tisíce'],
-  [3000, 'Tri Tisíce'],
-  [4000, 'Štyri Tisíce'],
-  [5000, 'Päť Tisíc'],
-  [4680, 'Štyri Tisíce Šesťsto Osemdesiat'],
-  [10000, 'Desať Tisíc'],
-  [63892, 'Šesťdesiat Tri Tisíc Osemsto Deväťdesiat Dva'],
-  [100000, 'Sto Tisíc'],
+  [1100, 'Tisícsto'],
+  [2000, 'Dvetisíc'],
+  [3000, 'Tritisíc'],
+  [4000, 'Štyritisíc'],
+  [5000, 'Päťtisíc'],
+  [4680, 'Štyritisícšesťstoosemdesiat'],
+  [10000, 'Desaťtisíc'],
+  [63892, 'Šesťdesiattritisícosemstodeväťdesiatdva'],
+  [100000, 'Stotisíc'],
   [1000000, 'Milión'],
   [2000000, 'Dva Milióny'],
-  [5000000, 'Päť Milión'],
-  [2741034, 'Dva Milióny Sedemsto Štyridsať Jeden Tisíc Tridsať Štyri'],
+  [5000000, 'Päť Miliónov'],
+  [2741034, 'Dva Milióny Sedemstoštyridsaťjedentisíctridsaťštyri'],
   [1000000000, 'Miliarda'],
-  [2000000000, 'Dva Miliardy'],
-  [5000000000, 'Päť Miliarda'],
+  [2000000000, 'Dve Miliardy'],
+  [5000000000, 'Päť Miliárd'],
 ];
 
 describe('Test Integers with options = {}', () => {
@@ -116,21 +116,28 @@ describe('Test Negative Integers with options = {}', () => {
   });
 });
 
-// Helper function to get Slovak currency form
-function getCurrencyName(words: string): string {
-  // Check for singular (1)
-  if (words === 'Jeden') {
+// Slovak unit form (euro: one = 1; few = 2-4; otherwise genitive plural). Euro is neuter,
+// so the amounts 1 and 2 have their own words (Jedno Euro, Dve Eurá).
+function getCurrencyName(amount: number): string {
+  const n = Math.abs(amount);
+  if (n === 1) {
     return 'Euro';
   }
-  // Default plural for all other numbers
+  if (n >= 2 && n <= 4) {
+    return 'Eurá';
+  }
   return 'Eur';
+}
+
+function euroAmount(words: string): string {
+  return words.replace(/^(Mínus )?Jeden$/, '$1Jedno').replace(/^(Mínus )?Dva$/, '$1Dve');
 }
 
 describe('Test Integers with options = { currency: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    const currencyName = getCurrencyName(row[1] as string);
-    row[1] = `${row[1]} ${currencyName} Len`;
+    const currencyName = getCurrencyName(row[0] as number);
+    row[1] = `${euroAmount(row[1] as string)} ${currencyName} Len`;
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -141,8 +148,8 @@ describe('Test Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, doNotAddOnly: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    const currencyName = getCurrencyName(row[1] as string);
-    row[1] = `${row[1]} ${currencyName}`;
+    const currencyName = getCurrencyName(row[0] as number);
+    row[1] = `${euroAmount(row[1] as string)} ${currencyName}`;
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -158,8 +165,8 @@ describe('Test Negative Integers with options = { currency: true }', () => {
       return;
     }
     row[0] = -row[0];
-    const currencyName = getCurrencyName(row[1] as string);
-    row[1] = `Mínus ${row[1]} ${currencyName} Len`;
+    const currencyName = getCurrencyName(row[0] as number);
+    row[1] = `Mínus ${euroAmount(row[1] as string)} ${currencyName} Len`;
   });
 
   test.concurrent.each(testNegativeIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -173,8 +180,8 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
     if (i === 0) {
       row[1] = '';
     } else {
-      const currencyName = getCurrencyName(row[1] as string);
-      row[1] = `${row[1]} ${currencyName} Len`;
+      const currencyName = getCurrencyName(row[0] as number);
+      row[1] = `${euroAmount(row[1] as string)} ${currencyName} Len`;
     }
   });
 
@@ -190,22 +197,23 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
 
 const testFloats: [number, string][] = [
   [0.0, 'Nula'],
-  [0.04, 'Nula Celá Nula Štyri'],
-  [0.4, 'Nula Celá Štyri'],
-  [0.63, 'Nula Celá Šesťdesiat Tri'],
-  [37.06, 'Tridsať Sedem Celá Nula Šesť'],
-  [37.68, 'Tridsať Sedem Celá Šesťdesiat Osem'],
+  // Fraction reading is the default (sk.wiktionary «celá»: jedna celá štyri, tri celé štrnásť).
+  [0.04, 'Nula Celá Štyri Stotiny'],
+  [0.4, 'Nula Celá Štyri Desatiny'],
+  [0.63, 'Nula Celá Šesťdesiattri Stotín'],
+  [37.06, 'Tridsaťsedem Celých Šesť Stotín'],
+  [37.68, 'Tridsaťsedem Celých Šesťdesiatosem Stotín'],
 ];
 
 describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
   const testIncludeZeroFractional: [number | string, string][] = [
-    [123, `Sto Dvadsať Tri Eur Len`],
-    ['123', `Sto Dvadsať Tri Eur Len`],
-    ['123.0', `Sto Dvadsať Tri Eur A Nula Centov Len`],
-    ['123.00', `Sto Dvadsať Tri Eur A Nula Centov Len`],
+    [123, `Stodvadsaťtri Eur Len`],
+    ['123', `Stodvadsaťtri Eur Len`],
+    ['123.0', `Stodvadsaťtri Eur A Nula Centov Len`],
+    ['123.00', `Stodvadsaťtri Eur A Nula Centov Len`],
     ['0.00', `Nula Eur A Nula Centov Len`],
-    ['-123.00', `Mínus Sto Dvadsať Tri Eur A Nula Centov Len`],
-    ['37.68', `Tridsať Sedem Eur A Šesťdesiat Osem Centov Len`],
+    ['-123.00', `Mínus Stodvadsaťtri Eur A Nula Centov Len`],
+    ['37.68', `Tridsaťsedem Eur A Šesťdesiatosem Centov Len`],
   ];
 
   test.concurrent.each(testIncludeZeroFractional)('convert %s => %s', (input, expected) => {
@@ -226,12 +234,12 @@ describe('Test Floats with options = {}', () => {
 
 const testFloatsWithCurrency: [number, string][] = [
   [0.0, 'Nula Eur Len'],
-  [0.04, 'Nula Eur A Štyri Centov Len'],
+  [0.04, 'Nula Eur A Štyri Centy Len'],
   [0.4, 'Nula Eur A Štyridsať Centov Len'],
-  [0.63, 'Nula Eur A Šesťdesiat Tri Centov Len'],
-  [0.999, 'Jeden Euro Len'],
-  [37.06, 'Tridsať Sedem Eur A Šesť Centov Len'],
-  [37.68, 'Tridsať Sedem Eur A Šesťdesiat Osem Centov Len'],
+  [0.63, 'Nula Eur A Šesťdesiattri Centov Len'],
+  [0.999, 'Jedno Euro Len'],
+  [37.06, 'Tridsaťsedem Eur A Šesť Centov Len'],
+  [37.68, 'Tridsaťsedem Eur A Šesťdesiatosem Centov Len'],
 ];
 
 describe('Test Floats with options = { currency: true }', () => {
@@ -269,7 +277,7 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
     if (row[0] === 0.999) {
       row[1] = 'Nula Eur Len';
     } else {
-      row[1] = (row[1] as string).replace(new RegExp(` A [\\wáäčďéíľňóôŕšťúýžÁÄČĎÉÍĽŇÓÔŔŠŤÚÝŽ ]+ Cent[ov]*`), '');
+      row[1] = (row[1] as string).replace(new RegExp(` A [\\wáäčďéíľňóôŕšťúýžÁÄČĎÉÍĽŇÓÔŔŠŤÚÝŽ ]+ Cent(ov|y)?`), '');
     }
   });
 
@@ -310,10 +318,10 @@ const testOrdinalNumbers: [number, string][] = [
 
   // Tens
   [20, 'Dvadsiaty'],
-  [21, 'Dvadsať Prvý'],
-  [22, 'Dvadsať Druhý'],
+  [21, 'Dvadsiaty Prvý'],
+  [22, 'Dvadsiaty Druhý'],
   [30, 'Tridsiaty'],
-  [40, 'Štyridsaťty'],
+  [40, 'Štyridsiaty'],
   [50, 'Päťdesiaty'],
   [60, 'Šesťdesiaty'],
   [70, 'Sedemdesiaty'],
@@ -322,16 +330,28 @@ const testOrdinalNumbers: [number, string][] = [
 
   // Hundreds
   [100, 'Stý'],
-  [101, 'Sto Prvý'],
-  [200, 'Dvestý'],
-  [300, 'Tristý'],
+  [101, 'Stoprvý'],
+  [124, 'Stodvadsiaty Štvrtý'],
+  [200, 'Dvojstý'],
+  [300, 'Trojstý'],
+  [400, 'Štvorstý'],
+  [500, 'Päťstý'],
 
   // Thousands
   [1000, 'Tisíci'],
-  [1001, 'Tisíc Prvý'],
+  [1001, 'Tisícprvý'],
+  [1985, 'Tisícdeväťstoosemdesiaty Piaty'],
+  [2000, 'Dvojtisíci'],
+  [2002, 'Dvetisícdruhý'],
+  [10000, 'Desaťtisíci'],
+  [22000, 'Dvadsaťdvatisíci'],
+  [100000, 'Stotisíci'],
 
   // Millions
-  [1000000, 'Milióntý'],
+  [1000000, 'Miliónty'],
+  [1000001, 'Milión Prvý'],
+  [2000000, 'Dvojmiliónty'],
+  [1000000000, 'Miliardtý'],
 ];
 
 describe('Test Ordinal Numbers', () => {
@@ -367,8 +387,8 @@ const testPowersOfTen: [number, string][] = [
   [10, 'Desať'],
   [100, 'Sto'],
   [1000, 'Tisíc'],
-  [10000, 'Desať Tisíc'],
-  [100000, 'Sto Tisíc'],
+  [10000, 'Desaťtisíc'],
+  [100000, 'Stotisíc'],
   [1000000, 'Milión'],
 ];
 
@@ -489,20 +509,20 @@ describe('Functional helpers (locale-level)', () => {
 });
 
 const testFractionStyleSkSK: [number, string][] = [
-  [1.1, 'Jeden A Jeden Desatina'],
-  [2.5, 'Dva A Päť Desatiny'],
-  [1.01, 'Jeden A Jeden Stotina'],
-  [1.45, 'Jeden A Štyridsať Päť Stotiny'],
-  [0.05, 'Nula A Päť Stotiny'],
-  [1.001, 'Jeden A Jeden Tisícina'],
-  [1.005, 'Jeden A Päť Tisíciny'],
-  [1.0001, 'Jeden A Jeden Desaťtisícina'],
-  [1.0005, 'Jeden A Päť Desaťtisíciny'],
-  [1.00001, 'Jeden A Jeden Stotisícina'],
-  [1.00005, 'Jeden A Päť Stotisíciny'],
-  [1.000001, 'Jeden A Jeden Miliontina'],
-  [1.000005, 'Jeden A Päť Miliontiny'],
-  [123.45, 'Sto Dvadsať Tri A Štyridsať Päť Stotiny'],
+  [1.1, 'Jedna Celá Jedna Desatina'],
+  [2.5, 'Dve Celé Päť Desatín'],
+  [1.01, 'Jedna Celá Jedna Stotina'],
+  [1.45, 'Jedna Celá Štyridsaťpäť Stotín'],
+  [0.05, 'Nula Celá Päť Stotín'],
+  [1.001, 'Jedna Celá Jedna Tisícina'],
+  [1.005, 'Jedna Celá Päť Tisícin'],
+  [1.0001, 'Jedna Celá Jedna Desaťtisícina'],
+  [1.0005, 'Jedna Celá Päť Desaťtisícin'],
+  [1.00001, 'Jedna Celá Jedna Stotisícina'],
+  [1.00005, 'Jedna Celá Päť Stotisícin'],
+  [1.000001, 'Jedna Celá Jedna Milióntina'],
+  [1.000005, 'Jedna Celá Päť Milióntin'],
+  [123.45, 'Stodvadsaťtri Celých Štyridsaťpäť Stotín'],
 ];
 
 describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
@@ -510,15 +530,18 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
     expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
   });
 
-  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+  test('names denominators up to 15 decimal places (7 places)', () => {
     expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
-      'Jeden Celá Milión Dvesto Tridsať Štyri Tisíc Päťsto Šesťdesiat Sedem',
+      'Jedna Celá Milión Dvestotridsaťštyritisícpäťstošesťdesiatsedem Desaťmilióntin',
     );
-    expect(toWords.convert(1.1234567)).toBe('Jeden Celá Milión Dvesto Tridsať Štyri Tisíc Päťsto Šesťdesiat Sedem');
+    expect(toWords.convert(1.1234567)).toBe(
+      'Jedna Celá Milión Dvestotridsaťštyritisícpäťstošesťdesiatsedem Desaťmilióntin',
+    );
   });
 
-  test('digit-by-digit style works without decimalStyle option', () => {
-    expect(toWords.convert(1.5)).toBe('Jeden Celá Päť');
-    expect(toWords.convert(0.05)).toBe('Nula Celá Nula Päť');
+  test("digit-by-digit style still available with decimalStyle: 'digit'", () => {
+    expect(toWords.convert(1.5)).toBe('Jedna Celá Päť Desatín');
+    expect(toWords.convert(1.5, { decimalStyle: 'digit' })).toBe('Jeden Celá Päť');
+    expect(toWords.convert(0.05, { decimalStyle: 'digit' })).toBe('Nula Celá Nula Päť');
   });
 });

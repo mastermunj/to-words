@@ -66,18 +66,18 @@ const testIntegers: [number, string][] = [
   [80, 'Tamanin'],
   [90, "Casa'in"],
   [99, "Casa'in Da Tara"],
-  [100, 'Ɗari Ɗaya'],
-  [137, 'Ɗaya Ɗari Da Talatin Da Bakwai'],
-  [200, 'Biyu Ɗari'],
-  [700, 'Bakwai Ɗari'],
-  [1000, 'Ɗaya Dubu'],
-  [1100, 'Ɗaya Dubu Da Ɗari Ɗaya'],
-  [4680, 'Huɗu Dubu Da Shida Ɗari Da Tamanin'],
-  [10000, 'Goma Dubu'],
-  [63892, "Sittin Da Uku Dubu Da Takwas Ɗari Da Casa'in Da Biyu"],
-  [100000, 'Ɗari Ɗaya Dubu'],
-  [1000000, 'Ɗaya Miliyan'],
-  [2741034, "Biyu Miliyan Da Bakwai Ɗari Da Arba'in Da Ɗaya Dubu Da Talatin Da Huɗu"],
+  [100, 'Ɗari'],
+  [137, 'Ɗari Da Talatin Da Bakwai'],
+  [200, 'Ɗari Biyu'],
+  [700, 'Ɗari Bakwai'],
+  [1000, 'Dubu'],
+  [1100, 'Dubu Da Ɗari'],
+  [4680, 'Dubu Huɗu Da Ɗari Shida Da Tamanin'],
+  [10000, 'Dubu Goma'],
+  [63892, "Dubu Sittin Da Uku Da Ɗari Takwas Da Casa'in Da Biyu"],
+  [100000, 'Dubu Ɗari'],
+  [1000000, 'Miliyan Ɗaya'],
+  [2741034, "Miliyan Biyu Da Dubu Ɗari Bakwai Da Arba'in Da Ɗaya Da Talatin Da Huɗu"],
 ];
 
 describe('Test Integers with options = {}', () => {
@@ -104,7 +104,7 @@ describe('Test Negative Integers with options = {}', () => {
 describe('Test Integers with options = { currency: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} Naira Kawai`;
+    row[1] = `Naira ${row[1]} Kawai`;
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -115,7 +115,7 @@ describe('Test Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, doNotAddOnly: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} Naira`;
+    row[1] = `Naira ${row[1]}`;
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -127,11 +127,11 @@ describe('Test Negative Integers with options = { currency: true }', () => {
   const testNegativeIntegersWithCurrency = cloneDeep(testIntegers);
   testNegativeIntegersWithCurrency.map((row, i) => {
     if (i === 0) {
-      row[1] = `${row[1]} Naira Kawai`;
+      row[1] = `Naira ${row[1]} Kawai`;
       return;
     }
     row[0] = -row[0];
-    row[1] = `Ragi ${row[1]} Naira Kawai`;
+    row[1] = `Ragi Naira ${row[1]} Kawai`;
   });
 
   test.concurrent.each(testNegativeIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -142,7 +142,7 @@ describe('Test Negative Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, ignoreZeroCurrency: true }', () => {
   const testIntegersWithCurrencyAndIgnoreZeroCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrencyAndIgnoreZeroCurrency.map((row, i) => {
-    row[1] = i === 0 ? '' : `${row[1]} Naira Kawai`;
+    row[1] = i === 0 ? '' : `Naira ${row[1]} Kawai`;
   });
 
   test.concurrent.each(testIntegersWithCurrencyAndIgnoreZeroCurrency)('convert %d => %s', (input, expected) => {
@@ -166,13 +166,13 @@ const testFloats: [number, string][] = [
 
 describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
   const testIncludeZeroFractional: [number | string, string][] = [
-    [123, `Ɗaya Ɗari Da Ashirin Da Uku Naira Kawai`],
-    ['123', `Ɗaya Ɗari Da Ashirin Da Uku Naira Kawai`],
-    ['123.0', `Ɗaya Ɗari Da Ashirin Da Uku Naira Da Sifili Kobo Kawai`],
-    ['123.00', `Ɗaya Ɗari Da Ashirin Da Uku Naira Da Sifili Kobo Kawai`],
-    ['0.00', `Sifili Naira Da Sifili Kobo Kawai`],
-    ['-123.00', `Ragi Ɗaya Ɗari Da Ashirin Da Uku Naira Da Sifili Kobo Kawai`],
-    ['37.68', `Talatin Da Bakwai Naira Da Sittin Da Takwas Kobo Kawai`],
+    [123, `Naira Ɗari Da Ashirin Da Uku Kawai`],
+    ['123', `Naira Ɗari Da Ashirin Da Uku Kawai`],
+    ['123.0', `Naira Ɗari Da Ashirin Da Uku Da Kobo Sifili Kawai`],
+    ['123.00', `Naira Ɗari Da Ashirin Da Uku Da Kobo Sifili Kawai`],
+    ['0.00', `Naira Sifili Da Kobo Sifili Kawai`],
+    ['-123.00', `Ragi Naira Ɗari Da Ashirin Da Uku Da Kobo Sifili Kawai`],
+    ['37.68', `Naira Talatin Da Bakwai Da Kobo Sittin Da Takwas Kawai`],
   ];
 
   test.concurrent.each(testIncludeZeroFractional)('convert %s => %s', (input, expected) => {
@@ -192,13 +192,13 @@ describe('Test Floats with options = {}', () => {
 });
 
 const testFloatsWithCurrency: [number, string][] = [
-  [0.0, 'Sifili Naira Kawai'],
-  [0.04, 'Sifili Naira Da Huɗu Kobo Kawai'],
-  [0.4, "Sifili Naira Da Arba'in Kobo Kawai"],
-  [0.63, 'Sifili Naira Da Sittin Da Uku Kobo Kawai'],
-  [0.999, 'Ɗaya Naira Kawai'],
-  [37.06, 'Talatin Da Bakwai Naira Da Shida Kobo Kawai'],
-  [37.68, 'Talatin Da Bakwai Naira Da Sittin Da Takwas Kobo Kawai'],
+  [0.0, 'Naira Sifili Kawai'],
+  [0.04, 'Naira Sifili Da Kobo Huɗu Kawai'],
+  [0.4, "Naira Sifili Da Kobo Arba'in Kawai"],
+  [0.63, 'Naira Sifili Da Kobo Sittin Da Uku Kawai'],
+  [0.999, 'Naira Ɗaya Kawai'],
+  [37.06, 'Naira Talatin Da Bakwai Da Kobo Shida Kawai'],
+  [37.68, 'Naira Talatin Da Bakwai Da Kobo Sittin Da Takwas Kawai'],
 ];
 
 describe('Test Floats with options = { currency: true }', () => {
@@ -216,7 +216,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true 
       return;
     }
     if (row[0] > 0 && row[0] < 1) {
-      row[1] = (row[1] as string).replace('Sifili Naira Da ', '');
+      row[1] = (row[1] as string).replace('Naira Sifili Da ', '');
     }
   });
 
@@ -234,9 +234,9 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
   const testFloatsWithCurrencyAndIgnoreDecimal = cloneDeep(testFloatsWithCurrency);
   testFloatsWithCurrencyAndIgnoreDecimal.map((row) => {
     if (row[0] === 0.999) {
-      row[1] = 'Sifili Naira Kawai';
+      row[1] = 'Naira Sifili Kawai';
     } else {
-      row[1] = (row[1] as string).replace(new RegExp(` Da [\\w'ɗƊ]+(?: Da [\\w'ɗƊ]+)* Kobo`), '');
+      row[1] = (row[1] as string).replace(/ Da Kobo .*?(?= Kawai$)/u, '');
     }
   });
 
@@ -277,8 +277,8 @@ const testOrdinalNumbers: [number, string][] = [
 
   // Tens
   [20, 'Na Ashirin'],
-  [21, 'Ashirin Da Na Farko'],
-  [22, 'Ashirin Da Na Biyu'],
+  [21, 'Na Ashirin Da Ɗaya'],
+  [22, 'Na Ashirin Da Biyu'],
   [30, 'Na Talatin'],
   [40, "Na Arba'in"],
   [50, 'Na Hamsin'],
@@ -288,16 +288,16 @@ const testOrdinalNumbers: [number, string][] = [
   [90, "Na Casa'in"],
 
   // Hundreds
-  [100, 'Na Ɗari Ɗaya'],
-  [101, 'Ɗaya Ɗari Da Na Farko'],
-  [200, 'Biyu Na Ɗari'],
+  [100, 'Na Ɗari'],
+  [101, 'Na Ɗari Da Ɗaya'],
+  [200, 'Na Ɗari Biyu'],
 
   // Thousands
-  [1000, 'Ɗaya Na Dubu'],
-  [1001, 'Ɗaya Dubu Da Na Farko'],
+  [1000, 'Na Dubu'],
+  [1001, 'Na Dubu Da Ɗaya'],
 
   // Millions
-  [1000000, 'Ɗaya Na Miliyan'],
+  [1000000, 'Na Miliyan Ɗaya'],
 ];
 
 describe('Test Ordinal Numbers', () => {
@@ -331,11 +331,11 @@ describe('Test Ordinal Error Cases', () => {
 // Powers of Ten Tests
 const testPowersOfTen: [number, string][] = [
   [10, 'Goma'],
-  [100, 'Ɗari Ɗaya'],
-  [1000, 'Ɗaya Dubu'],
-  [10000, 'Goma Dubu'],
-  [100000, 'Ɗari Ɗaya Dubu'],
-  [1000000, 'Ɗaya Miliyan'],
+  [100, 'Ɗari'],
+  [1000, 'Dubu'],
+  [10000, 'Dubu Goma'],
+  [100000, 'Dubu Ɗari'],
+  [1000000, 'Miliyan Ɗaya'],
 ];
 
 describe('Test Powers of Ten', () => {
@@ -348,8 +348,8 @@ describe('Test Powers of Ten', () => {
 const testBigInts: [bigint, string][] = [
   [0n, 'Sifili'],
   [1n, 'Ɗaya'],
-  [100n, 'Ɗari Ɗaya'],
-  [1000n, 'Ɗaya Dubu'],
+  [100n, 'Ɗari'],
+  [1000n, 'Dubu'],
 ];
 
 describe('Test BigInt with options = {}', () => {
@@ -361,8 +361,8 @@ describe('Test BigInt with options = {}', () => {
 // Negative BigInt Tests
 const testNegativeBigInts: [bigint, string][] = [
   [-1n, 'Ragi Ɗaya'],
-  [-100n, 'Ragi Ɗari Ɗaya'],
-  [-1000n, 'Ragi Ɗaya Dubu'],
+  [-100n, 'Ragi Ɗari'],
+  [-1000n, 'Ragi Dubu'],
 ];
 
 describe('Test Negative BigInt with options = {}', () => {
@@ -375,8 +375,8 @@ describe('Test Negative BigInt with options = {}', () => {
 const testStringInputs: [string, string][] = [
   ['0', 'Sifili'],
   ['1', 'Ɗaya'],
-  ['100', 'Ɗari Ɗaya'],
-  ['-100', 'Ragi Ɗari Ɗaya'],
+  ['100', 'Ɗari'],
+  ['-100', 'Ragi Ɗari'],
 ];
 
 describe('Test String Inputs with options = {}', () => {
@@ -408,7 +408,7 @@ describe('Test Zero Variants', () => {
   });
 
   test('convert 0 with currency => Sifili Naira Kawai', () => {
-    expect(toWords.convert(0, { currency: true })).toBe('Sifili Naira Kawai');
+    expect(toWords.convert(0, { currency: true })).toBe('Naira Sifili Kawai');
   });
 });
 

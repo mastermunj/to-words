@@ -9,7 +9,7 @@ description: Generated, machine-verifiable feature support for every to-words lo
 
 This reference is generated from the locale configurations shipped by the package. It is checked in CI, so the documentation and runtime manifest cannot silently drift apart.
 
-**136 locales** · **136 ordinal** · **100 fraction style** · **37 cardinal gender** · **8 ordinal gender** · **2 formal numeral locales**
+**136 locales** · **136 ordinal** · **100 fraction style** · **40 cardinal gender** · **9 ordinal gender** · **2 formal numeral locales**
 
 ## Programmatic Usage
 
@@ -59,141 +59,141 @@ Cardinal, currency, and digit-style decimal conversion are part of every locale 
 
 ## All Locales
 
-| Locale   | Numbering system | Largest named scale | Maximum verified integer | Ordinal | Gender             | Formal | Fraction digits  | Currency decimals |
-| -------- | ---------------- | ------------------- | ------------------------ | ------- | ------------------ | ------ | ---------------- | ----------------- |
-| `af-ZA`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `am-ET`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | —                | 2                 |
-| `ar-AE`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | —                | 2                 |
-| `ar-DZ`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | —                | 2                 |
-| `ar-EG`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | —                | 2                 |
-| `ar-IQ`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | —                | 3                 |
-| `ar-LB`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | —                | 2                 |
-| `ar-MA`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | —                | 2                 |
-| `ar-SA`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | —                | 2                 |
-| `ar-SD`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | —                | 2                 |
-| `ar-YE`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | —                | 2                 |
-| `as-IN`  | Indian           | 10^17               | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `az-AZ`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | —                | 2                 |
-| `be-BY`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `bg-BG`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `bn-BD`  | Indian           | 10^17               | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `bn-IN`  | Indian           | 10^17               | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `ca-ES`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `cs-CZ`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `da-DK`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `de-AT`  | Base thousand    | 10^27               | 10^30 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `de-CH`  | Base thousand    | 10^27               | 10^30 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `de-DE`  | Base thousand    | 10^27               | 10^30 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `el-GR`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `en-AE`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `en-AU`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `en-BD`  | Indian           | 10^17               | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `en-CA`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `en-GB`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `en-GH`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `en-HK`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `en-IE`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `en-IN`  | Indian           | 10^17               | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `en-IQ`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 3                 |
-| `en-JM`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `en-KE`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `en-LK`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `en-MA`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `en-MM`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `en-MU`  | Indian           | 10^63               | 10^65 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `en-MY`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `en-NG`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `en-NP`  | Indian           | 10^17               | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `en-NZ`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `en-OM`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 3                 |
-| `en-PH`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `en-PK`  | Indian           | 10^63               | 10^65 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `en-SA`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `en-SG`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `en-TT`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `en-TZ`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `en-UG`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `en-US`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `en-ZA`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `en-ZW`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `es-AR`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal + ordinal | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `es-CL`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal + ordinal | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `es-CO`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal + ordinal | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `es-ES`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal + ordinal | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `es-MX`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal + ordinal | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `es-PE`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal + ordinal | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `es-US`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal + ordinal | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `es-VE`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal + ordinal | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `et-EE`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | —                | 2                 |
-| `fa-IR`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `fi-FI`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | —                | 2                 |
-| `fil-PH` | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | —                | 2                 |
-| `fr-BE`  | Base thousand    | 10^27               | 10^30 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `fr-CA`  | Base thousand    | 10^27               | 10^30 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `fr-CH`  | Base thousand    | 10^27               | 10^30 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `fr-CI`  | Base thousand    | 10^27               | 10^30 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `fr-CM`  | Base thousand    | 10^27               | 10^30 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `fr-DZ`  | Base thousand    | 10^27               | 10^30 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `fr-FR`  | Base thousand    | 10^27               | 10^30 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `fr-MA`  | Base thousand    | 10^27               | 10^30 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `fr-MG`  | Base thousand    | 10^27               | 10^30 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `fr-SA`  | Base thousand    | 10^27               | 10^30 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `gu-IN`  | Indian           | 10^17               | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `ha-NG`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | —                | 2                 |
-| `hbo-IL` | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | —                | 2                 |
-| `he-IL`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `hi-IN`  | Indian           | 10^17               | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `hr-HR`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `hu-HU`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `id-ID`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `ig-NG`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | —                | 2                 |
-| `is-IS`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | —                | 2                 |
-| `it-IT`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `ja-JP`  | East Asian       | 10^20               | 10^24 - 1                | Yes     | —                  | No     | —                | 2                 |
-| `jv-ID`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | —                | 2                 |
-| `ka-GE`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `km-KH`  | Locale-specific  | 10^12               | 10^15 - 1                | Yes     | —                  | No     | —                | 2                 |
-| `kn-IN`  | Indian           | 10^17               | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `ko-KR`  | East Asian       | 10^20               | 10^24 - 1                | Yes     | —                  | No     | —                | 2                 |
-| `lo-LA`  | Locale-specific  | 10^15               | 10^18 - 1                | Yes     | —                  | No     | —                | 2                 |
-| `lt-LT`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | —                | 2                 |
-| `lv-LV`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `ml-IN`  | Indian           | 10^17               | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `mr-IN`  | Indian           | 10^17               | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `ms-MY`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `ms-SG`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `my-MM`  | Locale-specific  | 10^12               | 10^15 - 1                | Yes     | —                  | No     | —                | 2                 |
-| `nb-NO`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `ne-NP`  | Indian           | 10^17               | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `nl-NL`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `nl-SR`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `or-IN`  | Indian           | 10^17               | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `pa-IN`  | Indian           | 10^17               | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `pl-PL`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `pt-AO`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `pt-BR`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `pt-MZ`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `pt-PT`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `ro-RO`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `ru-RU`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `si-LK`  | Locale-specific  | 10^12               | 10^15 - 1                | Yes     | —                  | No     | —                | 2                 |
-| `sk-SK`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `sl-SI`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `sq-AL`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `sr-RS`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `sv-SE`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `sw-KE`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | —                | 2                 |
-| `sw-TZ`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | —                | 2                 |
-| `ta-IN`  | Indian           | 10^17               | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `te-IN`  | Indian           | 10^17               | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `th-TH`  | Locale-specific  | 10^15               | 10^18 - 1                | Yes     | —                  | No     | —                | 2                 |
-| `tr-TR`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | —                | 2                 |
-| `uk-UA`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `ur-PK`  | Indian           | 10^7                | 98765432101234           | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `uz-UZ`  | Base thousand    | 10^12               | 10^15 - 1                | Yes     | —                  | No     | —                | 2                 |
-| `vi-VN`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6 | 2                 |
-| `yo-NG`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | —                | 2                 |
-| `yue-HK` | East Asian       | 10^20               | 10^24 - 1                | Yes     | —                  | No     | —                | 2                 |
-| `zh-CN`  | East Asian       | 10^20               | 10^24 - 1                | Yes     | —                  | Yes    | —                | 2                 |
-| `zh-TW`  | East Asian       | 10^20               | 10^24 - 1                | Yes     | —                  | Yes    | —                | 2                 |
-| `zu-ZA`  | Base thousand    | 10^12               | 10^15 - 1                | Yes     | —                  | No     | —                | 2                 |
+| Locale   | Numbering system | Largest named scale | Maximum verified integer | Ordinal | Gender             | Formal | Fraction digits                                   | Currency decimals |
+| -------- | ---------------- | ------------------- | ------------------------ | ------- | ------------------ | ------ | ------------------------------------------------- | ----------------- |
+| `af-ZA`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `am-ET`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | —                                                 | 2                 |
+| `ar-AE`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | —                                                 | 2                 |
+| `ar-DZ`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | —                                                 | 2                 |
+| `ar-EG`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | —                                                 | 2                 |
+| `ar-IQ`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | —                                                 | 3                 |
+| `ar-LB`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | —                                                 | 2                 |
+| `ar-MA`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | —                                                 | 2                 |
+| `ar-SA`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | —                                                 | 2                 |
+| `ar-SD`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | —                                                 | 2                 |
+| `ar-YE`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | —                                                 | 2                 |
+| `as-IN`  | Indian           | 10^7                | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `az-AZ`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | —                                                 | 2                 |
+| `be-BY`  | Base thousand    | 10^21               | 10^24 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 | 2                 |
+| `bg-BG`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `bn-BD`  | Indian           | 10^7                | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `bn-IN`  | Indian           | 10^7                | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `ca-ES`  | Base thousand    | 10^18               | 10^21 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `cs-CZ`  | Base thousand    | 10^21               | 10^24 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 | 2                 |
+| `da-DK`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `de-AT`  | Base thousand    | 10^27               | 10^30 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `de-CH`  | Base thousand    | 10^27               | 10^30 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `de-DE`  | Base thousand    | 10^27               | 10^30 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `el-GR`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `en-AE`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `en-AU`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `en-BD`  | Indian           | 10^7                | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `en-CA`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `en-GB`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `en-GH`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `en-HK`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `en-IE`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `en-IN`  | Indian           | 10^7                | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `en-IQ`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 3                 |
+| `en-JM`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `en-KE`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `en-LK`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `en-MA`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `en-MM`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `en-MU`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `en-MY`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `en-NG`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `en-NP`  | Indian           | 10^17               | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `en-NZ`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `en-OM`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 3                 |
+| `en-PH`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `en-PK`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `en-SA`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `en-SG`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `en-TT`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `en-TZ`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `en-UG`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `en-US`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `en-ZA`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `en-ZW`  | Base thousand    | 10^63               | 10^66 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `es-AR`  | Base thousand    | 10^18               | 10^21 - 1                | Yes     | Cardinal + ordinal | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `es-CL`  | Base thousand    | 10^18               | 10^21 - 1                | Yes     | Cardinal + ordinal | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `es-CO`  | Base thousand    | 10^18               | 10^21 - 1                | Yes     | Cardinal + ordinal | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `es-ES`  | Base thousand    | 10^18               | 10^21 - 1                | Yes     | Cardinal + ordinal | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `es-MX`  | Base thousand    | 10^18               | 10^21 - 1                | Yes     | Cardinal + ordinal | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `es-PE`  | Base thousand    | 10^18               | 10^21 - 1                | Yes     | Cardinal + ordinal | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `es-US`  | Base thousand    | 10^18               | 10^21 - 1                | Yes     | Cardinal + ordinal | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `es-VE`  | Base thousand    | 10^18               | 10^21 - 1                | Yes     | Cardinal + ordinal | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `et-EE`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | —                                                 | 2                 |
+| `fa-IR`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `fi-FI`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | —                                                 | 2                 |
+| `fil-PH` | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | —                                                 | 2                 |
+| `fr-BE`  | Base thousand    | 10^27               | 10^30 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `fr-CA`  | Base thousand    | 10^27               | 10^30 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `fr-CH`  | Base thousand    | 10^27               | 10^30 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `fr-CI`  | Base thousand    | 10^27               | 10^30 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `fr-CM`  | Base thousand    | 10^27               | 10^30 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `fr-DZ`  | Base thousand    | 10^27               | 10^30 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `fr-FR`  | Base thousand    | 10^27               | 10^30 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `fr-MA`  | Base thousand    | 10^27               | 10^30 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `fr-MG`  | Base thousand    | 10^27               | 10^30 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `fr-SA`  | Base thousand    | 10^27               | 10^30 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `gu-IN`  | Indian           | 10^7                | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `ha-NG`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | —                                                 | 2                 |
+| `hbo-IL` | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | —                                                 | 2                 |
+| `he-IL`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal + ordinal | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `hi-IN`  | Indian           | 10^7                | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `hr-HR`  | Base thousand    | 10^21               | 10^24 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `hu-HU`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `id-ID`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `ig-NG`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | —                                                 | 2                 |
+| `is-IS`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | —                                                 | 2                 |
+| `it-IT`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `ja-JP`  | East Asian       | 10^20               | 10^24 - 1                | Yes     | —                  | No     | —                                                 | 2                 |
+| `jv-ID`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | —                                                 | 2                 |
+| `ka-GE`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `km-KH`  | Locale-specific  | 10^12               | 10^15 - 1                | Yes     | —                  | No     | —                                                 | 2                 |
+| `kn-IN`  | Indian           | 10^7                | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `ko-KR`  | East Asian       | 10^20               | 10^24 - 1                | Yes     | —                  | No     | —                                                 | 2                 |
+| `lo-LA`  | Locale-specific  | 10^12               | 10^18 - 1                | Yes     | —                  | No     | —                                                 | 2                 |
+| `lt-LT`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | —                                                 | 2                 |
+| `lv-LV`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `ml-IN`  | Indian           | 10^7                | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `mr-IN`  | Indian           | 10^7                | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `ms-MY`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `ms-SG`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `my-MM`  | Locale-specific  | 10^12               | 10^15 - 1                | Yes     | —                  | No     | —                                                 | 2                 |
+| `nb-NO`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `ne-NP`  | Indian           | 10^17               | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `nl-NL`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `nl-SR`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `or-IN`  | Indian           | 10^7                | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `pa-IN`  | Indian           | 10^7                | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `pl-PL`  | Base thousand    | 10^21               | 10^24 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 | 2                 |
+| `pt-AO`  | Base thousand    | 10^18               | 10^21 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `pt-BR`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `pt-MZ`  | Base thousand    | 10^18               | 10^21 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `pt-PT`  | Base thousand    | 10^18               | 10^21 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `ro-RO`  | Base thousand    | 10^18               | 10^21 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `ru-RU`  | Base thousand    | 10^21               | 10^24 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 | 2                 |
+| `si-LK`  | Locale-specific  | 10^12               | 10^15 - 1                | Yes     | —                  | No     | —                                                 | 2                 |
+| `sk-SK`  | Base thousand    | 10^21               | 10^24 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 | 2                 |
+| `sl-SI`  | Base thousand    | 10^21               | 10^24 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `sq-AL`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `sr-RS`  | Base thousand    | 10^21               | 10^24 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `sv-SE`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `sw-KE`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | —                                                 | 2                 |
+| `sw-TZ`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | —                                                 | 2                 |
+| `ta-IN`  | Indian           | 10^7                | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `te-IN`  | Indian           | 10^7                | 10^19 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `th-TH`  | Locale-specific  | 10^12               | 10^18 - 1                | Yes     | —                  | No     | —                                                 | 2                 |
+| `tr-TR`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | —                                                 | 2                 |
+| `uk-UA`  | Base thousand    | 10^21               | 10^24 - 1                | Yes     | Cardinal           | No     | 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 | 2                 |
+| `ur-PK`  | Indian           | 10^9                | 98765432101234           | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `uz-UZ`  | Base thousand    | 10^12               | 10^15 - 1                | Yes     | —                  | No     | —                                                 | 2                 |
+| `vi-VN`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `yo-NG`  | Base thousand    | 10^15               | 10^18 - 1                | Yes     | —                  | No     | —                                                 | 2                 |
+| `yue-HK` | East Asian       | 10^20               | 10^24 - 1                | Yes     | —                  | No     | —                                                 | 2                 |
+| `zh-CN`  | East Asian       | 10^20               | 10^24 - 1                | Yes     | —                  | Yes    | —                                                 | 2                 |
+| `zh-TW`  | East Asian       | 10^20               | 10^24 - 1                | Yes     | —                  | Yes    | —                                                 | 2                 |
+| `zu-ZA`  | Base thousand    | 10^12               | 10^15 - 1                | Yes     | —                  | No     | —                                                 | 2                 |

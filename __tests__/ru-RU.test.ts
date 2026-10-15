@@ -78,21 +78,21 @@ const testIntegers: [number, string][] = [
   [900, 'Девятьсот'],
   [1000, 'Тысяча'],
   [1100, 'Тысяча Сто'],
-  [2000, 'Два Тысячи'],
+  [2000, 'Две Тысячи'],
   [3000, 'Три Тысячи'],
   [4000, 'Четыре Тысячи'],
-  [5000, 'Пять Тысяча'],
+  [5000, 'Пять Тысяч'],
   [4680, 'Четыре Тысячи Шестьсот Восемьдесят'],
-  [10000, 'Десять Тысяча'],
-  [63892, 'Шестьдесят Три Тысяч Восемьсот Девяносто Два'],
+  [10000, 'Десять Тысяч'],
+  [63892, 'Шестьдесят Три Тысячи Восемьсот Девяносто Два'],
   [100000, 'Сто Тысяч'],
   [1000000, 'Миллион'],
   [2000000, 'Два Миллиона'],
-  [5000000, 'Пять Миллион'],
-  [2741034, 'Два Миллиона Семьсот Сорок Один Тысяч Тридцать Четыре'],
+  [5000000, 'Пять Миллионов'],
+  [2741034, 'Два Миллиона Семьсот Сорок Одна Тысяча Тридцать Четыре'],
   [1000000000, 'Миллиард'],
   [2000000000, 'Два Миллиарда'],
-  [5000000000, 'Пять Миллиард'],
+  [5000000000, 'Пять Миллиардов'],
 ];
 
 describe('Test Integers with options = {}', () => {
@@ -116,20 +116,22 @@ describe('Test Negative Integers with options = {}', () => {
   });
 });
 
-// Helper function to get Russian currency form
-function getCurrencyName(words: string): string {
-  // Check for singular (1)
-  if (words === 'Один') {
+// Russian unit form by plural category (CLDR ru: one / few / many)
+function getCurrencyName(amount: number): string {
+  const n = Math.abs(amount);
+  if (n % 10 === 1 && n % 100 !== 11) {
     return 'Рубль';
   }
-  // Default plural for all other numbers
+  if (n % 10 >= 2 && n % 10 <= 4 && !(n % 100 >= 12 && n % 100 <= 14)) {
+    return 'Рубля';
+  }
   return 'Рублей';
 }
 
 describe('Test Integers with options = { currency: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    const currencyName = getCurrencyName(row[1] as string);
+    const currencyName = getCurrencyName(row[0] as number);
     row[1] = `${row[1]} ${currencyName} Только`;
   });
 
@@ -141,7 +143,7 @@ describe('Test Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, doNotAddOnly: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    const currencyName = getCurrencyName(row[1] as string);
+    const currencyName = getCurrencyName(row[0] as number);
     row[1] = `${row[1]} ${currencyName}`;
   });
 
@@ -158,7 +160,7 @@ describe('Test Negative Integers with options = { currency: true }', () => {
       return;
     }
     row[0] = -row[0];
-    const currencyName = getCurrencyName(row[1] as string);
+    const currencyName = getCurrencyName(row[0] as number);
     row[1] = `Минус ${row[1]} ${currencyName} Только`;
   });
 
@@ -173,7 +175,7 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
     if (i === 0) {
       row[1] = '';
     } else {
-      const currencyName = getCurrencyName(row[1] as string);
+      const currencyName = getCurrencyName(row[0] as number);
       row[1] = `${row[1]} ${currencyName} Только`;
     }
   });
@@ -188,23 +190,34 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
   });
 });
 
+// Spec R9 (Грамота.ру, ответ № 320681): decimals read as a fraction by default.
 const testFloats: [number, string][] = [
   [0.0, 'Ноль'],
-  [0.04, 'Ноль Целых Ноль Четыре'],
-  [0.4, 'Ноль Целых Четыре'],
-  [0.63, 'Ноль Целых Шестьдесят Три'],
-  [37.06, 'Тридцать Семь Целых Ноль Шесть'],
-  [37.68, 'Тридцать Семь Целых Шестьдесят Восемь'],
+  [0.04, 'Ноль Целых Четыре Сотых'],
+  [0.4, 'Ноль Целых Четыре Десятых'],
+  [0.63, 'Ноль Целых Шестьдесят Три Сотых'],
+  [1.5, 'Одна Целая Пять Десятых'],
+  [37.06, 'Тридцать Семь Целых Шесть Сотых'],
+  [37.68, 'Тридцать Семь Целых Шестьдесят Восемь Сотых'],
 ];
+
+describe("Test Floats with options = { decimalStyle: 'digit' }", () => {
+  test.concurrent.each([
+    [0.04, 'Ноль Целых Ноль Четыре'],
+    [37.68, 'Тридцать Семь Целых Шестьдесят Восемь'],
+  ])('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input, { decimalStyle: 'digit' })).toBe(expected);
+  });
+});
 
 describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
   const testIncludeZeroFractional: [number | string, string][] = [
-    [123, `Сто Двадцать Три Рублей Только`],
-    ['123', `Сто Двадцать Три Рублей Только`],
-    ['123.0', `Сто Двадцать Три Рублей И Ноль Копеек Только`],
-    ['123.00', `Сто Двадцать Три Рублей И Ноль Копеек Только`],
+    [123, `Сто Двадцать Три Рубля Только`],
+    ['123', `Сто Двадцать Три Рубля Только`],
+    ['123.0', `Сто Двадцать Три Рубля И Ноль Копеек Только`],
+    ['123.00', `Сто Двадцать Три Рубля И Ноль Копеек Только`],
     ['0.00', `Ноль Рублей И Ноль Копеек Только`],
-    ['-123.00', `Минус Сто Двадцать Три Рублей И Ноль Копеек Только`],
+    ['-123.00', `Минус Сто Двадцать Три Рубля И Ноль Копеек Только`],
     ['37.68', `Тридцать Семь Рублей И Шестьдесят Восемь Копеек Только`],
   ];
 
@@ -226,9 +239,9 @@ describe('Test Floats with options = {}', () => {
 
 const testFloatsWithCurrency: [number, string][] = [
   [0.0, 'Ноль Рублей Только'],
-  [0.04, 'Ноль Рублей И Четыре Копеек Только'],
+  [0.04, 'Ноль Рублей И Четыре Копейки Только'],
   [0.4, 'Ноль Рублей И Сорок Копеек Только'],
-  [0.63, 'Ноль Рублей И Шестьдесят Три Копеек Только'],
+  [0.63, 'Ноль Рублей И Шестьдесят Три Копейки Только'],
   [0.999, 'Один Рубль Только'],
   [37.06, 'Тридцать Семь Рублей И Шесть Копеек Только'],
   [37.68, 'Тридцать Семь Рублей И Шестьдесят Восемь Копеек Только'],
@@ -269,7 +282,7 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
     if (row[0] === 0.999) {
       row[1] = 'Ноль Рублей Только';
     } else {
-      row[1] = (row[1] as string).replace(new RegExp(` И [\\wа-яА-ЯёЁ ]+ Копеек`), '');
+      row[1] = (row[1] as string).replace(new RegExp(` И [\\wа-яА-ЯёЁ ]+ Копе(ек|йки|йка)`), '');
     }
   });
 
@@ -489,16 +502,48 @@ describe('Functional helpers (locale-level)', () => {
 
 const testFractionStyleRuRU: [number, string][] = [
   // Slavic singular rule: singular when fracValue % 10 === 1 && fracValue % 100 !== 11
-  [1.1, 'Один И Один Десятая'],
-  [1.5, 'Один И Пять Десятых'],
-  [1.21, 'Один И Двадцать Один Сотая'],
-  [1.11, 'Один И Одиннадцать Сотых'],
-  [123.45, 'Сто Двадцать Три И Сорок Пять Сотых'],
-  [0.001, 'Ноль И Один Тысячная'],
+  [1.1, 'Одна Целая Одна Десятая'],
+  [1.5, 'Одна Целая Пять Десятых'],
+  [1.21, 'Одна Целая Двадцать Одна Сотая'],
+  [1.11, 'Одна Целая Одиннадцать Сотых'],
+  [123.45, 'Сто Двадцать Три Целых Сорок Пять Сотых'],
+  [0.001, 'Ноль Целых Одна Тысячная'],
 ];
 
 describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
   test.concurrent.each(testFractionStyleRuRU)('convert %d => %s', (input, expected) => {
     expect(toWords.convert(input, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+});
+
+// Spec R2 (ru.wiktionary: квинтиллион, секстиллион), R18, R20.
+describe('Test scale words above a quadrillion', () => {
+  test.each([
+    [10n ** 18n, 'Квинтиллион'],
+    [2n * 10n ** 21n, 'Два Секстиллиона'],
+    [5n * 10n ** 21n + 10n ** 18n, 'Пять Секстиллионов Один Квинтиллион'],
+  ])('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+
+  test.each([
+    [10n ** 18n, 'Квинтиллионный'],
+    [3n * 10n ** 21n, 'Трёхсекстиллионный'],
+  ])('ordinal %s => %s', (input, expected) => {
+    expect(toWords.toOrdinal(input)).toBe(expected);
+  });
+
+  test('a compose-mode multiplier of 1000+ is not fused into one ordinal word', () => {
+    expect(toWords.toOrdinal(6n * 10n ** 24n, { rangeMode: 'compose' })).toBe('Шесть Тысяч Секстиллионный');
+  });
+});
+
+// Spec R16: the rouble is masculine whatever the gender option says.
+describe('Test currency with the gender option', () => {
+  test.each([
+    ['1', { gender: 'feminine' }, 'Один Рубль Только'],
+    ['2.01', { gender: 'masculine' }, 'Два Рубля И Одна Копейка Только'],
+  ] as const)('convert %s %o => %s', (input, options, expected) => {
+    expect(toWords.convert(input, { currency: true, ...options })).toBe(expected);
   });
 });

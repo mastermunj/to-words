@@ -1,0 +1,279 @@
+{
+  "locale": "ru-RU",
+  "sources": {
+    "cldr-plural": {
+      "title": "Unicode CLDR — Language Plural Rules (ru: one / few / many)",
+      "url": "https://www.unicode.org/cldr/charts/latest/supplemental/language_plural_rules.html",
+      "accessed": "2026-10-08"
+    },
+    "wp-ru-grammar": {
+      "title": "Wikipedia — Russian grammar, Numerals (nominative after 'one': один рубль; genitive plural after 5+: десять рублей; два/две by gender)",
+      "url": "https://en.wikipedia.org/wiki/Russian_grammar#Numerals",
+      "accessed": "2026-10-08"
+    },
+    "wp-ru-declension": {
+      "title": "Wikipedia — Russian declension, Numerals (declension of composite numerals with тысяча)",
+      "url": "https://en.wikipedia.org/wiki/Russian_declension#Numerals",
+      "accessed": "2026-10-08"
+    },
+    "wikt-tysyacha": {
+      "title": "Wiktionary — тысяча (feminine noun; две тысячи, пять тысяч)",
+      "url": "https://en.wiktionary.org/wiki/тысяча",
+      "accessed": "2026-10-08"
+    }
+  },
+  "cases": [
+    {
+      "id": "card-1",
+      "capability": "cardinal",
+      "form": "cardinal",
+      "input": "1",
+      "expected": "Один",
+      "status": "verified",
+      "attested": true,
+      "sources": [
+        "wp-ru-grammar"
+      ]
+    },
+    {
+      "id": "gender-1-f",
+      "capability": "gender",
+      "form": "cardinal",
+      "input": "1",
+      "options": {
+        "gender": "feminine"
+      },
+      "expected": "Одна",
+      "status": "verified",
+      "attested": true,
+      "sources": [
+        "wp-ru-grammar"
+      ]
+    },
+    {
+      "id": "gender-2-f",
+      "capability": "gender",
+      "form": "cardinal",
+      "input": "2",
+      "options": {
+        "gender": "feminine"
+      },
+      "expected": "Две",
+      "status": "verified",
+      "attested": true,
+      "sources": [
+        "wp-ru-grammar"
+      ]
+    },
+    {
+      "id": "scale-1000",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "1000",
+      "expected": "Тысяча",
+      "status": "verified",
+      "attested": true,
+      "sources": [
+        "wikt-tysyacha"
+      ]
+    },
+    {
+      "id": "scale-2000",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "2000",
+      "expected": "Две Тысячи",
+      "status": "verified",
+      "attested": true,
+      "sources": [
+        "wikt-tysyacha",
+        "wp-ru-grammar"
+      ]
+    },
+    {
+      "id": "scale-5000",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "5000",
+      "expected": "Пять Тысяч",
+      "status": "verified",
+      "attested": true,
+      "sources": [
+        "wikt-tysyacha",
+        "cldr-plural"
+      ]
+    },
+    {
+      "id": "scale-21000",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "21000",
+      "expected": "Двадцать Одна Тысяча",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "cldr-plural",
+        "wp-ru-declension"
+      ]
+    },
+    {
+      "id": "scale-22000",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "22000",
+      "expected": "Двадцать Две Тысячи",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "cldr-plural",
+        "wp-ru-declension"
+      ]
+    },
+    {
+      "id": "scale-25000",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "25000",
+      "expected": "Двадцать Пять Тысяч",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "cldr-plural",
+        "wikt-tysyacha"
+      ]
+    },
+    {
+      "id": "scale-2000000",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "2000000",
+      "expected": "Два Миллиона",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "cldr-plural",
+        "wp-ru-grammar"
+      ]
+    },
+    {
+      "id": "scale-5000000",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "5000000",
+      "expected": "Пять Миллионов",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "cldr-plural",
+        "wp-ru-grammar"
+      ]
+    },
+    {
+      "id": "scale-21000000",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "21000000",
+      "expected": "Двадцать Один Миллион",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "cldr-plural",
+        "wp-ru-grammar"
+      ]
+    },
+    {
+      "id": "cur-1",
+      "capability": "currency",
+      "form": "currency",
+      "input": "1",
+      "options": {
+        "doNotAddOnly": true
+      },
+      "expected": "Один Рубль",
+      "status": "verified",
+      "attested": true,
+      "sources": [
+        "wp-ru-grammar"
+      ]
+    },
+    {
+      "id": "cur-2",
+      "capability": "currency",
+      "form": "currency",
+      "input": "2",
+      "options": {
+        "doNotAddOnly": true
+      },
+      "expected": "Два Рубля",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "cldr-plural",
+        "wp-ru-grammar"
+      ]
+    },
+    {
+      "id": "cur-5",
+      "capability": "currency",
+      "form": "currency",
+      "input": "5",
+      "options": {
+        "doNotAddOnly": true
+      },
+      "expected": "Пять Рублей",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "cldr-plural",
+        "wp-ru-grammar"
+      ]
+    },
+    {
+      "id": "cur-21",
+      "capability": "currency",
+      "form": "currency",
+      "input": "21",
+      "options": {
+        "doNotAddOnly": true
+      },
+      "expected": "Двадцать Один Рубль",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "cldr-plural",
+        "wp-ru-grammar"
+      ]
+    },
+    {
+      "id": "cur-1.01",
+      "capability": "currency",
+      "form": "currency",
+      "input": "1.01",
+      "options": {
+        "doNotAddOnly": true
+      },
+      "expected": "Один Рубль И Одна Копейка",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "wp-ru-grammar"
+      ]
+    },
+    {
+      "id": "cur-2.02",
+      "capability": "currency",
+      "form": "currency",
+      "input": "2.02",
+      "options": {
+        "doNotAddOnly": true
+      },
+      "expected": "Два Рубля И Две Копейки",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "cldr-plural",
+        "wp-ru-grammar"
+      ]
+    }
+  ]
+}

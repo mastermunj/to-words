@@ -39,9 +39,8 @@ export default class Locale implements LocaleInterface {
     // verbal ໝື່ນ is therefore deliberately absent: leaving 10^4 unnamed lets the
     // composer build it from ພັນ.
     numberWordsMapping: [
-      { number: 1000000000000000, value: 'ພັນລ້ານລ້ານ' },
+      // CLDR lo: a thousand million is built from ລ້ານ (ໜຶ່ງພັນໜຶ່ງຮ້ອຍລ້ານ), not a fixed ພັນລ້ານ word.
       { number: 1000000000000, value: 'ລ້ານລ້ານ' },
-      { number: 1000000000, value: 'ພັນລ້ານ' },
       { number: 1000000, value: 'ລ້ານ' },
       { number: 100000, value: 'ແສນ' },
       { number: 1000, value: 'ພັນ' },

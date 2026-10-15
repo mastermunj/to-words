@@ -35,35 +35,35 @@ describe('Test Locale', () => {
 
 const testIntegers: [number, string][] = [
   [0, 'Nul'],
-  [137, 'Een Honderd Sewe En Dertig'],
+  [137, 'Een Honderd Sewe-En-Dertig'],
   [700, 'Sewe Honderd'],
   [1100, 'Een Duisend Honderd'],
   [4680, 'Vier Duisend Ses Honderd Tagtig'],
-  [63892, 'Drie En Sestig Duisend Agt Honderd Twee En Negentig'],
-  [86100, 'Ses En Tagtig Duisend Honderd'],
-  [792581, 'Sewe Honderd Twee En Negentig Duisend Vyf Honderd Een En Tagtig'],
-  [2741034, 'Twee Miljoen Sewe Honderd Een En Veertig Duisend Vier En Dertig'],
-  [86429753, 'Ses En Tagtig Miljoen Vier Honderd Nege En Twintig Duisend Sewe Honderd Drie En Vyftig'],
-  [975310864, 'Nege Honderd Vyf En Sewentig Miljoen Drie Honderd Tien Duisend Agt Honderd Vier En Sestig'],
+  [63892, 'Drie-En-Sestig Duisend Agt Honderd Twee-En-Negentig'],
+  [86100, 'Ses-En-Tagtig Duisend Honderd'],
+  [792581, 'Sewe Honderd Twee-En-Negentig Duisend Vyf Honderd Een-En-Tagtig'],
+  [2741034, 'Twee Miljoen Sewe Honderd Een-En-Veertig Duisend Vier-En-Dertig'],
+  [86429753, 'Ses-En-Tagtig Miljoen Vier Honderd Nege-En-Twintig Duisend Sewe Honderd Drie-En-Vyftig'],
+  [975310864, 'Nege Honderd Vyf-En-Sewentig Miljoen Drie Honderd Tien Duisend Agt Honderd Vier-En-Sestig'],
   [
     9876543210,
-    'Nege Miljard Agt Honderd Ses En Sewentig Miljoen Vyf Honderd Drie En Veertig Duisend Twee Honderd Tien',
+    'Nege Miljard Agt Honderd Ses-En-Sewentig Miljoen Vyf Honderd Drie-En-Veertig Duisend Twee Honderd Tien',
   ],
   [
     98765432101,
-    'Agt En Negentig Miljard Sewe Honderd Vyf En Sestig Miljoen Vier Honderd Twee En Dertig Duisend Een Honderd Een',
+    'Agt-En-Negentig Miljard Sewe Honderd Vyf-En-Sestig Miljoen Vier Honderd Twee-En-Dertig Duisend Een Honderd Een',
   ],
   [
     987654321012,
-    'Nege Honderd Sewe En Tagtig Miljard Ses Honderd Vier En Vyftig Miljoen Drie Honderd Een En Twintig Duisend Twaalf',
+    'Nege Honderd Sewe-En-Tagtig Miljard Ses Honderd Vier-En-Vyftig Miljoen Drie Honderd Een-En-Twintig Duisend Twaalf',
   ],
   [
     9876543210123,
-    'Nege Biljoen Agt Honderd Ses En Sewentig Miljard Vyf Honderd Drie En Veertig Miljoen Twee Honderd Tien Duisend Een Honderd Drie En Twintig',
+    'Nege Biljoen Agt Honderd Ses-En-Sewentig Miljard Vyf Honderd Drie-En-Veertig Miljoen Twee Honderd Tien Duisend Een Honderd Drie-En-Twintig',
   ],
   [
     98765432101234,
-    'Agt En Negentig Biljoen Sewe Honderd Vyf En Sestig Miljard Vier Honderd Twee En Dertig Miljoen Een Honderd Een Duisend Twee Honderd Vier En Dertig',
+    'Agt-En-Negentig Biljoen Sewe Honderd Vyf-En-Sestig Miljard Vier Honderd Twee-En-Dertig Miljoen Een Honderd Een Duisend Twee Honderd Vier-En-Dertig',
   ],
 ];
 
@@ -80,7 +80,7 @@ describe('Test Negative Integers with options = {}', () => {
       return;
     }
     row[0] = -row[0];
-    row[1] = `Negatief ${row[1]}`;
+    row[1] = `Min ${row[1]}`;
   });
 
   test.concurrent.each(testNegativeIntegers)('convert %d => %s', (input, expected) => {
@@ -118,7 +118,7 @@ describe('Test Negative Integers with options = { currency: true }', () => {
       return;
     }
     row[0] = -row[0];
-    row[1] = `Negatief ${row[1]} Rand`;
+    row[1] = `Min ${row[1]} Rand`;
   });
 
   test.concurrent.each(testNegativeIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -144,26 +144,26 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
 
 const testFloats: [number, string][] = [
   [0.0, 'Nul'],
-  [0.04, 'Nul Punt Nul Vier'],
-  [0.0468, 'Nul Punt Nul Vier Ses Agt'],
-  [0.4, 'Nul Punt Vier'],
-  [0.973, 'Nul Punt Nege Honderd Drie En Sewentig'],
-  [0.999, 'Nul Punt Nege Honderd Nege En Negentig'],
-  [37.06, 'Sewe En Dertig Punt Nul Ses'],
-  [37.068, 'Sewe En Dertig Punt Nul Ses Agt'],
-  [37.68, 'Sewe En Dertig Punt Agt En Sestig'],
-  [37.683, 'Sewe En Dertig Punt Ses Honderd Drie En Tagtig'],
+  [0.04, 'Nul Komma Nul Vier'],
+  [0.0468, 'Nul Komma Nul Vier Ses Agt'],
+  [0.4, 'Nul Komma Vier'],
+  [0.973, 'Nul Komma Nege Honderd Drie-En-Sewentig'],
+  [0.999, 'Nul Komma Nege Honderd Nege-En-Negentig'],
+  [37.06, 'Sewe-En-Dertig Komma Nul Ses'],
+  [37.068, 'Sewe-En-Dertig Komma Nul Ses Agt'],
+  [37.68, 'Sewe-En-Dertig Komma Agt-En-Sestig'],
+  [37.683, 'Sewe-En-Dertig Komma Ses Honderd Drie-En-Tagtig'],
 ];
 
 describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
   const testIncludeZeroFractional: [number | string, string][] = [
-    [123, `Een Honderd Drie En Twintig Rand`],
-    ['123', `Een Honderd Drie En Twintig Rand`],
-    ['123.0', `Een Honderd Drie En Twintig Rand En Nul Sente`],
-    ['123.00', `Een Honderd Drie En Twintig Rand En Nul Sente`],
+    [123, `Een Honderd Drie-En-Twintig Rand`],
+    ['123', `Een Honderd Drie-En-Twintig Rand`],
+    ['123.0', `Een Honderd Drie-En-Twintig Rand En Nul Sente`],
+    ['123.00', `Een Honderd Drie-En-Twintig Rand En Nul Sente`],
     ['0.00', `Nul Rand En Nul Sente`],
-    ['-123.00', `Negatief Een Honderd Drie En Twintig Rand En Nul Sente`],
-    ['37.68', `Sewe En Dertig Rand En Agt En Sestig Sente`],
+    ['-123.00', `Min Een Honderd Drie-En-Twintig Rand En Nul Sente`],
+    ['37.68', `Sewe-En-Dertig Rand En Agt-En-Sestig Sente`],
   ];
 
   test.concurrent.each(testIncludeZeroFractional)('convert %s => %s', (input, expected) => {
@@ -187,12 +187,12 @@ const testFloatsWithCurrency: [number, string][] = [
   [0.04, `Nul Rand En Vier Sente`],
   [0.0468, `Nul Rand En Vyf Sente`],
   [0.4, `Nul Rand En Veertig Sente`],
-  [0.973, `Nul Rand En Sewe En Negentig Sente`],
+  [0.973, `Nul Rand En Sewe-En-Negentig Sente`],
   [0.999, `Een Rand`],
-  [37.06, `Sewe En Dertig Rand En Ses Sente`],
-  [37.068, `Sewe En Dertig Rand En Sewe Sente`],
-  [37.68, `Sewe En Dertig Rand En Agt En Sestig Sente`],
-  [37.683, `Sewe En Dertig Rand En Agt En Sestig Sente`],
+  [37.06, `Sewe-En-Dertig Rand En Ses Sente`],
+  [37.068, `Sewe-En-Dertig Rand En Sewe Sente`],
+  [37.68, `Sewe-En-Dertig Rand En Agt-En-Sestig Sente`],
+  [37.683, `Sewe-En-Dertig Rand En Agt-En-Sestig Sente`],
 ];
 
 describe('Test Floats with options = { currency: true }', () => {
@@ -254,7 +254,7 @@ const testOrdinals: [number, string][] = [
   [5, 'Vyfde'],
   [6, 'Sesde'],
   [7, 'Sewende'],
-  [8, 'Agtste'],
+  [8, 'Agste'],
   [9, 'Negende'],
   [10, 'Tiende'],
   [11, 'Elfde'],
@@ -268,11 +268,11 @@ const testOrdinals: [number, string][] = [
   [19, 'Negentiende'],
   [20, 'Twintigste'],
   // Composite numbers (21, 22, etc.)
-  [21, 'Een En Twintig'],
-  [22, 'Twee En Twintig'],
-  [23, 'Drie En Twintig'],
-  [24, 'Vier En Twintig'],
-  [25, 'Vyf En Twintig'],
+  [21, 'Een-En-Twintigste'],
+  [22, 'Twee-En-Twintigste'],
+  [23, 'Drie-En-Twintigste'],
+  [24, 'Vier-En-Twintigste'],
+  [25, 'Vyf-En-Twintigste'],
   // Tens
   [30, 'Dertigste'],
   [40, 'Veertigste'],
@@ -293,10 +293,10 @@ const testOrdinals: [number, string][] = [
   [101, 'Een Honderd Eerste'],
   [102, 'Een Honderd Tweede'],
   [111, 'Een Honderd Elfde'],
-  [123, 'Een Honderd Drie En Twintig'],
+  [123, 'Een Honderd Drie-En-Twintigste'],
   [150, 'Een Honderd Vyftigste'],
   [1001, 'Een Duisend Eerste'],
-  [1234, 'Een Duisend Twee Honderd Vier En Dertig'],
+  [1234, 'Een Duisend Twee Honderd Vier-En-Dertigste'],
   [1500, 'Een Duisend Vyf Honderdste'],
   [10000, 'Tien Duisendste'],
   [100000, 'Honderd Duisendste'],
@@ -365,7 +365,7 @@ const testBigInts: [bigint, string][] = [
   [1000000000000000n, 'Een Biljard'],
   [
     1234567890123n,
-    'Een Biljoen Twee Honderd Vier En Dertig Miljard Vyf Honderd Sewe En Sestig Miljoen Agt Honderd Negentig Duisend Een Honderd Drie En Twintig',
+    'Een Biljoen Twee Honderd Vier-En-Dertig Miljard Vyf Honderd Sewe-En-Sestig Miljoen Agt Honderd Negentig Duisend Een Honderd Drie-En-Twintig',
   ],
 ];
 
@@ -377,11 +377,11 @@ describe('Test BigInt Values', () => {
 
 // Negative BigInt Tests
 const testNegativeBigInts: [bigint, string][] = [
-  [-1n, 'Negatief Een'],
-  [-100n, 'Negatief Honderd'],
-  [-1000n, 'Negatief Een Duisend'],
-  [-1000000n, 'Negatief Een Miljoen'],
-  [-1000000000n, 'Negatief Een Miljard'],
+  [-1n, 'Min Een'],
+  [-100n, 'Min Honderd'],
+  [-1000n, 'Min Een Duisend'],
+  [-1000000n, 'Min Een Miljoen'],
+  [-1000000000n, 'Min Een Miljard'],
 ];
 
 describe('Test Negative BigInt Values', () => {
@@ -413,9 +413,9 @@ const testStringInputs: [string, string][] = [
   ['1', 'Een'],
   ['100', 'Honderd'],
   ['1000', 'Een Duisend'],
-  ['-100', 'Negatief Honderd'],
-  ['3.14', 'Drie Punt Veertien'],
-  ['-3.14', 'Negatief Drie Punt Veertien'],
+  ['-100', 'Min Honderd'],
+  ['3.14', 'Drie Komma Veertien'],
+  ['-3.14', 'Min Drie Komma Veertien'],
   ['  100  ', 'Honderd'],
   ['1000000', 'Een Miljoen'],
   ['1000000000', 'Een Miljard'],
@@ -433,7 +433,7 @@ const testStringInputsWithCurrency: [string, string][] = [
   ['1', 'Een Rand'],
   ['100', 'Honderd Rand'],
   ['100.50', 'Honderd Rand En Vyftig Sente'],
-  ['-100', 'Negatief Honderd Rand'],
+  ['-100', 'Min Honderd Rand'],
 ];
 
 describe('Test String Number Inputs with Currency', () => {
@@ -519,7 +519,7 @@ const testFractionStyleAfZA: [number, string][] = [
   [1.1, 'Een En Een Tiende'],
   [2.5, 'Twee En Vyf Tiende'],
   [1.01, 'Een En Een Honderdste'],
-  [1.45, 'Een En Vyf En Veertig Honderdste'],
+  [1.45, 'Een En Vyf-En-Veertig Honderdste'],
   [0.05, 'Nul En Vyf Honderdste'],
   [1.001, 'Een En Een Duisendste'],
   [1.005, 'Een En Vyf Duisendste'],
@@ -529,7 +529,7 @@ const testFractionStyleAfZA: [number, string][] = [
   [1.00005, 'Een En Vyf Honderdduisendste'],
   [1.000001, 'Een En Een Miljoenste'],
   [1.000005, 'Een En Vyf Miljoenste'],
-  [123.45, 'Een Honderd Drie En Twintig En Vyf En Veertig Honderdste'],
+  [123.45, 'Een Honderd Drie-En-Twintig En Vyf-En-Veertig Honderdste'],
 ];
 
 describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
@@ -539,15 +539,52 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
 
   test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
     expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
-      'Een Punt Een Miljoen Twee Honderd Vier En Dertig Duisend Vyf Honderd Sewe En Sestig',
+      'Een Komma Een Miljoen Twee Honderd Vier-En-Dertig Duisend Vyf Honderd Sewe-En-Sestig',
     );
     expect(toWords.convert(1.1234567)).toBe(
-      'Een Punt Een Miljoen Twee Honderd Vier En Dertig Duisend Vyf Honderd Sewe En Sestig',
+      'Een Komma Een Miljoen Twee Honderd Vier-En-Dertig Duisend Vyf Honderd Sewe-En-Sestig',
     );
   });
 
   test('digit-by-digit style works without decimalStyle option', () => {
-    expect(toWords.convert(1.5)).toBe('Een Punt Vyf');
-    expect(toWords.convert(0.05)).toBe('Nul Punt Nul Vyf');
+    expect(toWords.convert(1.5)).toBe('Een Komma Vyf');
+    expect(toWords.convert(0.05)).toBe('Nul Komma Nul Vyf');
+  });
+});
+
+// Cited examples — forms attested by language authorities. Sources: elon.io Afrikaans grammar
+// (cardinal/ordinal/money),
+// en.wiktionary Afrikaans entries, preply.com, languagesandnumbers.com (after Donaldson 1993).
+describe('Cited examples (sourced)', () => {
+  const citedCardinals: [number, string][] = [
+    [21, 'Een-En-Twintig'], // elon.io; en.wiktionary een-en-twintig
+    [25, 'Vyf-En-Twintig'], // en.wiktionary vyf-en-twintig; preply
+    [33, 'Drie-En-Dertig'], // en.wiktionary drie-en-dertig
+    [43, 'Drie-En-Veertig'], // elon.io (drie-en-veertig = 43)
+    [99, 'Nege-En-Negentig'], // elon.io (nege-en-negentig = 99)
+    [200, 'Twee Honderd'], // elon.io (twee honderd = 200); en.wiktionary tweehonderd
+    [365, 'Drie Honderd Vyf-En-Sestig'], // elon.io (drie honderd vyf-en-sestig = 365)
+    [1000000, 'Een Miljoen'], // elon.io (een miljoen); en.wiktionary miljoen
+  ];
+  test.concurrent.each(citedCardinals)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+
+  const citedOrdinals: [number, string][] = [
+    [1, 'Eerste'], // elon.io (eerste)
+    [3, 'Derde'], // elon.io; en.wiktionary derde
+    [7, 'Sewende'], // en.wiktionary sewende
+    [8, 'Agste'], // elon.io (agste, never agtde)
+    [20, 'Twintigste'], // elon.io (twintigste)
+    [21, 'Een-En-Twintigste'], // elon.io (een-en-twintigste = 21st); en.wiktionary
+    [33, 'Drie-En-Dertigste'], // elon.io (drie-en-dertigste)
+    [100, 'Honderdste'], // en.wiktionary honderdste
+  ];
+  test.concurrent.each(citedOrdinals)('toOrdinal(%d) => %s', (input, expected) => {
+    expect(toWords.toOrdinal(input)).toBe(expected);
+  });
+
+  test('decimals read with "Komma" (elon.io, preply, en.wiktionary komma)', () => {
+    expect(toWords.convert(2.5)).toBe('Twee Komma Vyf'); // elon.io twee komma vyf (2,5)
   });
 });

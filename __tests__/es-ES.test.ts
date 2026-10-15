@@ -50,7 +50,7 @@ const testIntegers: [number, string][] = [
   [98765432101, 'Noventa Y Ocho Mil Setecientos Sesenta Y Cinco Millones Cuatrocientos Treinta Y Dos Mil Ciento Uno'],
   [
     987654321012,
-    'Novecientos Ochenta Y Siete Mil Seiscientos Cincuenta Y Cuatro Millones Trescientos Veintiuno Mil Doce',
+    'Novecientos Ochenta Y Siete Mil Seiscientos Cincuenta Y Cuatro Millones Trescientos Veintiún Mil Doce',
   ],
   [
     9876543210123,
@@ -99,7 +99,7 @@ const testIntegersCurrency: [number, string][] = [
   [98765432101, 'Noventa Y Ocho Mil Setecientos Sesenta Y Cinco Millones Cuatrocientos Treinta Y Dos Mil Ciento Un'],
   [
     987654321012,
-    'Novecientos Ochenta Y Siete Mil Seiscientos Cincuenta Y Cuatro Millones Trescientos Veintiuno Mil Doce',
+    'Novecientos Ochenta Y Siete Mil Seiscientos Cincuenta Y Cuatro Millones Trescientos Veintiún Mil Doce',
   ],
   [
     9876543210123,
@@ -167,16 +167,16 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
 
 const testFloats: [number, string][] = [
   [0.0, 'Cero'],
-  [0.04, 'Cero Punto Cero Cuatro'],
-  [0.0468, 'Cero Punto Cero Cuatro Seis Ocho'],
-  [0.4, 'Cero Punto Cuatro'],
-  [0.63, 'Cero Punto Sesenta Y Tres'],
-  [0.973, 'Cero Punto Novecientos Setenta Y Tres'],
-  [0.999, 'Cero Punto Novecientos Noventa Y Nueve'],
-  [37.06, 'Treinta Y Siete Punto Cero Seis'],
-  [37.068, 'Treinta Y Siete Punto Cero Seis Ocho'],
-  [37.68, 'Treinta Y Siete Punto Sesenta Y Ocho'],
-  [37.683, 'Treinta Y Siete Punto Seiscientos Ochenta Y Tres'],
+  [0.04, 'Cero Coma Cero Cuatro'],
+  [0.0468, 'Cero Coma Cero Cuatro Seis Ocho'],
+  [0.4, 'Cero Coma Cuatro'],
+  [0.63, 'Cero Coma Sesenta Y Tres'],
+  [0.973, 'Cero Coma Novecientos Setenta Y Tres'],
+  [0.999, 'Cero Coma Novecientos Noventa Y Nueve'],
+  [37.06, 'Treinta Y Siete Coma Cero Seis'],
+  [37.068, 'Treinta Y Siete Coma Cero Seis Ocho'],
+  [37.68, 'Treinta Y Siete Coma Sesenta Y Ocho'],
+  [37.683, 'Treinta Y Siete Coma Seiscientos Ochenta Y Tres'],
 ];
 
 describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
@@ -350,11 +350,11 @@ const testOrdinals: [number, string][] = [
   [19, 'Decimonoveno'],
   [20, 'Vigésimo'],
   // Composite numbers (21-29)
-  [21, 'Veintiuno'],
-  [22, 'Veintidós'],
-  [23, 'Veintitrés'],
-  [24, 'Veinticuatro'],
-  [25, 'Veinticinco'],
+  [21, 'Vigésimo Primero'],
+  [22, 'Vigésimo Segundo'],
+  [23, 'Vigésimo Tercero'],
+  [24, 'Vigésimo Cuarto'],
+  [25, 'Vigésimo Quinto'],
   // Tens
   [30, 'Trigésimo'],
   [40, 'Cuadragésimo'],
@@ -374,23 +374,23 @@ const testOrdinals: [number, string][] = [
   [800, 'Octingentésimo'],
   [900, 'Noningentésimo'],
   [1000, 'Milésimo'],
-  [1000000, 'Un Millonésimo'],
+  [1000000, 'Millonésimo'],
   // Complex numbers
-  [101, 'Ciento Primero'],
-  [110, 'Ciento Décimo'],
-  [111, 'Ciento Decimoprimero'],
-  [123, 'Ciento Veintitrés'],
-  [150, 'Ciento Quincuagésimo'],
-  [199, 'Ciento Noventa Y Noveno'],
-  [256, 'Doscientos Cincuenta Y Sexto'],
-  [1001, 'Mil Primero'],
-  [1010, 'Mil Décimo'],
-  [1100, 'Mil Centésimo'],
-  [1234, 'Mil Doscientos Treinta Y Cuarto'],
+  [101, 'Centésimo Primero'],
+  [110, 'Centésimo Décimo'],
+  [111, 'Centésimo Decimoprimero'],
+  [123, 'Centésimo Vigésimo Tercero'],
+  [150, 'Centésimo Quincuagésimo'],
+  [199, 'Centésimo Nonagésimo Noveno'],
+  [256, 'Ducentésimo Quincuagésimo Sexto'],
+  [1001, 'Milésimo Primero'],
+  [1010, 'Milésimo Décimo'],
+  [1100, 'Milésimo Centésimo'],
+  [1234, 'Milésimo Ducentésimo Trigésimo Cuarto'],
   [2000, 'Dos Milésimo'],
   [10000, 'Diez Milésimo'],
   [100000, 'Cien Milésimo'],
-  [1000001, 'Un Millon Primero'],
+  [1000001, 'Millonésimo Primero'],
 ];
 
 describe('Test Ordinals', () => {
@@ -480,13 +480,13 @@ const testPowersOfTen: [number, string][] = [
   [1000, 'Mil'],
   [10000, 'Diez Mil'],
   [100000, 'Cien Mil'],
-  [1000000, 'Un Millon'],
+  [1000000, 'Un Millón'],
   [10000000, 'Diez Millones'],
   [100000000, 'Cien Millones'],
   [1000000000, 'Mil Millones'],
   [10000000000, 'Diez Mil Millones'],
   [100000000000, 'Cien Mil Millones'],
-  [1000000000000, 'Un Billon'],
+  [1000000000000, 'Un Billón'],
 ];
 
 describe('Test Powers of Ten (Spanish System)', () => {
@@ -508,8 +508,8 @@ const testBoundaries: [number, string][] = [
   [99999, 'Noventa Y Nueve Mil Novecientos Noventa Y Nueve'],
   [100000, 'Cien Mil'],
   [999999, 'Novecientos Noventa Y Nueve Mil Novecientos Noventa Y Nueve'],
-  [1000000, 'Un Millon'],
-  [1000001, 'Un Millon Uno'],
+  [1000000, 'Un Millón'],
+  [1000001, 'Un Millón Uno'],
 ];
 
 describe('Test Boundary Values', () => {
@@ -520,13 +520,13 @@ describe('Test Boundary Values', () => {
 
 // Negative Floats
 const testNegativeFloats: [number, string][] = [
-  [-0.5, 'Menos Cero Punto Cinco'],
-  [-0.25, 'Menos Cero Punto Veinticinco'],
-  [-0.99, 'Menos Cero Punto Noventa Y Nueve'],
-  [-1.5, 'Menos Uno Punto Cinco'],
-  [-3.14, 'Menos Tres Punto Catorce'],
-  [-99.99, 'Menos Noventa Y Nueve Punto Noventa Y Nueve'],
-  [-100.01, 'Menos Cien Punto Cero Uno'],
+  [-0.5, 'Menos Cero Coma Cinco'],
+  [-0.25, 'Menos Cero Coma Veinticinco'],
+  [-0.99, 'Menos Cero Coma Noventa Y Nueve'],
+  [-1.5, 'Menos Uno Coma Cinco'],
+  [-3.14, 'Menos Tres Coma Catorce'],
+  [-99.99, 'Menos Noventa Y Nueve Coma Noventa Y Nueve'],
+  [-100.01, 'Menos Cien Coma Cero Uno'],
 ];
 
 describe('Test Negative Floats', () => {
@@ -556,9 +556,9 @@ const testBigInts: [bigint, string][] = [
   [1n, 'Uno'],
   [100n, 'Cien'],
   [1000n, 'Mil'],
-  [1000000n, 'Un Millon'],
+  [1000000n, 'Un Millón'],
   [1000000000n, 'Mil Millones'],
-  [1000000000000n, 'Un Billon'],
+  [1000000000000n, 'Un Billón'],
 ];
 
 describe('Test BigInt Values', () => {
@@ -572,7 +572,7 @@ const testNegativeBigInts: [bigint, string][] = [
   [-1n, 'Menos Uno'],
   [-100n, 'Menos Cien'],
   [-1000n, 'Menos Mil'],
-  [-1000000n, 'Menos Un Millon'],
+  [-1000000n, 'Menos Un Millón'],
   [-1000000000n, 'Menos Mil Millones'],
 ];
 
@@ -589,7 +589,7 @@ const testBigIntsWithCurrency: [bigint, string][] = [
   [2n, 'Dos Euros'],
   [100n, 'Cien Euros'],
   [1000n, 'Mil Euros'],
-  [1000000n, 'Un Millon Euros'],
+  [1000000n, 'Un Millón De Euros'],
 ];
 
 describe('Test BigInt with Currency', () => {
@@ -605,10 +605,10 @@ const testStringInputs: [string, string][] = [
   ['100', 'Cien'],
   ['1000', 'Mil'],
   ['-100', 'Menos Cien'],
-  ['3.14', 'Tres Punto Catorce'],
-  ['-3.14', 'Menos Tres Punto Catorce'],
+  ['3.14', 'Tres Coma Catorce'],
+  ['-3.14', 'Menos Tres Coma Catorce'],
   ['  100  ', 'Cien'],
-  ['1000000', 'Un Millon'],
+  ['1000000', 'Un Millón'],
 ];
 
 describe('Test String Number Inputs', () => {
@@ -762,15 +762,15 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
 
   test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
     expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
-      'Uno Punto Un Millon Doscientos Treinta Y Cuatro Mil Quinientos Sesenta Y Siete',
+      'Uno Coma Un Millón Doscientos Treinta Y Cuatro Mil Quinientos Sesenta Y Siete',
     );
     expect(toWords.convert(1.1234567)).toBe(
-      'Uno Punto Un Millon Doscientos Treinta Y Cuatro Mil Quinientos Sesenta Y Siete',
+      'Uno Coma Un Millón Doscientos Treinta Y Cuatro Mil Quinientos Sesenta Y Siete',
     );
   });
 
   test('digit-by-digit style works without decimalStyle option', () => {
-    expect(toWords.convert(1.5)).toBe('Uno Punto Cinco');
-    expect(toWords.convert(0.05)).toBe('Cero Punto Cero Cinco');
+    expect(toWords.convert(1.5)).toBe('Uno Coma Cinco');
+    expect(toWords.convert(0.05)).toBe('Cero Coma Cero Cinco');
   });
 });

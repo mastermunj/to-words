@@ -49,10 +49,10 @@ import { ToWords } from 'to-words';
 const tw = new ToWords({ localeCode: 'ar-SA' });
 
 tw.convert(12345);
-// "اثنا عشر ألفاً وثلاثمائة وخمسة وأربعون"
+// "اثنا عشر ألفًا وثلاثمائة وخمسة وأربعون"
 
 tw.convert(1234.56, { currency: true });
-// "ألف ومئتان وأربعة وثلاثون ريالاً وستة وخمسون هللة"
+// "فقط ألف ومائتان وأربعة وثلاثون ريالًا وست وخمسون هللةً لا غير"
 ```
 
 ## Gender Support
@@ -72,7 +72,7 @@ Arabic is one of the locale families where gender changes the actual numeral wor
 ```js
 const iq = new ToWords({ localeCode: 'ar-IQ' });
 iq.convert('1.500', { currency: true });
-// "دينار واحد وخمسمائة فلس"
+// "فقط دينار عراقي واحد وخمسمائة فلس لا غير"
 ```
 
 ## Locale Codes

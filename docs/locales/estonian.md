@@ -26,8 +26,8 @@ import { ToWords } from 'to-words';
 
 const tw = new ToWords({ localeCode: 'et-EE' });
 
-tw.convert(100); // "Sada"
-tw.convert(1000); // "Tuhat"
+tw.convert(100); // "Ükssada"
+tw.convert(1000); // "Üks Tuhat"
 tw.convert(1000000);
 ```
 

@@ -35,29 +35,35 @@ describe('Test Locale', () => {
 
 const testIntegers: [number, string][] = [
   [0, 'Nul'],
-  [137, 'Hundrede Syvogtredive'],
+  [137, 'Hundrede Og Syvogtredive'],
   [700, 'Syv Hundrede'],
   [1100, 'Tusind Hundrede'],
-  [4680, 'Fire Tusind Seks Hundrede Firs'],
-  [63892, 'Treogtres Tusind Otte Hundrede Tooghalvfems'],
+  [4680, 'Fire Tusind Seks Hundrede Og Firs'],
+  [63892, 'Treogtres Tusind Otte Hundrede Og Tooghalvfems'],
   [86100, 'Seksogfirs Tusind Hundrede'],
-  [792581, 'Syv Hundrede Tooghalvfems Tusind Fem Hundrede Enogfirs'],
-  [2741034, 'To Million Syv Hundrede Enogfyrre Tusind Fireogtredive'],
-  [86429753, 'Seksogfirs Million Fire Hundrede Niogtyve Tusind Syv Hundrede Treoghalvtreds'],
-  [975310864, 'Ni Hundrede Femoghalvfjerds Million Tre Hundrede Ti Tusind Otte Hundrede Fireogtres'],
-  [9876543210, 'Ni Milliard Otte Hundrede Seksoghalvfjerds Million Fem Hundrede Treogfyrre Tusind To Hundrede Ti'],
-  [98765432101, 'Otteoghalvfems Milliard Syv Hundrede Femogtres Million Fire Hundrede Toogtredive Tusind Hundrede En'],
+  [792581, 'Syv Hundrede Og Tooghalvfems Tusind Fem Hundrede Og Enogfirs'],
+  [2741034, 'To Millioner Syv Hundrede Og Enogfyrre Tusind Og Fireogtredive'],
+  [86429753, 'Seksogfirs Millioner Fire Hundrede Og Niogtyve Tusind Syv Hundrede Og Treoghalvtreds'],
+  [975310864, 'Ni Hundrede Og Femoghalvfjerds Millioner Tre Hundrede Og Ti Tusind Otte Hundrede Og Fireogtres'],
+  [
+    9876543210,
+    'Ni Milliarder Otte Hundrede Og Seksoghalvfjerds Millioner Fem Hundrede Og Treogfyrre Tusind To Hundrede Og Ti',
+  ],
+  [
+    98765432101,
+    'Otteoghalvfems Milliarder Syv Hundrede Og Femogtres Millioner Fire Hundrede Og Toogtredive Tusind Hundrede Og En',
+  ],
   [
     987654321012,
-    'Ni Hundrede Syvogfirs Milliard Seks Hundrede Fireoghalvtreds Million Tre Hundrede Enogtyve Tusind Tolv',
+    'Ni Hundrede Og Syvogfirs Milliarder Seks Hundrede Og Fireoghalvtreds Millioner Tre Hundrede Og Enogtyve Tusind Og Tolv',
   ],
   [
     9876543210123,
-    'Ni Billion Otte Hundrede Seksoghalvfjerds Milliard Fem Hundrede Treogfyrre Million To Hundrede Ti Tusind Hundrede Treogtyve',
+    'Ni Billioner Otte Hundrede Og Seksoghalvfjerds Milliarder Fem Hundrede Og Treogfyrre Millioner To Hundrede Og Ti Tusind Hundrede Og Treogtyve',
   ],
   [
     98765432101234,
-    'Otteoghalvfems Billion Syv Hundrede Femogtres Milliard Fire Hundrede Toogtredive Million Hundrede En Tusind To Hundrede Fireogtredive',
+    'Otteoghalvfems Billioner Syv Hundrede Og Femogtres Milliarder Fire Hundrede Og Toogtredive Millioner Hundrede Og En Tusind To Hundrede Og Fireogtredive',
   ],
 ];
 
@@ -151,12 +157,12 @@ const testFloats: [number, string][] = [
 
 describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
   const testIncludeZeroFractional: [number | string, string][] = [
-    [123, `Hundrede Treogtyve Kroner`],
-    ['123', `Hundrede Treogtyve Kroner`],
-    ['123.0', `Hundrede Treogtyve Kroner Og Nul Øre`],
-    ['123.00', `Hundrede Treogtyve Kroner Og Nul Øre`],
+    [123, `Hundrede Og Treogtyve Kroner`],
+    ['123', `Hundrede Og Treogtyve Kroner`],
+    ['123.0', `Hundrede Og Treogtyve Kroner Og Nul Øre`],
+    ['123.00', `Hundrede Og Treogtyve Kroner Og Nul Øre`],
     ['0.00', `Nul Kroner Og Nul Øre`],
-    ['-123.00', `Minus Hundrede Treogtyve Kroner Og Nul Øre`],
+    ['-123.00', `Minus Hundrede Og Treogtyve Kroner Og Nul Øre`],
     ['37.68', `Syvogtredive Kroner Og Otteogtres Øre`],
   ];
 
@@ -270,17 +276,17 @@ const testOrdinals: [number, string][] = [
   // Tens
   [30, 'Tredivte'],
   [40, 'Fyrretyvende'],
-  [50, 'Halvtredsende'],
-  [60, 'Tresende'],
-  [70, 'Halvfjerdsende'],
-  [80, 'Firsende'],
-  [90, 'Halvfemsende'],
+  [50, 'Halvtredsindstyvende'],
+  [60, 'Tresindstyvende'],
+  [70, 'Halvfjerdsindstyvende'],
+  [80, 'Firsindstyvende'],
+  [90, 'Halvfemsindstyvende'],
   // Round numbers (100, 200, 1000, etc.)
-  [100, 'Hundredende'],
-  [200, 'To Hundredende'],
-  [300, 'Tre Hundredende'],
-  [1000, 'Tusindende'],
-  [2000, 'To Tusindende'],
+  [100, 'Hundrede'],
+  [200, 'To Hundrede'],
+  [300, 'Tre Hundrede'],
+  [1000, 'Tusinde'],
+  [2000, 'To Tusinde'],
   [1000000, 'En Millionte'],
   [2000000, 'To Millionte'],
   // Complex numbers
@@ -288,12 +294,12 @@ const testOrdinals: [number, string][] = [
   [102, 'Hundrede Anden'],
   [111, 'Hundrede Ellevte'],
   [123, 'Hundrede Treogtyvende'],
-  [150, 'Hundrede Halvtredsende'],
+  [150, 'Hundrede Halvtredsindstyvende'],
   [1001, 'Tusind Første'],
   [1234, 'Tusind To Hundrede Fireogtredivte'],
-  [1500, 'Tusind Fem Hundredende'],
-  [10000, 'Ti Tusindende'],
-  [100000, 'Hundrede Tusindende'],
+  [1500, 'Tusind Fem Hundrede'],
+  [10000, 'Ti Tusinde'],
+  [100000, 'Hundrede Tusinde'],
   [1000001, 'En Million Første'],
 ];
 
@@ -373,8 +379,8 @@ describe('Test Danish-specific numbers', () => {
   test('Large numbers', () => {
     expect(toWords.convert(1000000)).toBe('En Million');
     expect(toWords.convert(1000000000)).toBe('En Milliard');
-    expect(toWords.convert(2000000)).toBe('To Million');
-    expect(toWords.convert(2000000000)).toBe('To Milliard');
+    expect(toWords.convert(2000000)).toBe('To Millioner');
+    expect(toWords.convert(2000000000)).toBe('To Milliarder');
   });
 });
 
@@ -512,7 +518,7 @@ const testFractionStyleDaDK: [number, string][] = [
   [1.00005, 'En Og Fem Hundredtusindedele'],
   [1.000001, 'En Og En Milliondel'],
   [1.000005, 'En Og Fem Milliondele'],
-  [123.45, 'Hundrede Treogtyve Og Femogfyrre Hundredele'],
+  [123.45, 'Hundrede Og Treogtyve Og Femogfyrre Hundredele'],
 ];
 
 describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
@@ -532,5 +538,24 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
   test('digit-by-digit style works without decimalStyle option', () => {
     expect(toWords.convert(1.5)).toBe('En Komma Fem');
     expect(toWords.convert(0.05)).toBe('Nul Komma Nul Fem');
+  });
+});
+
+describe('Sourced forms (da.wikipedia «Talord», en.wiktionary)', () => {
+  test.each([
+    [52, 'Tooghalvtreds'],
+    [2000000, 'To Millioner'],
+  ])('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+
+  test.each([
+    [52, 'Tooghalvtredsindstyvende'],
+    [60, 'Tresindstyvende'],
+    [30, 'Tredivte'],
+    [100, 'Hundrede'],
+    [1000, 'Tusinde'],
+  ])('toOrdinal %d => %s', (input, expected) => {
+    expect(toWords.toOrdinal(input)).toBe(expected);
   });
 });
