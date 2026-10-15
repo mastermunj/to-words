@@ -60,7 +60,7 @@ export default class Locale implements LocaleInterface {
     // (一百零一); ordinals are 第 + the cardinal (CLDR zh: 第二十一, 第一百).
     ignoreOneForWords: ['十'],
     zeroForSkippedPlaces: true,
-    exactWordsMapping: [{ number: 100, value: '一百' }],
+    exactWordsMapping: [{ number: 100, value: '一 百' }],
     ordinalPrefix: '第',
     ordinalComposition: 'fused-prefix',
     ordinalWordsMapping: [
@@ -107,7 +107,7 @@ export default class Locale implements LocaleInterface {
         { number: 0, value: '零' },
       ],
       ignoreOneForWords: ['拾'],
-      exactWordsMapping: [{ number: 100, value: '壹佰' }],
+      exactWordsMapping: [{ number: 100, value: '壹 佰' }],
       currency: {
         name: '圓',
         plural: '圓',

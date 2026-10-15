@@ -708,7 +708,7 @@ describe('formalConfig ordinal exact words', () => {
       formalConfig: { ...config.formalConfig, ordinalExactWordsMapping: [{ number: 100, value: '第壹佰' }] },
     }));
     expect(zh.toOrdinal(100, { formal: true })).toBe('第壹佰');
-    expect(zh.toOrdinal(100)).toBe('第一百');
+    expect(zh.toOrdinal(100)).toBe('第一 百');
   });
 
   test('a formalConfig without exactWordsMapping keeps the plain exact words', () => {
@@ -716,7 +716,7 @@ describe('formalConfig ordinal exact words', () => {
       const { exactWordsMapping: _ignored, ...formal } = config.formalConfig!;
       return { formalConfig: formal };
     });
-    expect(zh.convert(100, { formal: true })).toBe('一百');
+    expect(zh.convert(100, { formal: true })).toBe('一 百');
   });
 });
 
