@@ -30,6 +30,8 @@ export default class Locale implements LocaleInterface {
       // Dutch uses the decimal comma, read «komma» (acht komma vijf).
       point: 'Komma',
     },
+    // casing natural/sentence: Dutch capitalises adjectives of place names (Surinaamse dollar).
+    naturalCaseWords: ['Surinaamse'],
     numberWordsMapping: [
       { number: 1000000000000000, value: 'Biljard', multiplierForms: { 1: 'Een' } },
       { number: 1000000000000, value: 'Biljoen', multiplierForms: { 1: 'Een' } },

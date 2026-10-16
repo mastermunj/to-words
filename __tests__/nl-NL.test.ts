@@ -695,3 +695,53 @@ describe('Taaladvies (Taalunie Leidraad 6.9, Team Taaladvies)', () => {
     expect(toWords.convert(-5)).toBe('Min Vijf');
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Eenentwintig'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Eenentwintig'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'Eenentwintig Euro En Vijftig Cent',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'eenentwintig euro en vijftig cent',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'EENENTWINTIG EURO EN VIJFTIG CENT',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'eenentwintig euro en vijftig cent',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Eenentwintig euro en vijftig cent',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Eenentwintigste'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'eenentwintigste',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'Een Komma Vijfentwintig'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'Een Komma Twee Vijf',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

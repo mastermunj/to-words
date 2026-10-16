@@ -559,3 +559,53 @@ describe('Sourced forms (da.wikipedia «Talord», en.wiktionary)', () => {
     expect(toWords.toOrdinal(input)).toBe(expected);
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Enogtyve'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Enogtyve'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'Enogtyve Kroner Og Halvtreds Øre',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'enogtyve kroner og halvtreds øre',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'ENOGTYVE KRONER OG HALVTREDS ØRE',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'enogtyve kroner og halvtreds øre',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Enogtyve kroner og halvtreds øre',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Enogtyvende'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'enogtyvende',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'En Komma Femogtyve'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'En Komma To Fem',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

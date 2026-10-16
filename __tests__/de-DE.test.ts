@@ -644,3 +644,53 @@ describe('Duden D 65 (Amtliches Regelwerk § 36 (1.6))', () => {
     expect(toWords.convert(1, { currency: true })).toBe('Ein Euro');
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Einundzwanzig'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Einundzwanzig'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'Einundzwanzig Euro Und Fünfzig Cent',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'einundzwanzig euro und fünfzig cent',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'EINUNDZWANZIG EURO UND FÜNFZIG CENT',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'einundzwanzig Euro und fünfzig Cent',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Einundzwanzig Euro und fünfzig Cent',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Einundzwanzigste'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'einundzwanzigste',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'Eins Komma Fünfundzwanzig'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'Eins Komma Zwei Fünf',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

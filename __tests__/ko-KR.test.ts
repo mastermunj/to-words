@@ -466,3 +466,34 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  // This script has no capital letters, so every casing leaves the output unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), '이십일'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), '이십일'],
+    ["casing 'title'", () => styled.convert(21.5, { currency: true, casing: 'title' }), '이십일원하고 오십'],
+    ["casing 'lower'", () => styled.convert(21.5, { currency: true, casing: 'lower' }), '이십일원하고 오십'],
+    ["casing 'upper'", () => styled.convert(21.5, { currency: true, casing: 'upper' }), '이십일원하고 오십'],
+    ["casing 'natural'", () => styled.convert(21.5, { currency: true, casing: 'natural' }), '이십일원하고 오십'],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      '이십일원하고 오십',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), '스물한번째'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      '스물한번째',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), '일점이십오'],
+    ["decimalStyle 'digit-by-digit'", () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }), '일점이오'],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

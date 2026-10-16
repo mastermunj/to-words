@@ -492,3 +492,53 @@ describe('en.wikipedia «Slovene numerals» / en.wiktionary — attested forms',
     expect(toWords.convert(5, { currency: true })).toBe('Pet Evrov Samo');
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Enaindvajset'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Enaindvajset'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'Enaindvajset Evrov In Petdeset Centov Samo',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'enaindvajset evrov in petdeset centov samo',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'ENAINDVAJSET EVROV IN PETDESET CENTOV SAMO',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'enaindvajset evrov in petdeset centov samo',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Enaindvajset evrov in petdeset centov samo',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Enaindvajseti'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'enaindvajseti',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'Ena Vejica Petindvajset'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'Ena Vejica Dve Pet',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

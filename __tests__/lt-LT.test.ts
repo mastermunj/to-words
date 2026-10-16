@@ -508,3 +508,53 @@ describe('Sourced forms (lt.wikipedia, en.wiktionary, CLDR lt)', () => {
     expect(tw.toOrdinal(input)).toBe(expected);
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Dvidešimt Vienas'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Dvidešimt Vienas'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'Dvidešimt Vienas Euras Ir Penkiasdešimt Centų Tik',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'dvidešimt vienas euras ir penkiasdešimt centų tik',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'DVIDEŠIMT VIENAS EURAS IR PENKIASDEŠIMT CENTŲ TIK',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'dvidešimt vienas euras ir penkiasdešimt centų tik',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Dvidešimt vienas euras ir penkiasdešimt centų tik',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Dvidešimt Pirmasis'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'dvidešimt pirmasis',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'Vienas Kablelis Dvidešimt Penki'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'Vienas Kablelis Du Penki',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

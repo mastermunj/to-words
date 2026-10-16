@@ -28,7 +28,7 @@ toWords(452.36, { localeCode: 'en-IN', currency: true });
 - [Features](#-features)
 - [Installation](#-installation)
 - [Quick Start](#-quick-start)
-- [Usage](#-usage) — [currency](#currency), [ordinals](#ordinal-numbers), [gender](#gender), [decimals](#decimals), [large numbers](#bigint--large-numbers), [locale detection](#locale-detection), [custom locales](#custom-locales)
+- [Usage](#-usage) — [currency](#currency), [ordinals](#ordinal-numbers), [gender](#gender), [decimals](#decimals), [letter case](#letter-case--hyphens), [large numbers](#bigint--large-numbers), [locale detection](#locale-detection), [custom locales](#custom-locales)
 - [CLI](#%EF%B8%8F-cli)
 - [Framework Integration](#%EF%B8%8F-framework-integration)
 - [Numbering Systems](#-numbering-systems)
@@ -267,13 +267,14 @@ tw.convert(1023, { useAnd: true }); // "One Thousand And Twenty Three"
 
 ### Decimals
 
-By default, the digits after the point word are read as a number, with any leading zeros read one by one. For legal and financial writing, `decimalStyle: 'fraction'` reads them as a fraction with a place-value denominator:
+By default, the digits after the point word are read as a number, with any leading zeros read one by one. `decimalStyle: 'digit-by-digit'` reads every digit on its own, and for legal and financial writing `decimalStyle: 'fraction'` reads them as a fraction with a place-value denominator:
 
 ```js
 const tw = new ToWords({ localeCode: 'en-US' });
 
 tw.convert(123.45); // "One Hundred Twenty Three Point Forty Five"
 tw.convert(0.05); // "Zero Point Zero Five"
+tw.convert(123.45, { decimalStyle: 'digit-by-digit' }); // "One Hundred Twenty Three Point Four Five"
 
 tw.convert(123.45, { decimalStyle: 'fraction' }); // "One Hundred Twenty Three And Forty Five Hundredths"
 tw.convert(1.1, { decimalStyle: 'fraction' }); // "One And One Tenth"
@@ -286,6 +287,30 @@ ru.convert(1.21, { decimalStyle: 'fraction' }); // "Одна Целая Двад
 - Fraction style covers 1 to 6 decimal places (tenths to millionths) in 100 locales, and up to 15 in Russian, Ukrainian, Belarusian, Polish, Czech and Slovak, each with its own grammar: Russian, for example, uses the singular denominator after 21, 31 and so on.
 - For more decimal places, or a locale without fraction words (Arabic, East Asian and Turkic locales, among others), it falls back to the default style without an error. The [fraction-style guide](https://mastermunj.github.io/to-words/guide/fraction-style) lists the locales.
 - Currency amounts always use the currency's fractional unit ("Fifty Six Cents"), whichever style is set.
+
+### Letter Case & Hyphens
+
+Output is in Title Case by default. `casing` changes it in every locale whose script has capital letters; other scripts are returned unchanged. `hyphenate: true` writes English compounds with a hyphen.
+
+```js
+const tw = new ToWords({ localeCode: 'en-US' });
+
+tw.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true });
+// "Twenty-one dollars and fifty cents only"
+tw.convert(21, { casing: 'lower', hyphenate: true }); // "twenty-one"
+tw.convert(21, { casing: 'upper' }); // "TWENTY ONE"
+
+const de = new ToWords({ localeCode: 'de-DE' });
+de.convert(2500000, { currency: true, casing: 'natural' }); // "zwei Millionen fünfhunderttausend Euro"
+```
+
+| `casing`     | Result                                                                                                          |
+| ------------ | --------------------------------------------------------------------------------------------------------------- |
+| `'title'`    | Every word capitalised (the default)                                                                            |
+| `'lower'`    | Everything lowercase, with the language's own rules (Turkish `İki` → `iki`)                                     |
+| `'upper'`    | Everything uppercase                                                                                            |
+| `'natural'`  | Lowercase except words the language capitalises: German nouns, "Australian", "CFA", and your own currency names |
+| `'sentence'` | `'natural'` with the first letter capitalised, as on a cheque                                                   |
 
 ### BigInt & Large Numbers
 
@@ -472,19 +497,21 @@ new ToWords({ localeCode: 'ja-JP' }).convert(100000000); // "一 億"
 
 ### Converter options
 
-| Option                  | Type    | Default    | Description                                                                                                                      |
-| ----------------------- | ------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| `currency`              | boolean | `false`    | Convert as a currency amount, with the locale's currency                                                                         |
-| `currencyOptions`       | object  | —          | Replace the locale's currency (`name`, `plural`, `singular`, `symbol`, `precision`, `fractionalUnit`); see [Currency](#currency) |
-| `ignoreDecimal`         | boolean | `false`    | Drop the fractional part                                                                                                         |
-| `ignoreZeroCurrency`    | boolean | `false`    | Skip a zero main amount ("Thirty Six Paise Only")                                                                                |
-| `doNotAddOnly`          | boolean | `false`    | Omit the "Only" word in currency mode                                                                                            |
-| `includeZeroFractional` | boolean | `false`    | For string input like `"123.00"`, include "And Zero Paise"                                                                       |
-| `gender`                | string  | —          | `'masculine'` or `'feminine'`, in locales with gendered number words                                                             |
-| `useAnd`                | boolean | —          | Insert the locale's "and" before the last part ("One Hundred And Twenty Three"); default `true` for da-DK and nb-NO              |
-| `formal`                | boolean | —          | Formal/financial characters (zh-CN, zh-TW)                                                                                       |
-| `decimalStyle`          | string  | `'digit'`  | `'digit'` reads the digits after the point as a number; `'fraction'` reads "Forty Five Hundredths"; see [Decimals](#decimals)    |
-| `rangeMode`             | string  | `'strict'` | `'strict'` throws above the locale's verified range; `'compose'` composes larger numbers from smaller scale words                |
+| Option                  | Type    | Default    | Description                                                                                                                                                        |
+| ----------------------- | ------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `currency`              | boolean | `false`    | Convert as a currency amount, with the locale's currency                                                                                                           |
+| `currencyOptions`       | object  | —          | Replace the locale's currency (`name`, `plural`, `singular`, `symbol`, `precision`, `fractionalUnit`); see [Currency](#currency)                                   |
+| `ignoreDecimal`         | boolean | `false`    | Drop the fractional part                                                                                                                                           |
+| `ignoreZeroCurrency`    | boolean | `false`    | Skip a zero main amount ("Thirty Six Paise Only")                                                                                                                  |
+| `doNotAddOnly`          | boolean | `false`    | Omit the "Only" word in currency mode                                                                                                                              |
+| `includeZeroFractional` | boolean | `false`    | For string input like `"123.00"`, include "And Zero Paise"                                                                                                         |
+| `gender`                | string  | —          | `'masculine'` or `'feminine'`, in locales with gendered number words                                                                                               |
+| `useAnd`                | boolean | —          | Insert the locale's "and" before the last part ("One Hundred And Twenty Three"); default `true` for da-DK and nb-NO                                                |
+| `formal`                | boolean | —          | Formal/financial characters (zh-CN, zh-TW)                                                                                                                         |
+| `decimalStyle`          | string  | `'digit'`  | `'digit'` reads the digits after the point as a number; `'digit-by-digit'` reads each digit; `'fraction'` reads "Forty Five Hundredths"; see [Decimals](#decimals) |
+| `casing`                | string  | `'title'`  | `'title'`, `'lower'`, `'upper'`, `'natural'` or `'sentence'`; see [Letter Case & Hyphens](#letter-case--hyphens) (also for `toOrdinal`)                            |
+| `hyphenate`             | boolean | `false`    | Hyphenate English compounds ("Twenty-One"); no effect in other languages (also for `toOrdinal`)                                                                    |
+| `rangeMode`             | string  | `'strict'` | `'strict'` throws above the locale's verified range; `'compose'` composes larger numbers from smaller scale words                                                  |
 
 Option objects, `LOCALES` and the default option objects are frozen or copied when used, so changing them later has no effect on an instance. The [API reference](https://mastermunj.github.io/to-words/guide/api-reference) on the docs site also covers `setLocaleDetector()`, the utility methods and locale inspection.
 

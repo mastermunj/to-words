@@ -444,3 +444,41 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Yirmi Bir'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Yirmi Bir'],
+    ["casing 'title'", () => styled.convert(21.5, { currency: true, casing: 'title' }), 'Yirmi Bir Lira Elli Kuruş'],
+    ["casing 'lower'", () => styled.convert(21.5, { currency: true, casing: 'lower' }), 'yirmi bir lira elli kuruş'],
+    ["casing 'upper'", () => styled.convert(21.5, { currency: true, casing: 'upper' }), 'YİRMİ BİR LİRA ELLİ KURUŞ'],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'yirmi bir lira elli kuruş',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Yirmi bir lira elli kuruş',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Yirmi Birinci'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'yirmi birinci',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'Bir Virgül Yirmi Beş'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'Bir Virgül İki Beş',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

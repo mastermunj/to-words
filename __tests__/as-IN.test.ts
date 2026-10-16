@@ -441,3 +441,34 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
     expect(toWords.convert(0.05)).toBe('শূন্য দশমিক শূন্য পাঁচ');
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  // This script has no capital letters, so every casing leaves the output unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'একৈছ'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'একৈছ'],
+    ["casing 'title'", () => styled.convert(21.5, { currency: true, casing: 'title' }), 'একৈছ টকা আৰু পঞ্চাছ পইচা'],
+    ["casing 'lower'", () => styled.convert(21.5, { currency: true, casing: 'lower' }), 'একৈছ টকা আৰু পঞ্চাছ পইচা'],
+    ["casing 'upper'", () => styled.convert(21.5, { currency: true, casing: 'upper' }), 'একৈছ টকা আৰু পঞ্চাছ পইচা'],
+    ["casing 'natural'", () => styled.convert(21.5, { currency: true, casing: 'natural' }), 'একৈছ টকা আৰু পঞ্চাছ পইচা'],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'একৈছ টকা আৰু পঞ্চাছ পইচা',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'একৈছতম'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'একৈছতম',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'এক দশমিক পঁচিছ'],
+    ["decimalStyle 'digit-by-digit'", () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }), 'এক দশমিক দুই পাঁচ'],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

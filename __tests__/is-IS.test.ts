@@ -460,3 +460,53 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Tuttugu Og Einn'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Tuttugu Og Einn'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'Tuttugu Og Ein Króna Og Fimmtíu Aurar',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'tuttugu og ein króna og fimmtíu aurar',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'TUTTUGU OG EIN KRÓNA OG FIMMTÍU AURAR',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'tuttugu og ein króna og fimmtíu aurar',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Tuttugu og ein króna og fimmtíu aurar',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Tuttugasti Og Fyrsti'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'tuttugasti og fyrsti',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'Einn Komma Tuttugu Og Fimm'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'Einn Komma Tveir Fimm',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

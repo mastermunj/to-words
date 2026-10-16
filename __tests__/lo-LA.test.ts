@@ -480,3 +480,34 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  // This script has no capital letters, so every casing leaves the output unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'ຊາວເອັດ'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'ຊາວເອັດ'],
+    ["casing 'title'", () => styled.convert(21.5, { currency: true, casing: 'title' }), 'ຊາວເອັດກີບຈຸດຫ້າສິບຖ້ວນ'],
+    ["casing 'lower'", () => styled.convert(21.5, { currency: true, casing: 'lower' }), 'ຊາວເອັດກີບຈຸດຫ້າສິບຖ້ວນ'],
+    ["casing 'upper'", () => styled.convert(21.5, { currency: true, casing: 'upper' }), 'ຊາວເອັດກີບຈຸດຫ້າສິບຖ້ວນ'],
+    ["casing 'natural'", () => styled.convert(21.5, { currency: true, casing: 'natural' }), 'ຊາວເອັດກີບຈຸດຫ້າສິບຖ້ວນ'],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'ຊາວເອັດກີບຈຸດຫ້າສິບຖ້ວນ',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'ທີຊາວເອັດ'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'ທີຊາວເອັດ',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'ໜຶ່ງຈຸດຊາວຫ້າ'],
+    ["decimalStyle 'digit-by-digit'", () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }), 'ໜຶ່ງຈຸດສອງຫ້າ'],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

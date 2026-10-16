@@ -531,3 +531,52 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
     expect(toWords.convert(0.05)).toBe('Zero Point Zero Five');
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Twenty One'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Twenty-One'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'Twenty One Cedis And Fifty Pesewas Only',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'twenty one cedis and fifty pesewas only',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'TWENTY ONE CEDIS AND FIFTY PESEWAS ONLY',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'twenty one cedis and fifty pesewas only',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Twenty-one cedis and fifty pesewas only',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Twenty First'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'twenty-first',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'One Point Twenty Five'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'One Point Two Five',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

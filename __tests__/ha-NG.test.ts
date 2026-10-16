@@ -453,3 +453,53 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Ashirin Da Ɗaya'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Ashirin Da Ɗaya'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'Naira Ashirin Da Ɗaya Da Kobo Hamsin Kawai',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'naira ashirin da ɗaya da kobo hamsin kawai',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'NAIRA ASHIRIN DA ƊAYA DA KOBO HAMSIN KAWAI',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'naira ashirin da ɗaya da kobo hamsin kawai',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Naira ashirin da ɗaya da kobo hamsin kawai',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Na Ashirin Da Ɗaya'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'na ashirin da ɗaya',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'Ɗaya Digo Ashirin Da Biyar'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'Ɗaya Digo Biyu Biyar',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

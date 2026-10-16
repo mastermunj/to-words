@@ -434,3 +434,34 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
     expect(toWords.convert(0.05)).toBe('ଶୂନ ଦଶମିକ ଶୂନ ପାଞ୍ଚ');
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  // This script has no capital letters, so every casing leaves the output unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'ଏକୋଇଶି'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'ଏକୋଇଶି'],
+    ["casing 'title'", () => styled.convert(21.5, { currency: true, casing: 'title' }), 'ଏକୋଇଶି ଟଙ୍କା ଏବଂ ପଚାଶ ପଇସା'],
+    ["casing 'lower'", () => styled.convert(21.5, { currency: true, casing: 'lower' }), 'ଏକୋଇଶି ଟଙ୍କା ଏବଂ ପଚାଶ ପଇସା'],
+    ["casing 'upper'", () => styled.convert(21.5, { currency: true, casing: 'upper' }), 'ଏକୋଇଶି ଟଙ୍କା ଏବଂ ପଚାଶ ପଇସା'],
+    ["casing 'natural'", () => styled.convert(21.5, { currency: true, casing: 'natural' }), 'ଏକୋଇଶି ଟଙ୍କା ଏବଂ ପଚାଶ ପଇସା'],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'ଏକୋଇଶି ଟଙ୍କା ଏବଂ ପଚାଶ ପଇସା',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'ଏକୋଇଶିତମ'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'ଏକୋଇଶିତମ',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'ଏକ ଦଶମିକ ପଚିଶି'],
+    ["decimalStyle 'digit-by-digit'", () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }), 'ଏକ ଦଶମିକ ଦୁଇ ପାଞ୍ଚ'],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

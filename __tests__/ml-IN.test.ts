@@ -448,3 +448,42 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
     expect(toWords.convert(0.05)).toBe('പൂജ്യം പോയിന്റ് പൂജ്യം അഞ്ച്');
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  // This script has no capital letters, so every casing leaves the output unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'ഇരുപത്തി ഒന്ന്'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'ഇരുപത്തി ഒന്ന്'],
+    ["casing 'title'", () => styled.convert(21.5, { currency: true, casing: 'title' }), 'ഇരുപത്തി ഒന്ന് രൂപ ഉം അമ്പത് പൈസ'],
+    ["casing 'lower'", () => styled.convert(21.5, { currency: true, casing: 'lower' }), 'ഇരുപത്തി ഒന്ന് രൂപ ഉം അമ്പത് പൈസ'],
+    ["casing 'upper'", () => styled.convert(21.5, { currency: true, casing: 'upper' }), 'ഇരുപത്തി ഒന്ന് രൂപ ഉം അമ്പത് പൈസ'],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'ഇരുപത്തി ഒന്ന് രൂപ ഉം അമ്പത് പൈസ',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'ഇരുപത്തി ഒന്ന് രൂപ ഉം അമ്പത് പൈസ',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'ഇരുപത്തി ഒന്നാം'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'ഇരുപത്തി ഒന്നാം',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'ഒന്ന് പോയിന്റ് ഇരുപത്തി അഞ്ച്'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'ഒന്ന് പോയിന്റ് രണ്ട് അഞ്ച്',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

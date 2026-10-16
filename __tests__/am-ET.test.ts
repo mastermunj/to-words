@@ -513,3 +513,38 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  // This script has no capital letters, so every casing leaves the output unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'ሃያ አንድ'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'ሃያ አንድ'],
+    ["casing 'title'", () => styled.convert(21.5, { currency: true, casing: 'title' }), 'ሃያ አንድ ብር እና ሃምሳ ሳንቲም ብቻ'],
+    ["casing 'lower'", () => styled.convert(21.5, { currency: true, casing: 'lower' }), 'ሃያ አንድ ብር እና ሃምሳ ሳንቲም ብቻ'],
+    ["casing 'upper'", () => styled.convert(21.5, { currency: true, casing: 'upper' }), 'ሃያ አንድ ብር እና ሃምሳ ሳንቲም ብቻ'],
+    ["casing 'natural'", () => styled.convert(21.5, { currency: true, casing: 'natural' }), 'ሃያ አንድ ብር እና ሃምሳ ሳንቲም ብቻ'],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'ሃያ አንድ ብር እና ሃምሳ ሳንቲም ብቻ',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'ሃያ አንደኛ'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'ሃያ አንደኛ',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'አንድ ነጥብ ሃያ አምስት'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'አንድ ነጥብ ሁለት አምስት',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

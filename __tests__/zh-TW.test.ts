@@ -149,7 +149,7 @@ describe('Test with options = { currency: true, includeZeroFractional: true }', 
     ['123.00', `一 百 二十 三 元 零 分 整`],
     ['0.00', `零 元 零 分 整`],
     ['-123.00', `負 一 百 二十 三 元 零 分 整`],
-    ['37.68', `三十 七 元 六十 八 分 整`],
+    ['37.68', `三十 七 元 六 角 八 分`],
   ];
 
   test.concurrent.each(testIncludeZeroFractional)('convert %s => %s', (input, expected) => {
@@ -170,17 +170,17 @@ describe('Test Floats with options = {}', () => {
 
 const testFloatsWithCurrency: [number, string][] = [
   [0, '零 元 整'],
-  [0.01, '零 元 一 分 整'],
-  [0.04, '零 元 四 分 整'],
-  [0.0468, '零 元 五 分 整'],
-  [0.5, '零 元 五十 分 整'],
-  [0.63, '零 元 六十 三 分 整'],
-  [0.973, '零 元 九十 七 分 整'],
+  [0.01, '零 元 一 分'],
+  [0.04, '零 元 四 分'],
+  [0.0468, '零 元 五 分'],
+  [0.5, '零 元 五 角'],
+  [0.63, '零 元 六 角 三 分'],
+  [0.973, '零 元 九 角 七 分'],
   [0.999, '一 元 整'],
-  [1.25, '一 元 二十 五 分 整'],
-  [10.99, '十 元 九十 九 分 整'],
-  [37.06, '三十 七 元 六 分 整'],
-  [37.68, '三十 七 元 六十 八 分 整'],
+  [1.25, '一 元 二 角 五 分'],
+  [10.99, '十 元 九 角 九 分'],
+  [37.06, '三十 七 元 零 六 分'],
+  [37.68, '三十 七 元 六 角 八 分'],
 ];
 
 describe('Test Floats with options = { currency: true }', () => {
@@ -192,17 +192,17 @@ describe('Test Floats with options = { currency: true }', () => {
 describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true }', () => {
   const testFloatsWithCurrencyAndIgnoreZeroCurrency: [number, string][] = [
     [0, ''],
-    [0.01, '一 分 整'],
-    [0.04, '四 分 整'],
-    [0.0468, '五 分 整'],
-    [0.5, '五十 分 整'],
-    [0.63, '六十 三 分 整'],
-    [0.973, '九十 七 分 整'],
+    [0.01, '一 分'],
+    [0.04, '四 分'],
+    [0.0468, '五 分'],
+    [0.5, '五 角'],
+    [0.63, '六 角 三 分'],
+    [0.973, '九 角 七 分'],
     [0.999, '一 元 整'],
-    [1.25, '一 元 二十 五 分 整'],
-    [10.99, '十 元 九十 九 分 整'],
-    [37.06, '三十 七 元 六 分 整'],
-    [37.68, '三十 七 元 六十 八 分 整'],
+    [1.25, '一 元 二 角 五 分'],
+    [10.99, '十 元 九 角 九 分'],
+    [37.06, '三十 七 元 零 六 分'],
+    [37.68, '三十 七 元 六 角 八 分'],
   ];
 
   test.concurrent.each(testFloatsWithCurrencyAndIgnoreZeroCurrency)('convert %d => %s', (input, expected) => {
@@ -545,10 +545,10 @@ describe('Test Formal Integers with options = { formal: true, currency: true }',
 
 describe('Test Formal Floats with options = { formal: true, currency: true }', () => {
   const testFormalFloatsWithCurrency: [number, string][] = [
-    [0.01, '零 圓 壹 分 整'],
-    [1.25, '壹 圓 貳拾 伍 分 整'],
-    [10.99, '拾 圓 玖拾 玖 分 整'],
-    [37.68, '參拾 柒 圓 陸拾 捌 分 整'],
+    [0.01, '零 圓 壹 分'],
+    [1.25, '壹 圓 貳 角 伍 分'],
+    [10.99, '拾 圓 玖 角 玖 分'],
+    [37.68, '參拾 柒 圓 陸 角 捌 分'],
   ];
 
   test.concurrent.each(testFormalFloatsWithCurrency)('convert %d => %s', (input, expected) => {
@@ -598,5 +598,36 @@ describe('Functional helpers (locale-level)', () => {
     const tw = new LocaleToWords();
     expect(localeToCurrency(1)).toBe(tw.convert(1, { currency: true }));
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
+  });
+});
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  // This script has no capital letters, so every casing leaves the output unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), '二十 一'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), '二十 一'],
+    ["casing 'title'", () => styled.convert(21.5, { currency: true, casing: 'title' }), '二十 一 元 五 角'],
+    ["casing 'lower'", () => styled.convert(21.5, { currency: true, casing: 'lower' }), '二十 一 元 五 角'],
+    ["casing 'upper'", () => styled.convert(21.5, { currency: true, casing: 'upper' }), '二十 一 元 五 角'],
+    ["casing 'natural'", () => styled.convert(21.5, { currency: true, casing: 'natural' }), '二十 一 元 五 角'],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      '二十 一 元 五 角',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), '第二十 一'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      '第二十 一',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), '一 點 二十 五'],
+    ["decimalStyle 'digit-by-digit'", () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }), '一 點 二 五'],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
   });
 });

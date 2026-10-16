@@ -533,3 +533,41 @@ describe('Sourced examples (Bokmål number grammar)', () => {
     expect(toWords.toOrdinal(1000000)).toBe('En Millionte');
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Tjueen'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Tjueen'],
+    ["casing 'title'", () => styled.convert(21.5, { currency: true, casing: 'title' }), 'Tjueen Kroner Og Femti Øre'],
+    ["casing 'lower'", () => styled.convert(21.5, { currency: true, casing: 'lower' }), 'tjueen kroner og femti øre'],
+    ["casing 'upper'", () => styled.convert(21.5, { currency: true, casing: 'upper' }), 'TJUEEN KRONER OG FEMTI ØRE'],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'tjueen kroner og femti øre',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Tjueen kroner og femti øre',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Tjueførste'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'tjueførste',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'En Komma Tjuefem'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'En Komma To Fem',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

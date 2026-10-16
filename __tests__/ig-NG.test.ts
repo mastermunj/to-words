@@ -460,3 +460,53 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Iri Abụọ Na Otu'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Iri Abụọ Na Otu'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'Iri Abụọ Na Otu Naira Na Iri Ise Kobo Naanị',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'iri abụọ na otu naira na iri ise kobo naanị',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'IRI ABỤỌ NA OTU NAIRA NA IRI ISE KOBO NAANỊ',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'iri abụọ na otu naira na iri ise kobo naanị',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Iri abụọ na otu naira na iri ise kobo naanị',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Nke Iri Abụọ Na Otu'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'nke iri abụọ na otu',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'Otu Ntụpọ Iri Abụọ Na Ise'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'Otu Ntụpọ Abụọ Ise',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

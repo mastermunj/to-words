@@ -28,6 +28,7 @@ import {
   type NumberWordMap,
   type OrdinalWordMap,
   type OrdinalOptions,
+  type OutputStyleOptions,
   type RangeMode,
   type ToWordsOptions,
 } from './types.js';
@@ -71,6 +72,15 @@ function takesNounConnector(value: bigint): boolean {
 
 function lowerFirst(word: string): string {
   return word.charAt(0).toLowerCase() + word.slice(1);
+}
+
+/** Locale-aware case change (tr İki → iki); a tag the runtime rejects falls back to the root rules. */
+function changeCase(text: string, tag: string, upper: boolean): string {
+  try {
+    return upper ? text.toLocaleUpperCase(tag) : text.toLocaleLowerCase(tag);
+  } catch {
+    return upper ? text.toUpperCase() : text.toLowerCase();
+  }
 }
 
 export const DefaultConverterOptions: Readonly<ConverterOptions> = Object.freeze({
@@ -490,6 +500,8 @@ export class ToWordsCore {
             formal: options.formal ?? baseOptions?.formal,
             decimalStyle: options.decimalStyle ?? baseOptions?.decimalStyle,
             rangeMode: options.rangeMode ?? baseOptions?.rangeMode ?? 'strict',
+            casing: options.casing ?? baseOptions?.casing,
+            hyphenate: options.hyphenate ?? baseOptions?.hyphenate,
           };
 
     if (!this.isValidNumber(number)) {
@@ -513,7 +525,7 @@ export class ToWordsCore {
       words = this.convertNumber(number, mergedOptions, localeOverride);
     }
 
-    return this.joinWords(words, localeOverride.config);
+    return this.finishOutput(words, mergedOptions, localeOverride.config);
   }
 
   public toOrdinal(number: NumberInput, options: OrdinalOptions = {}): string {
@@ -555,12 +567,77 @@ export class ToWordsCore {
         localeConfig.numberWordsMapping.map((entry) => entry.multiplierForms?.[1]).filter((form) => form !== undefined),
       );
       const parts = words.filter((word, index) => word !== GLUE && !(ones.has(word) && index < words.length - 1));
-      return this.joinWords(
+      return this.finishOutput(
         parts.flatMap((word, index) => (index === 0 ? [word] : [GLUE, word])),
+        options,
         localeConfig,
       );
     }
-    return this.joinWords(words, localeConfig);
+    return this.finishOutput(words, options, localeConfig);
+  }
+
+  /**
+   * Join the words, then apply the output style: `hyphenate` joins compound tens and units with
+   * `compoundHyphen` (en Twenty-One), and `casing` re-cases the text (see `LetterCase`).
+   */
+  private finishOutput(
+    words: string[],
+    options: OutputStyleOptions & Pick<ConverterOptions, 'currency' | 'currencyOptions'>,
+    config: LocaleConfig,
+  ): string {
+    const hyphen = config.compoundHyphen;
+    if (options.hyphenate && hyphen) {
+      const tens = new Set<string>();
+      const units = new Set<string>();
+      for (const entry of [...config.numberWordsMapping, ...(config.ordinalWordsMapping ?? [])]) {
+        const value = Number(entry.number);
+        if (value >= 20 && value <= 90 && value % 10 === 0) {
+          [entry.value].flat().forEach((word) => tens.add(word));
+        } else if (value >= 1 && value <= 9) {
+          [entry.value].flat().forEach((word) => units.add(word));
+        }
+      }
+      words = words.reduce<string[]>((out, word, index) => {
+        if (index > 0 && units.has(word) && tens.has(words[index - 1])) {
+          out[out.length - 1] += hyphen + word;
+        } else {
+          out.push(word);
+        }
+        return out;
+      }, []);
+    }
+    const text = this.joinWords(words, config);
+    const casing = options.casing;
+    if (!casing || casing === 'title') {
+      return text;
+    }
+    const tag = this.localeIdentifier ?? this.options.localeCode!;
+    if (casing === 'upper') {
+      return changeCase(text, tag, true);
+    }
+    const keep = new Set(casing === 'lower' ? [] : (config.naturalCaseWords ?? []));
+    const custom = options.currency ? options.currencyOptions : undefined;
+    if (custom && casing !== 'lower') {
+      // A caller-supplied currency keeps the spelling it was given.
+      const unit = custom.fractionalUnit;
+      const names = [custom.name, custom.plural, custom.singular, unit.name, unit.plural, unit.singular];
+      names
+        .join(' ')
+        .split(' ')
+        .forEach((part) => keep.add(part));
+    }
+    let output = keep.size
+      ? text
+          .split(' ')
+          .map((word) => (keep.has(word) ? word : changeCase(word, tag, false)))
+          .join(' ')
+      : changeCase(text, tag, false);
+    // sentence: capitalise the first letter, unless the script writes no capitals (ka ოცდაერთი).
+    if (casing === 'sentence' && /\p{Lu}/u.test(text)) {
+      const first = output.search(/\p{L}/u);
+      output = output.slice(0, first) + changeCase(output[first], tag, true) + output.slice(first + 1);
+    }
+    return output;
   }
 
   /**
@@ -708,6 +785,10 @@ export class ToWordsCore {
       if (composed) {
         return composed;
       }
+    }
+
+    if (localeConfig.ordinalComposition === 'remainder-first' && number >= BIGINT_100) {
+      return this.composeRemainderFirstOrdinal(number, options.gender, localeInstance);
     }
 
     if (localeConfig.ordinalScaleStems) {
@@ -874,6 +955,47 @@ export class ToWordsCore {
       prefix.push(localeConfig.texts.and);
     }
     return [...prefix, fused];
+  }
+  /**
+   * `ordinalComposition: 'remainder-first'` (numbers from 100 up): the ordinal of the last two
+   * digits, then each larger group from the hundreds up as a definite cardinal after the joiner
+   * (ar 1234th الرابع والثلاثون بعد المائتين بعد الألف). Without a remainder the smallest group
+   * is the ordinal itself (ar 2000th الألفان, 1100th المائة بعد الألف).
+   */
+  private composeRemainderFirstOrdinal(
+    number: bigint,
+    gender: OrdinalOptions['gender'],
+    localeInstance: InstanceType<ConstructorOf<LocaleInterface>>,
+  ): string[] {
+    const localeConfig = localeInstance.config;
+    const joiner = localeConfig.ordinalGroupJoiner as NonNullable<LocaleConfig['ordinalGroupJoiner']>;
+    const prefix = joiner.definitePrefix ?? '';
+    const remainder = number % BIGINT_100;
+    const groups = [(number % BIGINT_1000) - remainder];
+    for (let scale = BIGINT_1000; scale <= number; scale *= BIGINT_1000) {
+      groups.push(((number / scale) % BIGINT_1000) * scale);
+    }
+    const words: string[] = [];
+    if (remainder > BIGINT_0) {
+      const ordinal = this.getLocaleCache(localeInstance).ordinalWordsMap.get(remainder);
+      words.push(
+        ordinal
+          ? this.resolveOrdinalValue(ordinal, gender, localeConfig)
+          : this.joinWords(this.convertInternal(remainder, false, undefined, localeInstance, gender), localeConfig),
+      );
+    }
+    for (const group of groups) {
+      if (group === BIGINT_0) {
+        continue;
+      }
+      const [first, ...rest] = this.convertInternal(group, true, undefined, localeInstance);
+      if (words.length) {
+        words.push(joiner.word, prefix + (joiner.afterForms?.[first] ?? first), ...rest);
+      } else {
+        words.push(prefix + first, ...rest);
+      }
+    }
+    return words;
   }
 
   /**
@@ -1260,7 +1382,10 @@ export class ToWordsCore {
         if (!ignoreZero) {
           wordsWithDecimal.push(localeConfig.texts.point);
         }
-        if (fractionalPart.startsWith('0') && !localeConfig?.decimalLengthWordMapping) {
+        if (
+          decimalStyle === 'digit-by-digit' ||
+          (fractionalPart.startsWith('0') && !localeConfig?.decimalLengthWordMapping)
+        ) {
           const zeroWords: string[] = [];
           for (const num of fractionalPart) {
             zeroWords.push(...this.convertInternal(BigInt(num), true, undefined, locale, gender));
@@ -1382,6 +1507,9 @@ export class ToWordsCore {
         if (larger > BIGINT_0) {
           wordsWithDecimal.push(...this.convertInternal(larger, false, undefined, locale, fractionalGender));
           wordsWithDecimal.push(largerUnit.name);
+        } else if (largerUnit.zeroWord && mainAmount > BIGINT_0) {
+          // zh 一百元零五分: a skipped 角 between the yuan and the fen reads 零.
+          wordsWithDecimal.push(largerUnit.zeroWord);
         }
         if (smaller > BIGINT_0) {
           wordsWithDecimal.push(...this.convertInternal(smaller, false, undefined, locale, fractionalGender));
@@ -1432,17 +1560,18 @@ export class ToWordsCore {
     if (!isEmpty && isNegativeNumber) {
       words.unshift(localeConfig.texts.minus);
     }
-    if (!isEmpty && localeConfig.texts.only && !options.doNotAddOnly && !localeConfig.onlyInFront) {
+    const addOnly = !isEmpty && !options.doNotAddOnly && !(localeConfig.onlyWhenWhole && isFloat);
+    if (addOnly && localeConfig.texts.only && !localeConfig.onlyInFront) {
       wordsWithDecimal.push(localeConfig.texts.only);
     }
     if (wordsWithDecimal.length) {
       words.push(...wordsWithDecimal);
     }
 
-    if (!isEmpty && !options.doNotAddOnly && localeConfig.onlyInFront) {
+    if (addOnly && localeConfig.onlyInFront) {
       words.splice(0, 0, localeConfig.texts.only);
     }
-    if (!isEmpty && !options.doNotAddOnly && localeConfig.texts.onlyBefore) {
+    if (addOnly && localeConfig.texts.onlyBefore) {
       words.unshift(localeConfig.texts.onlyBefore);
     }
 

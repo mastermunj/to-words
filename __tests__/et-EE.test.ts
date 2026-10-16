@@ -436,3 +436,53 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Kakskümmend Üks'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Kakskümmend Üks'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'Ainult Kakskümmend Üks Eurot Ja Viiskümmend Senti',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'ainult kakskümmend üks eurot ja viiskümmend senti',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'AINULT KAKSKÜMMEND ÜKS EUROT JA VIISKÜMMEND SENTI',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'ainult kakskümmend üks eurot ja viiskümmend senti',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Ainult kakskümmend üks eurot ja viiskümmend senti',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Kakskümmend Esimene'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'kakskümmend esimene',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'Üks Koma Kakskümmend Viis'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'Üks Koma Kaks Viis',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

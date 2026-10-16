@@ -490,3 +490,53 @@ describe('Sourced forms (tezaurs.lv)', () => {
     expect(tw.convert(1.01, { currency: true, gender: 'feminine' })).toBe('viens eiro un viens cents');
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'divdesmit viens'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'divdesmit viens'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'divdesmit viens eiro un piecdesmit centi',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'divdesmit viens eiro un piecdesmit centi',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'DIVDESMIT VIENS EIRO UN PIECDESMIT CENTI',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'divdesmit viens eiro un piecdesmit centi',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'divdesmit viens eiro un piecdesmit centi',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'divdesmit pirmais'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'divdesmit pirmais',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'viens komats divdesmit pieci'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'viens komats divi pieci',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

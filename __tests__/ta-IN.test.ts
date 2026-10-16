@@ -448,3 +448,54 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
     expect(toWords.convert(0.05)).toBe('பூஜ்ஜியம் புள்ளி பூஜ்ஜியம் ஐந்து');
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  // This script has no capital letters, so every casing leaves the output unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'இருபத்தி ஒன்று'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'இருபத்தி ஒன்று'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'இருபத்தி ஒன்று ரூபாய் மற்றும் ஐம்பது பைசா',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'இருபத்தி ஒன்று ரூபாய் மற்றும் ஐம்பது பைசா',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'இருபத்தி ஒன்று ரூபாய் மற்றும் ஐம்பது பைசா',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'இருபத்தி ஒன்று ரூபாய் மற்றும் ஐம்பது பைசா',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'இருபத்தி ஒன்று ரூபாய் மற்றும் ஐம்பது பைசா',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'இருபத்தி ஒன்றாவது'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'இருபத்தி ஒன்றாவது',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'ஒன்று புள்ளி இருபத்தி ஐந்து'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'ஒன்று புள்ளி இரண்டு ஐந்து',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

@@ -474,3 +474,53 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Kaksikymmentä Yksi'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Kaksikymmentä Yksi'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'Kaksikymmentä Yksi Euroa Ja Viisikymmentä Senttiä',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'kaksikymmentä yksi euroa ja viisikymmentä senttiä',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'KAKSIKYMMENTÄ YKSI EUROA JA VIISIKYMMENTÄ SENTTIÄ',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'kaksikymmentä yksi euroa ja viisikymmentä senttiä',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Kaksikymmentä yksi euroa ja viisikymmentä senttiä',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Kahdeskymmenes Ensimmäinen'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'kahdeskymmenes ensimmäinen',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'Yksi Pilkku Kaksikymmentä Viisi'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'Yksi Pilkku Kaksi Viisi',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

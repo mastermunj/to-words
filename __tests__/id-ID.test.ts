@@ -564,3 +564,53 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
     expect(toWords.convert(0.05)).toBe('Nol Koma Nol Lima');
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Dua Puluh Satu'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Dua Puluh Satu'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'Dua Puluh Satu Rupiah Dan Lima Puluh Sen Saja',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'dua puluh satu rupiah dan lima puluh sen saja',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'DUA PULUH SATU RUPIAH DAN LIMA PULUH SEN SAJA',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'dua puluh satu rupiah dan lima puluh sen saja',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Dua puluh satu rupiah dan lima puluh sen saja',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Kedua Puluh Satu'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'kedua puluh satu',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'Satu Koma Dua Puluh Lima'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'Satu Koma Dua Lima',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

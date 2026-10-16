@@ -545,3 +545,53 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
     expect(toWords.convert(0.05, { decimalStyle: 'digit' })).toBe('Nula Celá Nula Päť');
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Dvadsaťjeden'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Dvadsaťjeden'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'Dvadsaťjeden Eur A Päťdesiat Centov Len',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'dvadsaťjeden eur a päťdesiat centov len',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'DVADSAŤJEDEN EUR A PÄŤDESIAT CENTOV LEN',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'dvadsaťjeden eur a päťdesiat centov len',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Dvadsaťjeden eur a päťdesiat centov len',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Dvadsiaty Prvý'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'dvadsiaty prvý',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'Jedna Celá Dvadsaťpäť Stotín'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'Jeden Celá Dva Päť',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

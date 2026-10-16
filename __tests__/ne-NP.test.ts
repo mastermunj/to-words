@@ -447,3 +447,42 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
     expect(toWords.convert(0.05)).toBe('शून्य दशमलब शून्य पाँच');
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  // This script has no capital letters, so every casing leaves the output unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'एक्काइस'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'एक्काइस'],
+    ["casing 'title'", () => styled.convert(21.5, { currency: true, casing: 'title' }), 'एक्काइस रुपैयाँ र पचास पैसा मात्र'],
+    ["casing 'lower'", () => styled.convert(21.5, { currency: true, casing: 'lower' }), 'एक्काइस रुपैयाँ र पचास पैसा मात्र'],
+    ["casing 'upper'", () => styled.convert(21.5, { currency: true, casing: 'upper' }), 'एक्काइस रुपैयाँ र पचास पैसा मात्र'],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'एक्काइस रुपैयाँ र पचास पैसा मात्र',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'एक्काइस रुपैयाँ र पचास पैसा मात्र',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'एक्काइसौं'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'एक्काइसौं',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'एक दशमलब पच्चिस'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'एक दशमलब दुई पाँच',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

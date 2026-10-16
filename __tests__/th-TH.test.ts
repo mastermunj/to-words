@@ -123,7 +123,7 @@ describe('Test with options = { currency: true, includeZeroFractional: true }', 
     ['123.00', `หนึ่งร้อยยี่สิบสามบาทศูนย์สตางค์ถ้วน`],
     ['0.00', `ศูนย์บาทศูนย์สตางค์ถ้วน`],
     ['-123.00', `ลบหนึ่งร้อยยี่สิบสามบาทศูนย์สตางค์ถ้วน`],
-    ['37.68', `สามสิบเจ็ดบาทหกสิบแปดสตางค์ถ้วน`],
+    ['37.68', `สามสิบเจ็ดบาทหกสิบแปดสตางค์`],
   ];
 
   test.concurrent.each(testIncludeZeroFractional)('convert %s => %s', (input, expected) => {
@@ -198,17 +198,17 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
 
 const testFloatsWithCurrency: [number, string][] = [
   [0.0, 'ศูนย์บาทถ้วน'],
-  [0.04, 'ศูนย์บาทสี่สตางค์ถ้วน'],
-  [0.4, 'ศูนย์บาทสี่สิบสตางค์ถ้วน'],
-  [0.63, 'ศูนย์บาทหกสิบสามสตางค์ถ้วน'],
-  [0.973, 'ศูนย์บาทเก้าสิบเจ็ดสตางค์ถ้วน'],
+  [0.04, 'ศูนย์บาทสี่สตางค์'],
+  [0.4, 'ศูนย์บาทสี่สิบสตางค์'],
+  [0.63, 'ศูนย์บาทหกสิบสามสตางค์'],
+  [0.973, 'ศูนย์บาทเก้าสิบเจ็ดสตางค์'],
   [0.999, 'หนึ่งบาทถ้วน'],
-  [37.06, 'สามสิบเจ็ดบาทหกสตางค์ถ้วน'],
-  [37.68, 'สามสิบเจ็ดบาทหกสิบแปดสตางค์ถ้วน'],
-  [37.683, 'สามสิบเจ็ดบาทหกสิบแปดสตางค์ถ้วน'],
+  [37.06, 'สามสิบเจ็ดบาทหกสตางค์'],
+  [37.68, 'สามสิบเจ็ดบาทหกสิบแปดสตางค์'],
+  [37.683, 'สามสิบเจ็ดบาทหกสิบแปดสตางค์'],
   [100, 'หนึ่งร้อยบาทถ้วน'],
-  [500.25, 'ห้าร้อยบาทยี่สิบห้าสตางค์ถ้วน'],
-  [1000.5, 'หนึ่งพันบาทห้าสิบสตางค์ถ้วน'],
+  [500.25, 'ห้าร้อยบาทยี่สิบห้าสตางค์'],
+  [1000.5, 'หนึ่งพันบาทห้าสิบสตางค์'],
 ];
 
 describe('Test Floats with options = { currency: true }', () => {
@@ -437,5 +437,36 @@ describe('Functional helpers (locale-level)', () => {
     const tw = new LocaleToWords();
     expect(localeToCurrency(1)).toBe(tw.convert(1, { currency: true }));
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
+  });
+});
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  // This script has no capital letters, so every casing leaves the output unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'ยี่สิบเอ็ด'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'ยี่สิบเอ็ด'],
+    ["casing 'title'", () => styled.convert(21.5, { currency: true, casing: 'title' }), 'ยี่สิบเอ็ดบาทห้าสิบสตางค์'],
+    ["casing 'lower'", () => styled.convert(21.5, { currency: true, casing: 'lower' }), 'ยี่สิบเอ็ดบาทห้าสิบสตางค์'],
+    ["casing 'upper'", () => styled.convert(21.5, { currency: true, casing: 'upper' }), 'ยี่สิบเอ็ดบาทห้าสิบสตางค์'],
+    ["casing 'natural'", () => styled.convert(21.5, { currency: true, casing: 'natural' }), 'ยี่สิบเอ็ดบาทห้าสิบสตางค์'],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'ยี่สิบเอ็ดบาทห้าสิบสตางค์',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'ที่ยี่สิบเอ็ด'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'ที่ยี่สิบเอ็ด',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'หนึ่งจุดยี่สิบห้า'],
+    ["decimalStyle 'digit-by-digit'", () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }), 'หนึ่งจุดสองห้า'],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
   });
 });

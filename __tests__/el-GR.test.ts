@@ -454,3 +454,53 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
     expect(toWords.convert(0.05)).toBe('Μηδέν Κόμμα Μηδέν Πέντε');
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Είκοσι Ένα'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Είκοσι Ένα'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'Είκοσι Ένα Ευρώ Και Πενήντα Λεπτά Μόνο',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'είκοσι ένα ευρώ και πενήντα λεπτά μόνο',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'ΕΙΚΟΣΙ ΕΝΑ ΕΥΡΩ ΚΑΙ ΠΕΝΗΝΤΑ ΛΕΠΤΑ ΜΟΝΟ',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'είκοσι ένα ευρώ και πενήντα λεπτά μόνο',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Είκοσι ένα ευρώ και πενήντα λεπτά μόνο',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Εικοστό Πρώτο'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'εικοστό πρώτο',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'Ένα Κόμμα Είκοσι Πέντε'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'Ένα Κόμμα Δύο Πέντε',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

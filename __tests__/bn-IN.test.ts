@@ -440,3 +440,34 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
     expect(toWords.convert(0.05)).toBe('শূন্য দশমিক শূন্য পাঁচ');
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  // This script has no capital letters, so every casing leaves the output unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'একুশ'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'একুশ'],
+    ["casing 'title'", () => styled.convert(21.5, { currency: true, casing: 'title' }), 'একুশ টাকা এবং পঞ্চাশ পয়সা'],
+    ["casing 'lower'", () => styled.convert(21.5, { currency: true, casing: 'lower' }), 'একুশ টাকা এবং পঞ্চাশ পয়সা'],
+    ["casing 'upper'", () => styled.convert(21.5, { currency: true, casing: 'upper' }), 'একুশ টাকা এবং পঞ্চাশ পয়সা'],
+    ["casing 'natural'", () => styled.convert(21.5, { currency: true, casing: 'natural' }), 'একুশ টাকা এবং পঞ্চাশ পয়সা'],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'একুশ টাকা এবং পঞ্চাশ পয়সা',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'একুশতম'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'একুশতম',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'এক দশমিক পঁচিশ'],
+    ["decimalStyle 'digit-by-digit'", () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }), 'এক দশমিক দুই পাঁচ'],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

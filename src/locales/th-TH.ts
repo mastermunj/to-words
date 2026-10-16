@@ -30,6 +30,9 @@ export default class Locale implements LocaleInterface {
     },
     trim: true,
     onlyInFront: false,
+    // ถ้วน ("exactly") closes a whole-baht amount only; with satang the amount ends on สตางค์
+    // (Excel BAHTTEXT: หนึ่งพันสองร้อยห้าบาทห้าสิบสตางค์).
+    onlyWhenWhole: true,
     numberWordsMapping: [
       { number: 1000000000000, value: 'ล้านล้าน' },
       { number: 1000000, value: 'ล้าน' },

@@ -162,7 +162,7 @@ Your file must:
   let instance: ToWords | undefined;
   ```
 
-  In practice, copy the bottom block verbatim from any existing locale file — the pattern is standardised across all 135 locales. The full registry validates locale configuration automatically and all entry points freeze it on first initialization, so define it completely and deterministically up front rather than mutating it after conversion starts. Standalone locale bundles use the prevalidated base to avoid shipping authoring-time validation code to every browser.
+  In practice, copy the bottom block verbatim from any existing locale file — the pattern is standardised across every locale. The full registry validates locale configuration automatically and all entry points freeze it on first initialization, so define it completely and deterministically up front rather than mutating it after conversion starts. Standalone locale bundles use the prevalidated base to avoid shipping authoring-time validation code to every browser.
 
   `numberWordsMapping` must contain zero, use unique numeric thresholds, and be strictly descending because the core uses binary search. The cross-locale invariant test enforces these requirements.
 

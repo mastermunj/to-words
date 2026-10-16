@@ -281,3 +281,53 @@ describe('Test Locale Functional API', () => {
     expect(localeToCurrency(10)).toBe("O'n So'm");
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Yigirma Bir'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Yigirma Bir'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      "Yigirma Bir So'm Va Ellik Tiyin",
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      "yigirma bir so'm va ellik tiyin",
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      "YIGIRMA BIR SO'M VA ELLIK TIYIN",
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      "yigirma bir so'm va ellik tiyin",
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      "Yigirma bir so'm va ellik tiyin",
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Yigirma Birinchi'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'yigirma birinchi',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'Bir Vergul Yigirma Besh'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'Bir Vergul Ikki Besh',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

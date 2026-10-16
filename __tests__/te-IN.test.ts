@@ -465,3 +465,42 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
     expect(toWords.convert(0.05)).toBe('సున్నా బిందువు సున్నా ఐదు');
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  // This script has no capital letters, so every casing leaves the output unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'ఇరవై ఒకటి'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'ఇరవై ఒకటి'],
+    ["casing 'title'", () => styled.convert(21.5, { currency: true, casing: 'title' }), 'ఇరవై ఒక్క రూపాయలు మరియు యాభై పైసలు'],
+    ["casing 'lower'", () => styled.convert(21.5, { currency: true, casing: 'lower' }), 'ఇరవై ఒక్క రూపాయలు మరియు యాభై పైసలు'],
+    ["casing 'upper'", () => styled.convert(21.5, { currency: true, casing: 'upper' }), 'ఇరవై ఒక్క రూపాయలు మరియు యాభై పైసలు'],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'ఇరవై ఒక్క రూపాయలు మరియు యాభై పైసలు',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'ఇరవై ఒక్క రూపాయలు మరియు యాభై పైసలు',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'ఇరవై ఒకటవ'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'ఇరవై ఒకటవ',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'ఒకటి బిందువు ఇరవై ఐదు'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'ఒకటి బిందువు రెండు ఐదు',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

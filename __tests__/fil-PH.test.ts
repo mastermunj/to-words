@@ -527,3 +527,53 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), "Dalawampu't Isa"],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), "Dalawampu't Isa"],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      "Dalawampu't Isang Piso At Limampung Sentimo Lamang",
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      "dalawampu't isang piso at limampung sentimo lamang",
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      "DALAWAMPU'T ISANG PISO AT LIMAMPUNG SENTIMO LAMANG",
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      "dalawampu't isang piso at limampung sentimo lamang",
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      "Dalawampu't isang piso at limampung sentimo lamang",
+    ],
+    ['ordinal', () => styled.toOrdinal(21), "Ikadalawampu't Isa"],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      "ikadalawampu't isa",
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), "Isa Tuldok Dalawampu't Lima"],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'Isa Tuldok Dalawa Lima',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});
