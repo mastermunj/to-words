@@ -1,6 +1,6 @@
 {
   "name": "to-words",
-  "version": "7.2.0",
+  "version": "7.3.0",
   "description": "Number to words converter for 136 locales: amounts in words for invoices and cheques, currency, ordinals and BigInt (TypeScript, ESM/CJS/UMD).",
   "keywords": [
     "amount in words",
