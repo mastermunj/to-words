@@ -522,3 +522,42 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  // This script has no capital letters, so every casing leaves the output unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'עשרים ואחת'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'עשרים ואחת'],
+    ["casing 'title'", () => styled.convert(21.5, { currency: true, casing: 'title' }), 'עשרים ואחד שקלים וחמשים גרות'],
+    ["casing 'lower'", () => styled.convert(21.5, { currency: true, casing: 'lower' }), 'עשרים ואחד שקלים וחמשים גרות'],
+    ["casing 'upper'", () => styled.convert(21.5, { currency: true, casing: 'upper' }), 'עשרים ואחד שקלים וחמשים גרות'],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'עשרים ואחד שקלים וחמשים גרות',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'עשרים ואחד שקלים וחמשים גרות',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'העשרים ואחד'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'העשרים ואחד',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'אחת נקודה עשרים וחמש'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'אחת נקודה שתים חמש',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

@@ -436,3 +436,53 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
     expect(toWords.convert(0.05)).toBe('Không Phẩy Không Năm');
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Hai Mươi Mốt'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Hai Mươi Mốt'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'Hai Mươi Mốt Đồng Và Năm Mươi Xu',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'hai mươi mốt đồng và năm mươi xu',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'HAI MƯƠI MỐT ĐỒNG VÀ NĂM MƯƠI XU',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'hai mươi mốt đồng và năm mươi xu',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Hai mươi mốt đồng và năm mươi xu',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Thứ Hai Mươi Mốt'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'thứ hai mươi mốt',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'Một Phẩy Hai Mươi Lăm'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'Một Phẩy Hai Năm',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

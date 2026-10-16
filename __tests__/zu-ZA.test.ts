@@ -271,3 +271,53 @@ describe('Test Locale Functional API', () => {
     expect(localeToCurrency(100)).toBe('Ikhulu Rand');
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Amashumi Amabili Na Kunye'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Amashumi Amabili Na Kunye'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'Amashumi Amabili Na Kunye Rand Na Amashumi Amahlanu Senti',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'amashumi amabili na kunye rand na amashumi amahlanu senti',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'AMASHUMI AMABILI NA KUNYE RAND NA AMASHUMI AMAHLANU SENTI',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'amashumi amabili na kunye rand na amashumi amahlanu senti',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Amashumi amabili na kunye rand na amashumi amahlanu senti',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Amashumi Amabili Na Kwokuqala'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'amashumi amabili na kwokuqala',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'Kunye Iphoyinti Amashumi Amabili Na Kuhlanu'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'Kunye Iphoyinti Kubili Kuhlanu',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

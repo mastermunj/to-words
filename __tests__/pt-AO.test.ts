@@ -459,3 +459,53 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
     expect(toWords.convert(0.05)).toBe('Zero Vírgula Zero Cinco');
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Vinte E Um'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Vinte E Um'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'Vinte E Um Kwanzas E Cinquenta Cêntimos',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'vinte e um kwanzas e cinquenta cêntimos',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'VINTE E UM KWANZAS E CINQUENTA CÊNTIMOS',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'vinte e um kwanzas e cinquenta cêntimos',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Vinte e um kwanzas e cinquenta cêntimos',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Vigésimo Primeiro'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'vigésimo primeiro',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'Um Vírgula Vinte E Cinco'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'Um Vírgula Dois Cinco',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

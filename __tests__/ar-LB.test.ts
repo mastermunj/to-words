@@ -291,10 +291,19 @@ describe('Ordinal Tests', () => {
     // Round numbers
     [100, 'المائة'],
     [1000, 'الألف'],
-    [1000000, 'المليون'],
+    // From 100th up: the ordinal of the last two digits, then each larger group after «بعد»
+    // (mawdoo3 «شرح العدد الترتيبي»; «الحديث الحادي والعشرون بعد المائة», Ibn al-Jawzi).
+    [101, 'الأول بعد المائة'],
+    [121, 'الحادي والعشرون بعد المائة'],
+    [200, 'المائتان'],
+    [201, 'الأول بعد المائتين'],
+    [1100, 'المائة بعد الألف'],
+    [1234, 'الرابع والثلاثون بعد المائتين بعد الألف'],
+    [2000, 'الألفان'],
+    [2021, 'الحادي والعشرون بعد الألفين'],
     // Complex numbers
-    [123, 'مائة والثالث والعشرون'],
-    [1001, 'ألف والأول'],
+    [123, 'الثالث والعشرون بعد المائة'],
+    [1001, 'الأول بعد الألف'],
   ];
 
   test.each(testOrdinals)('Number: %d => %s', (input, expected) => {
@@ -469,5 +478,56 @@ describe('Functional helpers (locale-level)', () => {
     const tw = new LocaleToWords();
     expect(localeToCurrency(1)).toBe(tw.convert(1, { currency: true }));
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
+  });
+});
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  // This script has no capital letters, so every casing leaves the output unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'واحد وعشرون'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'واحد وعشرون'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'فقط إحدى وعشرون ليرةً وخمسون قرشًا لا غير',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'فقط إحدى وعشرون ليرةً وخمسون قرشًا لا غير',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'فقط إحدى وعشرون ليرةً وخمسون قرشًا لا غير',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'فقط إحدى وعشرون ليرةً وخمسون قرشًا لا غير',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'فقط إحدى وعشرون ليرةً وخمسون قرشًا لا غير',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'الحادي والعشرون'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'الحادي والعشرون',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'واحد فاصلة خمسة وعشرون'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'واحد فاصلة اثنان خمسة',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
   });
 });

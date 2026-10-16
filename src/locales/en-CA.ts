@@ -28,6 +28,10 @@ export default class Locale implements LocaleInterface {
       only: 'Only',
       point: 'Point',
     },
+    // hyphenate: true joins compound tens and units (Twenty-One, Ninety-Ninth).
+    compoundHyphen: '-',
+    // casing natural/sentence keeps the proper adjective of the currency name.
+    naturalCaseWords: ['Canadian'],
     numberWordsMapping: [
       { number: 1000000000000000000000000000000000000000000000000000000000000000n, value: 'Vigintillion' },
       { number: 1000000000000000000000000000000000000000000000000000000000000n, value: 'Novemdecillion' },

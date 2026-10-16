@@ -524,3 +524,53 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
     expect(toWords.convert(0.05)).toBe('ნული მძიმე ნული ხუთი');
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'ოცდაერთი'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'ოცდაერთი'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'ოცდაერთი ლარი და ორმოცდაათი თეთრი',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'ოცდაერთი ლარი და ორმოცდაათი თეთრი',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'ᲝᲪᲓᲐᲔᲠᲗᲘ ᲚᲐᲠᲘ ᲓᲐ ᲝᲠᲛᲝᲪᲓᲐᲐᲗᲘ ᲗᲔᲗᲠᲘ',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'ოცდაერთი ლარი და ორმოცდაათი თეთრი',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'ოცდაერთი ლარი და ორმოცდაათი თეთრი',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'ოცდამეერთე'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'ოცდამეერთე',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'ერთი მძიმე ოცდახუთი'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'ერთი მძიმე ორი ხუთი',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

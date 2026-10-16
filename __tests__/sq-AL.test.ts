@@ -497,3 +497,53 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
     expect(toWords.convert(0.05)).toBe('Zero Presje Zero Pesë');
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Njëzet E Një'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Njëzet E Një'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'Njëzet E Një Lekë E Pesëdhjetë Qindarka Vetëm',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'njëzet e një lekë e pesëdhjetë qindarka vetëm',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'NJËZET E NJË LEKË E PESËDHJETË QINDARKA VETËM',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'njëzet e një lekë e pesëdhjetë qindarka vetëm',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Njëzet e një lekë e pesëdhjetë qindarka vetëm',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'I Njëzet E Njëti'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'i njëzet e njëti',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'Një Presje Njëzet E Pesë'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'Një Presje Dy Pesë',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

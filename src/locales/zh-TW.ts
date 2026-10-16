@@ -20,6 +20,7 @@ export default class Locale implements LocaleInterface {
         singular: '分',
         plural: '分',
         symbol: '',
+        largerUnit: { name: '角', factor: 10, zeroWord: '零' },
       },
     },
     texts: {
@@ -28,6 +29,9 @@ export default class Locale implements LocaleInterface {
       only: '整',
       point: '點',
     },
+    // 0.5 yuan is 五角; 整 closes an amount without 分 only, and is left out once a fraction is
+    // spelled (PBOC 正确填写票据和结算凭证的基本规定: 一百元整, 一百元五角, 一百元五角五分).
+    onlyWhenWhole: true,
     numberWordsMapping: [
       { number: 100000000000000000000n, value: '垓' },
       { number: 10000000000000000n, value: '京' },
@@ -118,6 +122,7 @@ export default class Locale implements LocaleInterface {
           singular: '分',
           plural: '分',
           symbol: '',
+          largerUnit: { name: '角', factor: 10, zeroWord: '零' },
         },
       },
       ordinalWordsMapping: [

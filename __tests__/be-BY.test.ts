@@ -546,3 +546,53 @@ describe('Test scale words above a quadrillion', () => {
     expect(toWords.convert(1, { currency: true, gender: 'feminine' })).toBe('Адзін Рубель Толькі');
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Дваццаць Адзін'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Дваццаць Адзін'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'Дваццаць Адзін Рубель І Пяцьдзясят Капеек Толькі',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'дваццаць адзін рубель і пяцьдзясят капеек толькі',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'ДВАЦЦАЦЬ АДЗІН РУБЕЛЬ І ПЯЦЬДЗЯСЯТ КАПЕЕК ТОЛЬКІ',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'дваццаць адзін рубель і пяцьдзясят капеек толькі',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Дваццаць адзін рубель і пяцьдзясят капеек толькі',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Дваццаць Першы'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'дваццаць першы',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'Адна Цэлая Дваццаць Пяць Сотых'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'Адзін Цэлых Два Пяць',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

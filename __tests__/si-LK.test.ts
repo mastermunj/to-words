@@ -237,3 +237,34 @@ describe('Test Locale Functional API', () => {
     expect(localeToCurrency(100)).toBe('රුපියල් සියය');
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  // This script has no capital letters, so every casing leaves the output unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'විසි එක'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'විසි එක'],
+    ["casing 'title'", () => styled.convert(21.5, { currency: true, casing: 'title' }), 'රුපියල් විසි එක සහ සත පනහ'],
+    ["casing 'lower'", () => styled.convert(21.5, { currency: true, casing: 'lower' }), 'රුපියල් විසි එක සහ සත පනහ'],
+    ["casing 'upper'", () => styled.convert(21.5, { currency: true, casing: 'upper' }), 'රුපියල් විසි එක සහ සත පනහ'],
+    ["casing 'natural'", () => styled.convert(21.5, { currency: true, casing: 'natural' }), 'රුපියල් විසි එක සහ සත පනහ'],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'රුපියල් විසි එක සහ සත පනහ',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'විසි එකවැනි'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'විසි එකවැනි',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'එක දශම විසි පහ'],
+    ["decimalStyle 'digit-by-digit'", () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }), 'එක දශම දෙක පහ'],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

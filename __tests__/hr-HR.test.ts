@@ -524,3 +524,53 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
     expect(toWords.convert(0.05)).toBe('Nula Zarez Nula Pet');
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Dvadeset Jedan'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Dvadeset Jedan'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'Dvadeset Jedan Euro I Pedeset Centi Samo',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'dvadeset jedan euro i pedeset centi samo',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'DVADESET JEDAN EURO I PEDESET CENTI SAMO',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'dvadeset jedan euro i pedeset centi samo',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Dvadeset jedan euro i pedeset centi samo',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Dvadeset Prvi'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'dvadeset prvi',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'Jedan Zarez Dvadeset Pet'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'Jedan Zarez Dva Pet',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

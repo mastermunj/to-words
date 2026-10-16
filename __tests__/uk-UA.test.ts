@@ -534,3 +534,53 @@ describe('Test ordinals from the 2019 orthography', () => {
     expect(toWords.convert(input)).toBe(expected);
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Двадцять Один'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Двадцять Один'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      "Двадцять Одна Гривня І П'ятдесят Копійок Тільки",
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      "двадцять одна гривня і п'ятдесят копійок тільки",
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      "ДВАДЦЯТЬ ОДНА ГРИВНЯ І П'ЯТДЕСЯТ КОПІЙОК ТІЛЬКИ",
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      "двадцять одна гривня і п'ятдесят копійок тільки",
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      "Двадцять одна гривня і п'ятдесят копійок тільки",
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Двадцять Перший'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'двадцять перший',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), "Одна Ціла Двадцять П'ять Сотих"],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      "Один Цілих Два П'ять",
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

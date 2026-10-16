@@ -474,3 +474,53 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Selikur'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Selikur'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'Selikur Rupiah Lan Sèket Sen Waé',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'selikur rupiah lan sèket sen waé',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'SELIKUR RUPIAH LAN SÈKET SEN WAÉ',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'selikur rupiah lan sèket sen waé',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Selikur rupiah lan sèket sen waé',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Kaping Selikur'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'kaping selikur',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'Siji Koma Selawé'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'Siji Koma Loro Lima',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

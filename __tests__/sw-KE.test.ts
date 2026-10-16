@@ -520,3 +520,53 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Ishirini Na Moja'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Ishirini Na Moja'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'Shilingi Ishirini Na Moja Na Senti Hamsini Tu',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'shilingi ishirini na moja na senti hamsini tu',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'SHILINGI ISHIRINI NA MOJA NA SENTI HAMSINI TU',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'shilingi ishirini na moja na senti hamsini tu',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Shilingi ishirini na moja na senti hamsini tu',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Wa Ishirini Na Moja'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'wa ishirini na moja',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'Moja Nukta Ishirini Na Tano'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'Moja Nukta Mbili Tano',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

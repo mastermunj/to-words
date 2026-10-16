@@ -126,19 +126,21 @@ toWords(1000, { localeCode: requestLocale });
 
 ## Converter Options
 
-| Option                  | Type                          | Default        | Description                                                   |
-| ----------------------- | ----------------------------- | -------------- | ------------------------------------------------------------- |
-| `currency`              | boolean                       | false          | Currency mode                                                 |
-| `ignoreDecimal`         | boolean                       | false          | Ignore fractional part                                        |
-| `ignoreZeroCurrency`    | boolean                       | false          | Skip zero main currency                                       |
-| `doNotAddOnly`          | boolean                       | false          | Omit "Only" suffix                                            |
-| `includeZeroFractional` | boolean                       | false          | Include zero fractional from string input                     |
-| `currencyOptions`       | `CurrencyOptions`             | locale default | Override currency name, fractional unit, or precision         |
-| `gender`                | `'masculine'` \| `'feminine'` | undefined      | Grammatical gender                                            |
-| `useAnd`                | boolean                       | undefined      | Insert connector before last two digits                       |
-| `formal`                | boolean                       | undefined      | Formal Chinese characters (大写)                              |
-| `decimalStyle`          | `'digit'` \| `'fraction'`     | `'digit'`      | Legal/positional decimal style                                |
-| `rangeMode`             | `'strict'` \| `'compose'`     | `'strict'`     | Enforce the supported range or opt into recursive composition |
+| Option                  | Type                                                               | Default        | Description                                                   |
+| ----------------------- | ------------------------------------------------------------------ | -------------- | ------------------------------------------------------------- |
+| `currency`              | boolean                                                            | false          | Currency mode                                                 |
+| `ignoreDecimal`         | boolean                                                            | false          | Ignore fractional part                                        |
+| `ignoreZeroCurrency`    | boolean                                                            | false          | Skip zero main currency                                       |
+| `doNotAddOnly`          | boolean                                                            | false          | Omit "Only" suffix                                            |
+| `includeZeroFractional` | boolean                                                            | false          | Include zero fractional from string input                     |
+| `currencyOptions`       | `CurrencyOptions`                                                  | locale default | Override currency name, fractional unit, or precision         |
+| `gender`                | `'masculine'` \| `'feminine'`                                      | undefined      | Grammatical gender                                            |
+| `useAnd`                | boolean                                                            | undefined      | Insert connector before last two digits                       |
+| `formal`                | boolean                                                            | undefined      | Formal Chinese characters (大写)                              |
+| `decimalStyle`          | `'digit'` \| `'digit-by-digit'` \| `'fraction'`                    | `'digit'`      | Decimal reading: as a number, each digit, or legal/positional |
+| `casing`                | `'title'` \| `'lower'` \| `'upper'` \| `'natural'` \| `'sentence'` | `'title'`      | Letter case of the output (also accepted by `toOrdinal`)      |
+| `hyphenate`             | boolean                                                            | false          | Hyphenate English compounds: Twenty-One (also `toOrdinal`)    |
+| `rangeMode`             | `'strict'` \| `'compose'`                                          | `'strict'`     | Enforce the supported range or opt into recursive composition |
 
 ## Currency Options
 

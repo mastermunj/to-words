@@ -197,6 +197,12 @@ export default class Locale implements LocaleInterface {
     splitWord: 'و',
     // و is written onto the next word (واحد وعشرون).
     connectorPrefix: 'و',
+    // From 100th up the ordinal of the last two digits comes first and the hundreds and larger
+    // groups follow as definite cardinals after «بعد» (الحادي والعشرون بعد المائة, 2000th الألفان;
+    // mawdoo3 «شرح العدد الترتيبي»). Ordinals are verified to 9999.
+    ordinalComposition: 'remainder-first',
+    ordinalGroupJoiner: { word: 'بعد', definitePrefix: 'ال', afterForms: { مائتان: 'مائتين', ألفان: 'ألفين' } },
+    maximumSupportedValues: { ordinal: 9999 },
     ordinalWordsMapping: [
       { number: 1000000000000000, value: 'الكوادريليون' },
       { number: 1000000000000, value: 'التريليون' },

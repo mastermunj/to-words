@@ -39,6 +39,8 @@ export interface CurrencyOptions {
     largerUnit?: {
       name: string;
       factor: number;
+      /** Read in place of a zero larger unit between a non-zero main amount and smaller unit (zh 零: 一百元零五分). */
+      zeroWord?: string;
     };
   };
 }
@@ -47,7 +49,24 @@ export type RangeMode = 'strict' | 'compose';
 
 export type ConversionForm = 'cardinal' | 'ordinal' | 'currency';
 
-export type ConverterOptions = {
+/**
+ * Letter case of the output, for scripts that have case (others are returned unchanged):
+ * - `title` (default): every word capitalised, as the locale data is written (Twenty One).
+ * - `lower` / `upper`: the whole text, using the locale's case rules (tr İki → iki).
+ * - `natural`: lowercase except words the language capitalises in running text
+ *   (de eine Million Euro, en-AU twenty Australian dollars) and caller-supplied currency names.
+ * - `sentence`: `natural` with the first letter capitalised (Twenty dollars only).
+ */
+export type LetterCase = 'title' | 'lower' | 'upper' | 'natural' | 'sentence';
+
+/** Output style shared by every conversion. */
+export type OutputStyleOptions = {
+  casing?: LetterCase;
+  /** Join compound tens and units with the locale's `compoundHyphen` (en Twenty-One); no effect elsewhere. */
+  hyphenate?: boolean;
+};
+
+export type ConverterOptions = OutputStyleOptions & {
   currency?: boolean;
   ignoreDecimal?: boolean;
   ignoreZeroCurrency?: boolean;
@@ -57,11 +76,14 @@ export type ConverterOptions = {
   gender?: 'masculine' | 'feminine';
   useAnd?: boolean;
   formal?: boolean;
-  decimalStyle?: 'digit' | 'fraction'; // 'digit' (default): digit-by-digit after point; 'fraction': positional/fractional style (e.g. "Forty-Five Hundredths")
+  // 'digit' (default): the decimal digits read as a number after the point (Point Forty Five), each
+  // digit once a leading zero is present (Point Zero Five); 'digit-by-digit': every digit on its own
+  // (Point Four Five); 'fraction': positional/fractional style (e.g. "Forty Five Hundredths")
+  decimalStyle?: 'digit' | 'digit-by-digit' | 'fraction';
   rangeMode?: RangeMode; // 'strict' (default): enforce the locale's verified range; 'compose': recursively reuse the largest named scale
 };
 
-export type OrdinalOptions = {
+export type OrdinalOptions = OutputStyleOptions & {
   gender?: GrammaticalGender;
   formal?: boolean;
   rangeMode?: RangeMode;
@@ -196,6 +218,13 @@ export type LocaleConfig = {
   paucalConfig?: PaucalConfig;
   noSplitWordAfter?: string[];
   onlyInFront?: boolean;
+  // texts.only marks a whole amount and is left out when a fractional part is spelled
+  // (th หนึ่งร้อยบาทถ้วน, but หนึ่งร้อยบาทห้าสิบสตางค์; zh 一百元整, but 一百元五角).
+  onlyWhenWhole?: boolean;
+  /** Words that keep their capital with `casing: 'natural'` (de nouns: Million, Euro, Hundertstel). */
+  naturalCaseWords?: string[];
+  /** Joins compound tens and units with `hyphenate: true` (en «-»: Twenty-One, Ninety-Ninth). */
+  compoundHyphen?: string;
   trim?: boolean;
   useTrailingForCurrency?: boolean; // If true, use trailing=true in currency mode (for French-style plurals)
   formalConfig?: FormalConfig;
@@ -315,8 +344,23 @@ export type LocaleConfig = {
    *   ordinalWordsMapping entries for 0–20 and exact entries still apply.
    * - `last-token`: ordinalize the last token of the final word, using `compoundValue` when set
    *   (fr 21 → Vingt Et Unième, 22 → Vingt-Deuxième).
+   * - `remainder-first`: from 100 up, the ordinal of the last two digits comes first and each larger
+   *   group follows as a definite cardinal after `ordinalGroupJoiner` (ar 121st الحادي والعشرون بعد
+   *   المائة, 2021st الحادي والعشرون بعد الألفين); a round number is its definite cardinal (ar الألفان).
    */
-  ordinalComposition?: 'last-component' | 'every-component' | 'last-token' | 'fused-prefix' | 'cardinal';
+  ordinalComposition?:
+    | 'last-component'
+    | 'every-component'
+    | 'last-token'
+    | 'fused-prefix'
+    | 'cardinal'
+    | 'remainder-first';
+  /**
+   * With `ordinalComposition: 'remainder-first'`: `word` precedes each larger group, `definitePrefix`
+   * is written onto the group's first word, and `afterForms` replaces that word after `word`
+   * (ar «بعد», «ال», dual oblique مائتان → مائتين: الأول بعد المائتين).
+   */
+  ordinalGroupJoiner?: { word: string; definitePrefix?: string; afterForms?: Record<string, string> };
   /**
    * Connector between a round large amount and the currency name
    * (es Un Millón De Euros, fr Un Million D'euros).

@@ -511,3 +511,34 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  // This script has no capital letters, so every casing leaves the output unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), '二十 一'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), '二十 一'],
+    ["casing 'title'", () => styled.convert(21.5, { currency: true, casing: 'title' }), '二十 一 元 五十 仙 整'],
+    ["casing 'lower'", () => styled.convert(21.5, { currency: true, casing: 'lower' }), '二十 一 元 五十 仙 整'],
+    ["casing 'upper'", () => styled.convert(21.5, { currency: true, casing: 'upper' }), '二十 一 元 五十 仙 整'],
+    ["casing 'natural'", () => styled.convert(21.5, { currency: true, casing: 'natural' }), '二十 一 元 五十 仙 整'],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      '二十 一 元 五十 仙 整',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), '第二十 一'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      '第二十 一',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), '一 點 二十 五'],
+    ["decimalStyle 'digit-by-digit'", () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }), '一 點 二 五'],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

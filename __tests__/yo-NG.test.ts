@@ -487,3 +487,53 @@ describe('Functional helpers (locale-level)', () => {
     expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Ogún Ọ̀kan'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Ogún Ọ̀kan'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'Ogún Ọ̀kan Naira Ati Àádọ́ta Kobo Nìkan',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'ogún ọ̀kan naira ati àádọ́ta kobo nìkan',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'OGÚN Ọ̀KAN NAIRA ATI ÀÁDỌ́TA KOBO NÌKAN',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'ogún ọ̀kan naira ati àádọ́ta kobo nìkan',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Ogún ọ̀kan naira ati àádọ́ta kobo nìkan',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Ogún Kìíní'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'ogún kìíní',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'Ọ̀kan Àmì Ogún Márùn-ún'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'Ọ̀kan Àmì Méjì Márùn-ún',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

@@ -264,3 +264,53 @@ describe('Test Locale functional exports', () => {
     expect(localeToCurrency(1)).toBe('Un Ariary');
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Vingt Et Un'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Vingt Et Un'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'Vingt Et Un Ariary Et Cinquante Iraimbilanja',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'vingt et un ariary et cinquante iraimbilanja',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'VINGT ET UN ARIARY ET CINQUANTE IRAIMBILANJA',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'vingt et un ariary et cinquante iraimbilanja',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Vingt et un ariary et cinquante iraimbilanja',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Vingt Et Unième'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'vingt et unième',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'Un Virgule Vingt-Cinq'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'Un Virgule Deux Cinq',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

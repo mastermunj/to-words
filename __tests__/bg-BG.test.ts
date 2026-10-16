@@ -551,3 +551,53 @@ describe('«и» before the last component (bg.wikipedia number articles)', () =
     expect(toWords.toOrdinal(input)).toBe(expected);
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Двадесет И Едно'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Двадесет И Едно'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'Двадесет И Едно Евро И Петдесет Евроцента Само',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'двадесет и едно евро и петдесет евроцента само',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'ДВАДЕСЕТ И ЕДНО ЕВРО И ПЕТДЕСЕТ ЕВРОЦЕНТА САМО',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'двадесет и едно евро и петдесет евроцента само',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Двадесет и едно евро и петдесет евроцента само',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Двадесет И Първи'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'двадесет и първи',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'Едно Цяло И Двадесет И Пет Стотни'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'Едно Цяло Две Пет',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

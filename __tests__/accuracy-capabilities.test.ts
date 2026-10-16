@@ -32,6 +32,10 @@ import PtBr from '../src/locales/pt-BR.js';
 import RuRu from '../src/locales/ru-RU.js';
 import SkSk from '../src/locales/sk-SK.js';
 import ZhCn from '../src/locales/zh-CN.js';
+import FaIr from '../src/locales/fa-IR.js';
+import ThTh from '../src/locales/th-TH.js';
+import TrTr from '../src/locales/tr-TR.js';
+import { NumberOutOfRangeError } from '../src/errors.js';
 import { PLURAL_RULE_NAMES, selectPluralCategory, type PluralRuleName } from '../src/plural-rules.js';
 import { ToWordsCore } from '../src/ToWordsCore.js';
 import type { LocaleConfig, LocaleInterface } from '../src/types.js';
@@ -208,8 +212,8 @@ describe('1c word joining and compounds', () => {
   test('a blank texts.and adds no word, with or without a separator override', () => {
     const plain = variant(ZhCn, () => ({}));
     const joined = variant(ZhCn, () => ({ wordJoining: { separator: '' } }));
-    expect(plain.convert('2.02', { currency: true, doNotAddOnly: true })).toBe('二 元 二 分');
-    expect(joined.convert('2.02', { currency: true, doNotAddOnly: true })).toBe('二元二分');
+    expect(plain.convert('2.02', { currency: true, doNotAddOnly: true })).toBe('二 元 零 二 分');
+    expect(joined.convert('2.02', { currency: true, doNotAddOnly: true })).toBe('二元零二分');
   });
 });
 
@@ -888,5 +892,123 @@ describe('multiplierPhrasesBeforeRemainder', () => {
       ),
     }));
     expect(phraseOnly.convert(2500)).toBe('രണ്ടായിരം അഞ്ഞൂറ്');
+  });
+});
+
+describe('output style: casing, hyphenate, digit-by-digit decimals', () => {
+  const en = new ToWordsCore().setLocale(EnUs, 'en-US');
+  const de = new ToWordsCore().setLocale(DeDe, 'de-DE');
+  const dollar = {
+    name: 'US-Dollar',
+    plural: 'US-Dollar',
+    symbol: '$',
+    fractionalUnit: { name: 'Cent', plural: 'Cent', symbol: '' },
+  };
+
+  test('every casing mode', () => {
+    expect(en.convert(21.5, { currency: true, casing: 'lower' })).toBe('twenty one dollars and fifty cents only');
+    expect(en.convert(21, { casing: 'upper' })).toBe('TWENTY ONE');
+    expect(en.convert(21, { casing: 'title' })).toBe('Twenty One');
+    expect(en.convert(21, { casing: 'natural' })).toBe('twenty one');
+    expect(en.convert(21, { casing: 'sentence', hyphenate: true })).toBe('Twenty-one');
+    expect(en.toOrdinal(99, { casing: 'lower', hyphenate: true })).toBe('ninety-ninth');
+  });
+
+  test('natural keeps the words the language capitalises, and a caller-supplied currency', () => {
+    expect(de.convert(2500000, { currency: true, casing: 'natural' })).toBe('zwei Millionen fünfhunderttausend Euro');
+    expect(de.convert(2500000, { currency: true, casing: 'lower' })).toBe('zwei millionen fünfhunderttausend euro');
+    expect(de.convert(1.45, { decimalStyle: 'fraction', casing: 'sentence' })).toBe(
+      'Eins und fünfundvierzig Hundertstel',
+    );
+    expect(de.toOrdinal(1000000, { casing: 'sentence' })).toBe('Millionste');
+    expect(de.convert(5, { currency: true, casing: 'natural', currencyOptions: dollar })).toBe('fünf US-Dollar');
+    expect(en.convert(5, { currency: true, casing: 'natural', currencyOptions: dollar })).toBe('five US-Dollar only');
+    expect(en.convert(5, { currency: true, casing: 'lower', currencyOptions: dollar })).toBe('five us-dollar only');
+  });
+
+  test("the locale's case rules apply, and scripts without capitals stay as they are", () => {
+    const tr = new ToWordsCore().setLocale(TrTr, 'tr-TR');
+    expect(tr.convert(2, { casing: 'upper' })).toBe('İKİ');
+    expect(tr.convert(2, { casing: 'lower' })).toBe('iki');
+    const ka = new ToWordsCore().setLocale(KaGe, 'ka-GE');
+    expect(ka.convert(21, { casing: 'sentence' })).toBe(ka.convert(21));
+    // A tag the runtime rejects falls back to the root case rules.
+    const custom = variant(EnUs, () => ({}));
+    expect(custom.convert(21, { casing: 'lower' })).toBe('twenty one');
+    expect(custom.convert(21, { casing: 'upper' })).toBe('TWENTY ONE');
+  });
+
+  test('converter defaults carry the style options', () => {
+    const lower = new ToWordsCore({ converterOptions: { casing: 'lower' } }).setLocale(EnUs, 'en-US');
+    expect(lower.convert(21)).toBe('twenty one');
+    expect(lower.convert(21, { hyphenate: true })).toBe('twenty-one');
+  });
+
+  test('hyphenate joins tens and units only where the locale sets compoundHyphen', () => {
+    expect(en.convert(121000, { hyphenate: true })).toBe('One Hundred Twenty-One Thousand');
+    expect(en.convert(120, { hyphenate: true })).toBe('One Hundred Twenty');
+    expect(de.convert(21, { hyphenate: true })).toBe(de.convert(21));
+    const cardinalOnly = variant(EnUs, () => ({ ordinalWordsMapping: undefined }));
+    expect(cardinalOnly.convert(21, { hyphenate: true })).toBe('Twenty-One');
+    // Without a locale identifier the converter's own locale code supplies the case rules.
+    expect(new ToWordsCore().setLocale(EnUs).convert(21, { casing: 'lower' })).toBe('twenty one');
+  });
+
+  test('digit-by-digit reads every decimal digit on its own', () => {
+    expect(en.convert(123.45, { decimalStyle: 'digit-by-digit' })).toBe('One Hundred Twenty Three Point Four Five');
+    expect(en.convert(123.45)).toBe('One Hundred Twenty Three Point Forty Five');
+    const fa = new ToWordsCore().setLocale(FaIr, 'fa-IR');
+    expect(fa.convert(1.25, { decimalStyle: 'digit-by-digit' })).not.toBe(fa.convert(1.25));
+  });
+});
+
+describe('onlyWhenWhole and largerUnit.zeroWord (th, zh)', () => {
+  test('the only-word closes whole amounts only', () => {
+    const th = new ToWordsCore().setLocale(ThTh, 'th-TH');
+    expect(th.convert(100, { currency: true })).toBe('หนึ่งร้อยบาทถ้วน');
+    expect(th.convert(100.25, { currency: true })).toBe('หนึ่งร้อยบาทยี่สิบห้าสตางค์');
+    const front = variant(EnUs, () => ({ onlyWhenWhole: true, onlyInFront: true }));
+    expect(front.convert(5, { currency: true })).toBe('Only Five Dollars');
+    expect(front.convert(5.5, { currency: true })).toBe('Five Dollars And Fifty Cents');
+  });
+
+  test('a skipped larger unit reads its zero word after a non-zero main amount', () => {
+    const zh = new ToWordsCore().setLocale(ZhCn, 'zh-CN');
+    expect(zh.convert(100.05, { currency: true })).toBe('一 百 元 零 五 分');
+    expect(zh.convert(0.05, { currency: true })).toBe('零 元 五 分');
+    expect(zh.convert(100.55, { currency: true })).toBe('一 百 元 五 角 五 分');
+    const noZero = variant(ZhCn, (config) => ({
+      currency: {
+        ...config.currency,
+        fractionalUnit: { ...config.currency.fractionalUnit, largerUnit: { name: '角', factor: 10 } },
+      },
+    }));
+    expect(noZero.convert(100.05, { currency: true })).toBe('一 百 元 五 分');
+  });
+});
+
+describe('remainder-first ordinals (ar)', () => {
+  const ar = new ToWordsCore().setLocale(ArSa, 'ar-SA');
+
+  test('beyond the verified ordinal range the caller opts into composition', () => {
+    expect(() => ar.toOrdinal(10000)).toThrow(NumberOutOfRangeError);
+    expect(ar.toOrdinal(1000000, { rangeMode: 'compose' })).toBe('المليون');
+  });
+
+  test('a remainder without an ordinal word falls back to its cardinal; the prefix is optional', () => {
+    const bare = variant(ArSa, (config) => ({
+      ordinalWordsMapping: config.ordinalWordsMapping!.filter((entry) => entry.number !== 23),
+      ordinalGroupJoiner: { word: 'بعد' },
+    }));
+    expect(bare.toOrdinal(123)).toBe('ثلاثة وعشرون بعد مائة');
+    expect(bare.toOrdinal(200)).toBe('مائتان');
+  });
+
+  test('the contract requires the joiner', () => {
+    const base = new ArSa().config;
+    expect(() =>
+      assertLocaleConfig({ ...base, ordinalGroupJoiner: undefined, ordinalComposition: 'remainder-first' }, 'custom'),
+    ).toThrow('ordinalGroupJoiner.word');
+    expect(() => assertLocaleConfig(base, 'custom')).not.toThrow();
   });
 });

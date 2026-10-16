@@ -575,3 +575,53 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
     expect(toWords.convert(0.05)).toBe('Zero Virgulă Zero Cinci');
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Douăzeci Și Unu'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Douăzeci Și Unu'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'Douăzeci Și Unu De Lei Și Cincizeci De Bani Exact',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'douăzeci și unu de lei și cincizeci de bani exact',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'DOUĂZECI ȘI UNU DE LEI ȘI CINCIZECI DE BANI EXACT',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'douăzeci și unu de lei și cincizeci de bani exact',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Douăzeci și unu de lei și cincizeci de bani exact',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Al Douăzeci Și Unulea'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'al douăzeci și unulea',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'Unu Virgulă Douăzeci Și Cinci'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'Unu Virgulă Doi Cinci',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

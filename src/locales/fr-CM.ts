@@ -28,6 +28,8 @@ export default class Locale implements LocaleInterface {
       only: '',
       point: 'Virgule',
     },
+    // casing natural/sentence keeps the acronym (francs CFA).
+    naturalCaseWords: ['CFA'],
     numberWordsMapping: [
       { number: 1000000000000000000000000000n, value: 'Quadrilliard' },
       { number: 1000000000000000000000000n, value: 'Quadrillion' },

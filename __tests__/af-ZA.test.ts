@@ -588,3 +588,53 @@ describe('Cited examples (sourced)', () => {
     expect(toWords.convert(2.5)).toBe('Twee Komma Vyf'); // elon.io twee komma vyf (2,5)
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Een-En-Twintig'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Een-En-Twintig'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'Een-En-Twintig Rand En Vyftig Sente',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'een-en-twintig rand en vyftig sente',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'EEN-EN-TWINTIG RAND EN VYFTIG SENTE',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'een-en-twintig rand en vyftig sente',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Een-en-twintig rand en vyftig sente',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Een-En-Twintigste'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'een-en-twintigste',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'Een Komma Vyf-En-Twintig'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'Een Komma Twee Vyf',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

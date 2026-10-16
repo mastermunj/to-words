@@ -35,6 +35,8 @@ export default class Locale implements LocaleInterface {
       ordinal: '9999999999999999999',
       currency: '9999999999999999999',
     },
+    // hyphenate: true joins compound tens and units (Twenty-One, Ninety-Ninth).
+    compoundHyphen: '-',
     numberWordsMapping: [
       { number: 10000000, value: 'Crore' },
       { number: 100000, value: 'Lakh' },

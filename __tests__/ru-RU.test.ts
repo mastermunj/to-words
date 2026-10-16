@@ -547,3 +547,53 @@ describe('Test currency with the gender option', () => {
     expect(toWords.convert(input, { currency: true, ...options })).toBe(expected);
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Двадцать Один'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Двадцать Один'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'Двадцать Один Рубль И Пятьдесят Копеек Только',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'двадцать один рубль и пятьдесят копеек только',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'ДВАДЦАТЬ ОДИН РУБЛЬ И ПЯТЬДЕСЯТ КОПЕЕК ТОЛЬКО',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'двадцать один рубль и пятьдесят копеек только',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Двадцать один рубль и пятьдесят копеек только',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Двадцать Первый'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'двадцать первый',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'Одна Целая Двадцать Пять Сотых'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'Один Целых Два Пять',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

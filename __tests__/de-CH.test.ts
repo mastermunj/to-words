@@ -648,3 +648,53 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
     expect(toWords.convert(0.05)).toBe('Null Komma Null Fünf');
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Einundzwanzig'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Einundzwanzig'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'Einundzwanzig Franken Und Fünfzig Rappen',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'einundzwanzig franken und fünfzig rappen',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'EINUNDZWANZIG FRANKEN UND FÜNFZIG RAPPEN',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'einundzwanzig Franken und fünfzig Rappen',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Einundzwanzig Franken und fünfzig Rappen',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Einundzwanzigste'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'einundzwanzigste',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'Eins Komma Fünfundzwanzig'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'Eins Komma Zwei Fünf',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

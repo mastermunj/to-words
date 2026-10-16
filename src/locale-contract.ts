@@ -366,11 +366,16 @@ function validateAccuracyOptions(config: LocaleConfig, name: string, issues: str
   }
   if (
     config.ordinalComposition !== undefined &&
-    !['last-component', 'every-component', 'last-token', 'fused-prefix', 'cardinal'].includes(config.ordinalComposition)
+    !['last-component', 'every-component', 'last-token', 'fused-prefix', 'cardinal', 'remainder-first'].includes(
+      config.ordinalComposition,
+    )
   ) {
     issues.push(
-      `${name}.ordinalComposition must be last-component, every-component, last-token, fused-prefix or cardinal`,
+      `${name}.ordinalComposition must be last-component, every-component, last-token, fused-prefix, cardinal or remainder-first`,
     );
+  }
+  if (config.ordinalComposition === 'remainder-first' && !config.ordinalGroupJoiner?.word) {
+    issues.push(`${name}.ordinalComposition remainder-first needs ordinalGroupJoiner.word`);
   }
   const connector = config.currencyScaleConnector;
   if (connector && (!connector.word || !isPositiveInteger(connector.minScale) || connector.elidedWord === '')) {

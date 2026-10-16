@@ -583,3 +583,53 @@ describe('Test sourced pl-PL forms', () => {
     expect(toWords.convert('1.01', { currency: true, gender: 'feminine' })).toBe('Jeden Złoty I Jeden Grosz Tylko');
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Dwadzieścia Jeden'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Dwadzieścia Jeden'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'Dwadzieścia Jeden Złotych I Pięćdziesiąt Groszy Tylko',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'dwadzieścia jeden złotych i pięćdziesiąt groszy tylko',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'DWADZIEŚCIA JEDEN ZŁOTYCH I PIĘĆDZIESIĄT GROSZY TYLKO',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'dwadzieścia jeden złotych i pięćdziesiąt groszy tylko',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Dwadzieścia jeden złotych i pięćdziesiąt groszy tylko',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Dwudziesty Pierwszy'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'dwudziesty pierwszy',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'Jeden Przecinek Dwadzieścia Pięć'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'Jeden Przecinek Dwa Pięć',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

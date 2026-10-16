@@ -334,3 +334,34 @@ describe('Test Locale Functional API', () => {
     expect(localeToCurrency(10)).toBe('တစ်ဆယ်ကျပ်');
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  // This script has no capital letters, so every casing leaves the output unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'နှစ်ဆယ့်တစ်'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'နှစ်ဆယ့်တစ်'],
+    ["casing 'title'", () => styled.convert(21.5, { currency: true, casing: 'title' }), 'နှစ်ဆယ့်တစ်ကျပ်ငါးဆယ်ပြား'],
+    ["casing 'lower'", () => styled.convert(21.5, { currency: true, casing: 'lower' }), 'နှစ်ဆယ့်တစ်ကျပ်ငါးဆယ်ပြား'],
+    ["casing 'upper'", () => styled.convert(21.5, { currency: true, casing: 'upper' }), 'နှစ်ဆယ့်တစ်ကျပ်ငါးဆယ်ပြား'],
+    ["casing 'natural'", () => styled.convert(21.5, { currency: true, casing: 'natural' }), 'နှစ်ဆယ့်တစ်ကျပ်ငါးဆယ်ပြား'],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'နှစ်ဆယ့်တစ်ကျပ်ငါးဆယ်ပြား',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'နှစ်ဆယ့်တစ်မြောက်'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'နှစ်ဆယ့်တစ်မြောက်',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'တစ်ဒသမနှစ်ဆယ့်ငါး'],
+    ["decimalStyle 'digit-by-digit'", () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }), 'တစ်ဒသမနှစ်ငါး'],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

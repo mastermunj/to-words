@@ -59,9 +59,11 @@ const SIZE_BUDGETS = Object.freeze({
   // 2 KiB gzip to every bundle, and the Slavic/Baltic adoption (fused ordinals,
   // multiplier words, plural data) about 0.5 KiB more. Accepted for now; reducing
   // it is tracked separately (e.g. loading a capability only where it is enabled).
-  fullGzipped: 90.5 * 1024,
-  averageLocaleGzipped: 9.25 * 1024,
-  largestLocaleGzipped: 10.5 * 1024,
+  // The output style options (casing, hyphenate) and remainder-first ordinals add about
+  // 0.45 KiB gzip to every locale bundle.
+  fullGzipped: 91.5 * 1024,
+  averageLocaleGzipped: 9.9 * 1024,
+  largestLocaleGzipped: 11.25 * 1024,
 });
 
 function assertSizeBudgets(

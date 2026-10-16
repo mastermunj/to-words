@@ -288,3 +288,53 @@ describe('Test Locale functional exports', () => {
     expect(localeToCurrency(1)).toBe('Un Sol');
   });
 });
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Veintiuno'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Veintiuno'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'Veintiún Soles Y Cincuenta Céntimos',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'veintiún soles y cincuenta céntimos',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'VEINTIÚN SOLES Y CINCUENTA CÉNTIMOS',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'veintiún soles y cincuenta céntimos',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Veintiún soles y cincuenta céntimos',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Vigésimo Primero'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'vigésimo primero',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'Uno Punto Veinticinco'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'Uno Punto Dos Cinco',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});
