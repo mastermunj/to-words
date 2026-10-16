@@ -2,6 +2,21 @@
 
 All notable changes to this project are documented here. Releases and this changelog are managed by [Release Please](https://github.com/googleapis/release-please).
 
+## [7.3.0](https://github.com/mastermunj/to-words/compare/v7.2.0...v7.3.0) (2026-10-16)
+
+
+### Features
+
+* add casing, hyphenate and digit-by-digit decimal options ([d54edc0](https://github.com/mastermunj/to-words/commit/d54edc0576a632a8bac1debe2dbe257e2727b6d0))
+* add casing, hyphenate and digit-by-digit decimal options ([c5a29a1](https://github.com/mastermunj/to-words/commit/c5a29a189509ceb6197f0b4d6dbd672aa61f8e77))
+
+
+### Bug Fixes
+
+* **ar:** ordinals from 100th up read the remainder first, then each larger group after بعد ([c5a29a1](https://github.com/mastermunj/to-words/commit/c5a29a189509ceb6197f0b4d6dbd672aa61f8e77))
+* **th:** ถ้วน closes whole-baht amounts only, as in Excel BAHTTEXT ([c5a29a1](https://github.com/mastermunj/to-words/commit/c5a29a189509ceb6197f0b4d6dbd672aa61f8e77))
+* **zh:** read tenths of a yuan as 角, a skipped 角 as 零, and 整 only without a fraction ([c5a29a1](https://github.com/mastermunj/to-words/commit/c5a29a189509ceb6197f0b4d6dbd672aa61f8e77))
+
 ## [7.2.0](https://github.com/mastermunj/to-words/compare/v7.1.0...v7.2.0) (2026-10-15)
 
 
