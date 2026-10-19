@@ -57,6 +57,7 @@ import enZw from './en-ZW.js';
 import esAr from './es-AR.js';
 import esCl from './es-CL.js';
 import esCo from './es-CO.js';
+import esDo from './es-DO.js';
 import esEs from './es-ES.js';
 import esMx from './es-MX.js';
 import esPe from './es-PE.js';
@@ -196,6 +197,7 @@ const LOCALES: Readonly<Record<string, ConstructorOf<LocaleInterface>>> = Object
   'es-AR': esAr,
   'es-CL': esCl,
   'es-CO': esCo,
+  'es-DO': esDo,
   'es-ES': esEs,
   'es-MX': esMx,
   'es-PE': esPe,

@@ -1,17 +1,17 @@
 ---
-title: All 136 Locales — Number to Words | to-words
-description: Complete list of all 136 language and regional locales supported by to-words. Arabic, Chinese, Devanagari, Latin, CJK, Cyrillic scripts and more.
+title: All 137 Locales — Number to Words | to-words
+description: Complete list of all 137 language and regional locales supported by to-words. Arabic, Chinese, Devanagari, Latin, CJK, Cyrillic scripts and more.
 head:
   - - meta
     - name: keywords
-      content: number to words supported locales, number to words 136 languages, to-words all locales list
+      content: number to words supported locales, number to words 137 languages, to-words all locales list
 ---
 
 <script setup>
 import LocaleDirectory from '../.vitepress/components/LocaleDirectory.vue'
 </script>
 
-# All 136 Supported Locales
+# All 137 Supported Locales
 
 Use this directory when you need the exact locale code, currency setup, or feature coverage before wiring `to-words` into a real product. The table below is generated from the library's source locale registry, so it stays aligned with the package rather than drifting from it.
 
@@ -84,7 +84,7 @@ These are dedicated language guides covering every supported language. Each guid
 | Sinhala               | [sinhala](/locales/sinhala)         | si-LK                                                                                                                                                                                                                   |
 | Slovak                | [slovak](/locales/slovak)           | sk-SK                                                                                                                                                                                                                   |
 | Slovenian             | [slovenian](/locales/slovenian)     | sl-SI                                                                                                                                                                                                                   |
-| Spanish               | [spanish](/locales/spanish)         | es-AR, es-CL, es-CO, es-ES, es-MX, es-PE, es-US, es-VE                                                                                                                                                                  |
+| Spanish               | [spanish](/locales/spanish)         | es-AR, es-CL, es-CO, es-DO, es-ES, es-MX, es-PE, es-US, es-VE                                                                                                                                                           |
 | Swahili               | [swahili](/locales/swahili)         | sw-KE, sw-TZ                                                                                                                                                                                                            |
 | Swedish               | [swedish](/locales/swedish)         | sv-SE                                                                                                                                                                                                                   |
 | Tamil                 | [tamil](/locales/tamil)             | ta-IN                                                                                                                                                                                                                   |

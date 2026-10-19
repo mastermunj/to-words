@@ -7,7 +7,7 @@
 [![license](https://img.shields.io/npm/l/to-words)](https://github.com/mastermunj/to-words/blob/main/LICENSE)
 [![node](https://img.shields.io/node/v/to-words)](https://www.npmjs.com/package/to-words)
 
-Convert numbers and currency amounts into words across 136 locales — production-ready BigInt, ordinal, and TypeScript support.
+Convert numbers and currency amounts into words across 137 locales — production-ready BigInt, ordinal, and TypeScript support.
 
 ```js
 import { toWords } from 'to-words';
@@ -42,14 +42,14 @@ toWords(452.36, { localeCode: 'en-IN', currency: true });
 
 ## ✨ Features
 
-- **136 Locales** — 72 languages with their regional currencies, from English, Hindi and Arabic to Georgian, Yoruba and Khmer
+- **137 Locales** — 72 languages with their regional currencies, from English, Hindi and Arabic to Georgian, Yoruba and Khmer
 - **Verified Output** — Every locale's cardinals, ordinals, currency and decimals are checked against independent references: CLDR number rules, dictionaries, language-authority guidance and real-world usage
 - **Currency** — Locale-specific currency and fractional units, custom currencies, and 3-decimal currencies (KWD, OMR, BHD)
 - **Ordinals** — First, Second, Third, and their equivalents in every locale
 - **Grammar-Aware** — Grammatical gender, plural forms of scale and currency words, and language-specific connectors
 - **Numbering Systems** — Short scale, long scale, Indian (lakh, crore) and East Asian (万, 億)
 - **Large Numbers** — Exact BigInt and string input beyond `Number.MAX_SAFE_INTEGER`, with a verified range per locale
-- **Legal Decimals** — "Forty Five Hundredths" style via `decimalStyle: 'fraction'` in 100 locales
+- **Legal Decimals** — "Forty Five Hundredths" style via `decimalStyle: 'fraction'` in 101 locales
 - **Formal Chinese Numerals** — Financial characters (大写/大寫) via `formal: true`
 - **Small Per-Locale Bundles** — Import only the locale you need; ESM, CommonJS and UMD builds, TypeScript types, zero dependencies
 - **Locale Detection** — `detectLocale()` and `resolveLocale()` map browser, runtime or request locales to a supported locale
@@ -230,7 +230,7 @@ tw.toOrdinal(21); // "Twenty First"
 tw.toOrdinal(100); // "One Hundredth"
 ```
 
-Ordinals are available in all 136 locales. They accept non-negative integers, plus the `gender` and `formal` options where the locale supports them.
+Ordinals are available in all 137 locales. They accept non-negative integers, plus the `gender` and `formal` options where the locale supports them.
 
 ### Gender
 
@@ -250,7 +250,7 @@ const fem = new ToWords({ localeCode: 'pt-BR', converterOptions: { gender: 'femi
 fem.convert(2); // "Duas"
 ```
 
-Supported in 40 locales: Spanish (8), Arabic (9), Portuguese (4), Hebrew (2), Russian, Ukrainian, Belarusian, Polish, Czech, Slovak, Slovenian, Croatian, Serbian, Bulgarian, Greek, Catalan, Romanian, Latvian, Lithuanian, Icelandic, and Swedish. Currency amounts agree with the currency's own gender automatically (ru "Один Рубль", uk "Одна Гривня"). The [capability matrix](https://mastermunj.github.io/to-words/guide/locale-capabilities) lists support per locale.
+Supported in 41 locales: Spanish (9), Arabic (9), Portuguese (4), Hebrew (2), Russian, Ukrainian, Belarusian, Polish, Czech, Slovak, Slovenian, Croatian, Serbian, Bulgarian, Greek, Catalan, Romanian, Latvian, Lithuanian, Icelandic, and Swedish. Currency amounts agree with the currency's own gender automatically (ru "Один Рубль", uk "Одна Гривня"). The [capability matrix](https://mastermunj.github.io/to-words/guide/locale-capabilities) lists support per locale.
 
 ### The "And" Connector
 
@@ -284,7 +284,7 @@ const ru = new ToWords({ localeCode: 'ru-RU' });
 ru.convert(1.21, { decimalStyle: 'fraction' }); // "Одна Целая Двадцать Одна Сотая"
 ```
 
-- Fraction style covers 1 to 6 decimal places (tenths to millionths) in 100 locales, and up to 15 in Russian, Ukrainian, Belarusian, Polish, Czech and Slovak, each with its own grammar: Russian, for example, uses the singular denominator after 21, 31 and so on.
+- Fraction style covers 1 to 6 decimal places (tenths to millionths) in 101 locales, and up to 15 in Russian, Ukrainian, Belarusian, Polish, Czech and Slovak, each with its own grammar: Russian, for example, uses the singular denominator after 21, 31 and so on.
 - For more decimal places, or a locale without fraction words (Arabic, East Asian and Turkic locales, among others), it falls back to the default style without an error. The [fraction-style guide](https://mastermunj.github.io/to-words/guide/fraction-style) lists the locales.
 - Currency amounts always use the currency's fractional unit ("Fifty Six Cents"), whichever style is set.
 
@@ -368,7 +368,7 @@ isSupportedLocale('en-US'); // true
 getLocaleCapabilities('zh-CN')?.formal; // true
 getLocaleMetadata('hi-IN')?.numbering.grouping; // [3, 2]
 getLocaleMetadata('en-US')?.range.maximumSupported.cardinal; // exact inclusive ceiling
-SUPPORTED_LOCALES.length; // 136
+SUPPORTED_LOCALES.length; // 137
 ```
 
 The same data is published as the [capability matrix](https://mastermunj.github.io/to-words/guide/locale-capabilities).
@@ -550,7 +550,7 @@ try {
 | **English** (31)                   | en-AE, en-AU, en-BD, en-CA, en-GB, en-GH, en-HK, en-IE, en-IN, en-IQ, en-JM, en-KE, en-LK, en-MA, en-MM, en-MU, en-MY, en-NG, en-NP, en-NZ, en-OM, en-PH, en-PK, en-SA, en-SG, en-TT, en-TZ, en-UG, en-US, en-ZA, en-ZW                                                                                                                                                                                                                  |
 | **French** (10)                    | fr-BE, fr-CA, fr-CH, fr-CI, fr-CM, fr-DZ, fr-FR, fr-MA, fr-MG, fr-SA                                                                                                                                                                                                                                                                                                                                                                     |
 | **Arabic** (9)                     | ar-AE, ar-DZ, ar-EG, ar-IQ, ar-LB, ar-MA, ar-SA, ar-SD, ar-YE                                                                                                                                                                                                                                                                                                                                                                            |
-| **Spanish** (8)                    | es-AR, es-CL, es-CO, es-ES, es-MX, es-PE, es-US, es-VE                                                                                                                                                                                                                                                                                                                                                                                   |
+| **Spanish** (9)                    | es-AR, es-CL, es-CO, es-DO, es-ES, es-MX, es-PE, es-US, es-VE                                                                                                                                                                                                                                                                                                                                                                            |
 | **Portuguese** (4)                 | pt-AO, pt-BR, pt-MZ, pt-PT                                                                                                                                                                                                                                                                                                                                                                                                               |
 | **Other European** (29)            | Albanian sq-AL, Belarusian be-BY, Bulgarian bg-BG, Catalan ca-ES, Croatian hr-HR, Czech cs-CZ, Danish da-DK, Dutch nl-NL / nl-SR, Estonian et-EE, Finnish fi-FI, German de-AT / de-CH / de-DE, Greek el-GR, Hungarian hu-HU, Icelandic is-IS, Italian it-IT, Latvian lv-LV, Lithuanian lt-LT, Norwegian nb-NO, Polish pl-PL, Romanian ro-RO, Russian ru-RU, Serbian sr-RS, Slovak sk-SK, Slovenian sl-SI, Swedish sv-SE, Ukrainian uk-UA |
 | **South Asian** (15)               | Assamese as-IN, Bengali bn-BD / bn-IN, Gujarati gu-IN, Hindi hi-IN, Kannada kn-IN, Malayalam ml-IN, Marathi mr-IN, Nepali ne-NP, Odia or-IN, Punjabi pa-IN, Sinhala si-LK, Tamil ta-IN, Telugu te-IN, Urdu ur-PK                                                                                                                                                                                                                         |
@@ -623,6 +623,7 @@ Every locale supports cardinals, ordinals and currency. Each language has a [doc
 | es-AR  | Spanish         | Argentina           | Peso          |
 | es-CL  | Spanish         | Chile               | Peso          |
 | es-CO  | Spanish         | Colombia            | Peso          |
+| es-DO  | Spanish         | Dominican Republic  | Peso          |
 | es-ES  | Spanish         | Spain               | Euro          |
 | es-MX  | Spanish         | Mexico              | Peso          |
 | es-PE  | Spanish         | Peru                | Sol           |
@@ -726,7 +727,7 @@ Run `npm run bench` to measure locally. Creating an instance costs far more than
 
 | Capability                 | **to-words**    | number-to-words | written-number | num-words      | n2words       |
 | -------------------------- | --------------- | --------------- | -------------- | -------------- | ------------- |
-| Locale / language coverage | **136 locales** | English-focused | Multi-language | Indian English | 70+ languages |
+| Locale / language coverage | **137 locales** | English-focused | Multi-language | Indian English | 70+ languages |
 | TypeScript declarations    | ✅              | ❌              | ❌             | ✅             | ✅            |
 | ESM-ready package          | ✅              | ❌              | ❌             | ❌             | ✅            |
 | Package `exports` map      | ✅              | ❌              | ❌             | ❌             | ✅            |

@@ -58,6 +58,7 @@ export type GeneratedLocaleCode =
   | 'es-AR'
   | 'es-CL'
   | 'es-CO'
+  | 'es-DO'
   | 'es-ES'
   | 'es-MX'
   | 'es-PE'
@@ -865,6 +866,20 @@ export const LOCALE_CAPABILITY_DATA: Readonly<Record<GeneratedLocaleCode, Locale
     21,
   ],
   'es-CO': [
+    true,
+    false,
+    true,
+    true,
+    [1, 2, 3, 4, 5, 6],
+    2,
+    'base-thousand',
+    [3],
+    [3, 6, 12, 18],
+    '1000000000000000000',
+    18,
+    21,
+  ],
+  'es-DO': [
     true,
     false,
     true,

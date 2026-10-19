@@ -58,7 +58,7 @@ function getFaqHead(pageFaq: unknown) {
 export default defineConfig({
   title: 'to-words',
   description:
-    'Convert numbers to words in 136 locales — JavaScript, TypeScript, ESM/CJS/UMD, BigInt, currency, ordinal.',
+    'Convert numbers to words in 137 locales — JavaScript, TypeScript, ESM/CJS/UMD, BigInt, currency, ordinal.',
   base: '/to-words/',
   lang: 'en-US',
   cleanUrls: true,
@@ -86,7 +86,7 @@ export default defineConfig({
       {
         property: 'og:description',
         content:
-          'Convert numbers to words in 136 locales — JavaScript, TypeScript, ESM/CJS/UMD, BigInt, currency, ordinal.',
+          'Convert numbers to words in 137 locales — JavaScript, TypeScript, ESM/CJS/UMD, BigInt, currency, ordinal.',
       },
     ],
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
@@ -112,7 +112,7 @@ export default defineConfig({
       {
         text: 'Locales',
         items: [
-          { text: 'Browse All 136 Locales', link: '/locales/' },
+          { text: 'Browse All 137 Locales', link: '/locales/' },
           { text: 'Afrikaans', link: '/locales/afrikaans' },
           { text: 'Albanian', link: '/locales/albanian' },
           { text: 'Amharic', link: '/locales/amharic' },
@@ -169,7 +169,7 @@ export default defineConfig({
           { text: 'Sinhala', link: '/locales/sinhala' },
           { text: 'Slovak', link: '/locales/slovak' },
           { text: 'Slovenian', link: '/locales/slovenian' },
-          { text: 'Spanish (8 locales)', link: '/locales/spanish' },
+          { text: 'Spanish (9 locales)', link: '/locales/spanish' },
           { text: 'Swahili (2 locales)', link: '/locales/swahili' },
           { text: 'Swedish', link: '/locales/swedish' },
           { text: 'Tamil', link: '/locales/tamil' },
@@ -225,7 +225,7 @@ export default defineConfig({
       '/locales/': [
         {
           text: 'Locale Directory',
-          items: [{ text: 'Browse All 136 Locales', link: '/locales/' }],
+          items: [{ text: 'Browse All 137 Locales', link: '/locales/' }],
         },
         {
           text: 'Language Guides',

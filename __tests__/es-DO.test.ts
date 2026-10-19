@@ -1,0 +1,635 @@
+import { describe, expect, test } from 'vitest';
+import { cloneDeep } from 'lodash';
+import { ToWords } from '../src/ToWords';
+import esDO from '../src/locales/es-DO.js';
+import {
+  ToWords as LocaleToWords,
+  toWords as localeToWords,
+  toOrdinal as localeToOrdinal,
+  toCurrency as localeToCurrency,
+} from '../src/locales/es-DO.js';
+
+const localeCode = 'es-DO';
+const toWords = new ToWords({
+  localeCode,
+});
+
+describe('Test Locale', () => {
+  test(`Locale Class: ${localeCode}`, () => {
+    expect(toWords.getLocaleClass()).toBe(esDO);
+  });
+
+  describe('Test Locale ToWords', () => {
+    test('ToWords from locale file works correctly', () => {
+      const tw = new LocaleToWords();
+      expect(tw.convert(1)).toBeDefined();
+      expect(typeof tw.convert(123)).toBe('string');
+    });
+  });
+
+  const wrongLocaleCode = localeCode + '-wrong';
+  test(`Wrong Locale: ${wrongLocaleCode}`, () => {
+    expect(() => new ToWords({ localeCode: wrongLocaleCode as never }).convert(1)).toThrow(/Unknown Locale/);
+  });
+});
+
+const testIntegers: [number, string][] = [
+  [0, 'Cero'],
+  [137, 'Ciento Treinta Y Siete'],
+  [700, 'Setecientos'],
+  [1100, 'Mil Cien'],
+  [4680, 'Cuatro Mil Seiscientos Ochenta'],
+  [63892, 'Sesenta Y Tres Mil Ochocientos Noventa Y Dos'],
+  [86100, 'Ochenta Y Seis Mil Cien'],
+  [792581, 'Setecientos Noventa Y Dos Mil Quinientos Ochenta Y Uno'],
+  [2741034, 'Dos Millones Setecientos Cuarenta Y Un Mil Treinta Y Cuatro'],
+  [86429753, 'Ochenta Y Seis Millones Cuatrocientos Veintinueve Mil Setecientos Cincuenta Y Tres'],
+  [975310864, 'Novecientos Setenta Y Cinco Millones Trescientos Diez Mil Ochocientos Sesenta Y Cuatro'],
+  [9876543210, 'Nueve Mil Ochocientos Setenta Y Seis Millones Quinientos Cuarenta Y Tres Mil Doscientos Diez'],
+  [98765432101, 'Noventa Y Ocho Mil Setecientos Sesenta Y Cinco Millones Cuatrocientos Treinta Y Dos Mil Ciento Uno'],
+  [
+    987654321012,
+    'Novecientos Ochenta Y Siete Mil Seiscientos Cincuenta Y Cuatro Millones Trescientos Veintiún Mil Doce',
+  ],
+  [
+    9876543210123,
+    'Nueve Billones Ochocientos Setenta Y Seis Mil Quinientos Cuarenta Y Tres Millones Doscientos Diez Mil Ciento Veintitrés',
+  ],
+  [
+    98765432101234,
+    'Noventa Y Ocho Billones Setecientos Sesenta Y Cinco Mil Cuatrocientos Treinta Y Dos Millones Ciento Un Mil Doscientos Treinta Y Cuatro',
+  ],
+];
+
+describe('Test Integers with options = {}', () => {
+  test.concurrent.each(testIntegers)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number)).toBe(expected);
+  });
+});
+
+describe('Test Negative Integers with options = {}', () => {
+  const testNegativeIntegers = cloneDeep(testIntegers);
+  testNegativeIntegers.map((row, i) => {
+    if (i === 0) {
+      return;
+    }
+    row[0] = -row[0];
+    row[1] = `Menos ${row[1]}`;
+  });
+
+  test.concurrent.each(testNegativeIntegers)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number)).toBe(expected);
+  });
+});
+
+const testIntegersCurrency: [number, string][] = [
+  [0, 'Cero'],
+  // [1, 'Un Peso Dominicano'],
+  [137, 'Ciento Treinta Y Siete'],
+  [700, 'Setecientos'],
+  [1100, 'Mil Cien'],
+  [4680, 'Cuatro Mil Seiscientos Ochenta'],
+  [63892, 'Sesenta Y Tres Mil Ochocientos Noventa Y Dos'],
+  [86100, 'Ochenta Y Seis Mil Cien'],
+  [792581, 'Setecientos Noventa Y Dos Mil Quinientos Ochenta Y Un'],
+  [2741034, 'Dos Millones Setecientos Cuarenta Y Un Mil Treinta Y Cuatro'],
+  [86429753, 'Ochenta Y Seis Millones Cuatrocientos Veintinueve Mil Setecientos Cincuenta Y Tres'],
+  [975310864, 'Novecientos Setenta Y Cinco Millones Trescientos Diez Mil Ochocientos Sesenta Y Cuatro'],
+  [9876543210, 'Nueve Mil Ochocientos Setenta Y Seis Millones Quinientos Cuarenta Y Tres Mil Doscientos Diez'],
+  [98765432101, 'Noventa Y Ocho Mil Setecientos Sesenta Y Cinco Millones Cuatrocientos Treinta Y Dos Mil Ciento Un'],
+  [
+    987654321012,
+    'Novecientos Ochenta Y Siete Mil Seiscientos Cincuenta Y Cuatro Millones Trescientos Veintiún Mil Doce',
+  ],
+  [
+    9876543210123,
+    'Nueve Billones Ochocientos Setenta Y Seis Mil Quinientos Cuarenta Y Tres Millones Doscientos Diez Mil Ciento Veintitrés',
+  ],
+  [
+    98765432101234,
+    'Noventa Y Ocho Billones Setecientos Sesenta Y Cinco Mil Cuatrocientos Treinta Y Dos Millones Ciento Un Mil Doscientos Treinta Y Cuatro',
+  ],
+];
+
+describe('Test Integers with options = { currency: true }', () => {
+  const testIntegersWithCurrency = cloneDeep(testIntegersCurrency);
+  testIntegersWithCurrency.map((row) => {
+    row[1] = `${row[1]} Pesos Dominicanos`;
+  });
+
+  test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { currency: true })).toBe(expected);
+  });
+});
+
+describe('Test Integers with options = { currency: true, doNotAddOnly: true }', () => {
+  const testIntegersWithCurrency = cloneDeep(testIntegersCurrency);
+  testIntegersWithCurrency.map((row) => {
+    row[1] = `${row[1]} Pesos Dominicanos`;
+  });
+
+  test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { currency: true, doNotAddOnly: true })).toBe(expected);
+  });
+});
+
+describe('Test Negative Integers with options = { currency: true }', () => {
+  const testNegativeIntegersWithCurrency = cloneDeep(testIntegersCurrency);
+  testNegativeIntegersWithCurrency.map((row, i) => {
+    if (i === 0) {
+      row[1] = `${row[1]} Pesos Dominicanos`;
+      return;
+    }
+    row[0] = -row[0];
+    row[1] = `Menos ${row[1]} Pesos Dominicanos`;
+  });
+
+  test.concurrent.each(testNegativeIntegersWithCurrency)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { currency: true })).toBe(expected);
+  });
+});
+
+describe('Test Integers with options = { currency: true, ignoreZeroCurrency: true }', () => {
+  const testIntegersWithCurrencyAndIgnoreZeroCurrency = cloneDeep(testIntegersCurrency);
+  testIntegersWithCurrencyAndIgnoreZeroCurrency.map((row, i) => {
+    row[1] = i === 0 ? '' : `${row[1]} Pesos Dominicanos`;
+  });
+
+  test.concurrent.each(testIntegersWithCurrencyAndIgnoreZeroCurrency)('convert %d => %s', (input, expected) => {
+    expect(
+      toWords.convert(input as number, {
+        currency: true,
+        ignoreZeroCurrency: true,
+      }),
+    ).toBe(expected);
+  });
+});
+
+const testFloats: [number, string][] = [
+  [0.0, 'Cero'],
+  [0.04, 'Cero Punto Cero Cuatro'],
+  [0.0468, 'Cero Punto Cero Cuatro Seis Ocho'],
+  [0.4, 'Cero Punto Cuatro'],
+  [0.63, 'Cero Punto Sesenta Y Tres'],
+  [0.973, 'Cero Punto Novecientos Setenta Y Tres'],
+  [0.999, 'Cero Punto Novecientos Noventa Y Nueve'],
+  [37.06, 'Treinta Y Siete Punto Cero Seis'],
+  [37.068, 'Treinta Y Siete Punto Cero Seis Ocho'],
+  [37.68, 'Treinta Y Siete Punto Sesenta Y Ocho'],
+  [37.683, 'Treinta Y Siete Punto Seiscientos Ochenta Y Tres'],
+];
+
+describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
+  const testIncludeZeroFractional: [number | string, string][] = [
+    [123, `Ciento Veintitrés Pesos Dominicanos`],
+    ['123', `Ciento Veintitrés Pesos Dominicanos`],
+    ['123.0', `Ciento Veintitrés Pesos Dominicanos Con Cero Centavos`],
+    ['123.00', `Ciento Veintitrés Pesos Dominicanos Con Cero Centavos`],
+    ['0.00', `Cero Pesos Dominicanos Con Cero Centavos`],
+    ['-123.00', `Menos Ciento Veintitrés Pesos Dominicanos Con Cero Centavos`],
+    ['37.68', `Treinta Y Siete Pesos Dominicanos Con Sesenta Y Ocho Centavos`],
+  ];
+
+  test.concurrent.each(testIncludeZeroFractional)('convert %s => %s', (input, expected) => {
+    expect(
+      toWords.convert(input, {
+        currency: true,
+        includeZeroFractional: true,
+      }),
+    ).toBe(expected);
+  });
+});
+
+describe('Test Floats with options = {}', () => {
+  test.concurrent.each(testFloats)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number)).toBe(expected);
+  });
+});
+
+const testFloatsWithCurrency: [number, string][] = [
+  [0.0, `Cero Pesos Dominicanos`],
+  [0.04, `Cero Pesos Dominicanos Con Cuatro Centavos`],
+  [0.0468, `Cero Pesos Dominicanos Con Cinco Centavos`],
+  [0.4, `Cero Pesos Dominicanos Con Cuarenta Centavos`],
+  [0.63, `Cero Pesos Dominicanos Con Sesenta Y Tres Centavos`],
+  [0.973, `Cero Pesos Dominicanos Con Noventa Y Siete Centavos`],
+  [0.999, `Un Peso Dominicano`],
+  [37.06, `Treinta Y Siete Pesos Dominicanos Con Seis Centavos`],
+  [37.068, `Treinta Y Siete Pesos Dominicanos Con Siete Centavos`],
+  [37.68, `Treinta Y Siete Pesos Dominicanos Con Sesenta Y Ocho Centavos`],
+  [37.683, `Treinta Y Siete Pesos Dominicanos Con Sesenta Y Ocho Centavos`],
+];
+
+describe('Test Floats with options = { currency: true }', () => {
+  test.concurrent.each(testFloatsWithCurrency)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { currency: true })).toBe(expected);
+  });
+});
+
+describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true }', () => {
+  const testFloatsWithCurrencyAndIgnoreZeroCurrency = cloneDeep(testFloatsWithCurrency);
+  testFloatsWithCurrencyAndIgnoreZeroCurrency[0][1] = '';
+  testFloatsWithCurrencyAndIgnoreZeroCurrency.map((row, i) => {
+    if (i === 0) {
+      row[1] = '';
+      return;
+    }
+    if (row[0] > 0 && row[0] < 1) {
+      row[1] = (row[1] as string).replace(`Cero Pesos Dominicanos Con `, '');
+    }
+  });
+
+  test.concurrent.each(testFloatsWithCurrencyAndIgnoreZeroCurrency)('convert %d => %s', (input, expected) => {
+    expect(
+      toWords.convert(input as number, {
+        currency: true,
+        ignoreZeroCurrency: true,
+      }),
+    ).toBe(expected);
+  });
+});
+
+describe('Test Floats with options = { currency: true, ignoreDecimal: true }', () => {
+  const testFloatsWithCurrencyAndIgnoreDecimal = cloneDeep(testFloatsWithCurrency);
+  testFloatsWithCurrencyAndIgnoreDecimal.map((row) => {
+    if (row[0] === 0.999) {
+      row[1] = `Cero Pesos Dominicanos`;
+    } else {
+      row[1] = (row[1] as string).replace(new RegExp(` Pesos Dominicanos Con [\\w ]+ Centavos`), ' Pesos Dominicanos');
+    }
+  });
+
+  test.concurrent.each(testFloatsWithCurrencyAndIgnoreDecimal)('convert %d => %s', (input, expected) => {
+    expect(
+      toWords.convert(input as number, {
+        currency: true,
+        ignoreDecimal: true,
+      }),
+    ).toBe(expected);
+  });
+});
+
+describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true, ignoreDecimal: true }', () => {
+  const testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals = cloneDeep(testFloatsWithCurrency);
+  testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals[0][1] = '';
+  testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals.map((row) => {
+    if (row[0] > 0 && row[0] < 1) {
+      row[1] = '';
+    }
+    row[1] = (row[1] as string).replace(new RegExp(` Pesos Dominicanos Con [\\w ]+ Centavos`), ' Pesos Dominicanos');
+  });
+
+  test.concurrent.each(testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals)(
+    'convert %d => %s',
+    (input, expected) => {
+      expect(
+        toWords.convert(input as number, {
+          currency: true,
+          ignoreZeroCurrency: true,
+          ignoreDecimal: true,
+        }),
+      ).toBe(expected);
+    },
+  );
+});
+
+const testFloatsWithDollarCurrency = [
+  [0.0, `Cero Dolares`],
+  [0.04, `Cero Dolares Con Cuatro Centavos`],
+  [0.0468, `Cero Dolares Con Cinco Centavos`],
+  [0.4, `Cero Dolares Con Cuarenta Centavos`],
+  [0.63, `Cero Dolares Con Sesenta Y Tres Centavos`],
+  [0.973, `Cero Dolares Con Noventa Y Siete Centavos`],
+  [0.999, `Un Dolar`],
+  [37.06, `Treinta Y Siete Dolares Con Seis Centavos`],
+  [37.068, `Treinta Y Siete Dolares Con Siete Centavos`],
+  [37.68, `Treinta Y Siete Dolares Con Sesenta Y Ocho Centavos`],
+  [37.683, `Treinta Y Siete Dolares Con Sesenta Y Ocho Centavos`],
+];
+
+const dollarCurrencyOptions = {
+  name: 'Dolar',
+  plural: 'Dolares',
+  singular: 'Dolar',
+  symbol: '$',
+  fractionalUnit: {
+    name: 'Centavo',
+    plural: 'Centavos',
+    singular: 'Centavo',
+    symbol: '¢',
+  },
+};
+
+describe('Test Floats with options = { currency: true, currencyOptions }', () => {
+  test.concurrent.each(testFloatsWithDollarCurrency)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { currency: true, currencyOptions: dollarCurrencyOptions })).toBe(expected);
+  });
+});
+
+// Ordinal Tests
+const testOrdinals: [number, string][] = [
+  // Numbers 1-20
+  [1, 'Primero'],
+  [2, 'Segundo'],
+  [3, 'Tercero'],
+  [4, 'Cuarto'],
+  [5, 'Quinto'],
+  [6, 'Sexto'],
+  [7, 'Séptimo'],
+  [8, 'Octavo'],
+  [9, 'Noveno'],
+  [10, 'Décimo'],
+  [11, 'Decimoprimero'],
+  [12, 'Decimosegundo'],
+  [13, 'Decimotercero'],
+  [14, 'Decimocuarto'],
+  [15, 'Decimoquinto'],
+  [16, 'Decimosexto'],
+  [17, 'Decimoséptimo'],
+  [18, 'Decimoctavo'],
+  [19, 'Decimonoveno'],
+  [20, 'Vigésimo'],
+  // Composite numbers (21-29)
+  [21, 'Vigésimo Primero'],
+  [22, 'Vigésimo Segundo'],
+  [23, 'Vigésimo Tercero'],
+  [24, 'Vigésimo Cuarto'],
+  [25, 'Vigésimo Quinto'],
+  // Tens
+  [30, 'Trigésimo'],
+  [40, 'Cuadragésimo'],
+  [50, 'Quincuagésimo'],
+  [60, 'Sexagésimo'],
+  [70, 'Septuagésimo'],
+  [80, 'Octogésimo'],
+  [90, 'Nonagésimo'],
+  // Round numbers
+  [100, 'Centésimo'],
+  [200, 'Ducentésimo'],
+  [300, 'Tricentésimo'],
+  [400, 'Cuadringentésimo'],
+  [500, 'Quingentésimo'],
+  [600, 'Sexcentésimo'],
+  [700, 'Septingentésimo'],
+  [800, 'Octingentésimo'],
+  [900, 'Noningentésimo'],
+  [1000, 'Milésimo'],
+  [1000000, 'Millonésimo'],
+  // Complex numbers
+  [101, 'Centésimo Primero'],
+  [110, 'Centésimo Décimo'],
+  [111, 'Centésimo Decimoprimero'],
+  [123, 'Centésimo Vigésimo Tercero'],
+  [150, 'Centésimo Quincuagésimo'],
+  [199, 'Centésimo Nonagésimo Noveno'],
+  [256, 'Ducentésimo Quincuagésimo Sexto'],
+  [1001, 'Milésimo Primero'],
+  [1010, 'Milésimo Décimo'],
+  [1100, 'Milésimo Centésimo'],
+  [1234, 'Milésimo Ducentésimo Trigésimo Cuarto'],
+  [2000, 'Dos Milésimo'],
+  [10000, 'Diez Milésimo'],
+  [100000, 'Cien Milésimo'],
+  [1000001, 'Millonésimo Primero'],
+];
+
+describe('Test Ordinals', () => {
+  test.concurrent.each(testOrdinals)('toOrdinal %d => %s', (input, expected) => {
+    expect(toWords.toOrdinal(input as number)).toBe(expected);
+  });
+});
+
+describe('Test Ordinal Error Cases', () => {
+  test('should throw error for negative numbers', () => {
+    expect(() => toWords.toOrdinal(-1)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+
+  test('should throw error for negative large numbers', () => {
+    expect(() => toWords.toOrdinal(-100)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+
+  test('should throw error for decimal numbers', () => {
+    expect(() => toWords.toOrdinal(1.5)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+
+  test('should throw error for decimal numbers with small fraction', () => {
+    expect(() => toWords.toOrdinal(10.01)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+
+  test('should throw error for negative decimal numbers', () => {
+    expect(() => toWords.toOrdinal(-3.14)).toThrow('Ordinal numbers must be non-negative integers');
+  });
+});
+
+// Powers of Ten Tests
+const testPowersOfTen: [number, string][] = [
+  [10, 'Diez'],
+  [100, 'Cien'],
+  [1000, 'Mil'],
+  [10000, 'Diez Mil'],
+  [100000, 'Cien Mil'],
+  [1000000, 'Un Millón'],
+];
+
+describe('Test Powers of Ten', () => {
+  test.concurrent.each(testPowersOfTen)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// BigInt Tests
+const testBigInts: [bigint, string][] = [
+  [0n, 'Cero'],
+  [1n, 'Uno'],
+  [100n, 'Cien'],
+  [1000n, 'Mil'],
+];
+
+describe('Test BigInt Inputs', () => {
+  test.concurrent.each(testBigInts)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Negative BigInt Tests
+const testNegativeBigInts: [bigint, string][] = [
+  [-1n, 'Menos Uno'],
+  [-100n, 'Menos Cien'],
+  [-1000n, 'Menos Mil'],
+];
+
+describe('Test Negative BigInt Inputs', () => {
+  test.concurrent.each(testNegativeBigInts)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// String Input Tests
+const testStringInputs: [string, string][] = [
+  ['0', 'Cero'],
+  ['1', 'Uno'],
+  ['100', 'Cien'],
+  ['-100', 'Menos Cien'],
+];
+
+describe('Test String Inputs', () => {
+  test.concurrent.each(testStringInputs)('convert %s => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+});
+
+// Zero Variants Tests
+describe('Test Zero Variants', () => {
+  test('convert 0 => Cero', () => {
+    expect(toWords.convert(0)).toBe('Cero');
+  });
+
+  test('convert -0 => Cero', () => {
+    expect(toWords.convert(-0)).toBe('Cero');
+  });
+
+  test('convert 0.0 => Cero', () => {
+    expect(toWords.convert(0.0)).toBe('Cero');
+  });
+
+  test('convert 0n => Cero', () => {
+    expect(toWords.convert(0n)).toBe('Cero');
+  });
+
+  test('convert "0" => Cero', () => {
+    expect(toWords.convert('0')).toBe('Cero');
+  });
+
+  test('convert 0 with currency => Cero Pesos Dominicanos', () => {
+    expect(toWords.convert(0, { currency: true })).toBe('Cero Pesos Dominicanos');
+  });
+});
+
+// Invalid Input Tests
+describe('Test Invalid Inputs', () => {
+  test('convert NaN throws error', () => {
+    expect(() => toWords.convert(Number.NaN)).toThrow('Invalid Number "NaN"');
+  });
+
+  test('convert Infinity throws error', () => {
+    expect(() => toWords.convert(Infinity)).toThrow('Invalid Number "Infinity"');
+  });
+
+  test('convert -Infinity throws error', () => {
+    expect(() => toWords.convert(-Infinity)).toThrow('Invalid Number "-Infinity"');
+  });
+
+  test('convert empty string throws error', () => {
+    expect(() => toWords.convert('')).toThrow('Invalid Number ""');
+  });
+
+  test('convert "abc" throws error', () => {
+    expect(() => toWords.convert('abc')).toThrow('Invalid Number "abc"');
+  });
+});
+
+describe('Functional helpers (locale-level)', () => {
+  test('toWords() matches new ToWords().convert()', () => {
+    const tw = new LocaleToWords();
+    expect(localeToWords(1)).toBe(tw.convert(1));
+    expect(localeToWords(100)).toBe(tw.convert(100));
+  });
+
+  test('toOrdinal() matches new ToWords().toOrdinal()', () => {
+    const tw = new LocaleToWords();
+    expect(localeToOrdinal(1)).toBe(tw.toOrdinal(1));
+  });
+
+  test('toCurrency() matches new ToWords().convert() with currency:true', () => {
+    const tw = new LocaleToWords();
+    expect(localeToCurrency(1)).toBe(tw.convert(1, { currency: true }));
+    expect(localeToCurrency(100)).toBe(tw.convert(100, { currency: true }));
+  });
+});
+
+const testFractionStyleEsDO: [number, string][] = [
+  [1.1, 'Uno Con Uno Décimo'],
+  [2.5, 'Dos Con Cinco Décimos'],
+  [1.01, 'Uno Con Uno Centésimo'],
+  [1.45, 'Uno Con Cuarenta Y Cinco Centésimos'],
+  [0.05, 'Cero Con Cinco Centésimos'],
+  [1.001, 'Uno Con Uno Milésimo'],
+  [1.005, 'Uno Con Cinco Milésimos'],
+  [1.0001, 'Uno Con Uno Diezmilésimo'],
+  [1.0005, 'Uno Con Cinco Diezmilésimos'],
+  [1.00001, 'Uno Con Uno Cienmilésimo'],
+  [1.00005, 'Uno Con Cinco Cienmilésimos'],
+  [1.000001, 'Uno Con Uno Millonésimo'],
+  [1.000005, 'Uno Con Cinco Millonésimos'],
+  [123.45, 'Ciento Veintitrés Con Cuarenta Y Cinco Centésimos'],
+];
+
+describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
+  test.concurrent.each(testFractionStyleEsDO)('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input as number, { decimalStyle: 'fraction' })).toBe(expected);
+  });
+
+  test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
+    expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
+      'Uno Punto Un Millón Doscientos Treinta Y Cuatro Mil Quinientos Sesenta Y Siete',
+    );
+    expect(toWords.convert(1.1234567)).toBe(
+      'Uno Punto Un Millón Doscientos Treinta Y Cuatro Mil Quinientos Sesenta Y Siete',
+    );
+  });
+
+  test('digit-by-digit style works without decimalStyle option', () => {
+    expect(toWords.convert(1.5)).toBe('Uno Punto Cinco');
+    expect(toWords.convert(0.05)).toBe('Cero Punto Cero Cinco');
+  });
+});
+
+describe('Output style options', () => {
+  const styled = new ToWords({ localeCode });
+  // hyphenate applies to English only, so the output is unchanged.
+  const cases: [string, () => string, string][] = [
+    ['default', () => styled.convert(21), 'Veintiuno'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Veintiuno'],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'Veintiún Pesos Dominicanos Con Cincuenta Centavos',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'veintiún pesos dominicanos con cincuenta centavos',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'VEINTIÚN PESOS DOMINICANOS CON CINCUENTA CENTAVOS',
+    ],
+    [
+      "casing 'natural'",
+      () => styled.convert(21.5, { currency: true, casing: 'natural' }),
+      'veintiún pesos dominicanos con cincuenta centavos',
+    ],
+    [
+      "casing 'sentence' with hyphenate",
+      () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
+      'Veintiún pesos dominicanos con cincuenta centavos',
+    ],
+    ['ordinal', () => styled.toOrdinal(21), 'Vigésimo Primero'],
+    [
+      "ordinal with casing 'lower' and hyphenate",
+      () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
+      'vigésimo primero',
+    ],
+    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), 'Uno Punto Veinticinco'],
+    [
+      "decimalStyle 'digit-by-digit'",
+      () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
+      'Uno Punto Dos Cinco',
+    ],
+  ];
+
+  test.each(cases)('%s', (_name, run, expected) => {
+    expect(run()).toBe(expected);
+  });
+});

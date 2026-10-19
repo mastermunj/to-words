@@ -11,7 +11,7 @@ import LOCALES from '../src/locales/index.js';
 
 describe('locale capability manifest', () => {
   test('contains every locale in deterministic order', () => {
-    expect(SUPPORTED_LOCALES).toHaveLength(136);
+    expect(SUPPORTED_LOCALES).toHaveLength(137);
     expect(SUPPORTED_LOCALES).toEqual(Object.keys(LOCALES).sort());
     expect(Object.keys(LOCALE_MANIFEST)).toEqual(SUPPORTED_LOCALES);
     expect(Object.isFrozen(SUPPORTED_LOCALES)).toBe(true);
@@ -33,7 +33,7 @@ describe('locale capability manifest', () => {
   test('publishes verified numbering-system counts and immutable range metadata', () => {
     const metadata = SUPPORTED_LOCALES.map((localeCode) => LOCALE_MANIFEST[localeCode].metadata);
 
-    expect(metadata.filter(({ numbering }) => numbering.system === 'base-thousand')).toHaveLength(109);
+    expect(metadata.filter(({ numbering }) => numbering.system === 'base-thousand')).toHaveLength(110);
     expect(metadata.filter(({ numbering }) => numbering.system === 'indian')).toHaveLength(17);
     expect(metadata.filter(({ numbering }) => numbering.system === 'east-asian')).toHaveLength(5);
     expect(metadata.filter(({ numbering }) => numbering.system === 'locale-specific')).toHaveLength(5);
@@ -53,11 +53,11 @@ describe('locale capability manifest', () => {
   test('publishes verified aggregate capability counts', () => {
     const capabilities = SUPPORTED_LOCALES.map((localeCode) => LOCALE_MANIFEST[localeCode].capabilities);
 
-    expect(capabilities.filter(({ ordinal }) => ordinal)).toHaveLength(136);
+    expect(capabilities.filter(({ ordinal }) => ordinal)).toHaveLength(137);
     expect(capabilities.filter(({ formal }) => formal)).toHaveLength(2);
-    expect(capabilities.filter(({ gender }) => gender.cardinal)).toHaveLength(40);
-    expect(capabilities.filter(({ gender }) => gender.ordinal)).toHaveLength(9);
-    expect(capabilities.filter(({ decimals }) => decimals.fraction)).toHaveLength(100);
+    expect(capabilities.filter(({ gender }) => gender.cardinal)).toHaveLength(41);
+    expect(capabilities.filter(({ gender }) => gender.ordinal)).toHaveLength(10);
+    expect(capabilities.filter(({ decimals }) => decimals.fraction)).toHaveLength(101);
     expect(capabilities.filter(({ currencyPrecision }) => currencyPrecision === 3)).toHaveLength(3);
   });
 
