@@ -102,7 +102,7 @@
 
     <!-- Stats bar -->
     <div class="demo-stats-bar">
-      <span class="demo-stat">🌍 136 Locales</span>
+      <span class="demo-stat">🌍 137 Locales</span>
       <span class="demo-stat">⚡ 4M+ ops/sec</span>
       <span class="demo-stat">📦 ~3 KB gzip</span>
       <span class="demo-stat">🔷 TypeScript</span>
@@ -210,6 +210,7 @@ const LOCALES: Locale[] = [
   { code: 'es-AR', language: 'Spanish', country: 'Argentina', flag: '🇦🇷' },
   { code: 'es-CL', language: 'Spanish', country: 'Chile', flag: '🇨🇱' },
   { code: 'es-CO', language: 'Spanish', country: 'Colombia', flag: '🇨🇴' },
+  { code: 'es-DO', language: 'Spanish', country: 'Dominican Republic', flag: '🇩🇴' },
   { code: 'es-ES', language: 'Spanish', country: 'Spain', flag: '🇪🇸' },
   { code: 'es-MX', language: 'Spanish', country: 'Mexico', flag: '🇲🇽' },
   { code: 'es-PE', language: 'Spanish', country: 'Peru', flag: '🇵🇪' },

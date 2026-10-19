@@ -1,5 +1,5 @@
 ---
-title: Spanish Number to Words in JavaScript (8 Locales) | to-words
+title: Spanish Number to Words in JavaScript (9 Locales) | to-words
 description: Convert numbers to Spanish words in JavaScript for Spain, Mexico, Argentina, and more. Supports currency wording, ordinals, and grammatical gender. npm install to-words.
 head:
   - - meta
@@ -18,18 +18,19 @@ faq:
 
 8 regional Spanish locales — Spain, Mexico, Argentina, Colombia, Chile, Peru, USA, Venezuela. Includes grammatical **gender** support.
 
-> **Locale codes:** `es-AR`, `es-CL`, `es-CO`, `es-ES`, `es-MX`, `es-PE`, `es-US`, `es-VE` · **Numbering system:** Short scale · **Currency:** Region-specific Spanish currencies · **Script:** Latin
+> **Locale codes:** `es-AR`, `es-CL`, `es-CO`, `es-DO`, `es-ES`, `es-MX`, `es-PE`, `es-US`, `es-VE` · **Numbering system:** Short scale · **Currency:** Region-specific Spanish currencies · **Script:** Latin
 
-| Locale  | Country   | Currency |
-| ------- | --------- | -------- |
-| `es-AR` | Argentina | Peso     |
-| `es-CL` | Chile     | Peso     |
-| `es-CO` | Colombia  | Peso     |
-| `es-ES` | Spain     | Euro     |
-| `es-MX` | Mexico    | Peso     |
-| `es-PE` | Peru      | Sol      |
-| `es-US` | USA       | Dollar   |
-| `es-VE` | Venezuela | Bolívar  |
+| Locale  | Country            | Currency |
+| ------- | ------------------ | -------- |
+| `es-AR` | Argentina          | Peso     |
+| `es-CL` | Chile              | Peso     |
+| `es-CO` | Colombia           | Peso     |
+| `es-DO` | Dominican Republic | Peso     |
+| `es-ES` | Spain              | Euro     |
+| `es-MX` | Mexico             | Peso     |
+| `es-PE` | Peru               | Sol      |
+| `es-US` | USA                | Dollar   |
+| `es-VE` | Venezuela          | Bolívar  |
 
 ## Install
 
@@ -72,16 +73,17 @@ tw.toOrdinal(10);
 
 ## Locale Codes
 
-| Locale code | Country       | Currency | Notes                               |
-| ----------- | ------------- | -------- | ----------------------------------- |
-| `es-AR`     | Argentina     | Peso     | Argentine Spanish wording           |
-| `es-CL`     | Chile         | Peso     | Chilean Spanish wording             |
-| `es-CO`     | Colombia      | Peso     | Colombian Spanish wording           |
-| `es-ES`     | Spain         | Euro     | Default European Spanish locale     |
-| `es-MX`     | Mexico        | Peso     | Best fit for Mexican Spanish output |
-| `es-PE`     | Peru          | Sol      | Peruvian Spanish wording            |
-| `es-US`     | United States | Dollar   | Spanish wording for US-based apps   |
-| `es-VE`     | Venezuela     | Bolívar  | Venezuelan Spanish currency wording |
+| Locale code | Country            | Currency | Notes                               |
+| ----------- | ------------------ | -------- | ----------------------------------- |
+| `es-AR`     | Argentina          | Peso     | Argentine Spanish wording           |
+| `es-CL`     | Chile              | Peso     | Chilean Spanish wording             |
+| `es-CO`     | Colombia           | Peso     | Colombian Spanish wording           |
+| `es-DO`     | Dominican Republic | Peso     | Dominican Spanish wording           |
+| `es-ES`     | Spain              | Euro     | Default European Spanish locale     |
+| `es-MX`     | Mexico             | Peso     | Best fit for Mexican Spanish output |
+| `es-PE`     | Peru               | Sol      | Peruvian Spanish wording            |
+| `es-US`     | United States      | Dollar   | Spanish wording for US-based apps   |
+| `es-VE`     | Venezuela          | Bolívar  | Venezuelan Spanish currency wording |
 
 ## Related
 

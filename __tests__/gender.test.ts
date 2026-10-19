@@ -665,7 +665,7 @@ describe('Gender-aware cardinals', () => {
 });
 
 describe('Gender-aware ordinals', () => {
-  test.each(['es-AR', 'es-CL', 'es-CO', 'es-ES', 'es-MX', 'es-PE', 'es-US', 'es-VE'])(
+  test.each(['es-AR', 'es-CL', 'es-CO', 'es-DO', 'es-ES', 'es-MX', 'es-PE', 'es-US', 'es-VE'])(
     '%s resolves feminine Spanish ordinal forms',
     (localeCode) => {
       const toWords = new ToWords({ localeCode: localeCode as LocaleCode });

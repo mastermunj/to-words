@@ -5,7 +5,7 @@
 Counts of independently sourced cases per capability: `✓` the converter matches the source, `✗` a known
 defect, `·` nothing checked yet. An unchecked cell means unknown, not correct.
 
-Locales with sourced cases: 12 of 136. Cases: 64 (51 verified, 13 known-wrong).
+Locales with sourced cases: 12 of 137. Cases: 64 (51 verified, 13 known-wrong).
 
 | Locale | cardinal | scale | ordinal | decimal | currency | gender | formal |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -67,6 +67,7 @@ Locales with sourced cases: 12 of 136. Cases: 64 (51 verified, 13 known-wrong).
 | es-AR | · | · | · | · | · | · | · |
 | es-CL | · | · | · | · | · | · | · |
 | es-CO | · | · | · | · | · | · | · |
+| es-DO | · | · | · | · | · | · | · |
 | es-ES | 1✓ | 2✓ | 1✓ | · | 1✓ | · | · |
 | es-MX | · | · | · | · | · | · | · |
 | es-PE | · | · | · | · | · | · | · |

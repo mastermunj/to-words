@@ -182,7 +182,7 @@ isSupportedLocale('en-US'); // true
 getLocaleCapabilities('zh-CN')?.formal; // true
 getLocaleMetadata('hi-IN')?.numbering.grouping; // [3, 2]
 getLocaleMetadata('en-US')?.range.maximumSupported.cardinal; // exact inclusive ceiling
-SUPPORTED_LOCALES.length; // 136
+SUPPORTED_LOCALES.length; // 137
 ```
 
 The manifest contains compact generated capability, numbering-system, and named-range metadata and does not load locale conversion tables. Size-sensitive conversion code should still use per-locale imports.

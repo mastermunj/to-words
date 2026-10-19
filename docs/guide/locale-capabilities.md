@@ -9,7 +9,7 @@ description: Generated, machine-verifiable feature support for every to-words lo
 
 This reference is generated from the locale configurations shipped by the package. It is checked in CI, so the documentation and runtime manifest cannot silently drift apart.
 
-**136 locales** · **136 ordinal** · **100 fraction style** · **40 cardinal gender** · **9 ordinal gender** · **2 formal numeral locales**
+**137 locales** · **137 ordinal** · **101 fraction style** · **41 cardinal gender** · **10 ordinal gender** · **2 formal numeral locales**
 
 ## Programmatic Usage
 
@@ -119,6 +119,7 @@ Cardinal, currency, and digit-style decimal conversion are part of every locale 
 | `es-AR`  | Base thousand    | 10^18               | 10^21 - 1                | Yes     | Cardinal + ordinal | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
 | `es-CL`  | Base thousand    | 10^18               | 10^21 - 1                | Yes     | Cardinal + ordinal | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
 | `es-CO`  | Base thousand    | 10^18               | 10^21 - 1                | Yes     | Cardinal + ordinal | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
+| `es-DO`  | Base thousand    | 10^18               | 10^21 - 1                | Yes     | Cardinal + ordinal | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
 | `es-ES`  | Base thousand    | 10^18               | 10^21 - 1                | Yes     | Cardinal + ordinal | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
 | `es-MX`  | Base thousand    | 10^18               | 10^21 - 1                | Yes     | Cardinal + ordinal | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
 | `es-PE`  | Base thousand    | 10^18               | 10^21 - 1                | Yes     | Cardinal + ordinal | No     | 1, 2, 3, 4, 5, 6                                  | 2                 |
