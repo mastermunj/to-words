@@ -2,6 +2,14 @@
 
 All notable changes to this project are documented here. Releases and this changelog are managed by [Release Please](https://github.com/googleapis/release-please).
 
+## [7.4.0](https://github.com/mastermunj/to-words/compare/v7.3.0...v7.4.0) (2026-10-19)
+
+
+### Features
+
+* add support for Dominican Republic locale (es-DO) and update locale counts ([8366bcf](https://github.com/mastermunj/to-words/commit/8366bcfe563474f2ab055e9166887f07a82ca34e))
+* **locales:** add es-DO (Spanish Dominican Republic) locale ([909e691](https://github.com/mastermunj/to-words/commit/909e691ed0ae899709b9ee746a2c8936be7849b8))
+
 ## [7.3.0](https://github.com/mastermunj/to-words/compare/v7.2.0...v7.3.0) (2026-10-16)
 
 
