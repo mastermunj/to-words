@@ -2,6 +2,14 @@
 
 All notable changes to this project are documented here. Releases and this changelog are managed by [Release Please](https://github.com/googleapis/release-please).
 
+## [7.4.1](https://github.com/mastermunj/to-words/compare/v7.4.0...v7.4.1) (2026-10-24)
+
+
+### Bug Fixes
+
+* **locales:** join round French scale amounts to the currency with de ([50659ce](https://github.com/mastermunj/to-words/commit/50659ce5059cfa2205847f75255b0317c6372846))
+* **locales:** join round French scale amounts to the currency with de ([789d43b](https://github.com/mastermunj/to-words/commit/789d43b9e7b8dd6946493396aabaf4109643f81d))
+
 ## [7.4.0](https://github.com/mastermunj/to-words/compare/v7.3.0...v7.4.0) (2026-10-19)
 
 
