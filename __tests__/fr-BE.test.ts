@@ -154,6 +154,16 @@ describe('Test with options = { currency: true, includeZeroFractional: true }', 
   });
 });
 
+describe('Test currency scale connector', () => {
+  // fr.wiktionary «million»: a round scale amount takes de before the currency.
+  test.each([
+    [1000000, "Un Million D'euros"],
+    [1500000, 'Un Million Cinq Cent Mille Euros'],
+  ])('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input, { currency: true })).toBe(expected);
+  });
+});
+
 describe('Test Floats with options = {}', () => {
   test.each(testFloats)('convert %d => %s', (input, expected) => {
     expect(toWords.convert(input as number)).toBe(expected);
