@@ -526,7 +526,7 @@ const testBigIntsWithCurrency: [bigint, string][] = [
   [2n, 'Deux Dollars'],
   [100n, 'Cent Dollars'],
   [1000n, 'Mille Dollars'],
-  [1000000n, 'Un Million Dollars'],
+  [1000000n, 'Un Million De Dollars'],
 ];
 
 describe('Test BigInt with Currency', () => {

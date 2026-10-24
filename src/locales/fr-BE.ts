@@ -145,6 +145,8 @@ export default class Locale implements LocaleInterface {
     pluralWords: ['Billiard', 'Billion', 'Milliard', 'Million'],
     pluralWordsOnlyWhenTrailing: ['Cent'],
     useTrailingForCurrency: true,
+    // fr.wiktionary «million»: un million d’euros; de joins a round scale amount to the currency.
+    currencyScaleConnector: { word: 'De', minScale: 1000000, elidedWord: "D'" },
     // Only the last word turns ordinal (vingt-quatre → vingt-quatrième).
     ordinalComposition: 'last-token',
     // fr.wiktionary «cent»: cent/vingt take -s when multiplied and ending the numeral; million and

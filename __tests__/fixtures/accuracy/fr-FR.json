@@ -68,8 +68,7 @@
         "doNotAddOnly": true
       },
       "expected": "Un Million D'euros",
-      "status": "known-wrong",
-      "defect": "H",
+      "status": "verified",
       "attested": true,
       "sources": [
         "frwikt-million"

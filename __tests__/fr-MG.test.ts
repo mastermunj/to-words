@@ -72,10 +72,13 @@ describe('Test Negative Integers with options = {}', () => {
   });
 });
 
+// A round amount of a million or more takes D' before the currency (Un Million D'ariary).
+const ariary = (amount: number): string => (amount !== 0 && amount % 1000000 === 0 ? "D'ariary" : 'Ariary');
+
 describe('Test Integers with options = { currency: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} Ariary`;
+    row[1] = `${row[1]} ${ariary(row[0] as number)}`;
   });
 
   test.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -86,7 +89,7 @@ describe('Test Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, doNotAddOnly: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} Ariary`;
+    row[1] = `${row[1]} ${ariary(row[0] as number)}`;
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -101,7 +104,7 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
       row[1] = '';
       return;
     }
-    row[1] = `${row[1]} Ariary`;
+    row[1] = `${row[1]} ${ariary(row[0] as number)}`;
   });
 
   test.concurrent.each(testIntegersWithCurrencyAndIgnoreZeroCurrency)('convert %d => %s', (input, expected) => {

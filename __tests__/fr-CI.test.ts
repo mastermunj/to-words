@@ -72,10 +72,13 @@ describe('Test Negative Integers with options = {}', () => {
   });
 });
 
+// A round amount of a million or more takes De before the currency (Un Million De Francs CFA).
+const scaleConnector = (amount: number): string => (amount !== 0 && amount % 1000000 === 0 ? ' De' : '');
+
 describe('Test Integers with options = { currency: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = row[0] === 1 ? `Un Franc CFA` : `${row[1]} Francs CFA`;
+    row[1] = row[0] === 1 ? `Un Franc CFA` : `${row[1]}${scaleConnector(row[0] as number)} Francs CFA`;
   });
 
   test.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -86,7 +89,7 @@ describe('Test Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, doNotAddOnly: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = row[0] === 1 ? `Un Franc CFA` : `${row[1]} Francs CFA`;
+    row[1] = row[0] === 1 ? `Un Franc CFA` : `${row[1]}${scaleConnector(row[0] as number)} Francs CFA`;
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -101,7 +104,7 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
       row[1] = '';
       return;
     }
-    row[1] = row[0] === 1 ? `Un Franc CFA` : `${row[1]} Francs CFA`;
+    row[1] = row[0] === 1 ? `Un Franc CFA` : `${row[1]}${scaleConnector(row[0] as number)} Francs CFA`;
   });
 
   test.concurrent.each(testIntegersWithCurrencyAndIgnoreZeroCurrency)('convert %d => %s', (input, expected) => {
@@ -145,6 +148,16 @@ const testFloats: [number, string][] = [
   [37.68, 'Trente-Sept Virgule Soixante-Huit'],
   [37.683, 'Trente-Sept Virgule Six Cent Quatre-Vingt-Trois'],
 ];
+
+describe('Test currency scale connector', () => {
+  // fr.wiktionary «million»: a round scale amount takes de before the currency.
+  test.each([
+    [3000000, 'Trois Millions De Francs CFA'],
+    [1500000, 'Un Million Cinq Cent Mille Francs CFA'],
+  ])('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input, { currency: true })).toBe(expected);
+  });
+});
 
 describe('Test Floats with options = {}', () => {
   test.each(testFloats)('convert %d => %s', (input, expected) => {
