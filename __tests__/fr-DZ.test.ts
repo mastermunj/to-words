@@ -72,10 +72,13 @@ describe('Test Negative Integers with options = {}', () => {
   });
 });
 
+// A round amount of a million or more takes De before the currency (Un Million De Dinars).
+const scaleConnector = (amount: number): string => (amount !== 0 && amount % 1000000 === 0 ? ' De' : '');
+
 describe('Test Integers with options = { currency: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = row[0] === 1 ? `Un Dinar` : `${row[1]} Dinars`;
+    row[1] = row[0] === 1 ? `Un Dinar` : `${row[1]}${scaleConnector(row[0] as number)} Dinars`;
   });
 
   test.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -86,7 +89,7 @@ describe('Test Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, doNotAddOnly: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = row[0] === 1 ? `Un Dinar` : `${row[1]} Dinars`;
+    row[1] = row[0] === 1 ? `Un Dinar` : `${row[1]}${scaleConnector(row[0] as number)} Dinars`;
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -101,7 +104,7 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
       row[1] = '';
       return;
     }
-    row[1] = row[0] === 1 ? `Un Dinar` : `${row[1]} Dinars`;
+    row[1] = row[0] === 1 ? `Un Dinar` : `${row[1]}${scaleConnector(row[0] as number)} Dinars`;
   });
 
   test.concurrent.each(testIntegersWithCurrencyAndIgnoreZeroCurrency)('convert %d => %s', (input, expected) => {

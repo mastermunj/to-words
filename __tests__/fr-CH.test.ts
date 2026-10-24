@@ -127,6 +127,16 @@ const testFloats: [number, string][] = [
   [37.68, 'Trente-Sept Virgule Soixante-Huit'],
 ];
 
+describe('Test currency scale connector', () => {
+  // fr.wiktionary «million»: a round scale amount takes de before the currency.
+  test.each([
+    [1000000, 'Un Million De Francs'],
+    [1500000, 'Un Million Cinq Cent Mille Francs'],
+  ])('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input, { currency: true })).toBe(expected);
+  });
+});
+
 describe('Test Floats with options = {}', () => {
   test.each(testFloats)('convert %d => %s', (input, expected) => {
     expect(toWords.convert(input as number)).toBe(expected);

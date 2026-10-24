@@ -157,6 +157,20 @@ describe('Test with options = { currency: true, includeZeroFractional: true }', 
   });
 });
 
+describe('Test currency scale connector', () => {
+  // fr.wiktionary «million»: a round scale amount takes de before the currency.
+  test.each([
+    [1000000, "Un Million D'euros"],
+    [2000000, "Deux Millions D'euros"],
+    [1000000000, "Un Milliard D'euros"],
+    [1200000000, "Un Milliard Deux Cents Millions D'euros"],
+    [1500000, 'Un Million Cinq Cent Mille Euros'],
+    [2000003, 'Deux Millions Trois Euros'],
+  ])('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input, { currency: true })).toBe(expected);
+  });
+});
+
 describe('Test Floats with options = {}', () => {
   test.each(testFloats)('convert %d => %s', (input, expected) => {
     expect(toWords.convert(input as number)).toBe(expected);
@@ -526,7 +540,7 @@ const testBigIntsWithCurrency: [bigint, string][] = [
   [2n, 'Deux Euros'],
   [100n, 'Cent Euros'],
   [1000n, 'Mille Euros'],
-  [1000000n, 'Un Million Euros'],
+  [1000000n, "Un Million D'euros"],
 ];
 
 describe('Test BigInt with Currency', () => {
