@@ -589,11 +589,25 @@ describe('Output style options', () => {
     [
       "decimalStyle 'digit-by-digit'",
       () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
-      'Один Целых Два Пять',
+      'Одна Целая Две Пять',
     ],
   ];
 
   test.each(cases)('%s', (_name, run, expected) => {
     expect(run()).toBe(expected);
+  });
+});
+
+describe('Digit decimal styles agree the whole part like the fraction reading', () => {
+  const digits = new ToWords({ localeCode });
+  const cases: [number, 'digit' | 'digit-by-digit', string][] = [
+    [1.25, 'digit', 'Одна Целая Двадцать Пять'],
+    [2.5, 'digit', 'Две Целых Пять'],
+    [5.2, 'digit', 'Пять Целых Две'],
+    [21.04, 'digit', 'Двадцать Одна Целая Ноль Четыре'],
+    [-3.14, 'digit-by-digit', 'Минус Три Целых Одна Четыре'],
+  ];
+  test.each(cases)('convert %d (%s) => %s', (input, decimalStyle, expected) => {
+    expect(digits.convert(input, { decimalStyle })).toBe(expected);
   });
 });

@@ -508,7 +508,7 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
 
   test('the fraction reading is the default; digit style is opt-in', () => {
     expect(toWords.convert(1.5)).toBe("Одна Ціла П'ять Десятих");
-    expect(toWords.convert(1.5, { decimalStyle: 'digit' })).toBe("Один Цілих П'ять");
+    expect(toWords.convert(1.5, { decimalStyle: 'digit' })).toBe("Одна Ціла П'ять");
     expect(toWords.convert(0.05, { decimalStyle: 'digit' })).toBe("Нуль Цілих Нуль П'ять");
   });
 });
@@ -576,11 +576,24 @@ describe('Output style options', () => {
     [
       "decimalStyle 'digit-by-digit'",
       () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }),
-      "Один Цілих Два П'ять",
+      "Одна Ціла Дві П'ять",
     ],
   ];
 
   test.each(cases)('%s', (_name, run, expected) => {
     expect(run()).toBe(expected);
+  });
+});
+
+describe('Digit decimal styles agree the whole part like the fraction reading', () => {
+  const digits = new ToWords({ localeCode });
+  const cases: [number, 'digit' | 'digit-by-digit', string][] = [
+    [1.25, 'digit', "Одна Ціла Двадцять П'ять"],
+    [2.5, 'digit', "Дві Цілих П'ять"],
+    [5.2, 'digit', "П'ять Цілих Дві"],
+    [-3.14, 'digit-by-digit', 'Мінус Три Цілих Одна Чотири'],
+  ];
+  test.each(cases)('convert %d (%s) => %s', (input, decimalStyle, expected) => {
+    expect(digits.convert(input, { decimalStyle })).toBe(expected);
   });
 });

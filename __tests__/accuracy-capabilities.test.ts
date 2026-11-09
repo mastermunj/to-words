@@ -696,7 +696,9 @@ describe('fi-FI: ordinalMultipliers', () => {
 
 describe('last-token ordinals with a repeated cardinal form', () => {
   test('a nonLeadingValue equal to the value maps once and still ordinalises', () => {
+    // Spaced words, so the repeated form is visible as its own token.
     const it = variant(ItIt, (config) => ({
+      wordJoining: undefined,
       numberWordsMapping: config.numberWordsMapping.map((entry) =>
         entry.number === 3 ? { ...entry, nonLeadingValue: 'Tre' } : entry,
       ),

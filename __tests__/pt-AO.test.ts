@@ -509,3 +509,15 @@ describe('Output style options', () => {
     expect(run()).toBe(expected);
   });
 });
+
+describe('Round scale amounts take de before the currency', () => {
+  const connector = new ToWords({ localeCode });
+  const cases: [number, string][] = [
+    [1000000, 'Um Milhão De Kwanzas'],
+    [2000000, 'Dois Milhões De Kwanzas'],
+    [1500000, 'Um Milhão E Quinhentos Mil Kwanzas'],
+  ];
+  test.each(cases)('convert %d => %s', (input, expected) => {
+    expect(connector.convert(input, { currency: true, doNotAddOnly: true })).toBe(expected);
+  });
+});

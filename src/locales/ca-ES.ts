@@ -105,6 +105,9 @@ export default class Locale implements LocaleInterface {
       { number: 1000000, value: 'Un Milió' },
       { number: 1000000000000, value: 'Un Bilió' },
     ],
+    // en.wiktionary «milió»: milió, bilió … are followed by de / d' unless a smaller number
+    // comes between (mil tres-cents quaranta-dos milions d'euros).
+    currencyScaleConnector: { word: 'De', minScale: 1000000, elidedWord: "D'" },
     // Only the last word turns ordinal; in compounds 1–4 are unè, dosè, tresè, quatrè (vint-i-unè; GIEC).
     ordinalComposition: 'last-token',
     ordinalWordsMapping: [

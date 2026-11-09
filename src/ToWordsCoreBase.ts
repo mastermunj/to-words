@@ -41,7 +41,8 @@ import { pickPluralForm, selectPluralCategory, type PluralCategory } from './plu
  */
 const GLUE = '\uE000';
 
-const VOWEL_INITIAL = /^[aeiouyàâäéèêëîïôöùûüœæ]/iu;
+// No "y": French writes «de yens», «de yaourts» (y-initial words take no elision).
+const VOWEL_INITIAL = /^[aeiouàâäéèêëîïôöùûüœæ]/iu;
 
 /**
  * True when the number is one additive component: a unit, a teen, a round ten or a round hundred,
@@ -697,14 +698,33 @@ export class ToWordsCore {
     }
     const separator = joining.separator ?? (config.trim ? '' : ' ');
     const lowercaseParts = joining.lowercaseCompoundParts !== false;
+    const finalAccent = joining.finalAccent;
     let output = '';
     let started = false;
     let glued = false;
-    for (const word of words) {
+    let previousPart = '';
+    for (let index = 0; index < words.length; index++) {
+      let word = words[index];
       if (word === GLUE) {
         glued = true;
         continue;
       }
+      if (finalAccent) {
+        // finalAccent: the accent marks the end of a compound only (it ventitré, centotré, but
+        // ventitremila; a separate tre has none: un milione tre).
+        const continues = words[index + 1] === GLUE;
+        if (continues && word.endsWith(finalAccent.accented)) {
+          word = word.slice(0, -finalAccent.accented.length) + finalAccent.plain;
+        } else if (!continues && glued && word.toLowerCase().endsWith(finalAccent.plain)) {
+          word = word.slice(0, -finalAccent.plain.length) + finalAccent.accented;
+        }
+      }
+      // elideBefore: a compound part drops its final vowel before these initials (it cento +
+      // otto → centotto, cento + ottanta → centottanta; mille is not listed: milleotto).
+      if (glued && word && joining.elideBefore?.[previousPart]?.includes(word.charAt(0).toLowerCase())) {
+        output = output.slice(0, -1);
+      }
+      previousPart = word.toLowerCase();
       if (!started) {
         output = word;
         started = true;
@@ -1379,8 +1399,24 @@ export class ToWordsCore {
         wordsWithDecimal.push(useSingular ? denominator.singular : denominator.plural);
       } else {
         // Default digit-by-digit style
+        // fractionReading.appliesToDigits: the whole part agrees with the whole-unit noun as in
+        // the fraction reading, and the digits take the fraction's gender (cs Jedna Celá Dvě Pět).
+        const wholeForms = reading?.appliesToDigits && localeConfig.pluralRule ? reading.wholeForms : undefined;
+        const digitGender = wholeForms ? (gender ?? reading?.gender) : gender;
         if (!ignoreZero) {
-          wordsWithDecimal.push(localeConfig.texts.point);
+          if (wholeForms) {
+            words = this.convertInternal(integerPart, true, undefined, locale, digitGender, useAnd);
+            wordsWithDecimal.push(
+              this.selectUnitForm(
+                { plural: localeConfig.texts.point },
+                wholeForms,
+                integerPart,
+                localeConfig.pluralRule as NonNullable<typeof localeConfig.pluralRule>,
+              ),
+            );
+          } else {
+            wordsWithDecimal.push(localeConfig.texts.point);
+          }
         }
         if (
           decimalStyle === 'digit-by-digit' ||
@@ -1388,11 +1424,11 @@ export class ToWordsCore {
         ) {
           const zeroWords: string[] = [];
           for (const num of fractionalPart) {
-            zeroWords.push(...this.convertInternal(BigInt(num), true, undefined, locale, gender));
+            zeroWords.push(...this.convertInternal(BigInt(num), true, undefined, locale, digitGender));
           }
           wordsWithDecimal.push(...zeroWords);
         } else {
-          wordsWithDecimal.push(...this.convertInternal(BigInt(fractionalPart), true, undefined, locale, gender));
+          wordsWithDecimal.push(...this.convertInternal(BigInt(fractionalPart), true, undefined, locale, digitGender));
           const decimalLengthWord = localeConfig?.decimalLengthWordMapping?.[fractionalPart.length];
           if (decimalLengthWord) {
             wordsWithDecimal.push(decimalLengthWord);

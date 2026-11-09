@@ -1,0 +1,42 @@
+{
+  "locale": "cs-CZ",
+  "sources": {
+    "wikt-cela": {
+      "title": "Wiktionary — celá (tři celé čtrnáct, pět celých dvě)",
+      "url": "https://en.wiktionary.org/wiki/cel%C3%A1",
+      "accessed": "2026-11-06"
+    }
+  },
+  "cases": [
+    {
+      "id": "dec-digit-3.14",
+      "capability": "decimal",
+      "form": "cardinal",
+      "input": "3.14",
+      "options": {
+        "decimalStyle": "digit"
+      },
+      "expected": "Tři Celé Čtrnáct",
+      "status": "verified",
+      "attested": true,
+      "sources": [
+        "wikt-cela"
+      ]
+    },
+    {
+      "id": "dec-digit-5.2",
+      "capability": "decimal",
+      "form": "cardinal",
+      "input": "5.2",
+      "options": {
+        "decimalStyle": "digit"
+      },
+      "expected": "Pět Celých Dvě",
+      "status": "verified",
+      "attested": true,
+      "sources": [
+        "wikt-cela"
+      ]
+    }
+  ]
+}

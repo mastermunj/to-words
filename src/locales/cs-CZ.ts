@@ -231,6 +231,9 @@ export default class Locale implements LocaleInterface {
       isDefault: true,
       // IJP: nula celá jedna, jedna celá dvě, dvě celé tři, pět celých jedna.
       wholeForms: { zero: 'Celá', one: 'Celá', few: 'Celé', many: 'Celých', other: 'Celých' },
+      // The digit styles read the same way without the denominator (en.wiktionary «celá»:
+      // tři celé čtrnáct (setin), pět celých dvě (desetiny)).
+      appliesToDigits: true,
       gender: 'feminine',
       denominatorForms: {
         1: { one: 'Desetina', few: 'Desetiny', many: 'Desetin', other: 'Desetin' },

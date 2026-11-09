@@ -62,7 +62,7 @@ const SIZE_BUDGETS = Object.freeze({
   // The output style options (casing, hyphenate) and remainder-first ordinals add about
   // 0.45 KiB gzip to every locale bundle.
   fullGzipped: 91.5 * 1024,
-  averageLocaleGzipped: 9.9 * 1024,
+  averageLocaleGzipped: 10 * 1024,
   largestLocaleGzipped: 11.25 * 1024,
 });
 

@@ -20,6 +20,21 @@
       "title": "Wiktionary — milione (plural milioni)",
       "url": "https://en.wiktionary.org/wiki/milione",
       "accessed": "2026-10-08"
+    },
+    "treccani-milione": {
+      "title": "Treccani — milione (un milione di euro)",
+      "url": "https://www.treccani.it/vocabolario/milione/",
+      "accessed": "2026-11-06"
+    },
+    "cldr-it-rbnf": {
+      "title": "Unicode CLDR — it spellout rules (rbnf/it.xml), run through ICU 79",
+      "url": "https://github.com/unicode-org/cldr/blob/main/common/rbnf/it.xml",
+      "accessed": "2026-11-09"
+    },
+    "tre-accent": {
+      "title": "D’accordo! (University of Iowa) — tre takes an accent when combined: trentatré, centotré, milletré",
+      "url": "https://pressbooks.uiowa.edu/daccordo/chapter/vocabolario-numeri/",
+      "accessed": "2026-11-09"
     }
   },
   "cases": [
@@ -29,8 +44,7 @@
       "form": "cardinal",
       "input": "101",
       "expected": "Centouno",
-      "status": "known-wrong",
-      "defect": "E",
+      "status": "verified",
       "attested": true,
       "sources": [
         "wikt-centouno"
@@ -42,8 +56,7 @@
       "form": "cardinal",
       "input": "500",
       "expected": "Cinquecento",
-      "status": "known-wrong",
-      "defect": "E",
+      "status": "verified",
       "attested": true,
       "sources": [
         "wikt-cinquecento"
@@ -55,8 +68,7 @@
       "form": "cardinal",
       "input": "2000",
       "expected": "Duemila",
-      "status": "known-wrong",
-      "defect": "E",
+      "status": "verified",
       "attested": true,
       "sources": [
         "wikt-duemila"
@@ -72,6 +84,160 @@
       "attested": false,
       "sources": [
         "wikt-milione"
+      ]
+    },
+    {
+      "id": "cur-1000000",
+      "capability": "currency",
+      "form": "currency",
+      "input": "1000000",
+      "options": {
+        "doNotAddOnly": true
+      },
+      "expected": "Un Milione Di Euro",
+      "status": "verified",
+      "attested": true,
+      "sources": [
+        "treccani-milione"
+      ]
+    },
+    {
+      "id": "cur-2000000",
+      "capability": "currency",
+      "form": "currency",
+      "input": "2000000",
+      "options": {
+        "doNotAddOnly": true
+      },
+      "expected": "Due Milioni Di Euro",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "treccani-milione"
+      ]
+    },
+    {
+      "id": "cur-3000000000",
+      "capability": "currency",
+      "form": "currency",
+      "input": "3000000000",
+      "options": {
+        "doNotAddOnly": true
+      },
+      "expected": "Tre Miliardi Di Euro",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "treccani-milione"
+      ]
+    },
+    {
+      "id": "card-103",
+      "capability": "cardinal",
+      "form": "cardinal",
+      "input": "103",
+      "expected": "Centotré",
+      "status": "verified",
+      "attested": true,
+      "sources": [
+        "cldr-it-rbnf",
+        "tre-accent"
+      ]
+    },
+    {
+      "id": "card-303",
+      "capability": "cardinal",
+      "form": "cardinal",
+      "input": "303",
+      "expected": "Trecentotré",
+      "status": "verified",
+      "attested": true,
+      "sources": [
+        "cldr-it-rbnf"
+      ]
+    },
+    {
+      "id": "card-108",
+      "capability": "cardinal",
+      "form": "cardinal",
+      "input": "108",
+      "expected": "Centotto",
+      "status": "verified",
+      "attested": true,
+      "sources": [
+        "cldr-it-rbnf"
+      ]
+    },
+    {
+      "id": "card-180",
+      "capability": "cardinal",
+      "form": "cardinal",
+      "input": "180",
+      "expected": "Centottanta",
+      "status": "verified",
+      "attested": true,
+      "sources": [
+        "cldr-it-rbnf"
+      ]
+    },
+    {
+      "id": "scale-1003",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "1003",
+      "expected": "Milletré",
+      "status": "verified",
+      "attested": true,
+      "sources": [
+        "tre-accent"
+      ]
+    },
+    {
+      "id": "scale-4349",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "4349",
+      "expected": "Quattromilatrecentoquarantanove",
+      "status": "verified",
+      "attested": true,
+      "sources": [
+        "cldr-it-rbnf"
+      ]
+    },
+    {
+      "id": "scale-21000",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "21000",
+      "expected": "Ventunmila",
+      "status": "verified",
+      "attested": true,
+      "sources": [
+        "cldr-it-rbnf"
+      ]
+    },
+    {
+      "id": "scale-1000003",
+      "capability": "scale",
+      "form": "cardinal",
+      "input": "1000003",
+      "expected": "Un Milione Tre",
+      "status": "verified",
+      "attested": true,
+      "sources": [
+        "cldr-it-rbnf"
+      ]
+    },
+    {
+      "id": "ord-2000",
+      "capability": "ordinal",
+      "form": "ordinal",
+      "input": "2000",
+      "expected": "Duemillesimo",
+      "status": "verified",
+      "attested": true,
+      "sources": [
+        "cldr-it-rbnf"
       ]
     }
   ]

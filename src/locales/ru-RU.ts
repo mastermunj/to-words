@@ -236,6 +236,8 @@ export default class Locale implements LocaleInterface {
       isDefault: true,
       wholeForms: { one: 'Целая', other: 'Целых' },
       gender: 'feminine',
+      // The digit styles keep the agreement and drop the denominator (Одна Целая Два Пять → Две Пять).
+      appliesToDigits: true,
     },
   };
 }

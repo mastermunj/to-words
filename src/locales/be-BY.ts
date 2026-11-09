@@ -236,6 +236,8 @@ export default class Locale implements LocaleInterface {
       isDefault: true,
       // be.wikipedia «Лічэбнік»: дзве цэлыя пятнаццаць сотых, чатыры сёмыя, сем цэлых пяць дзясятых.
       wholeForms: { one: 'Цэлая', few: 'Цэлыя', other: 'Цэлых' },
+      // The digit styles keep the agreement and drop the denominator.
+      appliesToDigits: true,
       denominatorForms: {
         1: { one: 'Дзясятая', few: 'Дзясятыя', other: 'Дзясятых' },
         2: { one: 'Сотая', few: 'Сотыя', other: 'Сотых' },

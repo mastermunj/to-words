@@ -1,0 +1,57 @@
+{
+  "locale": "ca-ES",
+  "sources": {
+    "wikt-milio": {
+      "title": "Wiktionary — milió (usage notes: followed by de / d’)",
+      "url": "https://en.wiktionary.org/wiki/mili%C3%B3",
+      "accessed": "2026-11-06"
+    }
+  },
+  "cases": [
+    {
+      "id": "cur-1000000",
+      "capability": "currency",
+      "form": "currency",
+      "input": "1000000",
+      "options": {
+        "doNotAddOnly": true
+      },
+      "expected": "Un Milió D'euros",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "wikt-milio"
+      ]
+    },
+    {
+      "id": "cur-2000000",
+      "capability": "currency",
+      "form": "currency",
+      "input": "2000000",
+      "options": {
+        "doNotAddOnly": true
+      },
+      "expected": "Dos Milions D'euros",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "wikt-milio"
+      ]
+    },
+    {
+      "id": "cur-1500000",
+      "capability": "currency",
+      "form": "currency",
+      "input": "1500000",
+      "options": {
+        "doNotAddOnly": true
+      },
+      "expected": "Un Milió Cinc-Cents Mil Euros",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "wikt-milio"
+      ]
+    }
+  ]
+}

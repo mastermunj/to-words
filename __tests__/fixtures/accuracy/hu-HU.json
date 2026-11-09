@@ -1,0 +1,27 @@
+{
+  "locale": "hu-HU",
+  "sources": {
+    "wp-filler": {
+      "title": "Wikipedia — Fillér (1/100 forint, still used in calculations)",
+      "url": "https://en.wikipedia.org/wiki/Fill%C3%A9r",
+      "accessed": "2026-11-06"
+    }
+  },
+  "cases": [
+    {
+      "id": "cur-1.5",
+      "capability": "currency",
+      "form": "currency",
+      "input": "1.5",
+      "options": {
+        "doNotAddOnly": true
+      },
+      "expected": "Egy Forint És Ötven Fillér",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "wp-filler"
+      ]
+    }
+  ]
+}

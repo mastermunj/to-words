@@ -1,0 +1,62 @@
+{
+  "locale": "pt-BR",
+  "sources": {
+    "ciber-milhao-de": {
+      "title": "Ciberdúvidas — «Um milhão de»",
+      "url": "https://ciberduvidas.iscte-iul.pt/consultorio/perguntas/um-milhao-de/8506",
+      "accessed": "2026-11-06"
+    },
+    "ciber-milhao-e-um": {
+      "title": "Ciberdúvidas — «Um milhão e uma pessoas» (de only when no numeral follows)",
+      "url": "https://ciberduvidas.iscte-iul.pt/consultorio/perguntas/um-milhao-e-uma-pessoas/33697",
+      "accessed": "2026-11-06"
+    }
+  },
+  "cases": [
+    {
+      "id": "cur-1000000",
+      "capability": "currency",
+      "form": "currency",
+      "input": "1000000",
+      "options": {
+        "doNotAddOnly": true
+      },
+      "expected": "Um Milhão De Reais",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "ciber-milhao-de"
+      ]
+    },
+    {
+      "id": "cur-2000000",
+      "capability": "currency",
+      "form": "currency",
+      "input": "2000000",
+      "options": {
+        "doNotAddOnly": true
+      },
+      "expected": "Dois Milhões De Reais",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "ciber-milhao-de"
+      ]
+    },
+    {
+      "id": "cur-1500000",
+      "capability": "currency",
+      "form": "currency",
+      "input": "1500000",
+      "options": {
+        "doNotAddOnly": true
+      },
+      "expected": "Um Milhão E Quinhentos Mil Reais",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "ciber-milhao-e-um"
+      ]
+    }
+  ]
+}

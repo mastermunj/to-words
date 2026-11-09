@@ -122,7 +122,7 @@ describe('Test Integers with options = { currency: true }', () => {
     [10, 'Deu Euros'],
     [100, 'Cent Euros'],
     [1000, 'Mil Euros'],
-    [1000000, 'Un Milió Euros'],
+    [1000000, "Un Milió D'euros"],
   ];
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -501,5 +501,19 @@ describe('Output style options', () => {
 
   test.each(cases)('%s', (_name, run, expected) => {
     expect(run()).toBe(expected);
+  });
+});
+
+describe("Round scale amounts take de / d' before the currency", () => {
+  const connector = new ToWords({ localeCode });
+  const cases: [number, string][] = [
+    [1000000, "Un Milió D'euros"],
+    [2000000, "Dos Milions D'euros"],
+    [3000000000, "Tres Mil Milions D'euros"],
+    [1500000, 'Un Milió Cinc-Cents Mil Euros'],
+    [1000000.5, "Un Milió D'euros I Cinquanta Cèntims"],
+  ];
+  test.each(cases)('convert %d => %s', (input, expected) => {
+    expect(connector.convert(input, { currency: true, doNotAddOnly: true })).toBe(expected);
   });
 });

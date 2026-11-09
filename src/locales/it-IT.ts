@@ -131,8 +131,8 @@ export default class Locale implements LocaleInterface {
       { number: 6, value: 'Sei' },
       { number: 5, value: 'Cinque' },
       { number: 4, value: 'Quattro' },
-      // tre is accented at the end of a compound (ventitré, centotré; CLDR it).
-      { number: 3, value: 'Tre', nonLeadingValue: 'Tré' },
+      // tre is accented only at the end of a compound (wordJoining.finalAccent).
+      { number: 3, value: 'Tre' },
       { number: 2, value: 'Due' },
       { number: 1, value: 'Uno' },
       { number: 0, value: 'Zero' },
@@ -151,6 +151,20 @@ export default class Locale implements LocaleInterface {
       1000000000000: { other: 'Bilioni' },
       1000000000000000: { other: 'Biliardi' },
     },
+    // CLDR it: numbers below a million are one word (centotré, quattromilatrecentoquarantanove,
+    // ventunmila); milione and larger stay separate (un milione tremila). tre takes its accent
+    // only at the end of a compound (centotré, milletré, but ventitremila, un milione tre), and
+    // cento elides before o (centotto, centottanta).
+    wordJoining: {
+      compoundBelow: 1000000,
+      finalAccent: { plain: 'tre', accented: 'tré' },
+      elideBefore: { cento: 'o' },
+      // useAnd's «e» splits the compound: mille e uno, mille e tre (a separate tre has no accent).
+      separateAnd: true,
+    },
+    // Treccani «milione»: un milione di sterline, quattro milioni di abitanti; di joins a round
+    // scale amount to the currency (no elision: un milione di euro).
+    currencyScaleConnector: { word: 'Di', minScale: 1000000 },
     // CLDR it: ordinals above ten add -esimo to the whole compound; only the last word changes.
     ordinalComposition: 'last-token',
     ordinalWordsMapping: [

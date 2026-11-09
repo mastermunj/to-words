@@ -752,3 +752,18 @@ describe('Output style options', () => {
     expect(run()).toBe(expected);
   });
 });
+
+describe("A y-initial currency name takes De, not an elided D'", () => {
+  const yen = {
+    name: 'Yen',
+    plural: 'Yens',
+    singular: 'Yen',
+    symbol: '¥',
+    fractionalUnit: { name: 'Sen', plural: 'Sens', singular: 'Sen', symbol: '' },
+  };
+  test('convert 1000000 => Un Million De Yens', () => {
+    expect(
+      new ToWords({ localeCode }).convert(1000000, { currency: true, doNotAddOnly: true, currencyOptions: yen }),
+    ).toBe('Un Million De Yens');
+  });
+});
