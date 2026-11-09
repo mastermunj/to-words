@@ -2,6 +2,18 @@
 
 All notable changes to this project are documented here. Releases and this changelog are managed by [Release Please](https://github.com/googleapis/release-please).
 
+## [7.4.2](https://github.com/mastermunj/to-words/compare/v7.4.1...v7.4.2) (2026-11-09)
+
+
+### Bug Fixes
+
+* **hu:** name the fillér so fractional amounts no longer end in a space ([746339f](https://github.com/mastermunj/to-words/commit/746339f7dffef8c5ea5122d5796b599bd4656e77))
+* Italian one-word numbers ([#2522](https://github.com/mastermunj/to-words/issues/2522)) and currency, decimal and subunit fixes in 13 locales ([d0cc4d8](https://github.com/mastermunj/to-words/commit/d0cc4d8109a57a1a0b0f73fae2ce551d86a287b0))
+* **it:** write numbers below a million as one word ([d713bb0](https://github.com/mastermunj/to-words/commit/d713bb0666ee048a5a48710ce9bef1bee8a150c7)), closes [#2522](https://github.com/mastermunj/to-words/issues/2522)
+* **locales:** digit decimal styles agree the whole part in ru, uk, be, cs and sk ([746339f](https://github.com/mastermunj/to-words/commit/746339f7dffef8c5ea5122d5796b599bd4656e77))
+* **locales:** join round scale amounts to the currency in it, pt and ca ([746339f](https://github.com/mastermunj/to-words/commit/746339f7dffef8c5ea5122d5796b599bd4656e77))
+* **yue:** read tenths of a Hong Kong dollar as 毫 ([746339f](https://github.com/mastermunj/to-words/commit/746339f7dffef8c5ea5122d5796b599bd4656e77))
+
 ## [7.4.1](https://github.com/mastermunj/to-words/compare/v7.4.0...v7.4.1) (2026-10-24)
 
 
