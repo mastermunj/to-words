@@ -437,6 +437,17 @@ export type WordJoiningConfig = {
   separateOrdinalUnit?: boolean;
   /** The `useAnd` word stays a separate word and splits the compound (sk 1001 → Tisíc A Jeden). */
   separateAnd?: boolean;
+  /**
+   * An accent that marks the end of a compound: a compound of two or more parts ending in `plain`
+   * takes `accented`, and a part ending in `accented` loses it when more of the compound follows.
+   * Separate words are unchanged (it Centotré, Ventitremila, but Un Milione Tre).
+   */
+  finalAccent?: { plain: string; accented: string };
+  /**
+   * Lower-case compound part → initial letters before which it drops its final vowel
+   * (it { cento: 'o' }: Centotto, Centottanta, but Centouno).
+   */
+  elideBefore?: Record<string, string>;
 };
 
 export interface LocaleInterface {

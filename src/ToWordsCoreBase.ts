@@ -698,14 +698,33 @@ export class ToWordsCore {
     }
     const separator = joining.separator ?? (config.trim ? '' : ' ');
     const lowercaseParts = joining.lowercaseCompoundParts !== false;
+    const finalAccent = joining.finalAccent;
     let output = '';
     let started = false;
     let glued = false;
-    for (const word of words) {
+    let previousPart = '';
+    for (let index = 0; index < words.length; index++) {
+      let word = words[index];
       if (word === GLUE) {
         glued = true;
         continue;
       }
+      if (finalAccent) {
+        // finalAccent: the accent marks the end of a compound only (it ventitré, centotré, but
+        // ventitremila; a separate tre has none: un milione tre).
+        const continues = words[index + 1] === GLUE;
+        if (continues && word.endsWith(finalAccent.accented)) {
+          word = word.slice(0, -finalAccent.accented.length) + finalAccent.plain;
+        } else if (!continues && glued && word.toLowerCase().endsWith(finalAccent.plain)) {
+          word = word.slice(0, -finalAccent.plain.length) + finalAccent.accented;
+        }
+      }
+      // elideBefore: a compound part drops its final vowel before these initials (it cento +
+      // otto → centotto, cento + ottanta → centottanta; mille is not listed: milleotto).
+      if (glued && word && joining.elideBefore?.[previousPart]?.includes(word.charAt(0).toLowerCase())) {
+        output = output.slice(0, -1);
+      }
+      previousPart = word.toLowerCase();
       if (!started) {
         output = word;
         started = true;

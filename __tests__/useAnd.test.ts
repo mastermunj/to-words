@@ -155,15 +155,20 @@ describe('useAnd option', () => {
     const toWords = new ToWords({ localeCode: 'it-IT' });
 
     test('101 default (no and)', () => {
-      expect(toWords.convert(101)).toBe('Cento Uno');
+      expect(toWords.convert(101)).toBe('Centouno');
     });
 
+    // The «e» splits the compound, and a separate tre has no accent (mille e tre).
     test('101 with useAnd', () => {
       expect(toWords.convert(101, { useAnd: true })).toBe('Cento E Uno');
     });
 
     test('1001 with useAnd', () => {
       expect(toWords.convert(1001, { useAnd: true })).toBe('Mille E Uno');
+    });
+
+    test('1003 with useAnd', () => {
+      expect(toWords.convert(1003, { useAnd: true })).toBe('Mille E Tre');
     });
   });
 
