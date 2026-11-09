@@ -151,6 +151,9 @@ export default class Locale implements LocaleInterface {
       1000000000000: { other: 'Bilioni' },
       1000000000000000: { other: 'Biliardi' },
     },
+    // Treccani «milione»: un milione di sterline, quattro milioni di abitanti; di joins a round
+    // scale amount to the currency (no elision: un milione di euro).
+    currencyScaleConnector: { word: 'Di', minScale: 1000000 },
     // CLDR it: ordinals above ten add -esimo to the whole compound; only the last word changes.
     ordinalComposition: 'last-token',
     ordinalWordsMapping: [

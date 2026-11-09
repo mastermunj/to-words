@@ -478,7 +478,7 @@ const testBigIntsWithCurrency: [bigint, string][] = [
   [2n, 'Dois Reais'],
   [100n, 'Cem Reais'],
   [1000n, 'Mil Reais'],
-  [1000000n, 'Um Milhão Reais'],
+  [1000000n, 'Um Milhão De Reais'],
 ];
 
 describe('Test BigInt with Currency', () => {
@@ -723,5 +723,19 @@ describe('Output style options', () => {
 
   test.each(cases)('%s', (_name, run, expected) => {
     expect(run()).toBe(expected);
+  });
+});
+
+describe('Round scale amounts take de before the currency', () => {
+  const connector = new ToWords({ localeCode });
+  const cases: [number, string][] = [
+    [1000000, 'Um Milhão De Reais'],
+    [2000000, 'Dois Milhões De Reais'],
+    [3000000000, 'Três Bilhões De Reais'],
+    [1500000, 'Um Milhão E Quinhentos Mil Reais'],
+    [1000000.5, 'Um Milhão De Reais E Cinquenta Centavos'],
+  ];
+  test.each(cases)('convert %d => %s', (input, expected) => {
+    expect(connector.convert(input, { currency: true, doNotAddOnly: true })).toBe(expected);
   });
 });

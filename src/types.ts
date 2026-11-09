@@ -318,6 +318,12 @@ export type LocaleConfig = {
     wholeUsesDefaultGender?: boolean;
     /** Denominator forms by number of decimal places; default one = singular, other = plural. */
     denominatorForms?: Record<number, PluralUnitForms>;
+    /**
+     * The `'digit'` and `'digit-by-digit'` styles agree the whole part with `wholeForms` too, and
+     * read the digits in `gender`, with the denominator left out (cs tři celé čtrnáct; ru 1.25 →
+     * Одна Целая Две Пять, not «Один Целых Два Пять»). `wholeUsesDefaultGender` is not applied.
+     */
+    appliesToDigits?: boolean;
   };
   /**
    * Write `texts.and` before the last component of each group and of the whole number, instead of

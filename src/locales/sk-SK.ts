@@ -249,6 +249,8 @@ export default class Locale implements LocaleInterface {
       isDefault: true,
       wholeForms: { zero: 'Celá', one: 'Celá', few: 'Celé', many: 'Celých', other: 'Celých' },
       gender: 'feminine',
+      // The digit styles keep the agreement and drop the denominator (jedna celá štyri).
+      appliesToDigits: true,
       denominatorForms: {
         1: { one: 'Desatina', few: 'Desatiny', many: 'Desatín', other: 'Desatín' },
         2: { one: 'Stotina', few: 'Stotiny', many: 'Stotín', other: 'Stotín' },

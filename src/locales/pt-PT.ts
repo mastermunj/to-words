@@ -97,6 +97,9 @@ export default class Locale implements LocaleInterface {
     // Every component is ordinal (vigésimo primeiro, milésimo primeiro), as in es.
     // «mil» agrees with the counted noun (duzentas mil pessoas; Ciberdúvidas «numerais feminino»).
     multiplierFollowsGender: [1000],
+    // Ciberdúvidas «um milhão de»: milhão takes de unless another numeral follows (um milhão de
+    // pessoas, um milhão e um); no elision in Portuguese (um milhão de euros).
+    currencyScaleConnector: { word: 'De', minScale: 1000000 },
     ordinalComposition: 'every-component',
     ordinalWordsMapping: [
       { number: 1000000000000000000n, value: 'Trilionésimo' },

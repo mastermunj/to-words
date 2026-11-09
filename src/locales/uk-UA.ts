@@ -244,6 +244,8 @@ export default class Locale implements LocaleInterface {
       isDefault: true,
       wholeForms: { one: 'Ціла', other: 'Цілих' },
       gender: 'feminine',
+      // The digit styles keep the agreement and drop the denominator.
+      appliesToDigits: true,
     },
   };
 }

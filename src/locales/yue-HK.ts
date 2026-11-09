@@ -15,11 +15,14 @@ export default class Locale implements LocaleInterface {
       plural: '元',
       singular: '元',
       symbol: 'HK$',
+      // zh.wikipedia «港元»: 1/10 is 毫 and 1/100 is 仙 (coins 壹毫, 貳毫, 伍毫), so 0.50 is 五 毫 and
+      // 12.34 is 三 毫 四 仙; 零 marks a skipped 毫 (325.04 → 三 百 二十 五 元 零 四 仙).
       fractionalUnit: {
         name: '仙',
         singular: '仙',
         plural: '仙',
         symbol: '',
+        largerUnit: { name: '毫', factor: 10, zeroWord: '零' },
       },
     },
     texts: {

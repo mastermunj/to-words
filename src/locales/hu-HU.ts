@@ -15,10 +15,12 @@ export default class Locale implements LocaleInterface {
       plural: 'Forint',
       singular: 'Forint',
       symbol: 'Ft',
+      // Wikipedia «Fillér»: 1/100 forint; the coins left circulation in 1999 but the fillér is
+      // still used in calculations (petrol 479,9 Ft/litre). Nouns stay singular after numerals.
       fractionalUnit: {
-        name: '',
-        singular: '',
-        plural: '',
+        name: 'Fillér',
+        singular: 'Fillér',
+        plural: 'Fillér',
         symbol: '',
       },
     },

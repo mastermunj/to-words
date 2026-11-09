@@ -190,11 +190,11 @@ describe('Test with options = { currency: true, includeZeroFractional: true }', 
   const testIncludeZeroFractional: [number | string, string][] = [
     [123, `Száz Huszonhárom Forint`],
     ['123', `Száz Huszonhárom Forint`],
-    ['123.0', `Száz Huszonhárom Forint`],
-    ['123.00', `Száz Huszonhárom Forint`],
-    ['0.00', `Nulla Forint`],
-    ['-123.00', `Mínusz Száz Huszonhárom Forint`],
-    ['37.68', `Harminc Hét Forint És Hatvan Nyolc `],
+    ['123.0', `Száz Huszonhárom Forint És Nulla Fillér`],
+    ['123.00', `Száz Huszonhárom Forint És Nulla Fillér`],
+    ['0.00', `Nulla Forint És Nulla Fillér`],
+    ['-123.00', `Mínusz Száz Huszonhárom Forint És Nulla Fillér`],
+    ['37.68', `Harminc Hét Forint És Hatvan Nyolc Fillér`],
   ];
 
   test.concurrent.each(testIncludeZeroFractional)('convert %s => %s', (input, expected) => {
@@ -215,10 +215,10 @@ describe('Test Floats with options = {}', () => {
 
 const testFloatsWithCurrency: [number, string][] = [
   [0.0, 'Nulla Forint'],
-  [0.5, 'Nulla Forint És Ötven '],
+  [0.5, 'Nulla Forint És Ötven Fillér'],
   [0.999, 'Egy Forint'],
-  [37.06, 'Harminc Hét Forint És Hat '],
-  [37.68, 'Harminc Hét Forint És Hatvan Nyolc '],
+  [37.06, 'Harminc Hét Forint És Hat Fillér'],
+  [37.68, 'Harminc Hét Forint És Hatvan Nyolc Fillér'],
 ];
 
 describe('Test Floats with options = { currency: true }', () => {
@@ -230,10 +230,10 @@ describe('Test Floats with options = { currency: true }', () => {
 describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true }', () => {
   const testFloatsWithCurrencyAndIgnoreZeroCurrency: [number, string][] = [
     [0.0, ''],
-    [0.5, 'Ötven '],
+    [0.5, 'Ötven Fillér'],
     [0.999, 'Egy Forint'],
-    [37.06, 'Harminc Hét Forint És Hat '],
-    [37.68, 'Harminc Hét Forint És Hatvan Nyolc '],
+    [37.06, 'Harminc Hét Forint És Hat Fillér'],
+    [37.68, 'Harminc Hét Forint És Hatvan Nyolc Fillér'],
   ];
 
   test.concurrent.each(testFloatsWithCurrencyAndIgnoreZeroCurrency)('convert %d => %s', (input, expected) => {
@@ -528,18 +528,30 @@ describe('Output style options', () => {
   const cases: [string, () => string, string][] = [
     ['default', () => styled.convert(21), 'Huszonegy'],
     ['hyphenate', () => styled.convert(21, { hyphenate: true }), 'Huszonegy'],
-    ["casing 'title'", () => styled.convert(21.5, { currency: true, casing: 'title' }), 'Huszonegy Forint És Ötven '],
-    ["casing 'lower'", () => styled.convert(21.5, { currency: true, casing: 'lower' }), 'huszonegy forint és ötven '],
-    ["casing 'upper'", () => styled.convert(21.5, { currency: true, casing: 'upper' }), 'HUSZONEGY FORINT ÉS ÖTVEN '],
+    [
+      "casing 'title'",
+      () => styled.convert(21.5, { currency: true, casing: 'title' }),
+      'Huszonegy Forint És Ötven Fillér',
+    ],
+    [
+      "casing 'lower'",
+      () => styled.convert(21.5, { currency: true, casing: 'lower' }),
+      'huszonegy forint és ötven fillér',
+    ],
+    [
+      "casing 'upper'",
+      () => styled.convert(21.5, { currency: true, casing: 'upper' }),
+      'HUSZONEGY FORINT ÉS ÖTVEN FILLÉR',
+    ],
     [
       "casing 'natural'",
       () => styled.convert(21.5, { currency: true, casing: 'natural' }),
-      'huszonegy forint és ötven ',
+      'huszonegy forint és ötven fillér',
     ],
     [
       "casing 'sentence' with hyphenate",
       () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
-      'Huszonegy forint és ötven ',
+      'Huszonegy forint és ötven fillér',
     ],
     ['ordinal', () => styled.toOrdinal(21), 'Huszonegyedik'],
     [

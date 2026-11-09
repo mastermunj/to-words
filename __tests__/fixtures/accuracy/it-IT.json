@@ -20,6 +20,11 @@
       "title": "Wiktionary — milione (plural milioni)",
       "url": "https://en.wiktionary.org/wiki/milione",
       "accessed": "2026-10-08"
+    },
+    "treccani-milione": {
+      "title": "Treccani — milione (un milione di euro)",
+      "url": "https://www.treccani.it/vocabolario/milione/",
+      "accessed": "2026-11-06"
     }
   },
   "cases": [
@@ -72,6 +77,51 @@
       "attested": false,
       "sources": [
         "wikt-milione"
+      ]
+    },
+    {
+      "id": "cur-1000000",
+      "capability": "currency",
+      "form": "currency",
+      "input": "1000000",
+      "options": {
+        "doNotAddOnly": true
+      },
+      "expected": "Un Milione Di Euro",
+      "status": "verified",
+      "attested": true,
+      "sources": [
+        "treccani-milione"
+      ]
+    },
+    {
+      "id": "cur-2000000",
+      "capability": "currency",
+      "form": "currency",
+      "input": "2000000",
+      "options": {
+        "doNotAddOnly": true
+      },
+      "expected": "Due Milioni Di Euro",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "treccani-milione"
+      ]
+    },
+    {
+      "id": "cur-3000000000",
+      "capability": "currency",
+      "form": "currency",
+      "input": "3000000000",
+      "options": {
+        "doNotAddOnly": true
+      },
+      "expected": "Tre Miliardi Di Euro",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "treccani-milione"
       ]
     }
   ]

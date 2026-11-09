@@ -149,7 +149,7 @@ describe('Test with options = { currency: true, includeZeroFractional: true }', 
     ['123.00', `一 百 二十 三 元 零 仙 整`],
     ['0.00', `零 元 零 仙 整`],
     ['-123.00', `負 一 百 二十 三 元 零 仙 整`],
-    ['37.68', `三十 七 元 六十 八 仙 整`],
+    ['37.68', `三十 七 元 六 毫 八 仙 整`],
   ];
 
   test.concurrent.each(testIncludeZeroFractional)('convert %s => %s', (input, expected) => {
@@ -173,14 +173,14 @@ const testFloatsWithCurrency: [number, string][] = [
   [0.01, '零 元 一 仙 整'],
   [0.04, '零 元 四 仙 整'],
   [0.0468, '零 元 五 仙 整'],
-  [0.5, '零 元 五十 仙 整'],
-  [0.63, '零 元 六十 三 仙 整'],
-  [0.973, '零 元 九十 七 仙 整'],
+  [0.5, '零 元 五 毫 整'],
+  [0.63, '零 元 六 毫 三 仙 整'],
+  [0.973, '零 元 九 毫 七 仙 整'],
   [0.999, '一 元 整'],
-  [1.25, '一 元 二十 五 仙 整'],
-  [10.99, '十 元 九十 九 仙 整'],
-  [37.06, '三十 七 元 六 仙 整'],
-  [37.68, '三十 七 元 六十 八 仙 整'],
+  [1.25, '一 元 二 毫 五 仙 整'],
+  [10.99, '十 元 九 毫 九 仙 整'],
+  [37.06, '三十 七 元 零 六 仙 整'],
+  [37.68, '三十 七 元 六 毫 八 仙 整'],
 ];
 
 describe('Test Floats with options = { currency: true }', () => {
@@ -195,14 +195,14 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true 
     [0.01, '一 仙 整'],
     [0.04, '四 仙 整'],
     [0.0468, '五 仙 整'],
-    [0.5, '五十 仙 整'],
-    [0.63, '六十 三 仙 整'],
-    [0.973, '九十 七 仙 整'],
+    [0.5, '五 毫 整'],
+    [0.63, '六 毫 三 仙 整'],
+    [0.973, '九 毫 七 仙 整'],
     [0.999, '一 元 整'],
-    [1.25, '一 元 二十 五 仙 整'],
-    [10.99, '十 元 九十 九 仙 整'],
-    [37.06, '三十 七 元 六 仙 整'],
-    [37.68, '三十 七 元 六十 八 仙 整'],
+    [1.25, '一 元 二 毫 五 仙 整'],
+    [10.99, '十 元 九 毫 九 仙 整'],
+    [37.06, '三十 七 元 零 六 仙 整'],
+    [37.68, '三十 七 元 六 毫 八 仙 整'],
   ];
 
   test.concurrent.each(testFloatsWithCurrencyAndIgnoreZeroCurrency)('convert %d => %s', (input, expected) => {
@@ -519,14 +519,14 @@ describe('Output style options', () => {
   const cases: [string, () => string, string][] = [
     ['default', () => styled.convert(21), '二十 一'],
     ['hyphenate', () => styled.convert(21, { hyphenate: true }), '二十 一'],
-    ["casing 'title'", () => styled.convert(21.5, { currency: true, casing: 'title' }), '二十 一 元 五十 仙 整'],
-    ["casing 'lower'", () => styled.convert(21.5, { currency: true, casing: 'lower' }), '二十 一 元 五十 仙 整'],
-    ["casing 'upper'", () => styled.convert(21.5, { currency: true, casing: 'upper' }), '二十 一 元 五十 仙 整'],
-    ["casing 'natural'", () => styled.convert(21.5, { currency: true, casing: 'natural' }), '二十 一 元 五十 仙 整'],
+    ["casing 'title'", () => styled.convert(21.5, { currency: true, casing: 'title' }), '二十 一 元 五 毫 整'],
+    ["casing 'lower'", () => styled.convert(21.5, { currency: true, casing: 'lower' }), '二十 一 元 五 毫 整'],
+    ["casing 'upper'", () => styled.convert(21.5, { currency: true, casing: 'upper' }), '二十 一 元 五 毫 整'],
+    ["casing 'natural'", () => styled.convert(21.5, { currency: true, casing: 'natural' }), '二十 一 元 五 毫 整'],
     [
       "casing 'sentence' with hyphenate",
       () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
-      '二十 一 元 五十 仙 整',
+      '二十 一 元 五 毫 整',
     ],
     ['ordinal', () => styled.toOrdinal(21), '第二十 一'],
     [

@@ -1,0 +1,42 @@
+{
+  "locale": "pt-PT",
+  "sources": {
+    "ciber-milhao-de": {
+      "title": "Ciberdúvidas — «Um milhão de»",
+      "url": "https://ciberduvidas.iscte-iul.pt/consultorio/perguntas/um-milhao-de/8506",
+      "accessed": "2026-11-06"
+    }
+  },
+  "cases": [
+    {
+      "id": "cur-1000000",
+      "capability": "currency",
+      "form": "currency",
+      "input": "1000000",
+      "options": {
+        "doNotAddOnly": true
+      },
+      "expected": "Um Milhão De Euros",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "ciber-milhao-de"
+      ]
+    },
+    {
+      "id": "cur-3000000000",
+      "capability": "currency",
+      "form": "currency",
+      "input": "3000000000",
+      "options": {
+        "doNotAddOnly": true
+      },
+      "expected": "Três Mil Milhões De Euros",
+      "status": "verified",
+      "attested": false,
+      "sources": [
+        "ciber-milhao-de"
+      ]
+    }
+  ]
+}

@@ -170,10 +170,13 @@ const testIntegersCurrency: [number, string][] = [
   [2741034, 'Due Milioni Sette Cento Quarantun Mila Trentaquattro'],
 ];
 
+// A round million or billion takes «di» before the currency (Treccani: un milione di euro).
+const di = (words: string): string => (/(Milion[ei]|Miliard[oi])$/.test(words) ? ' Di' : '');
+
 describe('Test Integers with options = { currency: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegersCurrency);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} Euro`;
+    row[1] = `${row[1]}${di(row[1])} Euro`;
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -184,7 +187,7 @@ describe('Test Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, doNotAddOnly: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegersCurrency);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} Euro`;
+    row[1] = `${row[1]}${di(row[1])} Euro`;
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -196,11 +199,11 @@ describe('Test Negative Integers with options = { currency: true }', () => {
   const testNegativeIntegersWithCurrency = cloneDeep(testIntegersCurrency);
   testNegativeIntegersWithCurrency.map((row, i) => {
     if (i === 0) {
-      row[1] = `${row[1]} Euro`;
+      row[1] = `${row[1]}${di(row[1])} Euro`;
       return;
     }
     row[0] = -row[0];
-    row[1] = `Meno ${row[1]} Euro`;
+    row[1] = `Meno ${row[1]}${di(row[1])} Euro`;
   });
 
   test.concurrent.each(testNegativeIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -211,7 +214,7 @@ describe('Test Negative Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, ignoreZeroCurrency: true }', () => {
   const testIntegersWithCurrencyAndIgnoreZeroCurrency = cloneDeep(testIntegersCurrency);
   testIntegersWithCurrencyAndIgnoreZeroCurrency.map((row, i) => {
-    row[1] = i === 0 ? '' : `${row[1]} Euro`;
+    row[1] = i === 0 ? '' : `${row[1]}${di(row[1])} Euro`;
   });
 
   test.concurrent.each(testIntegersWithCurrencyAndIgnoreZeroCurrency)('convert %d => %s', (input, expected) => {
@@ -537,8 +540,8 @@ const testBigIntsWithCurrency: [bigint, string][] = [
   [2n, 'Due Euro'],
   [100n, 'Cento Euro'],
   [1000n, 'Mille Euro'],
-  [1000000n, 'Un Milione Euro'],
-  [1000000000n, 'Un Miliardo Euro'],
+  [1000000n, 'Un Milione Di Euro'],
+  [1000000000n, 'Un Miliardo Di Euro'],
 ];
 
 describe('Test BigInt with Currency', () => {
@@ -807,5 +810,20 @@ describe('Output style options', () => {
 
   test.each(cases)('%s', (_name, run, expected) => {
     expect(run()).toBe(expected);
+  });
+});
+
+describe('Round scale amounts take di before the currency', () => {
+  const connector = new ToWords({ localeCode });
+  const cases: [number, string][] = [
+    [1000000, 'Un Milione Di Euro'],
+    [2000000, 'Due Milioni Di Euro'],
+    [3000000000, 'Tre Miliardi Di Euro'],
+    [1500000, 'Un Milione Cinque Cento Mila Euro'],
+    [1000001, 'Un Milione Un Euro'],
+    [1000000.5, 'Un Milione Di Euro E Cinquanta Centesimi'],
+  ];
+  test.each(cases)('convert %d => %s', (input, expected) => {
+    expect(connector.convert(input, { currency: true, doNotAddOnly: true })).toBe(expected);
   });
 });
