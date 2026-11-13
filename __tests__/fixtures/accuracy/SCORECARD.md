@@ -5,7 +5,7 @@
 Counts of independently sourced cases per capability: `✓` the converter matches the source, `✗` a known
 defect, `·` nothing checked yet. An unchecked cell means unknown, not correct.
 
-Locales with sourced cases: 17 of 137. Cases: 87 (78 verified, 9 known-wrong).
+Locales with sourced cases: 17 of 137. Cases: 92 (92 verified, 0 known-wrong).
 
 | Locale | cardinal | scale | ordinal | decimal | currency | gender | formal |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -98,7 +98,7 @@ Locales with sourced cases: 17 of 137. Cases: 87 (78 verified, 9 known-wrong).
 | ig-NG | · | · | · | · | · | · | · |
 | is-IS | · | · | · | · | · | · | · |
 | it-IT | 6✓ | 6✓ | 1✓ | · | 3✓ | · | · |
-| ja-JP | 1✓ | 1✓ 3✗ | · | · | · | · | · |
+| ja-JP | 1✓ | 5✓ | · | 1✓ | · | · | · |
 | jv-ID | · | · | · | · | · | · | · |
 | ka-GE | · | · | · | · | · | · | · |
 | km-KH | · | · | · | · | · | · | · |
@@ -143,6 +143,6 @@ Locales with sourced cases: 17 of 137. Cases: 87 (78 verified, 9 known-wrong).
 | vi-VN | · | · | · | · | · | · | · |
 | yo-NG | · | · | · | · | · | · | · |
 | yue-HK | · | · | · | · | · | · | · |
-| zh-CN | 0✓ 3✗ | 0✓ 2✗ | · | · | 0✓ 1✗ | · | · |
+| zh-CN | 4✓ | 2✓ | · | 2✓ | 1✓ | · | · |
 | zh-TW | · | · | · | · | · | · | · |
 | zu-ZA | · | · | · | · | · | · | · |

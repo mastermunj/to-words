@@ -15,8 +15,8 @@ export default class Locale implements LocaleInterface {
       plural: '元',
       singular: '元',
       symbol: 'HK$',
-      // zh.wikipedia «港元»: 1/10 is 毫 and 1/100 is 仙 (coins 壹毫, 貳毫, 伍毫), so 0.50 is 五 毫 and
-      // 12.34 is 三 毫 四 仙; 零 marks a skipped 毫 (325.04 → 三 百 二十 五 元 零 四 仙).
+      // zh.wikipedia «港元»: 1/10 is 毫 and 1/100 is 仙 (coins 壹毫, 貳毫, 伍毫), so 0.50 is 五毫 and
+      // 12.34 is 三毫四仙; 零 marks a skipped 毫 (325.04 → 三百二十五元零四仙).
       fractionalUnit: {
         name: '仙',
         singular: '仙',
@@ -31,6 +31,10 @@ export default class Locale implements LocaleInterface {
       only: '整',
       point: '點',
     },
+    // Chinese and Japanese write a number without spaces (CLDR zh, yue, ja: 一百一十四, 千五百万).
+    trim: true,
+    // Decimal digits are read one by one (CLDR zh, yue, ja: 3.14 → 三点一四; ja.wikipedia «漢数字»: 粒読み).
+    defaultDecimalStyle: 'digit-by-digit',
     numberWordsMapping: [
       { number: 10n ** 20n, value: '垓' },
       { number: 10n ** 16n, value: '京' },
@@ -63,7 +67,7 @@ export default class Locale implements LocaleInterface {
     // (一百零一); ordinals are 第 + the cardinal (CLDR zh: 第二十一, 第一百).
     ignoreOneForWords: ['十'],
     zeroForSkippedPlaces: true,
-    exactWordsMapping: [{ number: 100, value: '一 百' }],
+    exactWordsMapping: [{ number: 100, value: '一百' }],
     ordinalPrefix: '第',
     ordinalComposition: 'fused-prefix',
     ordinalWordsMapping: [

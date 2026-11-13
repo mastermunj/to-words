@@ -10,6 +10,11 @@
       "title": "Wikipedia — Renminbi (1 元 = 10 角 = 100 分)",
       "url": "https://en.wikipedia.org/wiki/Renminbi",
       "accessed": "2026-10-08"
+    },
+    "cldr-zh": {
+      "title": "Unicode CLDR — zh spellout rules (rbnf/zh.xml), run through ICU 79",
+      "url": "https://github.com/unicode-org/cldr/blob/main/common/rbnf/zh.xml",
+      "accessed": "2026-11-12"
     }
   },
   "cases": [
@@ -19,10 +24,11 @@
       "form": "cardinal",
       "input": "14",
       "expected": "十四",
-      "status": "known-wrong",
-      "defect": "F",
+      "status": "verified",
       "attested": true,
-      "sources": ["wp-zh-numerals"]
+      "sources": [
+        "wp-zh-numerals"
+      ]
     },
     {
       "id": "card-114",
@@ -30,10 +36,11 @@
       "form": "cardinal",
       "input": "114",
       "expected": "一百一十四",
-      "status": "known-wrong",
-      "defect": "F",
+      "status": "verified",
       "attested": true,
-      "sources": ["wp-zh-numerals"]
+      "sources": [
+        "wp-zh-numerals"
+      ]
     },
     {
       "id": "card-205",
@@ -41,10 +48,11 @@
       "form": "cardinal",
       "input": "205",
       "expected": "二百零五",
-      "status": "known-wrong",
-      "defect": "F",
+      "status": "verified",
       "attested": true,
-      "sources": ["wp-zh-numerals"]
+      "sources": [
+        "wp-zh-numerals"
+      ]
     },
     {
       "id": "scale-1158",
@@ -52,10 +60,11 @@
       "form": "cardinal",
       "input": "1158",
       "expected": "一千一百五十八",
-      "status": "known-wrong",
-      "defect": "F",
+      "status": "verified",
       "attested": true,
-      "sources": ["wp-zh-numerals"]
+      "sources": [
+        "wp-zh-numerals"
+      ]
     },
     {
       "id": "scale-10050026",
@@ -63,22 +72,63 @@
       "form": "cardinal",
       "input": "10050026",
       "expected": "一千零五万零二十六",
-      "status": "known-wrong",
-      "defect": "F",
+      "status": "verified",
       "attested": true,
-      "sources": ["wp-zh-numerals"]
+      "sources": [
+        "wp-zh-numerals"
+      ]
     },
     {
       "id": "cur-2.5",
       "capability": "currency",
       "form": "currency",
       "input": "2.5",
-      "options": { "doNotAddOnly": true },
+      "options": {
+        "doNotAddOnly": true
+      },
       "expected": "二元五角",
-      "status": "known-wrong",
-      "defect": "H",
+      "status": "verified",
       "attested": false,
-      "sources": ["wp-renminbi", "wp-zh-numerals"]
+      "sources": [
+        "wp-renminbi",
+        "wp-zh-numerals"
+      ]
+    },
+    {
+      "id": "card-101",
+      "capability": "cardinal",
+      "form": "cardinal",
+      "input": "101",
+      "expected": "一百零一",
+      "status": "verified",
+      "attested": true,
+      "sources": [
+        "cldr-zh"
+      ]
+    },
+    {
+      "id": "dec-3.14",
+      "capability": "decimal",
+      "form": "cardinal",
+      "input": "3.14",
+      "expected": "三点一四",
+      "status": "verified",
+      "attested": true,
+      "sources": [
+        "cldr-zh"
+      ]
+    },
+    {
+      "id": "dec-12.05",
+      "capability": "decimal",
+      "form": "cardinal",
+      "input": "12.05",
+      "expected": "十二点零五",
+      "status": "verified",
+      "attested": true,
+      "sources": [
+        "cldr-zh"
+      ]
     }
   ]
 }

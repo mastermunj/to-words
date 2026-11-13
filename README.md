@@ -333,8 +333,8 @@ Each locale has a verified range: en-US goes up to vigintillions (10^63), for ex
 
 ```js
 const cn = new ToWords({ localeCode: 'zh-CN' });
-cn.convert(123); // "一 百 二十 三"
-cn.convert(123, { formal: true }); // "壹 佰 贰拾 叁"
+cn.convert(123); // "一百二十三"
+cn.convert(123, { formal: true }); // "壹佰贰拾叁"
 
 const tw = new ToWords({ localeCode: 'zh-TW' });
 tw.toOrdinal(5, { formal: true }); // "第伍"
@@ -463,7 +463,7 @@ The [framework guide](https://mastermunj.github.io/to-words/guide/framework-inte
 new ToWords({ localeCode: 'de-DE' }).convert(1000000000); // "Eine Milliarde"
 new ToWords({ localeCode: 'en-IN' }).convert(1000000000000n); // "One Lakh Crore"
 new ToWords({ localeCode: 'hi-IN' }).convert(1000000000000n); // "एक लाख करोड़"
-new ToWords({ localeCode: 'ja-JP' }).convert(100000000); // "一 億"
+new ToWords({ localeCode: 'ja-JP' }).convert(100000000); // "一億"
 ```
 
 **Above a crore**, the Indian and Bangladeshi locales compose crore-based amounts, as official Indian usage does (Union Budget 2026-27: "₹53.5 lakh crore"): 10^9 is "One Hundred Crore" and 10^12 "One Lakh Crore". Nepal (`ne-NP`, `en-NP`) keeps Arba and Kharba, as its government budget does; `ur-PK` counts in ارب (ایک ہزار ارب = 10^12); and `en-PK` and `en-MU` use Million and Billion, as the Pakistani and Mauritian budget documents do.

@@ -212,7 +212,7 @@ describe('1c word joining and compounds', () => {
   test('a blank texts.and adds no word, with or without a separator override', () => {
     const plain = variant(ZhCn, () => ({}));
     const joined = variant(ZhCn, () => ({ wordJoining: { separator: '' } }));
-    expect(plain.convert('2.02', { currency: true, doNotAddOnly: true })).toBe('二 元 零 二 分');
+    expect(plain.convert('2.02', { currency: true, doNotAddOnly: true })).toBe('二元零二分');
     expect(joined.convert('2.02', { currency: true, doNotAddOnly: true })).toBe('二元零二分');
   });
 });
@@ -714,7 +714,7 @@ describe('formalConfig ordinal exact words', () => {
       formalConfig: { ...config.formalConfig, ordinalExactWordsMapping: [{ number: 100, value: '第壹佰' }] },
     }));
     expect(zh.toOrdinal(100, { formal: true })).toBe('第壹佰');
-    expect(zh.toOrdinal(100)).toBe('第一 百');
+    expect(zh.toOrdinal(100)).toBe('第一百');
   });
 
   test('a formalConfig without exactWordsMapping keeps the plain exact words', () => {
@@ -722,7 +722,7 @@ describe('formalConfig ordinal exact words', () => {
       const { exactWordsMapping: _ignored, ...formal } = config.formalConfig!;
       return { formalConfig: formal };
     });
-    expect(zh.convert(100, { formal: true })).toBe('一 百');
+    expect(zh.convert(100, { formal: true })).toBe('一百');
   });
 });
 
@@ -976,16 +976,16 @@ describe('onlyWhenWhole and largerUnit.zeroWord (th, zh)', () => {
 
   test('a skipped larger unit reads its zero word after a non-zero main amount', () => {
     const zh = new ToWordsCore().setLocale(ZhCn, 'zh-CN');
-    expect(zh.convert(100.05, { currency: true })).toBe('一 百 元 零 五 分');
-    expect(zh.convert(0.05, { currency: true })).toBe('零 元 五 分');
-    expect(zh.convert(100.55, { currency: true })).toBe('一 百 元 五 角 五 分');
+    expect(zh.convert(100.05, { currency: true })).toBe('一百元零五分');
+    expect(zh.convert(0.05, { currency: true })).toBe('零元五分');
+    expect(zh.convert(100.55, { currency: true })).toBe('一百元五角五分');
     const noZero = variant(ZhCn, (config) => ({
       currency: {
         ...config.currency,
         fractionalUnit: { ...config.currency.fractionalUnit, largerUnit: { name: '角', factor: 10 } },
       },
     }));
-    expect(noZero.convert(100.05, { currency: true })).toBe('一 百 元 五 分');
+    expect(noZero.convert(100.05, { currency: true })).toBe('一百元五分');
   });
 });
 
