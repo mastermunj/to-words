@@ -2,6 +2,14 @@
 
 All notable changes to this project are documented here. Releases and this changelog are managed by [Release Please](https://github.com/googleapis/release-please).
 
+## [7.5.0](https://github.com/mastermunj/to-words/compare/v7.4.2...v7.5.0) (2026-11-13)
+
+
+### Bug Fixes
+
+* **cjk:** write Chinese and Japanese numbers without spaces ([44d487e](https://github.com/mastermunj/to-words/commit/44d487e9d4e33e4d202b5d0f09986caf1ef8b28d))
+* **cjk:** write Chinese and Japanese numbers without spaces ([79dfbd5](https://github.com/mastermunj/to-words/commit/79dfbd56c177b86f57a77b74ea9d171bde37ec4d))
+
 ## [7.4.2](https://github.com/mastermunj/to-words/compare/v7.4.1...v7.4.2) (2026-11-09)
 
 
