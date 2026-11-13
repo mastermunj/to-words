@@ -301,6 +301,11 @@ export type LocaleConfig = {
    */
   ordinalTensAndUnits?: boolean;
   /**
+   * The decimal style used when the caller passes no `decimalStyle` (zh 3.14 → 三点一四 with
+   * 'digit-by-digit': decimal digits are read one by one). `fractionReading.isDefault` takes precedence.
+   */
+  defaultDecimalStyle?: 'digit' | 'digit-by-digit';
+  /**
    * Grammar of `decimalStyle: 'fraction'`, for locales with `pluralRule`. The whole part is
    * followed by a whole-unit noun chosen by its plural category instead of `texts.and`, both
    * numbers take `gender`, and the denominator form follows the numerator's category

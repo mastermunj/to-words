@@ -1358,7 +1358,8 @@ export class ToWordsCore {
       const reading = localeConfig.fractionReading;
       // fractionReading.isDefault: the digit reading is ungrammatical in this locale, so the
       // fraction reading applies unless the caller asks for `decimalStyle: 'digit'`.
-      const decimalStyle = options.decimalStyle ?? (reading?.isDefault ? 'fraction' : 'digit');
+      const decimalStyle =
+        options.decimalStyle ?? (reading?.isDefault ? 'fraction' : (localeConfig.defaultDecimalStyle ?? 'digit'));
       const denominator = localeConfig.fractionDenominatorMapping?.[fractionalPart.length];
       if (decimalStyle === 'fraction' && denominator && reading && localeConfig.pluralRule) {
         // fractionReading: the whole part agrees with a whole-unit noun and both numbers take the

@@ -28,6 +28,10 @@ export default class Locale implements LocaleInterface {
       only: '',
       point: '点',
     },
+    // Chinese and Japanese write a number without spaces (CLDR zh, yue, ja: 一百一十四, 千五百万).
+    trim: true,
+    // Decimal digits are read one by one (CLDR zh, yue, ja: 3.14 → 三点一四; ja.wikipedia «漢数字»: 粒読み).
+    defaultDecimalStyle: 'digit-by-digit',
     numberWordsMapping: [
       { number: 100000000000000000000n, value: '垓' },
       { number: 10000000000000000n, value: '京' },

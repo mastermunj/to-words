@@ -35,21 +35,21 @@ describe('Test Locale', () => {
 
 const testIntegers: [number, string][] = [
   [0, '零'],
-  [137, '一 百 三十 七'],
-  [700, '七 百'],
-  [1100, '一 千 一 百'],
-  [4680, '四 千 六 百 八十'],
-  [63892, '六 萬 三 千 八 百 九十 二'],
-  [86100, '八 萬 六 千 一 百'],
-  [792581, '七十 九 萬 二 千 五 百 八十 一'],
-  [2741034, '二 百 七十 四 萬 一 千 零 三十 四'],
-  [86429753, '八 千 六 百 四十 二 萬 九 千 七 百 五十 三'],
-  [975310864, '九 億 七 千 五 百 三十 一 萬 零 八 百 六十 四'],
-  [1000000000, '十 億'],
-  [9876543210, '九十 八 億 七 千 六 百 五十 四 萬 三 千 二 百 一十'],
-  [10000000000, '一 百 億'],
-  [100000000000, '一 千 億'],
-  [1000000000000, '一 兆'],
+  [137, '一百三十七'],
+  [700, '七百'],
+  [1100, '一千一百'],
+  [4680, '四千六百八十'],
+  [63892, '六萬三千八百九十二'],
+  [86100, '八萬六千一百'],
+  [792581, '七十九萬二千五百八十一'],
+  [2741034, '二百七十四萬一千零三十四'],
+  [86429753, '八千六百四十二萬九千七百五十三'],
+  [975310864, '九億七千五百三十一萬零八百六十四'],
+  [1000000000, '十億'],
+  [9876543210, '九十八億七千六百五十四萬三千二百一十'],
+  [10000000000, '一百億'],
+  [100000000000, '一千億'],
+  [1000000000000, '一兆'],
 ];
 
 describe('Test Integers with options = {}', () => {
@@ -65,7 +65,7 @@ describe('Test Negative Integers with options = {}', () => {
       return;
     }
     row[0] = -row[0];
-    row[1] = `負 ${row[1]}`;
+    row[1] = `負${row[1]}`;
   });
 
   test.concurrent.each(testNegativeIntegers)('convert %d => %s', (input, expected) => {
@@ -76,7 +76,7 @@ describe('Test Negative Integers with options = {}', () => {
 describe('Test Integers with options = { currency: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} 元 整`;
+    row[1] = `${row[1]}元整`;
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -87,7 +87,7 @@ describe('Test Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, doNotAddOnly: true }', () => {
   const testIntegersWithCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} 元`;
+    row[1] = `${row[1]}元`;
   });
 
   test.concurrent.each(testIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -99,11 +99,11 @@ describe('Test Negative Integers with options = { currency: true }', () => {
   const testNegativeIntegersWithCurrency = cloneDeep(testIntegers);
   testNegativeIntegersWithCurrency.map((row, i) => {
     if (i === 0) {
-      row[1] = `${row[1]} 元 整`;
+      row[1] = `${row[1]}元整`;
       return;
     }
     row[0] = -row[0];
-    row[1] = `負 ${row[1]} 元 整`;
+    row[1] = `負${row[1]}元整`;
   });
 
   test.concurrent.each(testNegativeIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -114,7 +114,7 @@ describe('Test Negative Integers with options = { currency: true }', () => {
 describe('Test Integers with options = { currency: true, ignoreZeroCurrency: true }', () => {
   const testIntegersWithCurrencyAndIgnoreZeroCurrency = cloneDeep(testIntegers);
   testIntegersWithCurrencyAndIgnoreZeroCurrency.map((row, i) => {
-    row[1] = i === 0 ? '' : `${row[1]} 元 整`;
+    row[1] = i === 0 ? '' : `${row[1]}元整`;
   });
 
   test.concurrent.each(testIntegersWithCurrencyAndIgnoreZeroCurrency)('convert %d => %s', (input, expected) => {
@@ -129,27 +129,27 @@ describe('Test Integers with options = { currency: true, ignoreZeroCurrency: tru
 
 const testFloats: [number, string][] = [
   [0, '零'],
-  [0.04, '零 點 零 四'],
-  [0.0468, '零 點 零 四 六 八'],
-  [0.4, '零 點 四'],
-  [0.63, '零 點 六十 三'],
-  [0.973, '零 點 九 百 七十 三'],
-  [0.999, '零 點 九 百 九十 九'],
-  [37.06, '三十 七 點 零 六'],
-  [37.068, '三十 七 點 零 六 八'],
-  [37.68, '三十 七 點 六十 八'],
-  [37.683, '三十 七 點 六 百 八十 三'],
+  [0.04, '零點零四'],
+  [0.0468, '零點零四六八'],
+  [0.4, '零點四'],
+  [0.63, '零點六三'],
+  [0.973, '零點九七三'],
+  [0.999, '零點九九九'],
+  [37.06, '三十七點零六'],
+  [37.068, '三十七點零六八'],
+  [37.68, '三十七點六八'],
+  [37.683, '三十七點六八三'],
 ];
 
 describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
   const testIncludeZeroFractional: [number | string, string][] = [
-    [123, `一 百 二十 三 元 整`],
-    ['123', `一 百 二十 三 元 整`],
-    ['123.0', `一 百 二十 三 元 零 分 整`],
-    ['123.00', `一 百 二十 三 元 零 分 整`],
-    ['0.00', `零 元 零 分 整`],
-    ['-123.00', `負 一 百 二十 三 元 零 分 整`],
-    ['37.68', `三十 七 元 六 角 八 分`],
+    [123, `一百二十三元整`],
+    ['123', `一百二十三元整`],
+    ['123.0', `一百二十三元零分整`],
+    ['123.00', `一百二十三元零分整`],
+    ['0.00', `零元零分整`],
+    ['-123.00', `負一百二十三元零分整`],
+    ['37.68', `三十七元六角八分`],
   ];
 
   test.concurrent.each(testIncludeZeroFractional)('convert %s => %s', (input, expected) => {
@@ -169,18 +169,18 @@ describe('Test Floats with options = {}', () => {
 });
 
 const testFloatsWithCurrency: [number, string][] = [
-  [0, '零 元 整'],
-  [0.01, '零 元 一 分'],
-  [0.04, '零 元 四 分'],
-  [0.0468, '零 元 五 分'],
-  [0.5, '零 元 五 角'],
-  [0.63, '零 元 六 角 三 分'],
-  [0.973, '零 元 九 角 七 分'],
-  [0.999, '一 元 整'],
-  [1.25, '一 元 二 角 五 分'],
-  [10.99, '十 元 九 角 九 分'],
-  [37.06, '三十 七 元 零 六 分'],
-  [37.68, '三十 七 元 六 角 八 分'],
+  [0, '零元整'],
+  [0.01, '零元一分'],
+  [0.04, '零元四分'],
+  [0.0468, '零元五分'],
+  [0.5, '零元五角'],
+  [0.63, '零元六角三分'],
+  [0.973, '零元九角七分'],
+  [0.999, '一元整'],
+  [1.25, '一元二角五分'],
+  [10.99, '十元九角九分'],
+  [37.06, '三十七元零六分'],
+  [37.68, '三十七元六角八分'],
 ];
 
 describe('Test Floats with options = { currency: true }', () => {
@@ -192,17 +192,17 @@ describe('Test Floats with options = { currency: true }', () => {
 describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true }', () => {
   const testFloatsWithCurrencyAndIgnoreZeroCurrency: [number, string][] = [
     [0, ''],
-    [0.01, '一 分'],
-    [0.04, '四 分'],
-    [0.0468, '五 分'],
-    [0.5, '五 角'],
-    [0.63, '六 角 三 分'],
-    [0.973, '九 角 七 分'],
-    [0.999, '一 元 整'],
-    [1.25, '一 元 二 角 五 分'],
-    [10.99, '十 元 九 角 九 分'],
-    [37.06, '三十 七 元 零 六 分'],
-    [37.68, '三十 七 元 六 角 八 分'],
+    [0.01, '一分'],
+    [0.04, '四分'],
+    [0.0468, '五分'],
+    [0.5, '五角'],
+    [0.63, '六角三分'],
+    [0.973, '九角七分'],
+    [0.999, '一元整'],
+    [1.25, '一元二角五分'],
+    [10.99, '十元九角九分'],
+    [37.06, '三十七元零六分'],
+    [37.68, '三十七元六角八分'],
   ];
 
   test.concurrent.each(testFloatsWithCurrencyAndIgnoreZeroCurrency)('convert %d => %s', (input, expected) => {
@@ -217,18 +217,18 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true 
 
 describe('Test Floats with options = { currency: true, ignoreDecimal: true }', () => {
   const testFloatsWithCurrencyAndIgnoreDecimal: [number, string][] = [
-    [0, '零 元 整'],
-    [0.01, '零 元 整'],
-    [0.04, '零 元 整'],
-    [0.0468, '零 元 整'],
-    [0.5, '零 元 整'],
-    [0.63, '零 元 整'],
-    [0.973, '零 元 整'],
-    [0.999, '零 元 整'],
-    [1.25, '一 元 整'],
-    [10.99, '十 元 整'],
-    [37.06, '三十 七 元 整'],
-    [37.68, '三十 七 元 整'],
+    [0, '零元整'],
+    [0.01, '零元整'],
+    [0.04, '零元整'],
+    [0.0468, '零元整'],
+    [0.5, '零元整'],
+    [0.63, '零元整'],
+    [0.973, '零元整'],
+    [0.999, '零元整'],
+    [1.25, '一元整'],
+    [10.99, '十元整'],
+    [37.06, '三十七元整'],
+    [37.68, '三十七元整'],
   ];
 
   test.concurrent.each(testFloatsWithCurrencyAndIgnoreDecimal)('convert %d => %s', (input, expected) => {
@@ -251,10 +251,10 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true,
     [0.63, ''],
     [0.973, ''],
     [0.999, ''],
-    [1.25, '一 元 整'],
-    [10.99, '十 元 整'],
-    [37.06, '三十 七 元 整'],
-    [37.68, '三十 七 元 整'],
+    [1.25, '一元整'],
+    [10.99, '十元整'],
+    [37.06, '三十七元整'],
+    [37.68, '三十七元整'],
   ];
 
   test.concurrent.each(testFloatsWithCurrencyAndIgnoreZeroCurrencyAndIgnoreDecimals)(
@@ -283,19 +283,19 @@ const testOrdinalNumbers: [number, string][] = [
   [8, '第八'],
   [9, '第九'],
   [10, '第十'],
-  [11, '第十 一'],
-  [12, '第十 二'],
-  [13, '第十 三'],
-  [14, '第十 四'],
-  [15, '第十 五'],
-  [16, '第十 六'],
-  [17, '第十 七'],
-  [18, '第十 八'],
-  [19, '第十 九'],
+  [11, '第十一'],
+  [12, '第十二'],
+  [13, '第十三'],
+  [14, '第十四'],
+  [15, '第十五'],
+  [16, '第十六'],
+  [17, '第十七'],
+  [18, '第十八'],
+  [19, '第十九'],
   [20, '第二十'],
-  [21, '第二十 一'],
-  [22, '第二十 二'],
-  [23, '第二十 三'],
+  [21, '第二十一'],
+  [22, '第二十二'],
+  [23, '第二十三'],
   [30, '第三十'],
   [40, '第四十'],
   [50, '第五十'],
@@ -303,33 +303,33 @@ const testOrdinalNumbers: [number, string][] = [
   [70, '第七十'],
   [80, '第八十'],
   [90, '第九十'],
-  [31, '第三十 一'],
-  [32, '第三十 二'],
-  [33, '第三十 三'],
-  [41, '第四十 一'],
-  [42, '第四十 二'],
-  [43, '第四十 三'],
-  [51, '第五十 一'],
-  [52, '第五十 二'],
-  [53, '第五十 三'],
-  [100, '第一 百'],
-  [200, '第二 百'],
-  [1000, '第一 千'],
-  [10000, '第一 萬'],
-  [100000, '第十 萬'],
-  [1000000, '第一 百 萬'],
-  [100001, '第十 萬 零 一'],
-  [100002, '第十 萬 零 二'],
-  [100003, '第十 萬 零 三'],
-  [101, '第一 百 零 一'],
-  [102, '第一 百 零 二'],
-  [103, '第一 百 零 三'],
-  [111, '第一 百 一十 一'],
-  [112, '第一 百 一十 二'],
-  [113, '第一 百 一十 三'],
-  [123, '第一 百 二十 三'],
-  [1001, '第一 千 零 一'],
-  [1234, '第一 千 二 百 三十 四'],
+  [31, '第三十一'],
+  [32, '第三十二'],
+  [33, '第三十三'],
+  [41, '第四十一'],
+  [42, '第四十二'],
+  [43, '第四十三'],
+  [51, '第五十一'],
+  [52, '第五十二'],
+  [53, '第五十三'],
+  [100, '第一百'],
+  [200, '第二百'],
+  [1000, '第一千'],
+  [10000, '第一萬'],
+  [100000, '第十萬'],
+  [1000000, '第一百萬'],
+  [100001, '第十萬零一'],
+  [100002, '第十萬零二'],
+  [100003, '第十萬零三'],
+  [101, '第一百零一'],
+  [102, '第一百零二'],
+  [103, '第一百零三'],
+  [111, '第一百一十一'],
+  [112, '第一百一十二'],
+  [113, '第一百一十三'],
+  [123, '第一百二十三'],
+  [1001, '第一千零一'],
+  [1234, '第一千二百三十四'],
 ];
 
 describe('Test Ordinal Numbers', () => {
@@ -381,17 +381,17 @@ describe('Test Invalid Inputs', () => {
 // Powers of Ten (Traditional Chinese system: 萬, 億, 兆)
 const testPowersOfTen: [number, string][] = [
   [10, '十'],
-  [100, '一 百'],
-  [1000, '一 千'],
-  [10000, '一 萬'],
-  [100000, '十 萬'],
-  [1000000, '一 百 萬'],
-  [10000000, '一 千 萬'],
-  [100000000, '一 億'],
-  [1000000000, '十 億'],
-  [10000000000, '一 百 億'],
-  [100000000000, '一 千 億'],
-  [1000000000000, '一 兆'],
+  [100, '一百'],
+  [1000, '一千'],
+  [10000, '一萬'],
+  [100000, '十萬'],
+  [1000000, '一百萬'],
+  [10000000, '一千萬'],
+  [100000000, '一億'],
+  [1000000000, '十億'],
+  [10000000000, '一百億'],
+  [100000000000, '一千億'],
+  [1000000000000, '一兆'],
 ];
 
 describe('Test Powers of Ten (Chinese System)', () => {
@@ -404,11 +404,11 @@ describe('Test Powers of Ten (Chinese System)', () => {
 const testBigInts: [bigint, string][] = [
   [0n, '零'],
   [1n, '一'],
-  [100n, '一 百'],
-  [1000n, '一 千'],
-  [10000n, '一 萬'],
-  [100000000n, '一 億'],
-  [1000000000000n, '一 兆'],
+  [100n, '一百'],
+  [1000n, '一千'],
+  [10000n, '一萬'],
+  [100000000n, '一億'],
+  [1000000000000n, '一兆'],
 ];
 
 describe('Test BigInt Values', () => {
@@ -419,11 +419,11 @@ describe('Test BigInt Values', () => {
 
 // Negative BigInt Tests
 const testNegativeBigInts: [bigint, string][] = [
-  [-1n, '負 一'],
-  [-100n, '負 一 百'],
-  [-1000n, '負 一 千'],
-  [-10000n, '負 一 萬'],
-  [-100000000n, '負 一 億'],
+  [-1n, '負一'],
+  [-100n, '負一百'],
+  [-1000n, '負一千'],
+  [-10000n, '負一萬'],
+  [-100000000n, '負一億'],
 ];
 
 describe('Test Negative BigInt Values', () => {
@@ -436,11 +436,11 @@ describe('Test Negative BigInt Values', () => {
 const testStringInputs: [string, string][] = [
   ['0', '零'],
   ['1', '一'],
-  ['100', '一 百'],
-  ['1000', '一 千'],
-  ['-100', '負 一 百'],
-  ['  100  ', '一 百'],
-  ['10000', '一 萬'],
+  ['100', '一百'],
+  ['1000', '一千'],
+  ['-100', '負一百'],
+  ['  100  ', '一百'],
+  ['10000', '一萬'],
 ];
 
 describe('Test String Number Inputs', () => {
@@ -472,7 +472,7 @@ describe('Test Zero Variants', () => {
   });
 
   test('converts 0 with currency', () => {
-    expect(toWords.convert(0, { currency: true })).toBe('零 元 整');
+    expect(toWords.convert(0, { currency: true })).toBe('零元整');
   });
 
   test('converts 0 with currency and ignoreZeroCurrency', () => {
@@ -485,11 +485,11 @@ describe('Test All Currency Options Combinations', () => {
   const testValue = 1234;
 
   test('currency only', () => {
-    expect(toWords.convert(testValue, { currency: true })).toBe('一 千 二 百 三十 四 元 整');
+    expect(toWords.convert(testValue, { currency: true })).toBe('一千二百三十四元整');
   });
 
   test('currency + doNotAddOnly', () => {
-    expect(toWords.convert(testValue, { currency: true, doNotAddOnly: true })).toBe('一 千 二 百 三十 四 元');
+    expect(toWords.convert(testValue, { currency: true, doNotAddOnly: true })).toBe('一千二百三十四元');
   });
 });
 
@@ -509,21 +509,21 @@ const testFormalIntegers: [number, string][] = [
   [8, '捌'],
   [9, '玖'],
   [10, '拾'],
-  [11, '拾 壹'],
+  [11, '拾壹'],
   [20, '貳拾'],
-  [21, '貳拾 壹'],
+  [21, '貳拾壹'],
   [50, '伍拾'],
-  [99, '玖拾 玖'],
-  [100, '壹 佰'],
-  [137, '壹 佰 參拾 柒'],
-  [700, '柒 佰'],
-  [1100, '壹 仟 壹 佰'],
-  [4680, '肆 仟 陸 佰 捌拾'],
-  [10000, '壹 萬'],
-  [63892, '陸 萬 參 仟 捌 佰 玖拾 貳'],
-  [100000000, '壹 億'],
-  [975310864, '玖 億 柒 仟 伍 佰 參拾 壹 萬 零 捌 佰 陸拾 肆'],
-  [1000000000000, '壹 兆'],
+  [99, '玖拾玖'],
+  [100, '壹佰'],
+  [137, '壹佰參拾柒'],
+  [700, '柒佰'],
+  [1100, '壹仟壹佰'],
+  [4680, '肆仟陸佰捌拾'],
+  [10000, '壹萬'],
+  [63892, '陸萬參仟捌佰玖拾貳'],
+  [100000000, '壹億'],
+  [975310864, '玖億柒仟伍佰參拾壹萬零捌佰陸拾肆'],
+  [1000000000000, '壹兆'],
 ];
 
 describe('Test Formal Integers with options = { formal: true }', () => {
@@ -535,7 +535,7 @@ describe('Test Formal Integers with options = { formal: true }', () => {
 describe('Test Formal Integers with options = { formal: true, currency: true }', () => {
   const testFormalIntegersWithCurrency = cloneDeep(testFormalIntegers);
   testFormalIntegersWithCurrency.map((row) => {
-    row[1] = `${row[1]} 圓 整`;
+    row[1] = `${row[1]}圓整`;
   });
 
   test.concurrent.each(testFormalIntegersWithCurrency)('convert %d => %s', (input, expected) => {
@@ -545,10 +545,10 @@ describe('Test Formal Integers with options = { formal: true, currency: true }',
 
 describe('Test Formal Floats with options = { formal: true, currency: true }', () => {
   const testFormalFloatsWithCurrency: [number, string][] = [
-    [0.01, '零 圓 壹 分'],
-    [1.25, '壹 圓 貳 角 伍 分'],
-    [10.99, '拾 圓 玖 角 玖 分'],
-    [37.68, '參拾 柒 圓 陸 角 捌 分'],
+    [0.01, '零圓壹分'],
+    [1.25, '壹圓貳角伍分'],
+    [10.99, '拾圓玖角玖分'],
+    [37.68, '參拾柒圓陸角捌分'],
   ];
 
   test.concurrent.each(testFormalFloatsWithCurrency)('convert %d => %s', (input, expected) => {
@@ -570,10 +570,10 @@ const testFormalOrdinals: [number, string][] = [
   [20, '第貳拾'],
   [30, '第參拾'],
   [50, '第伍拾'],
-  [100, '第壹 佰'],
-  [21, '第貳拾 壹'],
-  [123, '第壹 佰 貳拾 參'],
-  [1234, '第壹 仟 貳 佰 參拾 肆'],
+  [100, '第壹佰'],
+  [21, '第貳拾壹'],
+  [123, '第壹佰貳拾參'],
+  [1234, '第壹仟貳佰參拾肆'],
 ];
 
 describe('Test Formal Ordinal Numbers', () => {
@@ -606,25 +606,25 @@ describe('Output style options', () => {
   // hyphenate applies to English only, so the output is unchanged.
   // This script has no capital letters, so every casing leaves the output unchanged.
   const cases: [string, () => string, string][] = [
-    ['default', () => styled.convert(21), '二十 一'],
-    ['hyphenate', () => styled.convert(21, { hyphenate: true }), '二十 一'],
-    ["casing 'title'", () => styled.convert(21.5, { currency: true, casing: 'title' }), '二十 一 元 五 角'],
-    ["casing 'lower'", () => styled.convert(21.5, { currency: true, casing: 'lower' }), '二十 一 元 五 角'],
-    ["casing 'upper'", () => styled.convert(21.5, { currency: true, casing: 'upper' }), '二十 一 元 五 角'],
-    ["casing 'natural'", () => styled.convert(21.5, { currency: true, casing: 'natural' }), '二十 一 元 五 角'],
+    ['default', () => styled.convert(21), '二十一'],
+    ['hyphenate', () => styled.convert(21, { hyphenate: true }), '二十一'],
+    ["casing 'title'", () => styled.convert(21.5, { currency: true, casing: 'title' }), '二十一元五角'],
+    ["casing 'lower'", () => styled.convert(21.5, { currency: true, casing: 'lower' }), '二十一元五角'],
+    ["casing 'upper'", () => styled.convert(21.5, { currency: true, casing: 'upper' }), '二十一元五角'],
+    ["casing 'natural'", () => styled.convert(21.5, { currency: true, casing: 'natural' }), '二十一元五角'],
     [
       "casing 'sentence' with hyphenate",
       () => styled.convert(21.5, { currency: true, casing: 'sentence', hyphenate: true }),
-      '二十 一 元 五 角',
+      '二十一元五角',
     ],
-    ['ordinal', () => styled.toOrdinal(21), '第二十 一'],
+    ['ordinal', () => styled.toOrdinal(21), '第二十一'],
     [
       "ordinal with casing 'lower' and hyphenate",
       () => styled.toOrdinal(21, { casing: 'lower', hyphenate: true }),
-      '第二十 一',
+      '第二十一',
     ],
-    ["decimalStyle 'digit' (default)", () => styled.convert(1.25), '一 點 二十 五'],
-    ["decimalStyle 'digit-by-digit'", () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }), '一 點 二 五'],
+    ['default (digit by digit)', () => styled.convert(1.25), '一點二五'],
+    ["decimalStyle 'digit-by-digit'", () => styled.convert(1.25, { decimalStyle: 'digit-by-digit' }), '一點二五'],
   ];
 
   test.each(cases)('%s', (_name, run, expected) => {

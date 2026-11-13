@@ -32,6 +32,10 @@ export default class Locale implements LocaleInterface {
     // 0.5 yuan is 五角; 整 closes an amount without 分 only, and is left out once a fraction is
     // spelled (PBOC 正确填写票据和结算凭证的基本规定: 一百元整, 一百元五角, 一百元五角五分).
     onlyWhenWhole: true,
+    // Chinese and Japanese write a number without spaces (CLDR zh, yue, ja: 一百一十四, 千五百万).
+    trim: true,
+    // Decimal digits are read one by one (CLDR zh, yue, ja: 3.14 → 三点一四; ja.wikipedia «漢数字»: 粒読み).
+    defaultDecimalStyle: 'digit-by-digit',
     numberWordsMapping: [
       { number: 100000000000000000000n, value: '垓' },
       { number: 10000000000000000n, value: '京' },
@@ -64,7 +68,7 @@ export default class Locale implements LocaleInterface {
     // (一百零一); ordinals are 第 + the cardinal (CLDR zh: 第二十一, 第一百).
     ignoreOneForWords: ['十'],
     zeroForSkippedPlaces: true,
-    exactWordsMapping: [{ number: 100, value: '一 百' }],
+    exactWordsMapping: [{ number: 100, value: '一百' }],
     ordinalPrefix: '第',
     ordinalComposition: 'fused-prefix',
     ordinalWordsMapping: [
@@ -111,7 +115,7 @@ export default class Locale implements LocaleInterface {
         { number: 0, value: '零' },
       ],
       ignoreOneForWords: ['拾'],
-      exactWordsMapping: [{ number: 100, value: '壹 佰' }],
+      exactWordsMapping: [{ number: 100, value: '壹佰' }],
       currency: {
         name: '圓',
         plural: '圓',
