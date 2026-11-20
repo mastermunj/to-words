@@ -57,8 +57,8 @@ const testIntegers: [number, string][] = [
   [20, 'Zwanzig'],
   [21, 'Einundzwanzig'],
   [22, 'Zweiundzwanzig'],
-  [30, 'Dreißig'],
-  [31, 'Einunddreißig'],
+  [30, 'Dreissig'],
+  [31, 'Einunddreissig'],
   [40, 'Vierzig'],
   [42, 'Zweiundvierzig'],
   [50, 'Fünfzig'],
@@ -68,7 +68,7 @@ const testIntegers: [number, string][] = [
   [90, 'Neunzig'],
   [99, 'Neunundneunzig'],
   [100, 'Hundert'],
-  [137, 'Hundertsiebenunddreißig'],
+  [137, 'Hundertsiebenunddreissig'],
   [200, 'Zweihundert'],
   [700, 'Siebenhundert'],
   [1000, 'Tausend'],
@@ -79,14 +79,14 @@ const testIntegers: [number, string][] = [
   [792581, 'Siebenhundertzweiundneunzigtausendfünfhunderteinundachtzig'],
   [1000000, 'Eine Million'],
   [2000000, 'Zwei Millionen'],
-  [2741034, 'Zwei Millionen Siebenhunderteinundvierzigtausendvierunddreißig'],
+  [2741034, 'Zwei Millionen Siebenhunderteinundvierzigtausendvierunddreissig'],
   [86429753, 'Sechsundachtzig Millionen Vierhundertneunundzwanzigtausendsiebenhundertdreiundfünfzig'],
   [975310864, 'Neunhundertfünfundsiebzig Millionen Dreihundertzehntausendachthundertvierundsechzig'],
   [1000000000, 'Eine Milliarde'],
   [9876543210, 'Neun Milliarden Achthundertsechsundsiebzig Millionen Fünfhundertdreiundvierzigtausendzweihundertzehn'],
   [
     98765432101,
-    'Achtundneunzig Milliarden Siebenhundertfünfundsechzig Millionen Vierhundertzweiunddreißigtausendhunderteins',
+    'Achtundneunzig Milliarden Siebenhundertfünfundsechzig Millionen Vierhundertzweiunddreissigtausendhunderteins',
   ],
   [
     987654321012,
@@ -98,7 +98,7 @@ const testIntegers: [number, string][] = [
   ],
   [
     98765432101234,
-    'Achtundneunzig Billionen Siebenhundertfünfundsechzig Milliarden Vierhundertzweiunddreißig Millionen Hunderteintausendzweihundertvierunddreißig',
+    'Achtundneunzig Billionen Siebenhundertfünfundsechzig Milliarden Vierhundertzweiunddreissig Millionen Hunderteintausendzweihundertvierunddreissig',
   ],
 ];
 
@@ -184,10 +184,10 @@ const testFloats: [number, string][] = [
   [0.4, 'Null Komma Vier'],
   [0.973, 'Null Komma Neunhundertdreiundsiebzig'],
   [0.999, 'Null Komma Neunhundertneunundneunzig'],
-  [37.06, 'Siebenunddreißig Komma Null Sechs'],
-  [37.068, 'Siebenunddreißig Komma Null Sechs Acht'],
-  [37.68, 'Siebenunddreißig Komma Achtundsechzig'],
-  [37.683, 'Siebenunddreißig Komma Sechshundertdreiundachtzig'],
+  [37.06, 'Siebenunddreissig Komma Null Sechs'],
+  [37.068, 'Siebenunddreissig Komma Null Sechs Acht'],
+  [37.68, 'Siebenunddreissig Komma Achtundsechzig'],
+  [37.683, 'Siebenunddreissig Komma Sechshundertdreiundachtzig'],
 ];
 
 describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
@@ -198,7 +198,7 @@ describe('Test with options = { currency: true, includeZeroFractional: true }', 
     ['123.00', `Hundertdreiundzwanzig Franken Und Null Rappen`],
     ['0.00', `Null Franken Und Null Rappen`],
     ['-123.00', `Minus Hundertdreiundzwanzig Franken Und Null Rappen`],
-    ['37.68', `Siebenunddreißig Franken Und Achtundsechzig Rappen`],
+    ['37.68', `Siebenunddreissig Franken Und Achtundsechzig Rappen`],
   ];
 
   test.concurrent.each(testIncludeZeroFractional)('convert %s => %s', (input, expected) => {
@@ -224,10 +224,10 @@ const testFloatsWithCurrency: [number, string][] = [
   [0.4, `Null Franken Und Vierzig Rappen`],
   [0.973, `Null Franken Und Siebenundneunzig Rappen`],
   [0.999, `Ein Franken`],
-  [37.06, `Siebenunddreißig Franken Und Sechs Rappen`],
-  [37.068, `Siebenunddreißig Franken Und Sieben Rappen`],
-  [37.68, `Siebenunddreißig Franken Und Achtundsechzig Rappen`],
-  [37.683, `Siebenunddreißig Franken Und Achtundsechzig Rappen`],
+  [37.06, `Siebenunddreissig Franken Und Sechs Rappen`],
+  [37.068, `Siebenunddreissig Franken Und Sieben Rappen`],
+  [37.68, `Siebenunddreissig Franken Und Achtundsechzig Rappen`],
+  [37.683, `Siebenunddreissig Franken Und Achtundsechzig Rappen`],
 ];
 
 describe('Test Floats with options = { currency: true }', () => {
@@ -309,7 +309,7 @@ const testOrdinals: [number, string][] = [
   [24, 'Vierundzwanzigste'],
   [25, 'Fünfundzwanzigste'],
   // Tens
-  [30, 'Dreißigste'],
+  [30, 'Dreissigste'],
   [40, 'Vierzigste'],
   [50, 'Fünfzigste'],
   [60, 'Sechzigste'],
@@ -331,7 +331,7 @@ const testOrdinals: [number, string][] = [
   [123, 'Hundertdreiundzwanzigste'],
   [150, 'Hundertfünfzigste'],
   [1001, 'Tausenderste'],
-  [1234, 'Tausendzweihundertvierunddreißigste'],
+  [1234, 'Tausendzweihundertvierunddreissigste'],
   [1500, 'Tausendfünfhundertste'],
   [10000, 'Zehntausendste'],
   [100000, 'Hunderttausendste'],
@@ -636,10 +636,10 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
 
   test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
     expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
-      'Eins Komma Eine Million Zweihundertvierunddreißigtausendfünfhundertsiebenundsechzig',
+      'Eins Komma Eine Million Zweihundertvierunddreissigtausendfünfhundertsiebenundsechzig',
     );
     expect(toWords.convert(1.1234567)).toBe(
-      'Eins Komma Eine Million Zweihundertvierunddreißigtausendfünfhundertsiebenundsechzig',
+      'Eins Komma Eine Million Zweihundertvierunddreissigtausendfünfhundertsiebenundsechzig',
     );
   });
 
@@ -696,5 +696,32 @@ describe('Output style options', () => {
 
   test.each(cases)('%s', (_name, run, expected) => {
     expect(run()).toBe(expected);
+  });
+});
+
+describe('Swiss spelling (no ß)', () => {
+  // Swiss Standard German writes «ss» instead of «ß» (Duden, Schweizerhochdeutsch).
+  test.each([
+    [30, 'Dreissig'],
+    [33, 'Dreiunddreissig'],
+    [130, 'Hundertdreissig'],
+    [30000, 'Dreissigtausend'],
+  ])('convert %d => %s', (input, expected) => {
+    expect(toWords.convert(input)).toBe(expected);
+  });
+
+  test.each([
+    [30, 'Dreissigste'],
+    [39, 'Neununddreissigste'],
+  ])('toOrdinal(%d) => %s', (input, expected) => {
+    expect(toWords.toOrdinal(input)).toBe(expected);
+  });
+
+  test('no output from 0 to 1000 contains ß', () => {
+    for (let n = 0; n <= 1000; n++) {
+      expect(toWords.convert(n)).not.toContain('ß');
+      expect(toWords.toOrdinal(n)).not.toContain('ß');
+      expect(toWords.convert(n + 0.3, { currency: true })).not.toContain('ß');
+    }
   });
 });
