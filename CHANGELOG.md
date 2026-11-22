@@ -2,6 +2,14 @@
 
 All notable changes to this project are documented here. Releases and this changelog are managed by [Release Please](https://github.com/googleapis/release-please).
 
+## [7.5.1](https://github.com/mastermunj/to-words/compare/v7.5.0...v7.5.1) (2026-11-22)
+
+
+### Bug Fixes
+
+* **de-CH:** write ss instead of ß (Dreissig) ([0a71600](https://github.com/mastermunj/to-words/commit/0a716003b87a1fd8ee02dc69e037c3a7cea148d0))
+* **de-CH:** write ss instead of ß (Dreissig) ([0368c3b](https://github.com/mastermunj/to-words/commit/0368c3b9bca85aac0d7964a1fd6c7dec0efec1f8)), closes [#2538](https://github.com/mastermunj/to-words/issues/2538)
+
 ## [7.5.0](https://github.com/mastermunj/to-words/compare/v7.4.2...v7.5.0) (2026-11-13)
 
 
