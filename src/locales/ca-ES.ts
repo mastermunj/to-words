@@ -8,6 +8,28 @@ import {
 } from '../types.js';
 import { ToWordsCore } from '../ToWordsCoreBase.js';
 
+// IEC: a hyphen joins tens and units (trenta-dos, quaranta-cinc; vint-i-u from 21 to 29).
+const UNITS: [number, string, string?][] = [
+  [9, 'Nou'],
+  [8, 'Vuit'],
+  [7, 'Set'],
+  [6, 'Sis'],
+  [5, 'Cinc'],
+  [4, 'Quatre'],
+  [3, 'Tres'],
+  [2, 'Dos', 'Dues'],
+  [1, 'Un', 'Una'],
+];
+
+const tensWithUnits = (tens: number, word: string) => [
+  ...UNITS.map(([unit, value, feminineValue]) => ({
+    number: tens + unit,
+    value: `${word}-${value}`,
+    ...(feminineValue && { feminineValue: `${word}-${feminineValue}` }),
+  })),
+  { number: tens, value: word },
+];
+
 export default class Locale implements LocaleInterface {
   public config: LocaleConfig = {
     currency: {
@@ -43,77 +65,13 @@ export default class Locale implements LocaleInterface {
       { number: 300, value: 'Tres-Cents', feminineValue: 'Tres-Centes' },
       { number: 200, value: 'Dos-Cents', feminineValue: 'Dues-Centes' },
       { number: 100, value: 'Cent' },
-      // IEC: a hyphen joins tens and units (trenta-dos, quaranta-cinc; vint-i-u from 21 to 29).
-      { number: 99, value: 'Noranta-Nou' },
-      { number: 98, value: 'Noranta-Vuit' },
-      { number: 97, value: 'Noranta-Set' },
-      { number: 96, value: 'Noranta-Sis' },
-      { number: 95, value: 'Noranta-Cinc' },
-      { number: 94, value: 'Noranta-Quatre' },
-      { number: 93, value: 'Noranta-Tres' },
-      { number: 92, value: 'Noranta-Dos', feminineValue: 'Noranta-Dues' },
-      { number: 91, value: 'Noranta-Un', feminineValue: 'Noranta-Una' },
-      { number: 90, value: 'Noranta' },
-      { number: 89, value: 'Vuitanta-Nou' },
-      { number: 88, value: 'Vuitanta-Vuit' },
-      { number: 87, value: 'Vuitanta-Set' },
-      { number: 86, value: 'Vuitanta-Sis' },
-      { number: 85, value: 'Vuitanta-Cinc' },
-      { number: 84, value: 'Vuitanta-Quatre' },
-      { number: 83, value: 'Vuitanta-Tres' },
-      { number: 82, value: 'Vuitanta-Dos', feminineValue: 'Vuitanta-Dues' },
-      { number: 81, value: 'Vuitanta-Un', feminineValue: 'Vuitanta-Una' },
-      { number: 80, value: 'Vuitanta' },
-      { number: 79, value: 'Setanta-Nou' },
-      { number: 78, value: 'Setanta-Vuit' },
-      { number: 77, value: 'Setanta-Set' },
-      { number: 76, value: 'Setanta-Sis' },
-      { number: 75, value: 'Setanta-Cinc' },
-      { number: 74, value: 'Setanta-Quatre' },
-      { number: 73, value: 'Setanta-Tres' },
-      { number: 72, value: 'Setanta-Dos', feminineValue: 'Setanta-Dues' },
-      { number: 71, value: 'Setanta-Un', feminineValue: 'Setanta-Una' },
-      { number: 70, value: 'Setanta' },
-      { number: 69, value: 'Seixanta-Nou' },
-      { number: 68, value: 'Seixanta-Vuit' },
-      { number: 67, value: 'Seixanta-Set' },
-      { number: 66, value: 'Seixanta-Sis' },
-      { number: 65, value: 'Seixanta-Cinc' },
-      { number: 64, value: 'Seixanta-Quatre' },
-      { number: 63, value: 'Seixanta-Tres' },
-      { number: 62, value: 'Seixanta-Dos', feminineValue: 'Seixanta-Dues' },
-      { number: 61, value: 'Seixanta-Un', feminineValue: 'Seixanta-Una' },
-      { number: 60, value: 'Seixanta' },
-      { number: 59, value: 'Cinquanta-Nou' },
-      { number: 58, value: 'Cinquanta-Vuit' },
-      { number: 57, value: 'Cinquanta-Set' },
-      { number: 56, value: 'Cinquanta-Sis' },
-      { number: 55, value: 'Cinquanta-Cinc' },
-      { number: 54, value: 'Cinquanta-Quatre' },
-      { number: 53, value: 'Cinquanta-Tres' },
-      { number: 52, value: 'Cinquanta-Dos', feminineValue: 'Cinquanta-Dues' },
-      { number: 51, value: 'Cinquanta-Un', feminineValue: 'Cinquanta-Una' },
-      { number: 50, value: 'Cinquanta' },
-      { number: 49, value: 'Quaranta-Nou' },
-      { number: 48, value: 'Quaranta-Vuit' },
-      { number: 47, value: 'Quaranta-Set' },
-      { number: 46, value: 'Quaranta-Sis' },
-      { number: 45, value: 'Quaranta-Cinc' },
-      { number: 44, value: 'Quaranta-Quatre' },
-      { number: 43, value: 'Quaranta-Tres' },
-      { number: 42, value: 'Quaranta-Dos', feminineValue: 'Quaranta-Dues' },
-      { number: 41, value: 'Quaranta-Un', feminineValue: 'Quaranta-Una' },
-      { number: 40, value: 'Quaranta' },
-      { number: 39, value: 'Trenta-Nou' },
-      { number: 38, value: 'Trenta-Vuit' },
-      { number: 37, value: 'Trenta-Set' },
-      { number: 36, value: 'Trenta-Sis' },
-      { number: 35, value: 'Trenta-Cinc' },
-      { number: 34, value: 'Trenta-Quatre' },
-      { number: 33, value: 'Trenta-Tres' },
-      { number: 32, value: 'Trenta-Dos', feminineValue: 'Trenta-Dues' },
-      { number: 31, value: 'Trenta-Un', feminineValue: 'Trenta-Una' },
-      { number: 30, value: 'Trenta' },
+      ...tensWithUnits(90, 'Noranta'),
+      ...tensWithUnits(80, 'Vuitanta'),
+      ...tensWithUnits(70, 'Setanta'),
+      ...tensWithUnits(60, 'Seixanta'),
+      ...tensWithUnits(50, 'Cinquanta'),
+      ...tensWithUnits(40, 'Quaranta'),
+      ...tensWithUnits(30, 'Trenta'),
       { number: 29, value: 'Vint-I-Nou' },
       { number: 28, value: 'Vint-I-Vuit' },
       { number: 27, value: 'Vint-I-Set' },
@@ -265,5 +223,8 @@ export function toOrdinal(number: NumberInput, options?: OrdinalOptions): string
  * Shorthand for toWords(number, { currency: true, ...options }).
  */
 export function toCurrency(number: NumberInput, options?: ConverterOptions): string {
-  return (instance ??= new ToWords()).convert(number, { ...options, currency: true });
+  return (instance ??= new ToWords()).convert(number, {
+    ...options,
+    currency: true,
+  });
 }
