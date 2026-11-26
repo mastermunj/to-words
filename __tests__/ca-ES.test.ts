@@ -60,17 +60,17 @@ const testIntegers: [number, string][] = [
   [25, 'Vint-I-Cinc'],
   [29, 'Vint-I-Nou'],
   [30, 'Trenta'],
-  [31, 'Trenta Un'],
-  [35, 'Trenta Cinc'],
+  [31, 'Trenta-Un'],
+  [35, 'Trenta-Cinc'],
   [40, 'Quaranta'],
   [50, 'Cinquanta'],
   [60, 'Seixanta'],
   [70, 'Setanta'],
   [80, 'Vuitanta'],
   [90, 'Noranta'],
-  [99, 'Noranta Nou'],
+  [99, 'Noranta-Nou'],
   [100, 'Cent'],
-  [137, 'Cent Trenta Set'],
+  [137, 'Cent Trenta-Set'],
   [200, 'Dos-Cents'],
   [300, 'Tres-Cents'],
   [400, 'Quatre-Cents'],
@@ -84,11 +84,11 @@ const testIntegers: [number, string][] = [
   [2000, 'Dos Mil'],
   [4680, 'Quatre Mil Sis-Cents Vuitanta'],
   [10000, 'Deu Mil'],
-  [63892, 'Seixanta Tres Mil Vuit-Cents Noranta Dos'],
+  [63892, 'Seixanta-Tres Mil Vuit-Cents Noranta-Dos'],
   [100000, 'Cent Mil'],
   [1000000, 'Un Milió'],
   [2000000, 'Dos Milions'],
-  [2741034, 'Dos Milions Set-Cents Quaranta Un Mil Trenta Quatre'],
+  [2741034, 'Dos Milions Set-Cents Quaranta-Un Mil Trenta-Quatre'],
   [1000000000, 'Mil Milions'],
   [2000000000, 'Dos Mil Milions'],
 ];
@@ -179,9 +179,9 @@ const testFloats: [number, string][] = [
   [0.0, 'Zero'],
   [0.04, 'Zero Coma Zero Quatre'],
   [0.4, 'Zero Coma Quatre'],
-  [0.63, 'Zero Coma Seixanta Tres'],
-  [37.06, 'Trenta Set Coma Zero Sis'],
-  [37.68, 'Trenta Set Coma Seixanta Vuit'],
+  [0.63, 'Zero Coma Seixanta-Tres'],
+  [37.06, 'Trenta-Set Coma Zero Sis'],
+  [37.68, 'Trenta-Set Coma Seixanta-Vuit'],
 ];
 
 describe('Test with options = { currency: true, includeZeroFractional: true }', () => {
@@ -192,7 +192,7 @@ describe('Test with options = { currency: true, includeZeroFractional: true }', 
     ['123.00', `Cent Vint-I-Tres Euros I Zero Cèntims`],
     ['0.00', `Zero Euros I Zero Cèntims`],
     ['-123.00', `Menys Cent Vint-I-Tres Euros I Zero Cèntims`],
-    ['37.68', `Trenta Set Euros I Seixanta Vuit Cèntims`],
+    ['37.68', `Trenta-Set Euros I Seixanta-Vuit Cèntims`],
   ];
 
   test.concurrent.each(testIncludeZeroFractional)('convert %s => %s', (input, expected) => {
@@ -215,9 +215,9 @@ const testFloatsWithCurrency: [number, string][] = [
   [0.0, 'Zero Euros'],
   [0.04, 'Zero Euros I Quatre Cèntims'],
   [0.4, 'Zero Euros I Quaranta Cèntims'],
-  [0.63, 'Zero Euros I Seixanta Tres Cèntims'],
-  [37.06, 'Trenta Set Euros I Sis Cèntims'],
-  [37.68, 'Trenta Set Euros I Seixanta Vuit Cèntims'],
+  [0.63, 'Zero Euros I Seixanta-Tres Cèntims'],
+  [37.06, 'Trenta-Set Euros I Sis Cèntims'],
+  [37.68, 'Trenta-Set Euros I Seixanta-Vuit Cèntims'],
 ];
 
 describe('Test Floats with options = { currency: true }', () => {
@@ -231,7 +231,7 @@ describe('Test Floats with options = { currency: true, ignoreZeroCurrency: true 
     [0.0, ''],
     [0.04, 'Quatre Cèntims'],
     [0.4, 'Quaranta Cèntims'],
-    [37.06, 'Trenta Set Euros I Sis Cèntims'],
+    [37.06, 'Trenta-Set Euros I Sis Cèntims'],
   ];
 
   test.concurrent.each(testFloatsWithCurrencyAndIgnoreZeroCurrency)('convert %d => %s', (input, expected) => {
@@ -249,8 +249,8 @@ describe('Test Floats with options = { currency: true, ignoreDecimal: true }', (
     [0.0, 'Zero Euros'],
     [0.04, 'Zero Euros'],
     [0.4, 'Zero Euros'],
-    [37.06, 'Trenta Set Euros'],
-    [37.68, 'Trenta Set Euros'],
+    [37.06, 'Trenta-Set Euros'],
+    [37.68, 'Trenta-Set Euros'],
   ];
 
   test.concurrent.each(testFloatsWithCurrencyAndIgnoreDecimal)('convert %d => %s', (input, expected) => {
@@ -423,7 +423,7 @@ const testFractionStyleCaES: [number, string][] = [
   [1.1, 'Un I Un Dècim'],
   [2.5, 'Dos I Cinc Dècims'],
   [1.01, 'Un I Un Centèsim'],
-  [1.45, 'Un I Quaranta Cinc Centèsims'],
+  [1.45, 'Un I Quaranta-Cinc Centèsims'],
   [0.05, 'Zero I Cinc Centèsims'],
   [1.001, 'Un I Un Mil·lèsim'],
   [1.005, 'Un I Cinc Mil·lèsims'],
@@ -433,7 +433,7 @@ const testFractionStyleCaES: [number, string][] = [
   [1.00005, 'Un I Cinc Cent-Mil·lèsims'],
   [1.000001, 'Un I Un Milionèsim'],
   [1.000005, 'Un I Cinc Milionèsims'],
-  [123.45, 'Cent Vint-I-Tres I Quaranta Cinc Centèsims'],
+  [123.45, 'Cent Vint-I-Tres I Quaranta-Cinc Centèsims'],
 ];
 
 describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
@@ -443,9 +443,9 @@ describe("Test Floats with options = { decimalStyle: 'fraction' }", () => {
 
   test('falls back to digit-by-digit for unmapped decimal length (7 places)', () => {
     expect(toWords.convert(1.1234567, { decimalStyle: 'fraction' })).toBe(
-      'Un Coma Un Milió Dos-Cents Trenta Quatre Mil Cinc-Cents Seixanta Set',
+      'Un Coma Un Milió Dos-Cents Trenta-Quatre Mil Cinc-Cents Seixanta-Set',
     );
-    expect(toWords.convert(1.1234567)).toBe('Un Coma Un Milió Dos-Cents Trenta Quatre Mil Cinc-Cents Seixanta Set');
+    expect(toWords.convert(1.1234567)).toBe('Un Coma Un Milió Dos-Cents Trenta-Quatre Mil Cinc-Cents Seixanta-Set');
   });
 
   test('digit-by-digit style works without decimalStyle option', () => {
@@ -515,5 +515,30 @@ describe("Round scale amounts take de / d' before the currency", () => {
   ];
   test.each(cases)('convert %d => %s', (input, expected) => {
     expect(connector.convert(input, { currency: true, doNotAddOnly: true })).toBe(expected);
+  });
+});
+
+describe('A hyphen joins tens and units (IEC: trenta-dos, seixanta-setè)', () => {
+  const hyphenated = new ToWords({ localeCode });
+  test.each([
+    [32, 'Trenta-Dos'],
+    [45, 'Quaranta-Cinc'],
+    [137, 'Cent Trenta-Set'],
+    [41000, 'Quaranta-Un Mil'],
+  ])('convert %d => %s', (input, expected) => {
+    expect(hyphenated.convert(input)).toBe(expected);
+  });
+  test.each([
+    [34, 'Trenta-Quatrè'],
+    [67, 'Seixanta-Setè'],
+  ])('toOrdinal %d => %s', (input, expected) => {
+    expect(hyphenated.toOrdinal(input)).toBe(expected);
+  });
+  test.each([
+    [22, 'Vint-I-Dues'],
+    [32, 'Trenta-Dues'],
+    [91, 'Noranta-Una'],
+  ])('convert %d with gender feminine => %s', (input, expected) => {
+    expect(hyphenated.convert(input, { gender: 'feminine' })).toBe(expected);
   });
 });
