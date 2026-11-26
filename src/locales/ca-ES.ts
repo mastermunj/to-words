@@ -8,6 +8,28 @@ import {
 } from '../types.js';
 import { ToWordsCore } from '../ToWordsCoreBase.js';
 
+// IEC: a hyphen joins tens and units (trenta-dos, quaranta-cinc; vint-i-u from 21 to 29).
+const UNITS: [number, string, string?][] = [
+  [9, 'Nou'],
+  [8, 'Vuit'],
+  [7, 'Set'],
+  [6, 'Sis'],
+  [5, 'Cinc'],
+  [4, 'Quatre'],
+  [3, 'Tres'],
+  [2, 'Dos', 'Dues'],
+  [1, 'Un', 'Una'],
+];
+
+const tensWithUnits = (tens: number, word: string) => [
+  ...UNITS.map(([unit, value, feminineValue]) => ({
+    number: tens + unit,
+    value: `${word}-${value}`,
+    ...(feminineValue && { feminineValue: `${word}-${feminineValue}` }),
+  })),
+  { number: tens, value: word },
+];
+
 export default class Locale implements LocaleInterface {
   public config: LocaleConfig = {
     currency: {
@@ -43,13 +65,13 @@ export default class Locale implements LocaleInterface {
       { number: 300, value: 'Tres-Cents', feminineValue: 'Tres-Centes' },
       { number: 200, value: 'Dos-Cents', feminineValue: 'Dues-Centes' },
       { number: 100, value: 'Cent' },
-      { number: 90, value: 'Noranta' },
-      { number: 80, value: 'Vuitanta' },
-      { number: 70, value: 'Setanta' },
-      { number: 60, value: 'Seixanta' },
-      { number: 50, value: 'Cinquanta' },
-      { number: 40, value: 'Quaranta' },
-      { number: 30, value: 'Trenta' },
+      ...tensWithUnits(90, 'Noranta'),
+      ...tensWithUnits(80, 'Vuitanta'),
+      ...tensWithUnits(70, 'Setanta'),
+      ...tensWithUnits(60, 'Seixanta'),
+      ...tensWithUnits(50, 'Cinquanta'),
+      ...tensWithUnits(40, 'Quaranta'),
+      ...tensWithUnits(30, 'Trenta'),
       { number: 29, value: 'Vint-I-Nou' },
       { number: 28, value: 'Vint-I-Vuit' },
       { number: 27, value: 'Vint-I-Set' },
@@ -57,7 +79,7 @@ export default class Locale implements LocaleInterface {
       { number: 25, value: 'Vint-I-Cinc' },
       { number: 24, value: 'Vint-I-Quatre' },
       { number: 23, value: 'Vint-I-Tres' },
-      { number: 22, value: 'Vint-I-Dos' },
+      { number: 22, value: 'Vint-I-Dos', feminineValue: 'Vint-I-Dues' },
       { number: 21, value: 'Vint-I-Un', feminineValue: 'Vint-I-Una' },
       { number: 20, value: 'Vint' },
       { number: 19, value: 'Dinou' },
@@ -201,5 +223,8 @@ export function toOrdinal(number: NumberInput, options?: OrdinalOptions): string
  * Shorthand for toWords(number, { currency: true, ...options }).
  */
 export function toCurrency(number: NumberInput, options?: ConverterOptions): string {
-  return (instance ??= new ToWords()).convert(number, { ...options, currency: true });
+  return (instance ??= new ToWords()).convert(number, {
+    ...options,
+    currency: true,
+  });
 }
